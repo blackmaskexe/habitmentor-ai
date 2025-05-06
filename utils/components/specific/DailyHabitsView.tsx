@@ -1,16 +1,16 @@
-import React from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  TouchableOpacity,
-} from "react-native";
-import { Ionicons } from "@expo/vector-icons";
 import { useTheme } from "@/utils/theme/ThemeContext";
+import { Ionicons } from "@expo/vector-icons";
+import React, { useState } from "react";
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import BouncyCheckbox from "react-native-bouncy-checkbox";
 
 // Components:
-import CheckButton from "../general/CheckButton";
 
 interface HabitItem {
   habitName: string;
@@ -49,6 +49,10 @@ const DailyHabitsView: React.FC = () => {
   const theme = useTheme();
   const styles = createStyles(theme);
 
+  const [taskCompletion, setTaskCompletion] = useState<any>(
+    Array(habitItems.length).fill(false)
+  ); // track the ticking of the habit items
+
   // const renderCheckmarks = (frequency: number, completed: number) => {
   //   return Array.from({ length: frequency }).map((_, index) => (
   //     <View key={index} style={styles.checkmarkContainer}>
@@ -66,36 +70,57 @@ const DailyHabitsView: React.FC = () => {
   return (
     <ScrollView style={styles.container}>
       {habitItems.map((habit, index) => (
-        <TouchableOpacity
-          key={index}
-          onPress={() => {
-            console.log("Wake me up when you're on");
-          }}
-        >
+        <View key={index}>
           <View style={styles.habitCard}>
-            <View style={styles.habitInfo}>
+            {/* <View style={styles.habitInfo}>
               <Text style={styles.habitName}>{habit.habitName}</Text>
               <Text style={styles.habitDeadline}>{habit.habitDeadline}</Text>
-            </View>
-            <View style={styles.rightContent}>
-              {/* <View style={styles.checkmarksRow}>
-                {renderCheckmarks(
-                  habit.habitFrequency,
-                  habit.completedFrequency
-                )}
-              </View> */}
-              <View>
-                <CheckButton
-                  size={16}
-                  onPress={() => {
-                    console.log("oh baby come to sleep");
-                  }}
-                />
-              </View>
-              {/* <Text style={styles.points}></Text> */}
-            </View>
+            </View> */}
+            <BouncyCheckbox
+              size={28}
+              fillColor={theme.colors.primary}
+              // unFillColor="#FFFFFF"
+              text={habit.habitName}
+              // iconStyle={{ borderColor: "red" }}
+              // innerIconStyle={{ borderWidth: 2 }}
+              textStyle={{
+                fontFamily: "JosefinSans-Regular",
+                color: theme.colors.text,
+              }}
+              onPress={(isChecked: boolean) => {
+                console.log(isChecked);
+                setTaskCompletion((oldTaskCompletion: any) => {
+                  const newTaskCompletion = [...oldTaskCompletion];
+                  newTaskCompletion[index] = !oldTaskCompletion[index];
+                  return newTaskCompletion;
+                });
+              }}
+              textComponent={
+                <View style={styles.habitTextContainer}>
+                  <Text
+                    style={[
+                      styles.habitName,
+                      taskCompletion[index] && {
+                        textDecorationLine: "line-through",
+                        color: theme.colors.textSecondary,
+                      },
+                    ]}
+                  >
+                    {habit.habitName}
+                  </Text>
+                  <Text style={styles.habitInfo}>{habit.habitDeadline}</Text>
+                </View>
+              }
+            />
+            <TouchableOpacity style={styles.habitOptions}>
+              <Ionicons
+                name="ellipsis-vertical-outline"
+                size={20}
+                color={theme.colors.textSecondary}
+              />
+            </TouchableOpacity>
           </View>
-        </TouchableOpacity>
+        </View>
       ))}
     </ScrollView>
   );
@@ -118,6 +143,7 @@ const createStyles = (theme: any) =>
     },
     habitInfo: {
       flex: 1,
+      color: theme.colors.textSecondary,
     },
     habitName: {
       ...theme.text.body,
@@ -125,12 +151,15 @@ const createStyles = (theme: any) =>
       color: theme.colors.text,
       marginBottom: theme.spacing.s / 2,
     },
+    habitOptions: {
+      alignSelf: "center",
+    },
     habitDeadline: {
       ...theme.text.small,
       color: theme.colors.textSecondary,
     },
-    rightContent: {
-      alignItems: "flex-end",
+    habitTextContainer: {
+      marginLeft: 16,
     },
     checkmarksRow: {
       flexDirection: "row",

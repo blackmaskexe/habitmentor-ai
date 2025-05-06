@@ -1,10 +1,15 @@
-import { Stack } from "expo-router";
 import { ThemeProvider } from "@/utils/theme/ThemeContext";
+import { Stack } from "expo-router";
 
 export default function RootLayout() {
   return (
     <ThemeProvider>
-      <Stack screenOptions={{ headerShown: false }}>
+      <Stack
+        screenOptions={{
+          headerShown: false,
+        }}
+        initialRouteName="index"
+      >
         <Stack.Screen name="index" />
         <Stack.Screen
           name="(tabs)"

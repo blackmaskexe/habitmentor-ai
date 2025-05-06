@@ -1,13 +1,12 @@
+import { Ionicons } from "@expo/vector-icons";
 import React from "react";
 import {
-  TouchableOpacity,
-  Text,
-  StyleSheet,
-  Dimensions,
   ActivityIndicator,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
   View,
 } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
 import { useTheme } from "../../theme/ThemeContext";
 
 type IoniconsName = React.ComponentProps<typeof Ionicons>["name"];
@@ -57,7 +56,7 @@ const CTAButton: React.FC<CTAButtonProps> = ({
 function createStyles(theme: any) {
   return StyleSheet.create({
     button: {
-      width: theme.button.width.l,
+      width: "100%",
       height: 54,
       backgroundColor: theme.button.background,
       borderRadius: 12,

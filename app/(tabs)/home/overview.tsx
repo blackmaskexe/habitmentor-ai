@@ -1,31 +1,33 @@
 // NOTE: THIS PAGE OPENS UP AS A MODAL
 
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  TouchableOpacity,
-} from "react-native";
-import React from "react";
 import { useTheme } from "@/utils/theme/ThemeContext";
 import { useRouter } from "expo-router";
+import React from "react";
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 import CrossButton from "@/utils/components/general/CrossButton";
 import NavigationPill from "@/utils/components/general/NavigationPill";
-import WeeklyHabitsView from "@/utils/components/specific/WeeklyHabitsView";
+import AllHabitsOverview from "@/utils/components/specific/AllHabitsOverview";
 import MonthlyHabitActivityMonitor from "@/utils/components/specific/MonthlyHabitActivityMonitor";
 
-const WeeklyScreen = () => {
+const OverviewScreen = () => {
   const router = useRouter();
   const theme = useTheme();
   const styles = createStyles(theme);
+
   return (
     <View style={styles.container}>
       <NavigationPill />
       <View style={styles.closeButtonContainer}>
         <CrossButton onPress={() => router.back()} size={20} outline={false} />
       </View>
+      {/* changed from it being a modal to a standard screen */}
       <ScrollView
         style={styles.scrollContainer}
         showsVerticalScrollIndicator={false}
@@ -59,7 +61,42 @@ const WeeklyScreen = () => {
           {/* <Text style={styles.weeklyTaskText}>Weekly Task Overview:</Text> */}
           {/* <WeeklyHabitsView /> */}
         </View>
+
+        <View style={styles.allHabitsInfo}>
+          <Text style={styles.monthlyProgressText}>All Habits Info</Text>
+          <AllHabitsOverview
+            allHabitsArray={[
+              {
+                habitName: "Morning Meditation",
+                habitDeadline: "8:00 AM",
+                habitFrequency: 1,
+                completedFrequency: 0,
+                points: 50,
+              },
+              {
+                habitName: "Drink Water",
+                habitDeadline: "Every 2 hours",
+                habitFrequency: 4,
+                completedFrequency: 1,
+                points: 100,
+              },
+              {
+                habitName: "Exercise",
+                habitDeadline: "6:00 PM",
+                habitFrequency: 1,
+                completedFrequency: 1,
+                points: 150,
+              },
+            ]}
+          />
+        </View>
       </ScrollView>
+      {/* <CTAButton
+        title="press me brah"
+        onPress={() => {
+          router.push("/(tabs)/home/test");
+        }}
+      /> */}
     </View>
   );
 };
@@ -135,7 +172,10 @@ function createStyles(theme: any) {
       color: theme.colors.text,
       ...theme.text.h2,
     },
+    allHabitsInfo: {
+      marginTop: theme.spacing.l,
+    },
   });
 }
 
-export default WeeklyScreen;
+export default OverviewScreen;

@@ -1,12 +1,14 @@
-import { View, Text, StyleSheet, ScrollView } from "react-native";
 import { useTheme } from "@/utils/theme/ThemeContext";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
 
-import WeekAtAGlance from "@/utils/components/specific/WeekGlance";
 import DailyHabitsView from "@/utils/components/specific/DailyHabitsView";
+import WeekAtAGlance from "@/utils/components/specific/WeekGlance";
+import { usePathname } from "expo-router";
 
 export default function Index() {
   const theme = useTheme();
   const styles = createStyle(theme);
+  console.log(usePathname());
 
   return (
     <View style={styles.container}>
@@ -28,6 +30,11 @@ export default function Index() {
           <Text style={styles.habitSectionText}>Habits for Today:</Text>
           <DailyHabitsView />
         </View>
+        <View
+          style={{
+            marginTop: 10,
+          }}
+        ></View>
         {/* <View style={styles.habitsSection}>
           <Text style={styles.habitSectionText}>Upcoming Milestones:</Text>
           <DailyHabitsView />
@@ -73,7 +80,7 @@ function createStyle(theme: any) {
 
     text: {
       color: theme.colors.text,
-      ...theme.text.h2,
+      ...theme.text.body,
     },
   });
 }
