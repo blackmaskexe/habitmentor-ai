@@ -16,7 +16,7 @@ export default function AllHabitsOverview({
         return (
           <>
             <View style={styles.habitCard} key={Math.random()}>
-              <Ionicons name="airplane" style={styles.habitIcon} />
+              <Ionicons name="today" style={styles.habitIcon} size={24} />
               <View style={styles.habitCardText}>
                 <Text style={styles.habitName}>{habitItem.habitName}</Text>
                 <Text style={styles.habitDetails}>

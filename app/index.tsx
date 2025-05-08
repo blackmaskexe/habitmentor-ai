@@ -7,7 +7,7 @@ import "react-native-gesture-handler";
 import LoadingScreen from "@/utils/components/general/LoadingScreen";
 
 export default function Index() {
-  // AsyncStorage.setItem("hasOnboarded", "false");
+  // AsyncStorage.setItem("hasOnboarded", "true");
   const [isLoading, setIsLoading] = useState(true); // set a loading state to manage initial loading
   const [hasOnboarded, setHasOnboarded] = useState(false);
 
@@ -34,3 +34,6 @@ export default function Index() {
 
   return <Redirect href={hasOnboarded ? "/(tabs)/home" : "/(onboarding)"} />;
 }
+
+// Implementation for Zeego Alternative:
+// https://github.com/react-native-menu/menu

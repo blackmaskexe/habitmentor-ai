@@ -9,6 +9,7 @@ import {
   View,
 } from "react-native";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
+import ContextMenu from "react-native-context-menu-view";
 
 // Components:
 
@@ -53,6 +54,14 @@ const DailyHabitsView: React.FC = () => {
     Array(habitItems.length).fill(false)
   ); // track the ticking of the habit items
 
+  const handleToggleTaskCompletion = (index: number) => {
+    setTaskCompletion((oldTaskCompletion: any) => {
+      const newTaskCompletion = [...oldTaskCompletion];
+      newTaskCompletion[index] = !oldTaskCompletion[index];
+      return newTaskCompletion;
+    });
+  };
+
   // const renderCheckmarks = (frequency: number, completed: number) => {
   //   return Array.from({ length: frequency }).map((_, index) => (
   //     <View key={index} style={styles.checkmarkContainer}>
@@ -70,57 +79,60 @@ const DailyHabitsView: React.FC = () => {
   return (
     <ScrollView style={styles.container}>
       {habitItems.map((habit, index) => (
-        <View key={index}>
-          <View style={styles.habitCard}>
-            {/* <View style={styles.habitInfo}>
+        <ContextMenu
+          key={habit.habitName}
+          actions={[{ title: "Title 1" }, { title: "Title 2" }]}
+          onPress={(e) => {
+            console.warn(
+              `Pressed ${e.nativeEvent.name} at index ${e.nativeEvent.index}`
+            );
+          }}
+        >
+          <View>
+            <View style={styles.habitCard}>
+              {/* <View style={styles.habitInfo}>
               <Text style={styles.habitName}>{habit.habitName}</Text>
               <Text style={styles.habitDeadline}>{habit.habitDeadline}</Text>
             </View> */}
-            <BouncyCheckbox
-              size={28}
-              fillColor={theme.colors.primary}
-              // unFillColor="#FFFFFF"
-              text={habit.habitName}
-              // iconStyle={{ borderColor: "red" }}
-              // innerIconStyle={{ borderWidth: 2 }}
-              textStyle={{
-                fontFamily: "JosefinSans-Regular",
-                color: theme.colors.text,
-              }}
-              onPress={(isChecked: boolean) => {
-                console.log(isChecked);
-                setTaskCompletion((oldTaskCompletion: any) => {
-                  const newTaskCompletion = [...oldTaskCompletion];
-                  newTaskCompletion[index] = !oldTaskCompletion[index];
-                  return newTaskCompletion;
-                });
-              }}
-              textComponent={
-                <View style={styles.habitTextContainer}>
-                  <Text
-                    style={[
-                      styles.habitName,
-                      taskCompletion[index] && {
-                        textDecorationLine: "line-through",
-                        color: theme.colors.textSecondary,
-                      },
-                    ]}
-                  >
-                    {habit.habitName}
-                  </Text>
-                  <Text style={styles.habitInfo}>{habit.habitDeadline}</Text>
-                </View>
-              }
-            />
-            <TouchableOpacity style={styles.habitOptions}>
-              <Ionicons
-                name="ellipsis-vertical-outline"
-                size={20}
-                color={theme.colors.textSecondary}
+              <BouncyCheckbox
+                size={28}
+                fillColor={theme.colors.primary}
+                // unFillColor="#FFFFFF"
+                text={habit.habitName}
+                // iconStyle={{ borderColor: "red" }}
+                // innerIconStyle={{ borderWidth: 2 }}
+                textStyle={{
+                  fontFamily: "JosefinSans-Regular",
+                  color: theme.colors.text,
+                }}
+                onPress={() => handleToggleTaskCompletion(index)}
+                textComponent={
+                  <View style={styles.habitTextContainer}>
+                    <Text
+                      style={[
+                        styles.habitName,
+                        taskCompletion[index] && {
+                          textDecorationLine: "line-through",
+                          color: theme.colors.textSecondary,
+                        },
+                      ]}
+                    >
+                      {habit.habitName}
+                    </Text>
+                    <Text style={styles.habitInfo}>{habit.habitDeadline}</Text>
+                  </View>
+                }
               />
-            </TouchableOpacity>
+              <TouchableOpacity style={styles.habitOptions}>
+                <Ionicons
+                  name="ellipsis-vertical-outline"
+                  size={20}
+                  color={theme.colors.textSecondary}
+                />
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
+        </ContextMenu>
       ))}
     </ScrollView>
   );
