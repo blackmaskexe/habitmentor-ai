@@ -1,10 +1,10 @@
+import { useTheme } from "@/utils/theme/ThemeContext";
 import React from "react";
 import {
-  View,
-  Text,
+  Dimensions,
   Image,
   StyleSheet,
-  Dimensions,
+  Text,
   TouchableOpacity,
 } from "react-native";
 
@@ -33,6 +33,8 @@ const Card: React.FC<CardProps> = ({
   padding = 16,
   callback,
 }) => {
+  const theme = useTheme();
+
   const defaultBackground =
     backgroundColor || (mode === "dark" ? "#1A1A1A" : "#f0f0f0");
   const defaultTextColor = mode === "dark" ? "#ffffff" : "#000000";
@@ -71,7 +73,8 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 8,
     margin: 10,
-    width: "90%", // Takes up 90% of parent width
+    // width: "90%", // Takes up 90% of parent width
+    width: "100%",
     alignSelf: "center",
   },
   image: {

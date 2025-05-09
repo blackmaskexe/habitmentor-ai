@@ -13,6 +13,9 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
+        // sceneStyle: {
+        //   backgroundColor: "black",
+        // },
         headerStyle: {
           backgroundColor: theme.colors.background,
           borderBottomWidth: 0.5,
@@ -33,7 +36,7 @@ export default function TabLayout() {
           title: "Home",
 
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="home-outline" size={size} color={color} />
+            <Ionicons name="home" size={size} color={color} />
           ),
           headerLeft: () => (
             <TouchableOpacity
@@ -73,18 +76,62 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="progress"
+        name="chat"
         options={{
-          title: "Progress",
+          animation: "none",
+          title: "AI Chat",
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="stats-chart-outline" size={size} color={color} />
+            <Ionicons name="chatbubbles" size={size} color={color} />
+          ),
+          tabBarStyle: {
+            display: "none",
+          },
+
+          headerLeft: () => (
+            <TouchableOpacity
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                marginLeft: theme.spacing.m,
+              }}
+              onPress={() => {
+                console.log("adapted to the models, I'm adapted to the bottle");
+                router.back();
+              }}
+            >
+              <Ionicons
+                name="chevron-back"
+                size={24}
+                color={theme.colors.primary}
+              />
+              <Text
+                style={
+                  {
+                    color: theme.colors.primary,
+                    ...theme.text.body,
+                    marginLeft: 4,
+                  } as any
+                }
+              >
+                Back
+              </Text>
+            </TouchableOpacity>
           ),
         }}
       />
       <Tabs.Screen
-        name="settings"
+        name="leaderboard"
         options={{
-          title: "Settings",
+          title: "Leaderboard",
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="stats-chart" size={size} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="more"
+        options={{
+          title: "More",
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="list-outline" size={size} color={color} />
           ),

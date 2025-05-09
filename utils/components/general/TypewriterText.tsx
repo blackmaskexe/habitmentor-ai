@@ -1,19 +1,16 @@
-import { useEffect, useState, useRef } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { useEffect, useRef, useState } from "react";
+import { StyleSheet, Text, View } from "react-native";
 import { useTheme } from "../../theme/ThemeContext";
 
 interface TypewriterTextProps {
   textContent: string;
   typingSpeed?: number;
-  heading?: boolean;
-  title?: string;
+  // heading prop is no longer used as title is removed
 }
 
 export default function TypewriterText({
   textContent,
   typingSpeed = 0.5,
-  heading = false,
-  title = "",
 }: TypewriterTextProps) {
   const theme = useTheme();
   const styles = createStyles(theme);
@@ -31,7 +28,7 @@ export default function TypewriterText({
   };
 
   // Convert typingSpeed (0-1) to milliseconds
-  const speed = 150 - typingSpeed * 150;
+  const speed = 150 - typingSpeed * 150; // Lower value means faster typing
 
   useEffect(() => {
     if (currentIndex < textContent.length) {
@@ -42,18 +39,24 @@ export default function TypewriterText({
 
       return () => clearTimeout(timeout);
     } else {
-      textComplete.current = true;
+      textComplete.current = true; // Mark as complete to stop onLayout updates
     }
   }, [currentIndex, textContent, speed]);
 
   return (
     <View style={styles.container}>
-      {heading && title && <Text style={styles.heading}>{title}</Text>}
+      {/* Heading/title rendering removed */}
 
-      <View style={{ height: textHeight, width: "100%" }}>
+      {/* Container to hold the text and maintain height */}
+      <View
+        style={{
+          height: textHeight > 0 ? textHeight : undefined,
+          width: "100%",
+        }}
+      >
         <Text style={styles.description}>{displayedText}</Text>
 
-        {/* Invisible text to measure */}
+        {/* Invisible text to measure the full height of textContent */}
         <Text
           style={[styles.description, styles.hiddenText]}
           onLayout={onTextLayout}
@@ -69,23 +72,24 @@ function createStyles(theme: any) {
   return StyleSheet.create({
     container: {
       width: "100%",
-      padding: theme.spacing.m,
+      // padding: theme.spacing.m,
     },
-    heading: {
-      ...theme.text.h1,
-      color: theme.colors.text,
-      textAlign: "center",
-      marginBottom: theme.spacing.m,
-    },
+    // heading style is no longer used
     description: {
-      ...theme.text.h3,
+      // Assuming theme.text.body is smaller than theme.text.h3
+      // If theme.text.body doesn't exist or isn't smaller,
+      // you might need to adjust fontSize directly, e.g., fontSize: theme.text.h3.fontSize * 0.8
+      ...theme.text.body, // Changed from h3 to body for smaller text
       color: theme.colors.textSecondary,
       width: "100%",
-      textAlign: "center",
+      textAlign: "left",
     },
     hiddenText: {
       position: "absolute",
       opacity: 0,
+      // Ensure it doesn't affect user interaction
+      zIndex: -1,
+      pointerEvents: "none",
     },
   });
 }

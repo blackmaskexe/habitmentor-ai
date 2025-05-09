@@ -11,32 +11,28 @@ export default function AllHabitsOverview({
   const styles = createStyles(theme);
   console.log("Drop down yeah", theme.colors.altBackground);
   return (
-    <View style={styles.allHabitsContainer} key={"Container"}>
+    <View style={styles.allHabitsContainer}>
       {allHabitsArray.map((habitItem, index) => {
         return (
-          <>
-            <View style={styles.habitCard} key={Math.random()}>
-              <Ionicons name="today" style={styles.habitIcon} size={24} />
-              <View style={styles.habitCardText}>
-                <Text style={styles.habitName}>{habitItem.habitName}</Text>
-                <Text style={styles.habitDetails}>
-                  Streak: 12 | 9 days until 21
-                </Text>
-              </View>
-              <View style={styles.habitCompletionDotContainer}>
-                {Array(7)
-                  .fill(Math.random())
-                  .map((value, index) => {
-                    return (
-                      <View
-                        key={Math.random()}
-                        style={styles.weekdayDot}
-                      ></View>
-                    );
-                  })}
-              </View>
+          <View style={styles.habitCard} key={`${habitItem.habitName}-card`}>
+            <Ionicons name="today" style={styles.habitIcon} size={24} />
+            <View style={styles.habitCardText}>
+              <Text style={styles.habitName}>{habitItem.habitName}</Text>
+              <Text style={styles.habitDetails}>
+                Streak: 12 | 9 days until 21
+              </Text>
             </View>
-          </>
+            <View style={styles.habitCompletionDotContainer}>
+              {Array(7).map((value, index) => {
+                return (
+                  <View
+                    key={`${habitItem.habitName}-dot-${index}`}
+                    style={styles.weekdayDot}
+                  ></View>
+                );
+              })}
+            </View>
+          </View>
         );
       })}
     </View>

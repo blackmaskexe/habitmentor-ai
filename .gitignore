@@ -3,6 +3,9 @@
 # environment variables:
 .env
 
+# misc
+.vscode
+
 # dependencies
 node_modules/
 

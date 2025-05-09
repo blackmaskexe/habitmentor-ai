@@ -7,9 +7,11 @@ import {
   KeyboardAvoidingView,
   Platform,
   Pressable,
+  ScrollView,
   StyleSheet,
   Text,
   TextInput,
+  TouchableOpacity,
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -23,13 +25,17 @@ import { SafeAreaView } from "react-native-safe-area-context";
 //     content: "Hello! How can I help you today?",
 //     $createdAt: new Date(Date.now() - 10 * 60 * 1000).toISOString(), // 10 minutes ago
 //   },
-  
 
 // ];
 
-export default function ChatMessages({ userName = "Person", messagesArray } : {
+export default function ChatMessages({
+  userName = "Person",
+  messagesArray,
+  tooltips,
+}: {
   userName?: string;
-  messagesArray: any[]
+  messagesArray: any[];
+  tooltips?: string[];
 }) {
   const theme = useTheme();
   const styles = createStyles(theme);
@@ -52,7 +58,7 @@ export default function ChatMessages({ userName = "Person", messagesArray } : {
         >
           <LegendList
             data={messagesArray}
-            renderItem={({ item }: {item: any}) => {
+            renderItem={({ item }: { item: any }) => {
               const isSender = item.sender == "user";
               return (
                 <View
@@ -62,7 +68,7 @@ export default function ChatMessages({ userName = "Person", messagesArray } : {
                       : styles.systemMessageContainer
                   }
                 >
-                 <View
+                  <View
                     style={
                       isSender
                         ? styles.userMessageContent
@@ -101,6 +107,23 @@ export default function ChatMessages({ userName = "Person", messagesArray } : {
             //   console.log("info", info);
             // }}
           />
+          <ScrollView
+            style={styles.tooltipContainer}
+            horizontal={true}
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.tooltipContentContainer}
+          >
+            {tooltips?.map((item, index) => {
+              return (
+                <TouchableOpacity
+                  style={styles.tooltipItem}
+                  key={`tooltip-${item}`}
+                >
+                  <Text style={styles.tooltipText}>{item}</Text>
+                </TouchableOpacity>
+              );
+            })}
+          </ScrollView>
           <View
             style={{
               borderWidth: 1,
@@ -108,7 +131,7 @@ export default function ChatMessages({ userName = "Person", messagesArray } : {
               flexDirection: "row",
               alignItems: "center",
               borderRadius: 20,
-              marginBottom: 6,
+              // marginBottom: 6,
               marginHorizontal: 10,
             }}
           >
@@ -153,6 +176,7 @@ function createStyles(theme: any) {
   return StyleSheet.create({
     container: {
       flex: 1,
+      backgroundColor: theme.colors.background,
     },
     kbAvoidingView: {
       flex: 1,
@@ -186,6 +210,40 @@ function createStyles(theme: any) {
       flex: 1,
       padding: 10,
       borderRadius: 10,
+    },
+    // Tooltip Styles
+    tooltipContainer: {
+      maxHeight: 48,
+      marginVertical: theme.spacing.xs,
+      marginBottom: 12,
+      marginTop: 12,
+    },
+    tooltipContentContainer: {
+      padding: theme.spacing.s,
+      gap: theme.spacing.s,
+      alignItems: "center",
+    },
+    tooltipItem: {
+      backgroundColor: theme.colors.surface,
+      paddingVertical: theme.spacing.xs,
+      paddingHorizontal: theme.spacing.m,
+      borderRadius: 16,
+      borderWidth: 1,
+      borderColor: theme.colors.border,
+      minHeight: 36,
+      justifyContent: "center",
+      alignItems: "center",
+      // Add subtle shadow for depth
+      shadowColor: theme.colors.shadow,
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.1,
+      shadowRadius: 3,
+      elevation: 2, // for Android shadow
+    },
+    tooltipText: {
+      color: theme.colors.textSecondary,
+      fontSize: 14,
+      fontWeight: "500",
     },
   });
 }

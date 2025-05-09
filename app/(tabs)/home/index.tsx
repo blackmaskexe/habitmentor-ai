@@ -1,9 +1,26 @@
 import { useTheme } from "@/utils/theme/ThemeContext";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 
+import TypewriterText from "@/utils/components/general/TypewriterText";
 import DailyHabitsView from "@/utils/components/specific/DailyHabitsView";
 import WeekAtAGlance from "@/utils/components/specific/WeekGlance";
 import { usePathname } from "expo-router";
+
+const items = [
+  {
+    listText: "Be pacific. You woke up, you did this, you did that",
+    bullet: { type: "text", bulletText: "→" },
+  },
+  {
+    listText:
+      "Ok. I woke up. I went to school. I came from school. I did the dishes.",
+    bullet: { type: "text", bulletText: "→" },
+  },
+  {
+    listText: "I don't care, dokhet dokhet saar saar, sokhet sokhet taar taar",
+    bullet: { type: "text", bulletText: "→" },
+  },
+];
 
 export default function Index() {
   const theme = useTheme();
@@ -30,11 +47,13 @@ export default function Index() {
           <Text style={styles.habitSectionText}>Habits for Today:</Text>
           <DailyHabitsView />
         </View>
-        <View
-          style={{
-            marginTop: 10,
-          }}
-        ></View>
+        <View style={styles.aiSection}>
+          <Text style={styles.aiSectionText}>Top AI Suggestion:</Text>
+          <TypewriterText
+            textContent="So you choose to be concealed, now you're somebody now. You're a somebody in a nobody's town. I don't think you even know it."
+            typingSpeed={0.9}
+          />
+        </View>
         {/* <View style={styles.habitsSection}>
           <Text style={styles.habitSectionText}>Upcoming Milestones:</Text>
           <DailyHabitsView />
@@ -76,6 +95,15 @@ function createStyle(theme: any) {
       color: theme.colors.text,
       ...theme.text.h2,
       marginBottom: 5,
+    },
+    aiSection: {
+      paddingTop: theme.spacing.s,
+      marginTop: theme.spacing.m,
+    },
+    aiSectionText: {
+      color: theme.colors.text,
+      ...theme.text.h2,
+      marginBottom: 7,
     },
 
     text: {

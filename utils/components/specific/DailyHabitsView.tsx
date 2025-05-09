@@ -8,8 +8,8 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { SheetManager } from "react-native-actions-sheet";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
-import ContextMenu from "react-native-context-menu-view";
 
 // Components:
 
@@ -76,63 +76,74 @@ const DailyHabitsView: React.FC = () => {
   //   ));
   // };
 
+  const renderHabitItem = (habit: any, index: number) => {
+    return (
+      <BouncyCheckbox
+        size={28}
+        fillColor={theme.colors.primary}
+        // unFillColor="#FFFFFF"
+        text={habit.habitName}
+        // iconStyle={{ borderColor: "red" }}
+        // innerIconStyle={{ borderWidth: 2 }}
+        textStyle={{
+          fontFamily: "JosefinSans-Regular",
+          color: theme.colors.text,
+        }}
+        onPress={() => handleToggleTaskCompletion(index)}
+        onLongPress={() => {}}
+        textComponent={
+          <View style={styles.habitTextContainer}>
+            <Text
+              style={[
+                styles.habitName,
+                taskCompletion[index] && {
+                  textDecorationLine: "line-through",
+                  color: theme.colors.textSecondary,
+                },
+              ]}
+            >
+              {habit.habitName}
+            </Text>
+            <Text style={styles.habitInfo}>{habit.habitDeadline}</Text>
+          </View>
+        }
+      />
+    );
+  };
+
   return (
     <ScrollView style={styles.container}>
       {habitItems.map((habit, index) => (
-        <ContextMenu
-          key={habit.habitName}
-          actions={[{ title: "Title 1" }, { title: "Title 2" }]}
-          onPress={(e) => {
-            console.warn(
-              `Pressed ${e.nativeEvent.name} at index ${e.nativeEvent.index}`
-            );
-          }}
-        >
-          <View>
-            <View style={styles.habitCard}>
-              {/* <View style={styles.habitInfo}>
+        <View key={index}>
+          <View style={styles.habitCard}>
+            {/* <View style={styles.habitInfo}>
               <Text style={styles.habitName}>{habit.habitName}</Text>
               <Text style={styles.habitDeadline}>{habit.habitDeadline}</Text>
             </View> */}
-              <BouncyCheckbox
-                size={28}
-                fillColor={theme.colors.primary}
-                // unFillColor="#FFFFFF"
-                text={habit.habitName}
-                // iconStyle={{ borderColor: "red" }}
-                // innerIconStyle={{ borderWidth: 2 }}
-                textStyle={{
-                  fontFamily: "JosefinSans-Regular",
-                  color: theme.colors.text,
-                }}
-                onPress={() => handleToggleTaskCompletion(index)}
-                textComponent={
-                  <View style={styles.habitTextContainer}>
-                    <Text
-                      style={[
-                        styles.habitName,
-                        taskCompletion[index] && {
-                          textDecorationLine: "line-through",
-                          color: theme.colors.textSecondary,
-                        },
-                      ]}
-                    >
-                      {habit.habitName}
-                    </Text>
-                    <Text style={styles.habitInfo}>{habit.habitDeadline}</Text>
-                  </View>
-                }
+            {renderHabitItem(habit, index)}
+
+            <TouchableOpacity
+              style={styles.habitOptions}
+              onPress={() => {
+                SheetManager.show("example-sheet", {
+                  payload: {
+                    sheetType: "habitItem",
+                    habitItem: {
+                      habit: habit,
+                      habitIndex: index,
+                    },
+                  },
+                });
+              }}
+            >
+              <Ionicons
+                name="ellipsis-vertical-outline"
+                size={20}
+                color={theme.colors.textSecondary}
               />
-              <TouchableOpacity style={styles.habitOptions}>
-                <Ionicons
-                  name="ellipsis-vertical-outline"
-                  size={20}
-                  color={theme.colors.textSecondary}
-                />
-              </TouchableOpacity>
-            </View>
+            </TouchableOpacity>
           </View>
-        </ContextMenu>
+        </View>
       ))}
     </ScrollView>
   );

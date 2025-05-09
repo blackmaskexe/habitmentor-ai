@@ -1,4 +1,5 @@
 export const lightTheme = {
+  theme: "light",
   colors: {
     // Core colors
     primary: "#007AFF",
@@ -73,6 +74,7 @@ export const lightTheme = {
 };
 
 export const darkTheme = {
+  theme: "dark",
   colors: {
     // Core colors
     primary: "#FF6347",
