@@ -1,50 +1,92 @@
-# Welcome to your Expo app 👋
+# Life AI - Your Intelligent Habit Companion 🌱
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A minimalist habit tracking application built with Expo that leverages AI to help users build and maintain healthy habits through personalized guidance and clean, focused interactions.
 
-## Get started
+---
 
-1. Install dependencies
+## ✨ Features
 
+- **AI-Powered Guidance**: Intelligent chat interface that provides personalized advice and motivation.
+- **Clean UI/UX**: Minimalist design philosophy focusing on the present moment.
+- **Habit Tracking**: Visual progress tracking with daily and weekly views.
+- **Photo Journaling**: Capture daily visual records of your habit progress.
+- **Smart Reminders**: Context-aware notifications to keep you on track.
+
+---
+
+## 🛠️ Tech Stack
+
+- **Expo** with Expo Router
+- **React Native**
+- **OpenAI API** for AI interactions
+- Custom theming system for dark/light mode support
+
+---
+
+## 🚀 Getting Started
+
+1. **Clone the repository**:
+   ```bash
+   git clone <repository-url>
+   ```
+2. **Install dependencies**:
    ```bash
    npm install
    ```
+3. **Set up environment variables**:
 
-2. Start the app
+   - Edit the `.env` file with your OpenAI API key and other required credentials.
 
+4. **Start the development server**:
    ```bash
-   npx expo start
+   npm start
    ```
 
-In the output, you'll find options to open the app in a
+---
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+## 📂 Project Structure
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+- **Home Tab**: Daily habit tracking and progress visualization.
+- **AI Chat**: Personalized guidance and motivation through natural conversation.
+- **Overview**: Weekly and monthly habit progress analysis.
+- **Settings**: App configuration and user preferences.
 
-## Get a fresh project
+---
 
-When you're ready, run:
+## 📋 Requirements
 
-```bash
-npm run reset-project
-```
+- **iOS**: 13.0 or later
+- **Android**: API level 21 or later
+- **Node.js**: 16.0 or later
+- **Expo SDK**: 49 or later
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+---
 
-## Learn more
+## 🤝 Contributing
 
-To learn more about developing your project with Expo, look at the following resources:
+We welcome contributions! Please see our **[Contributing Guide](CONTRIBUTING.md)** for details.
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+---
 
-## Join the community
+## 🛎️ Support
 
-Join our community of developers creating universal apps.
+- **Report an Issue**: [GitHub Issues](https://github.com/your-repo/issues)
+- **Feature Requests**: [GitHub Discussions](https://github.com/your-repo/discussions)
+- **Email**: [support@life-ai.app](mailto:support@life-ai.app)
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+---
+
+## 📜 License
+
+This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) file for details.
+
+---
+
+## 🙏 Acknowledgments
+
+- Design inspiration from mindfulness and meditation apps.
+- Built with **Expo**.
+- AI powered by **OpenAI**.
+- Made with ❤️ by **[Your Name/Team]**.
+
+---
