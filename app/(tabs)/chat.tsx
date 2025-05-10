@@ -1,9 +1,11 @@
 import ChatMessages from "@/utils/components/general/ChatMessage";
 import { useTheme } from "@/utils/theme/ThemeContext";
+import { useLocalSearchParams } from "expo-router";
 import React from "react";
 import { StyleSheet } from "react-native";
 
 const Chat = () => {
+  const { initialMessage } = useLocalSearchParams();
   const theme = useTheme();
   const styles = createStyles(theme);
 
@@ -82,6 +84,7 @@ const Chat = () => {
         "Dap up a unun",
         "Get a unun pass",
       ]}
+      initialMessage={(initialMessage as any) || ""}
     />
   );
 };

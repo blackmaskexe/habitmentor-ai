@@ -2,7 +2,8 @@ import { useTheme } from "@/utils/theme/ThemeContext";
 import { Ionicons } from "@expo/vector-icons";
 import { LegendList } from "@legendapp/list";
 import { useHeaderHeight } from "@react-navigation/elements";
-import React, { useState } from "react";
+import { useFocusEffect } from "expo-router";
+import React, { useCallback, useEffect, useRef, useState } from "react"; // Ensure useCallback is imported
 import {
   KeyboardAvoidingView,
   Platform,
@@ -32,15 +33,32 @@ export default function ChatMessages({
   userName = "Person",
   messagesArray,
   tooltips,
+  initialMessage,
 }: {
   userName?: string;
   messagesArray: any[];
   tooltips?: string[];
+  initialMessage: string;
 }) {
   const theme = useTheme();
   const styles = createStyles(theme);
   const textInputRef = React.useRef<any>(null);
-  const [messageContent, setMessageContent] = useState("");
+  const listRef = useRef<any>(null); // Ref for LegendList
+
+  useFocusEffect(
+    // Callback should be wrapped in `React.useCallback` to avoid running the effect too often.
+    useCallback(() => {
+      // Invoked whenever the route is focused.
+      listRef.current?.scrollToEnd({ animated: true });
+
+      // Return function is invoked whenever the route gets out of focus.
+      // return () => {
+      //   console.log("This route is now unfocused.");
+      // };
+    }, [])
+  );
+
+  const [messageContent, setMessageContent] = useState(initialMessage);
 
   const headerHeight = Platform.OS === "ios" ? useHeaderHeight() : 0;
 
@@ -58,6 +76,7 @@ export default function ChatMessages({
         >
           <LegendList
             data={messagesArray}
+            ref={listRef}
             renderItem={({ item }: { item: any }) => {
               const isSender = item.sender == "user";
               return (

@@ -25,7 +25,11 @@ const OverviewScreen = () => {
     <View style={styles.container}>
       <NavigationPill />
       <View style={styles.closeButtonContainer}>
-        <CrossButton onPress={() => router.back()} size={20} outline={false} />
+        <CrossButton
+          onPress={() => router.replace("/(tabs)/home")}
+          size={20}
+          outline={false}
+        />
       </View>
       {/* changed from it being a modal to a standard screen */}
       <ScrollView

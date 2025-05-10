@@ -5,6 +5,7 @@ import TypewriterText from "@/utils/components/general/TypewriterText";
 import DailyHabitsView from "@/utils/components/specific/DailyHabitsView";
 import WeekAtAGlance from "@/utils/components/specific/WeekGlance";
 import { usePathname } from "expo-router";
+import MyMenu from "@/utils/components/specific/zeego/HabitItemContextMenu";
 
 const items = [
   {
