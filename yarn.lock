@@ -1472,6 +1472,11 @@
   dependencies:
     merge-options "^3.0.4"
 
+"@react-native-menu/menu@^1.2.3":
+  version "1.2.3"
+  resolved "https://registry.yarnpkg.com/@react-native-menu/menu/-/menu-1.2.3.tgz#7a6a6748d610ab0d14aa65e1414520a5254aeff6"
+  integrity sha512-sEfiVIivsa0lSelFm9Wbm/RAi+XoEHc75GGhjwvSrj9KSCVvNNXwr9F8l42e1t/lzYvVYzmkYxLG6VKxrDYJiw==
+
 "@react-native/assets-registry@0.79.1":
   version "0.79.1"
   resolved "https://registry.npmjs.org/@react-native/assets-registry/-/assets-registry-0.79.1.tgz"
