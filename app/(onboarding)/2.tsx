@@ -45,6 +45,7 @@ const AddMoreHabitsPrompt = () => {
           <View style={styles.habitAddPicker}>
             <VariableItemPicker
               onModalSubmit={() => {
+                // to make the scrolling of incrementing habits smoother
                 scrollViewRef.current?.scrollToEnd({ animated: true });
               }}
             />

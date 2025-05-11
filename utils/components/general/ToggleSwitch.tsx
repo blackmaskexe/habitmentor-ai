@@ -1,6 +1,7 @@
 import React, { useRef, useEffect } from "react";
 import { View, Animated, Pressable, StyleSheet } from "react-native";
 import { useTheme } from "@/utils/theme/ThemeContext";
+import * as Haptics from "expo-haptics";
 
 interface ToggleSwitchProps {
   isEnabled: boolean;
@@ -42,6 +43,7 @@ const ToggleSwitch: React.FC<ToggleSwitchProps> = ({
   const handlePress = () => {
     if (!disabled) {
       onToggle(!isEnabled);
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     }
   };
 

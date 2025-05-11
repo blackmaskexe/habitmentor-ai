@@ -18,6 +18,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 // Components:
 import GenericForm from "../general/GenericForm";
 import CTAButton from "../general/CTAButton";
+import mmkvStorage from "@/utils/mmkvStorage";
 
 type ItemPickerProps = {
   onItemPress?: (index: number) => void;
@@ -31,19 +32,19 @@ type ItemPickerProps = {
 
 const fields = [
   {
-    key: "habit",
+    key: "habitName",
     label: "Habit Name",
     placeholder: "Read 10 minutes a day",
     required: true,
   },
   {
-    key: "description",
+    key: "habitDescription",
     label: "Habit Description",
     placeholder: "optional",
     required: false,
   },
   {
-    key: "frequency",
+    key: "habitFrequency",
     label: "Habit Frequency",
     placeholder: "every monday, wednesday, friday",
     required: false,
@@ -68,7 +69,7 @@ export default function VariableItemPicker({
     console.log(moreHabitsArray, "WOOOO YEAH WOOHOHHOOH YEAH WOHOHOH YWAH");
     setModalVisible(false);
     const habitData = values;
-    habitData.iconName = getHabitIcon(habitData.habit);
+    habitData.iconName = getHabitIcon(habitData.habitName);
 
     setValues({}); // clear the form upon submission
 
@@ -89,8 +90,8 @@ export default function VariableItemPicker({
       onModalSubmit();
     }, 100);
 
-    // as well as store everything that is in the morHabitsArray in the asyncstorage
-    AsyncStorage.setItem("moreHabits", JSON.stringify(moreHabitsArray));
+    // as well as store everything that is in the morHabitsArray in the mmkv storage
+    mmkvStorage.set("moreHabits", JSON.stringify(moreHabitsArray));
   }, [moreHabitsArray]);
 
   const renderEmptyBoxes = () => {
@@ -115,11 +116,13 @@ export default function VariableItemPicker({
         <View style={styles.textContainer}>
           <Text style={styles.placeholder}>
             {moreHabitsArray[index]
-              ? moreHabitsArray[index].habit
+              ? moreHabitsArray[index].habitName
               : "Add a Habit"}
           </Text>
           <Text style={styles.subtitlePlaceholder}>
-            {moreHabitsArray[index] ? moreHabitsArray[index].description : null}
+            {moreHabitsArray[index]
+              ? moreHabitsArray[index].habitDescription
+              : null}
           </Text>
         </View>
       </Pressable>

@@ -12,7 +12,7 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { useTheme } from "@/utils/theme/ThemeContext";
 import { useEffect, useState } from "react";
-// import api from "@/utils/api";
+import mmkvStorage from "@/utils/mmkvStorage";
 import { getHabitIcon } from "@/utils/misc/habitIcons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -33,24 +33,32 @@ type ItemPickerProps = {
 
 const fields = [
   {
-    key: "habit",
+    key: "habitName",
     label: "Habit Name",
     placeholder: "Read 10 minutes a day",
     required: true,
   },
   {
-    key: "description",
+    key: "habitDescription",
     label: "Habit Description",
     placeholder: "optional",
     required: false,
   },
   {
-    key: "frequency",
+    key: "habitFrequency",
     label: "Habit Frequency",
     placeholder: "every monday, wednesday, friday",
     required: false,
   },
 ];
+
+//  {
+//     habitName: "Exercise",
+//     habitDeadline: "6:00 PM",
+//     habitFrequency: 1,
+//     completedFrequency: 1,
+//     points: 150,
+//   },
 
 const { width } = Dimensions.get("window");
 const BOX_SIZE = Math.min(width * 0.18, 80); // Responsive but capped at 80px in length and width
@@ -71,7 +79,8 @@ export default function FixedItemPicker({
   const handleNewHabitSubmission = function () {
     setModalVisible(false);
     const habitData = values;
-    habitData.iconName = getHabitIcon(habitData.habit); // generate icons from a predetermined list
+    console.log("dig dig dig dig jigga jigga jig jig", habitData, values);
+    habitData.iconName = getHabitIcon(habitData.habitName); // generate icons from a predetermined list
     setValues({}); // clearing form data upon submission
 
     // let response = null;
@@ -109,8 +118,10 @@ export default function FixedItemPicker({
     if (habitItems.length == numRows) {
       // when all the habit items are filled, trigger the callback onAllHabitSelected passed from prop
       onAllHabitSelected();
-      // as well as save eveything to the AsyncStorage
-      AsyncStorage.setItem("coreHabits", JSON.stringify(habitItems));
+      // as well as save eveything to the mmkv storage
+      mmkvStorage.set("coreHabits", JSON.stringify(habitItems));
+      mmkvStorage.set("activeHabits", JSON.stringify(habitItems));
+      console.log("BUMMMMMMM", mmkvStorage.getString("coreHabits"));
     }
   }, [habitItems]);
 
@@ -136,10 +147,10 @@ export default function FixedItemPicker({
 
           <View style={styles.textContainer}>
             <Text style={styles.placeholder}>
-              {habitItems[index] ? habitItems[index].habit : "Add a Habit"}
+              {habitItems[index] ? habitItems[index].habitName : "Add a Habit"}
             </Text>
             <Text style={styles.subtitlePlaceholder}>
-              {habitItems[index] ? habitItems[index].description : null}
+              {habitItems[index] ? habitItems[index].habitDescription : null}
             </Text>
           </View>
         </Pressable>
@@ -204,7 +215,7 @@ export default function FixedItemPicker({
                   />
                   <CTAButton
                     title={"Submit"}
-                    disabled={values.habit ? false : true}
+                    disabled={values.habitName ? false : true}
                     onPress={() => {
                       handleNewHabitSubmission();
                     }}

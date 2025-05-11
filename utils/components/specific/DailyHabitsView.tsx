@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import { SheetManager } from "react-native-actions-sheet";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
+import mmkvStorage from "@/utils/mmkvStorage";
 
 // Components:
 
@@ -22,33 +23,39 @@ interface HabitItem {
 }
 
 // Dummy data
-const habitItems: HabitItem[] = [
-  {
-    habitName: "Morning Meditation",
-    habitDeadline: "8:00 AM",
-    habitFrequency: 1,
-    completedFrequency: 0,
-    points: 50,
-  },
-  {
-    habitName: "Drink Water",
-    habitDeadline: "Every 2 hours",
-    habitFrequency: 4,
-    completedFrequency: 1,
-    points: 100,
-  },
-  {
-    habitName: "Exercise",
-    habitDeadline: "6:00 PM",
-    habitFrequency: 1,
-    completedFrequency: 1,
-    points: 150,
-  },
-];
+// const habitItems: HabitItem[] = [
+//   {
+//     habitName: "Morning Meditation",
+//     habitDeadline: "8:00 AM",
+//     habitFrequency: 1,
+//     completedFrequency: 0,
+//     points: 50,
+//   },
+//   {
+//     habitName: "Drink Water",
+//     habitDeadline: "Every 2 hours",
+//     habitFrequency: 4,
+//     completedFrequency: 1,
+//     points: 100,
+//   },
+//   {
+//     habitName: "Exercise",
+//     habitDeadline: "6:00 PM",
+//     habitFrequency: 1,
+//     completedFrequency: 1,
+//     points: 150,
+//   },
+// ];
 
 const DailyHabitsView: React.FC = () => {
+  console.log("dam dam dam darararara", mmkvStorage.getString("activeHabits"));
   const theme = useTheme();
   const styles = createStyles(theme);
+
+  // extracting habit items that are active from the mmkvStorage
+  const storedHabitsString =
+    mmkvStorage.getString("activeHabits") || JSON.stringify([]);
+  const habitItems: any[] = JSON.parse(storedHabitsString);
 
   const [taskCompletion, setTaskCompletion] = useState<any>(
     Array(habitItems.length).fill(false)
@@ -125,6 +132,7 @@ const DailyHabitsView: React.FC = () => {
             <TouchableOpacity
               style={styles.habitOptions}
               onPress={() => {
+                console.log("I think i've seen it twice all year", habit);
                 SheetManager.show("example-sheet", {
                   payload: {
                     sheetType: "habitItem",

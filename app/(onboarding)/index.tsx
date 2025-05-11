@@ -19,6 +19,7 @@ const AppIntroduction = () => {
         contentInsetAdjustmentBehavior="automatic"
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
+        scrollEnabled={false}
       >
         {/* {Array.from({ length: 6 }).map((value, index) => {
           return (
@@ -30,7 +31,7 @@ const AppIntroduction = () => {
 
         <CardWithoutImage
           title="Better Life"
-          description="bro do you even want to improve your life?"
+          description="bro do you even want to improve your life? Click this message if you do"
           onPress={() => {
             console.log("don't you stop");
             router.push("/(onboarding)/1");

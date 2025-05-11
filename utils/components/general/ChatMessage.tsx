@@ -159,7 +159,7 @@ export default function ChatMessages({
               placeholder="Type a message"
               style={{
                 minHeight: 40,
-                color: "white",
+                color: theme.colors.text,
                 flexShrink: 1, // prevent pushing the send button out of the screen
                 flexGrow: 1, // allow the text input to grow keeping the send button to the right
                 padding: 10,

@@ -24,7 +24,7 @@ export default function HabitItemSheet({ habitObject }: { habitObject: any }) {
     <View style={styles.habitItemSheetContainer}>
       <CardWithoutImage
         title={habitObject.habitName}
-        description="Splish splash like the past she's the wave tuturned"
+        description={habitObject.habitDescription || ""}
       />
     </View>
   );

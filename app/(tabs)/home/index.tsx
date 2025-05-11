@@ -5,23 +5,6 @@ import TypewriterText from "@/utils/components/general/TypewriterText";
 import DailyHabitsView from "@/utils/components/specific/DailyHabitsView";
 import WeekAtAGlance from "@/utils/components/specific/WeekGlance";
 import { usePathname } from "expo-router";
-import MyMenu from "@/utils/components/specific/zeego/HabitItemContextMenu";
-
-const items = [
-  {
-    listText: "Be pacific. You woke up, you did this, you did that",
-    bullet: { type: "text", bulletText: "→" },
-  },
-  {
-    listText:
-      "Ok. I woke up. I went to school. I came from school. I did the dishes.",
-    bullet: { type: "text", bulletText: "→" },
-  },
-  {
-    listText: "I don't care, dokhet dokhet saar saar, sokhet sokhet taar taar",
-    bullet: { type: "text", bulletText: "→" },
-  },
-];
 
 export default function Index() {
   const theme = useTheme();

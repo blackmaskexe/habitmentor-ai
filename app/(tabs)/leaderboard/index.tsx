@@ -3,23 +3,35 @@ import { View, useWindowDimensions, Text, StyleSheet } from "react-native";
 import { TabView, SceneMap, TabBar } from "react-native-tab-view";
 import { useTheme } from "@/utils/theme/ThemeContext";
 
-const FirstRoute = () => (
-  <View style={styles.scene}>
-    <Text>First Tab</Text>
-  </View>
-);
+const FirstRoute = () => {
+  const theme = useTheme();
+  const styles = createStyles(theme);
+  return (
+    <View style={styles.scene}>
+      <Text style={styles.placeholderText}>Coming Soon</Text>
+    </View>
+  );
+};
 
-const SecondRoute = () => (
-  <View style={styles.scene}>
-    <Text>Second Tab</Text>
-  </View>
-);
+const SecondRoute = () => {
+  const theme = useTheme();
+  const styles = createStyles(theme);
+  return (
+    <View style={styles.scene}>
+      <Text style={styles.placeholderText}>Coming Soon</Text>
+    </View>
+  );
+};
 
-const ThirdRoute = () => (
-  <View style={styles.scene}>
-    <Text>Third Tab</Text>
-  </View>
-);
+const ThirdRoute = () => {
+  const theme = useTheme();
+  const styles = createStyles(theme);
+  return (
+    <View style={styles.scene}>
+      <Text style={styles.placeholderText}>Coming Soon</Text>
+    </View>
+  );
+};
 
 const renderScene = SceneMap({
   first: FirstRoute,
@@ -58,10 +70,17 @@ export default function TabViewExample() {
   );
 }
 
-const styles = StyleSheet.create({
-  scene: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
+function createStyles(theme: any) {
+  return StyleSheet.create({
+    scene: {
+      flex: 1,
+      alignItems: "center",
+      justifyContent: "center",
+      backgroundColor: theme.colors.background,
+    },
+    placeholderText: {
+      color: theme.colors.text,
+      ...theme.text.h2,
+    },
+  });
+}

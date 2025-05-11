@@ -104,7 +104,8 @@ const UserSettingsPrompt = () => {
           <GenericList
             items={[
               {
-                listText: "Get notified when it's time to complete your habits",
+                listText:
+                  "‎ ‎ Get notified when it's time to complete your habits",
                 bullet: {
                   type: "text",
                   bulletText: "🔔",
@@ -112,7 +113,7 @@ const UserSettingsPrompt = () => {
               },
               {
                 listText:
-                  "Save your progress to the cloud and sync across devices",
+                  "‎ ‎ Save your progress to the cloud and sync across devices",
                 bullet: {
                   type: "text",
                   bulletText: "☁️",
@@ -120,7 +121,7 @@ const UserSettingsPrompt = () => {
               },
               {
                 listText:
-                  "You can change these settings anytime from the settings menu",
+                  "‎ ‎ You can change these settings anytime from the settings menu",
                 bullet: {
                   type: "text",
                   bulletText: "⚙️",
