@@ -27,17 +27,18 @@ export default function Index() {
           dayPercentages={[90, 20, 50, 60, 70, 10, 100]}
           completionPercentage={99}
         />
-        <View style={styles.habitsSection}>
-          <Text style={styles.habitSectionText}>Habits for Today:</Text>
-          <DailyHabitsView />
-        </View>
         <View style={styles.aiSection}>
           <Text style={styles.aiSectionText}>Top AI Suggestion:</Text>
           <TypewriterText
             textContent="So you choose to be concealed, now you're somebody now. You're a somebody in a nobody's town. I don't think you even know it."
-            typingSpeed={0.9}
+            typingSpeed={0.95}
           />
         </View>
+        <View style={styles.habitsSection}>
+          <Text style={styles.habitSectionText}>Habits for Today:</Text>
+          <DailyHabitsView />
+        </View>
+
         {/* <View style={styles.habitsSection}>
           <Text style={styles.habitSectionText}>Upcoming Milestones:</Text>
           <DailyHabitsView />

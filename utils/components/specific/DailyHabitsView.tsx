@@ -48,7 +48,6 @@ interface HabitItem {
 // ];
 
 const DailyHabitsView: React.FC = () => {
-  console.log("dam dam dam darararara", mmkvStorage.getString("activeHabits"));
   const theme = useTheme();
   const styles = createStyles(theme);
 

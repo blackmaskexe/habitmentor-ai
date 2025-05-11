@@ -43,7 +43,7 @@ const ToggleSwitch: React.FC<ToggleSwitchProps> = ({
   const handlePress = () => {
     if (!disabled) {
       onToggle(!isEnabled);
-      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     }
   };
 

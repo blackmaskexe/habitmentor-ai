@@ -15,11 +15,16 @@ import CrossButton from "@/utils/components/general/CrossButton";
 import NavigationPill from "@/utils/components/general/NavigationPill";
 import AllHabitsOverview from "@/utils/components/specific/AllHabitsOverview";
 import MonthlyHabitActivityMonitor from "@/utils/components/specific/MonthlyHabitActivityMonitor";
+import mmkvStorage from "@/utils/mmkvStorage";
 
 const OverviewScreen = () => {
   const router = useRouter();
   const theme = useTheme();
   const styles = createStyles(theme);
+
+  const activeHabits = JSON.parse(
+    mmkvStorage.getString("activeHabits") || "[]"
+  );
 
   return (
     <View style={styles.container}>
@@ -68,31 +73,7 @@ const OverviewScreen = () => {
 
         <View style={styles.allHabitsInfo}>
           <Text style={styles.monthlyProgressText}>All Habits Info</Text>
-          <AllHabitsOverview
-            allHabitsArray={[
-              {
-                habitName: "Morning Meditation",
-                habitDeadline: "8:00 AM",
-                habitFrequency: 1,
-                completedFrequency: 0,
-                points: 50,
-              },
-              {
-                habitName: "Drink Water",
-                habitDeadline: "Every 2 hours",
-                habitFrequency: 4,
-                completedFrequency: 1,
-                points: 100,
-              },
-              {
-                habitName: "Exercise",
-                habitDeadline: "6:00 PM",
-                habitFrequency: 1,
-                completedFrequency: 1,
-                points: 150,
-              },
-            ]}
-          />
+          <AllHabitsOverview allHabitsArray={activeHabits} />
         </View>
       </ScrollView>
       {/* <CTAButton

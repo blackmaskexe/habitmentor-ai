@@ -1,3 +1,4 @@
+import mmkvStorage from "@/utils/mmkvStorage";
 import { useTheme } from "@/utils/theme/ThemeContext";
 import { Ionicons } from "@expo/vector-icons";
 import { LegendList } from "@legendapp/list";
@@ -30,13 +31,11 @@ import { SafeAreaView } from "react-native-safe-area-context";
 // ];
 
 export default function ChatMessages({
-  userName = "Person",
-  messagesArray,
+  // userName = "Person",
   tooltips,
   initialMessage,
 }: {
   userName?: string;
-  messagesArray: any[];
   tooltips?: string[];
   initialMessage: string;
 }) {
@@ -45,25 +44,46 @@ export default function ChatMessages({
   const textInputRef = React.useRef<any>(null);
   const listRef = useRef<any>(null); // Ref for LegendList
 
-  useFocusEffect(
-    // Callback should be wrapped in `React.useCallback` to avoid running the effect too often.
-    useCallback(() => {
-      // Invoked whenever the route is focused.
-      listRef.current?.scrollToEnd({ animated: true });
-
-      // Return function is invoked whenever the route gets out of focus.
-      // return () => {
-      //   console.log("This route is now unfocused.");
-      // };
-    }, [])
-  );
+  const [messages, setMessages] = useState(() => {
+    const storedMessages = mmkvStorage.getString("chatMessages");
+    return storedMessages ? JSON.parse(storedMessages) : [];
+  });
 
   const [messageContent, setMessageContent] = useState(initialMessage);
+
+  useEffect(() => {
+    // to be able to load different initial messages when rendered using different parameters
+    setMessageContent(initialMessage);
+  }, [initialMessage]);
+
+  useFocusEffect(
+    useCallback(() => {
+      // Invoked whenever the route is focused.
+      // scrolls the chat to the absolute bottom (bottomest of the bottom)
+      listRef.current?.scrollToEnd({ animated: true });
+
+      return () => {
+        // cleanup function
+      };
+    }, [messages])
+  );
 
   const headerHeight = Platform.OS === "ios" ? useHeaderHeight() : 0;
 
   const handleSendMessage = function () {
-    console.log("meep");
+    const newMessages = [
+      ...messages,
+      {
+        sender: "user",
+        content: messageContent,
+        $createdAt: new Date(),
+      },
+    ];
+    setMessages(newMessages);
+    mmkvStorage.set("chatMessages", JSON.stringify(newMessages));
+    setMessageContent("");
+
+    listRef.current?.scrollToEnd({ animated: true });
   };
 
   return (
@@ -75,7 +95,7 @@ export default function ChatMessages({
           keyboardVerticalOffset={headerHeight}
         >
           <LegendList
-            data={messagesArray}
+            data={messages}
             ref={listRef}
             renderItem={({ item }: { item: any }) => {
               const isSender = item.sender == "user";
@@ -116,7 +136,7 @@ export default function ChatMessages({
             keyExtractor={(item) => item?.$createdAt ?? "unknown"}
             contentContainerStyle={{ padding: 10 }}
             recycleItems={true}
-            initialScrollIndex={messagesArray.length - 1}
+            initialScrollIndex={messages.length - 1}
             alignItemsAtEnd // Aligns to the end of the screen, so if there's only a few items there will be enough padding at the top to make them appear to be at the bottom.
             maintainScrollAtEnd // prop will check if you are already scrolled to the bottom when data changes, and if so it keeps you scrolled to the bottom.
             maintainScrollAtEndThreshold={0.5} // prop will check if you are already scrolled to the bottom when data changes, and if so it keeps you scrolled to the bottom.
@@ -137,6 +157,9 @@ export default function ChatMessages({
                 <TouchableOpacity
                   style={styles.tooltipItem}
                   key={`tooltip-${item}`}
+                  onPress={() => {
+                    setMessageContent(item);
+                  }}
                 >
                   <Text style={styles.tooltipText}>{item}</Text>
                 </TouchableOpacity>

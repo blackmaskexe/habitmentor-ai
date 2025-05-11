@@ -1,3 +1,4 @@
+import ChatDropDownMenu from "@/utils/components/specific/zeego/ChatDropDownMenu";
 import { useTheme } from "@/utils/theme/ThemeContext";
 import { Ionicons } from "@expo/vector-icons";
 import { Tabs, usePathname, useRouter } from "expo-router";
@@ -117,6 +118,9 @@ export default function TabLayout() {
               </Text>
             </TouchableOpacity>
           ),
+          headerRight: () => {
+            return <ChatDropDownMenu />;
+          },
         }}
       />
       <Tabs.Screen
