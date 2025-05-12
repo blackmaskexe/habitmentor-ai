@@ -29,8 +29,8 @@ function ExampleSheet(props: SheetProps<"example-sheet">) {
     <ActionSheet
       id={props.sheetId}
       containerStyle={styles.actionSheetContainer}
-      snapPoints={[200]}
-      initialSnapIndex={0}
+      // snapPoints={[200]}
+      // initialSnapIndex={0}
     >
       <NavigationPill />
 

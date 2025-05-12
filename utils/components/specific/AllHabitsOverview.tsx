@@ -3,6 +3,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SheetManager } from "react-native-actions-sheet";
 import HabitItemContextMenu from "./zeego/HabitItemContextMenu";
+import OverviewHabitdropdownMenu from "./zeego/OverviewHabitDropdownMenu";
 
 export default function AllHabitsOverview({
   allHabitsArray,
@@ -38,27 +39,7 @@ export default function AllHabitsOverview({
                 );
               })}
             </View>
-            {/* <TouchableOpacity
-              style={styles.habitOptions}
-              onPress={() => {
-                console.log("things i should of said", habitItem);
-                SheetManager.show("example-sheet", {
-                  payload: {
-                    sheetType: "habitItem",
-                    habitItem: {
-                      habit: habitItem,
-                      habitIndex: index,
-                    },
-                  },
-                });
-              }}
-            >
-              <Ionicons
-                name="ellipsis-vertical-outline"
-                size={20}
-                color={theme.colors.textSecondary}
-              />
-            </TouchableOpacity> */}
+            <OverviewHabitdropdownMenu habitItem={habitItem} />
           </View>
 
           // <View style={styles.habitCard}>

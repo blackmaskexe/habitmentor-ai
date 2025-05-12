@@ -25,9 +25,9 @@ export default function OverviewHabitdropdownMenu({
         </TouchableOpacity>
       </DropdownMenu.DropdownMenuTrigger>
       <DropdownMenu.DropdownMenuContent>
-        <DropdownMenu.DropdownMenuLabel />
+        <DropdownMenu.DropdownMenuLabel>OPTIONS</DropdownMenu.DropdownMenuLabel>
         <DropdownMenu.DropdownMenuItem
-          key="clear-chat"
+          key="ask-ai"
           onSelect={() => {
             router.replace("/(tabs)/home");
             router.navigate({
@@ -38,10 +38,44 @@ export default function OverviewHabitdropdownMenu({
             });
           }}
         >
+          <DropdownMenu.DropdownMenuItemIcon
+            ios={{
+              name: "sparkles",
+              pointSize: 24,
+            }}
+          />
           <DropdownMenu.DropdownMenuItemTitle>
             Improve Habit using AI
           </DropdownMenu.DropdownMenuItemTitle>
         </DropdownMenu.DropdownMenuItem>
+
+        <DropdownMenu.DropdownMenuItem
+          key="consistency-graph"
+          onSelect={() => {}}
+        >
+          <DropdownMenu.DropdownMenuItemIcon
+            ios={{
+              name: "chart.bar",
+              pointSize: 18,
+            }}
+          />
+          <DropdownMenu.DropdownMenuItemTitle>
+            View Consistency Graph
+          </DropdownMenu.DropdownMenuItemTitle>
+        </DropdownMenu.DropdownMenuItem>
+
+        <DropdownMenu.DropdownMenuItem key="skip-today" onSelect={() => {}}>
+          <DropdownMenu.DropdownMenuItemIcon
+            ios={{
+              name: "forward.end",
+              pointSize: 24,
+            }}
+          />
+          <DropdownMenu.DropdownMenuItemTitle>
+            Skip Habit for Today
+          </DropdownMenu.DropdownMenuItemTitle>
+        </DropdownMenu.DropdownMenuItem>
+
         {/* <DropdownMenu.Group>
           <DropdownMenu.DropdownMenuItem />
         </DropdownMenu.Group>

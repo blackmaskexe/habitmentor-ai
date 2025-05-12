@@ -2,8 +2,9 @@
 // bunch of options
 
 import { useTheme } from "@/utils/theme/ThemeContext";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, Text } from "react-native";
 import CardWithoutImage from "../../general/CardWithoutImage";
+import IosOptionList from "../../general/IosOptionList";
 
 // SheetManager.show("example-sheet", {
 //   payload: {
@@ -26,6 +27,7 @@ export default function HabitItemSheet({ habitObject }: { habitObject: any }) {
         title={habitObject.habitName}
         description={habitObject.habitDescription || ""}
       />
+      <IosOptionList habitItem={habitObject} />
     </View>
   );
 }
@@ -34,49 +36,8 @@ function createStyles(theme: any) {
   return StyleSheet.create({
     habitItemSheetContainer: {
       marginVertical: theme.spacing.s,
-      padding: theme.spacing.m,
+      // padding: theme.spacing.m,
       borderRadius: theme.radius.m,
-    },
-    habitCard: {
-      flexDirection: "row",
-      justifyContent: "center",
-      alignItems: "center",
-      //   backgroundColor: theme.colors.surface,
-      //   marginHorizontal: theme.spacing.m,
-      marginVertical: theme.spacing.s,
-      padding: theme.spacing.m,
-      borderRadius: theme.radius.m,
-    },
-    habitInfo: {
-      flex: 1,
-      color: theme.colors.textSecondary,
-    },
-    habitName: {
-      ...theme.text.body,
-      fontWeight: "600",
-      color: theme.colors.text,
-      marginBottom: theme.spacing.s / 2,
-    },
-    habitOptions: {
-      alignSelf: "center",
-    },
-    habitDeadline: {
-      ...theme.text.small,
-      color: theme.colors.textSecondary,
-    },
-    habitTextContainer: {
-      marginLeft: 16,
-    },
-    checkmarksRow: {
-      flexDirection: "row",
-      marginBottom: theme.spacing.s / 2,
-    },
-    checkmarkContainer: {
-      marginLeft: theme.spacing.s,
-    },
-    points: {
-      ...theme.text.small,
-      color: theme.colors.textTertiary,
     },
   });
 }

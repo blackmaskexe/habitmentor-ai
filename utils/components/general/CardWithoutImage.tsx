@@ -77,7 +77,7 @@ function createStyles(theme: any) {
       shadowRadius: 4,
       elevation: 8,
       margin: 10,
-      width: "100%", // Takes up 90% of parent width
+      width: "95%", // Takes up 95% of parent width
       alignSelf: "center",
     },
 
