@@ -1,6 +1,6 @@
 import { useTheme } from "@/utils/theme/ThemeContext";
 import { Ionicons } from "@expo/vector-icons";
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   ScrollView,
   StyleSheet,
@@ -11,6 +11,7 @@ import {
 import { SheetManager } from "react-native-actions-sheet";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import mmkvStorage from "@/utils/mmkvStorage";
+import { useFocusEffect } from "expo-router";
 
 // Components:
 
@@ -51,10 +52,45 @@ const DailyHabitsView: React.FC = () => {
   const theme = useTheme();
   const styles = createStyles(theme);
 
+  const [habitItems, setHabitItems] = useState<any>([]);
+
+  const loadHabits = function () {
+    let loadedHabits: any[] = [];
+    const storedHabitsString = mmkvStorage.getString("activeHabits");
+    if (storedHabitsString) {
+      loadedHabits = JSON.parse(storedHabitsString);
+      setHabitItems(loadedHabits);
+    } else {
+      throw new Error("Not able to fetch active habits from mmkvStorage");
+    }
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      loadHabits();
+      console.log("damn this page was loaded, I am surprised that it did");
+    }, [])
+  );
+
+  useEffect(() => {
+    loadHabits(); // try and load the habits on mount
+
+    const listener = mmkvStorage.addOnValueChangedListener((changedKey) => {
+      if (changedKey == "activeHabits") {
+        console.log("habits were changed somehow");
+        loadHabits();
+      }
+    });
+
+    return () => {
+      listener.remove();
+    };
+  }, []);
+
   // extracting habit items that are active from the mmkvStorage
-  const storedHabitsString =
-    mmkvStorage.getString("activeHabits") || JSON.stringify([]);
-  const habitItems: any[] = JSON.parse(storedHabitsString);
+  // const storedHabitsString =
+  //   mmkvStorage.getString("activeHabits") || JSON.stringify([]);
+  // const habitItems: any[] = JSON.parse(storedHabitsString);
 
   const [taskCompletion, setTaskCompletion] = useState<any>(
     Array(habitItems.length).fill(false)

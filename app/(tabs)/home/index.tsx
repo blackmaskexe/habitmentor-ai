@@ -4,12 +4,10 @@ import { ScrollView, StyleSheet, Text, View } from "react-native";
 import TypewriterText from "@/utils/components/general/TypewriterText";
 import DailyHabitsView from "@/utils/components/specific/DailyHabitsView";
 import WeekAtAGlance from "@/utils/components/specific/WeekGlance";
-import { usePathname } from "expo-router";
 
 export default function Index() {
   const theme = useTheme();
   const styles = createStyle(theme);
-  console.log(usePathname());
 
   return (
     <View style={styles.container}>
