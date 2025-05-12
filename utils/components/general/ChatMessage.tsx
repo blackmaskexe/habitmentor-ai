@@ -44,10 +44,33 @@ export default function ChatMessages({
   const textInputRef = React.useRef<any>(null);
   const listRef = useRef<any>(null); // Ref for LegendList
 
-  const [messages, setMessages] = useState(() => {
+  const [messages, setMessages] = useState<any>([]);
+
+  const loadMessages = function () {
+    let loadedMessages: any[] = [];
     const storedMessages = mmkvStorage.getString("chatMessages");
-    return storedMessages ? JSON.parse(storedMessages) : [];
-  });
+    if (storedMessages) {
+      loadedMessages = JSON.parse(storedMessages);
+      setMessages(loadedMessages);
+    } else {
+      throw new Error("Not able to fetch active habits from mmkvStorage");
+    }
+  };
+
+  useEffect(() => {
+    loadMessages(); // try and load the messages on mount
+
+    const listener = mmkvStorage.addOnValueChangedListener((changedKey) => {
+      if (changedKey == "chatMessages") {
+        // detect when there is a change in the chat messages, and refresh the chat
+        loadMessages();
+      }
+    });
+
+    return () => {
+      listener.remove(); // remove the listener on dismount
+    };
+  }, []);
 
   const [messageContent, setMessageContent] = useState(initialMessage);
 
