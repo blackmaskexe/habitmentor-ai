@@ -19,6 +19,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 // Components:
 import GenericForm from "../general/GenericForm";
 import CTAButton from "../general/CTAButton";
+import WeekdayFrequencyPicker from "./WeekdayFrequencyPicker";
 
 type ItemPickerProps = {
   numRows: number;
@@ -42,12 +43,6 @@ const fields = [
     key: "habitDescription",
     label: "Habit Description",
     placeholder: "optional",
-    required: false,
-  },
-  {
-    key: "habitFrequency",
-    label: "Habit Frequency",
-    placeholder: "every monday, wednesday, friday",
     required: false,
   },
 ];
@@ -213,6 +208,7 @@ export default function FixedItemPicker({
                     }}
                     values={values}
                   />
+                  <WeekdayFrequencyPicker />
                   <CTAButton
                     title={"Submit"}
                     disabled={values.habitName ? false : true}

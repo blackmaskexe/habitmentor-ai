@@ -28,7 +28,7 @@ export default function Index() {
         <View style={styles.aiSection}>
           <Text style={styles.aiSectionText}>Top AI Suggestion:</Text>
           <TypewriterText
-            textContent="So you choose to be concealed, now you're somebody now. You're a somebody in a nobody's town. I don't think you even know it."
+            textContent="When the AI feature will be implemented, this will suggest a new and differnt suggestion everyday based on your activity"
             typingSpeed={0.95}
           />
         </View>
