@@ -1,7 +1,8 @@
 import { useTheme } from "@/utils/theme/ThemeContext";
 import { useState } from "react";
 import { StyleSheet, TouchableOpacity, View, Text } from "react-native";
-const weekdays = ["M", "T", "W", "TR", "F", "SA", "SU"];
+// const weekdays = ["M", "T", "W", "TR", "F", "SA", "SU"];
+const weekdays = ["Mon", "Tue", "We", "Thu", "Fri", "Sat", "Sun"];
 import * as Haptics from "expo-haptics";
 
 export default function WeekdayFrequencyPicker() {
@@ -49,6 +50,8 @@ function createStyles(theme: any) {
       flexDirection: "row",
       justifyContent: "space-around", // Equal spacing
       alignItems: "center",
+      width: "100%",
+      alignSelf: "center",
     },
     weekdayItem: {
       borderRadius: 5, // Make it circular

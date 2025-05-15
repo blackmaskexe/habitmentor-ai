@@ -20,6 +20,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import GenericForm from "../general/GenericForm";
 import CTAButton from "../general/CTAButton";
 import WeekdayFrequencyPicker from "./WeekdayFrequencyPicker";
+import FrequencyPickerOptionList from "./FrequencyPickerOptionList";
+import TaskFrequencyDropdownMenu from "./zeego/TaskFrequencyDropdownMenu";
 
 type ItemPickerProps = {
   numRows: number;
@@ -36,13 +38,13 @@ const fields = [
   {
     key: "habitName",
     label: "Habit Name",
-    placeholder: "Read 10 minutes a day",
+    placeholder: "Example Habit",
     required: true,
   },
   {
     key: "habitDescription",
     label: "Habit Description",
-    placeholder: "optional",
+    placeholder: "Example Description",
     required: false,
   },
 ];
@@ -67,6 +69,9 @@ export default function FixedItemPicker({
   const styles = createStyles(theme, BOX_SIZE);
   const [values, setValues] = useState<any>({}); // values for the form inside the modal
   const [activeHabitItemIndex, setActiveHabitItemIndex] = useState(0);
+  const [habitsFrequency, setHabitFrequency] = useState(
+    Array(numRows).fill(false)
+  );
 
   const [habitItems, setHabitItems] = useState<any>([]);
   const [modalVisible, setModalVisible] = useState(false);
@@ -208,7 +213,15 @@ export default function FixedItemPicker({
                     }}
                     values={values}
                   />
-                  <WeekdayFrequencyPicker />
+                  <TaskFrequencyDropdownMenu
+                    index={activeHabitItemIndex}
+                    onSetHabitFrequency={setHabitFrequency}
+                  />
+                  <Text style={styles.formLabel}>
+                    {habitsFrequency[activeHabitItemIndex]}
+                  </Text>
+                  {/* <WeekdayFrequencyPicker /> */}
+                  <View style={styles.space} />
                   <CTAButton
                     title={"Submit"}
                     disabled={values.habitName ? false : true}
@@ -291,6 +304,14 @@ function createStyles(theme: any, boxSize: number) {
       justifyContent: "space-between",
       alignItems: "center",
       marginBottom: theme.spacing.l,
+    },
+    formLabel: {
+      ...theme.text.body,
+      color: theme.colors.text,
+      marginBottom: theme.spacing.s,
+    },
+    space: {
+      marginVertical: theme.spacing.m,
     },
   });
 }

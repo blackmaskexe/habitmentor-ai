@@ -10,6 +10,7 @@ export const lightTheme = {
     textSecondary: "#333333",
     textTertiary: "#c6c6c0",
     shadow: "rgba(0,0,0,0.2)",
+    placeholder: "rgba(51, 51, 51, 0.5)",
 
     // Functional colors
     border: "#E8F7EE",
@@ -85,6 +86,7 @@ export const darkTheme = {
     textSecondary: "#798086",
     textTertiary: "#c6c6c0",
     shadow: "rgba(0,0,0,0.5)",
+    placeholder: "rgba(120, 120, 120)",
 
     // Functional colors
     border: "#3D3D3D",

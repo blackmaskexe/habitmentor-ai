@@ -114,7 +114,7 @@ export default function GenericForm({
           <TextInput
             style={[styles.input, errors[field.key] && styles.inputError]}
             placeholder={field.placeholder}
-            placeholderTextColor={theme.colors.textTertiary}
+            placeholderTextColor={theme.colors.placeholder}
             value={values[field.key]}
             onChangeText={(text) => onValueChange(field.key, text)}
             secureTextEntry={field.secureTextEntry}
@@ -133,14 +133,18 @@ function createStyles(theme: any) {
   return StyleSheet.create({
     container: {
       width: "100%",
-      padding: theme.spacing.m,
+      // padding: theme.spacing.m,
     },
     fieldContainer: {
       marginBottom: theme.spacing.m,
     },
     label: {
       ...theme.text.body,
-      color: theme.colors.text,
+      fontSize: 13,
+      fontWeight: "600",
+      color: theme.colors.textSecondary,
+      letterSpacing: 0.5,
+      textTransform: "uppercase",
       marginBottom: theme.spacing.s,
     },
     required: {

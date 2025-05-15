@@ -4,7 +4,7 @@
 import { useTheme } from "@/utils/theme/ThemeContext";
 import { StyleSheet, View, Text } from "react-native";
 import CardWithoutImage from "../../general/CardWithoutImage";
-import IosOptionList from "../../general/IosOptionList";
+import IosOptionList from "./ActionSheetIosOptionList";
 
 // SheetManager.show("example-sheet", {
 //   payload: {
