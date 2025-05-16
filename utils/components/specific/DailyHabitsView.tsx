@@ -155,7 +155,7 @@ const DailyHabitsView: React.FC = () => {
 
   return (
     <ScrollView style={styles.container}>
-      {habitItems.map((habit, index) => (
+      {habitItems.map((habit: any, index: any) => (
         <View key={index}>
           <View style={styles.habitCard}>
             {/* <View style={styles.habitInfo}>

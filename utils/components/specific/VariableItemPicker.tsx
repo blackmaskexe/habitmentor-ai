@@ -19,6 +19,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import GenericForm from "../general/GenericForm";
 import CTAButton from "../general/CTAButton";
 import mmkvStorage from "@/utils/mmkvStorage";
+import TaskFrequencyDropdownMenu from "./zeego/TaskFrequencyDropdownMenu";
+import WeekdayFrequencyPicker from "./WeekdayFrequencyPicker";
 
 type ItemPickerProps = {
   onItemPress?: (index: number) => void;
@@ -43,12 +45,6 @@ const fields = [
     placeholder: "optional",
     required: false,
   },
-  {
-    key: "habitFrequency",
-    label: "Habit Frequency",
-    placeholder: "every monday, wednesday, friday",
-    required: false,
-  },
 ];
 
 const { width } = Dimensions.get("window");
@@ -62,8 +58,17 @@ export default function VariableItemPicker({
   const styles = createStyles(theme, BOX_SIZE);
   const [values, setValues] = useState<any>({}); // values for the form inside the modal
 
+  const [activeHabitItemIndex, setActiveHabitItemIndex] = useState(0);
+
+  const [habitsFrequency, setHabitFrequency] = useState(
+    // this array contains array of days (In the format of Mon, Tue, Wed) that the user wants to do these habits on
+    Array(1).fill(null)
+  );
+
   const [modalVisible, setModalVisible] = useState(false);
   const [moreHabitsArray, setMoreHabitsArray] = useState(Array(1).fill(null));
+
+  console.log("baburao ka style", moreHabitsArray);
 
   const handleNewHabitSubmission = function () {
     console.log(moreHabitsArray, "WOOOO YEAH WOOHOHHOOH YEAH WOHOHOH YWAH");
@@ -91,7 +96,8 @@ export default function VariableItemPicker({
     }, 100);
 
     // as well as store everything that is in the morHabitsArray in the mmkv storage
-    mmkvStorage.set("moreHabits", JSON.stringify(moreHabitsArray));
+    mmkvStorage.set("moreHabits", JSON.stringify(moreHabitsArray.slice(0, -1))); // saving all the habit items except the last one
+    // because it's always gonna be null
   }, [moreHabitsArray]);
 
   const renderEmptyBoxes = () => {
@@ -101,6 +107,7 @@ export default function VariableItemPicker({
         style={styles.row}
         onPress={() => {
           setModalVisible(true);
+          setActiveHabitItemIndex(index);
         }}
       >
         <View style={styles.box}>
@@ -183,6 +190,22 @@ export default function VariableItemPicker({
                     }}
                     values={values}
                   />
+                  <TaskFrequencyDropdownMenu
+                    index={activeHabitItemIndex}
+                    onSetHabitFrequency={setHabitFrequency}
+                  />
+
+                  <View style={styles.spaceSmall} />
+                  <WeekdayFrequencyPicker
+                    currentFrequency={
+                      habitsFrequency[activeHabitItemIndex] || []
+                    }
+                    changeValues={setValues}
+                  />
+
+                  <Text style={styles.formLabel}></Text>
+                  {/* <WeekdayFrequencyPicker /> */}
+                  <View style={styles.space} />
                   <CTAButton
                     title={"Submit"}
                     onPress={() => {
@@ -264,6 +287,17 @@ function createStyles(theme: any, boxSize: number) {
       justifyContent: "space-between",
       alignItems: "center",
       marginBottom: theme.spacing.l,
+    },
+    space: {
+      marginVertical: theme.spacing.m,
+    },
+    spaceSmall: {
+      marginVertical: theme.spacing.s,
+    },
+    formLabel: {
+      ...theme.text.body,
+      color: theme.colors.text,
+      marginBottom: theme.spacing.s,
     },
   });
 }

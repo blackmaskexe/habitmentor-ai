@@ -80,13 +80,11 @@ export default function FixedItemPicker({
   const handleNewHabitSubmission = function () {
     setModalVisible(false);
     const habitData = values;
-    console.log("dig dig dig dig jigga jigga jig jig", habitData, values);
     habitData.iconName = getHabitIcon(habitData.habitName); // generate icons from a predetermined list
     setValues({}); // clearing form data upon submission
 
     // if (habitItems.length <= 3) {
     setHabitItems((oldHabitItems: any) => {
-      console.log(oldHabitItems, "so just leave me alona");
       const newHabitItems = [...oldHabitItems];
       newHabitItems[activeHabitItemIndex] = habitData;
       // newHabitItems[activeHabitItemIndex].iconName = response.data.success
@@ -95,8 +93,6 @@ export default function FixedItemPicker({
 
       return newHabitItems;
     });
-
-    console.log(habitItems, "I am habit items");
 
     // }
   };
@@ -209,6 +205,7 @@ export default function FixedItemPicker({
                     currentFrequency={
                       habitsFrequency[activeHabitItemIndex] || []
                     }
+                    changeValues={setValues}
                   />
 
                   <Text style={styles.formLabel}></Text>

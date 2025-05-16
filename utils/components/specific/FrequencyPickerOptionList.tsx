@@ -59,7 +59,7 @@ export default function FrequencyPickerOptionList() {
         {renderOptionItem(
           "single",
           "calendar-outline",
-          "Set Habit Frequency",
+          "Click to Set Habit Frequency",
           () => {}
         )}
 

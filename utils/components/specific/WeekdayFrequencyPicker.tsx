@@ -7,20 +7,35 @@ import * as Haptics from "expo-haptics";
 
 export default function WeekdayFrequencyPicker({
   currentFrequency,
+  changeValues,
 }: {
   currentFrequency: string[];
+  changeValues: any;
 }) {
   useEffect(() => {
     // When currentFrequency changes, then change how the
     // boxes for weekdays are displayed
 
     onHabitFrequencyChange();
-    console.log(currentFrequency, "hahhahahhahha");
   }, [currentFrequency]);
+
   const theme = useTheme();
   const styles = createStyles(theme);
 
   const [activeDays, setActiveDays] = useState(Array(7).fill(true));
+
+  useEffect(() => {
+    // write to the GenericForm's value the frequency data about the habit
+    updateValueState(activeDays);
+  }, [activeDays]);
+
+  const updateValueState = function (newActiveDays: any) {
+    changeValues((oldValue: any) => {
+      const newValue = oldValue;
+      newValue.frequency = activeDays;
+      return newValue;
+    });
+  };
 
   const onHabitFrequencyChange = function () {
     console.log(currentFrequency);
@@ -31,10 +46,9 @@ export default function WeekdayFrequencyPicker({
         newActiveDays[index] = true;
       }
     });
+    setActiveDays(newActiveDays);
 
     console.log("these are the new active days after update", newActiveDays);
-
-    setActiveDays(newActiveDays);
   };
 
   const handleDayPress = function (index: number) {
