@@ -70,7 +70,8 @@ export default function FixedItemPicker({
   const [values, setValues] = useState<any>({}); // values for the form inside the modal
   const [activeHabitItemIndex, setActiveHabitItemIndex] = useState(0);
   const [habitsFrequency, setHabitFrequency] = useState(
-    Array(numRows).fill(false)
+    // this array contains array of days (In the format of Mon, Tue, Wed) that the user wants to do these habits on
+    Array(numRows).fill(null)
   );
 
   const [habitItems, setHabitItems] = useState<any>([]);
@@ -82,20 +83,6 @@ export default function FixedItemPicker({
     console.log("dig dig dig dig jigga jigga jig jig", habitData, values);
     habitData.iconName = getHabitIcon(habitData.habitName); // generate icons from a predetermined list
     setValues({}); // clearing form data upon submission
-
-    // let response = null;
-    // try {
-    //   response = await api.post("/onboarding/get-ionicon", {
-    //     habit: habitData.habit,
-    //   }); // get the icon name from server before proceeding
-    // } catch (err) {
-    //   console.log(err);
-    //   response = {
-    //     data: {
-    //       success: false,
-    //     },
-    //   };
-    // }
 
     // if (habitItems.length <= 3) {
     setHabitItems((oldHabitItems: any) => {
@@ -121,7 +108,6 @@ export default function FixedItemPicker({
       // as well as save eveything to the mmkv storage
       mmkvStorage.set("coreHabits", JSON.stringify(habitItems));
       mmkvStorage.set("activeHabits", JSON.stringify(habitItems));
-      console.log("BUMMMMMMM", mmkvStorage.getString("coreHabits"));
     }
   }, [habitItems]);
 
@@ -217,9 +203,15 @@ export default function FixedItemPicker({
                     index={activeHabitItemIndex}
                     onSetHabitFrequency={setHabitFrequency}
                   />
-                  <Text style={styles.formLabel}>
-                    {habitsFrequency[activeHabitItemIndex]}
-                  </Text>
+
+                  <View style={styles.spaceSmall} />
+                  <WeekdayFrequencyPicker
+                    currentFrequency={
+                      habitsFrequency[activeHabitItemIndex] || []
+                    }
+                  />
+
+                  <Text style={styles.formLabel}></Text>
                   {/* <WeekdayFrequencyPicker /> */}
                   <View style={styles.space} />
                   <CTAButton
@@ -312,6 +304,18 @@ function createStyles(theme: any, boxSize: number) {
     },
     space: {
       marginVertical: theme.spacing.m,
+    },
+    spaceSmall: {
+      marginVertical: theme.spacing.s,
+    },
+    headerLabel: {
+      ...theme.text.body,
+      fontSize: 13,
+      fontWeight: "600",
+      color: theme.colors.textSecondary,
+      letterSpacing: 0.5,
+      textTransform: "uppercase",
+      marginBottom: theme.spacing.m,
     },
   });
 }

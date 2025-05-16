@@ -1,15 +1,41 @@
 import { useTheme } from "@/utils/theme/ThemeContext";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { StyleSheet, TouchableOpacity, View, Text } from "react-native";
-// const weekdays = ["M", "T", "W", "TR", "F", "SA", "SU"];
+
 const weekdays = ["Mon", "Tue", "We", "Thu", "Fri", "Sat", "Sun"];
 import * as Haptics from "expo-haptics";
 
-export default function WeekdayFrequencyPicker() {
+export default function WeekdayFrequencyPicker({
+  currentFrequency,
+}: {
+  currentFrequency: string[];
+}) {
+  useEffect(() => {
+    // When currentFrequency changes, then change how the
+    // boxes for weekdays are displayed
+
+    onHabitFrequencyChange();
+    console.log(currentFrequency, "hahhahahhahha");
+  }, [currentFrequency]);
   const theme = useTheme();
   const styles = createStyles(theme);
 
-  const [activeDays, setActiveDays] = useState(Array(7).fill(false));
+  const [activeDays, setActiveDays] = useState(Array(7).fill(true));
+
+  const onHabitFrequencyChange = function () {
+    console.log(currentFrequency);
+
+    const newActiveDays = Array(7).fill(false);
+    weekdays.forEach((item, index) => {
+      if (currentFrequency.includes(item)) {
+        newActiveDays[index] = true;
+      }
+    });
+
+    console.log("these are the new active days after update", newActiveDays);
+
+    setActiveDays(newActiveDays);
+  };
 
   const handleDayPress = function (index: number) {
     setActiveDays((oldActiveDays) => {
@@ -26,6 +52,7 @@ export default function WeekdayFrequencyPicker() {
       {weekdays.map((daySymbol, index) => {
         return (
           <TouchableOpacity
+            key={daySymbol}
             style={[
               activeDays[index]
                 ? styles.weekdayItemActivated
@@ -52,11 +79,12 @@ function createStyles(theme: any) {
       alignItems: "center",
       width: "100%",
       alignSelf: "center",
+      marginBottom: theme.spacing.m,
     },
     weekdayItem: {
-      borderRadius: 5, // Make it circular
-      width: 30, // Fixed width
-      height: 30, // Fixed height
+      borderRadius: 10, // Make it circular
+      width: 40, // Fixed width
+      height: 40, // Fixed height
       justifyContent: "center", // Center content vertically
       alignItems: "center", // Center content horizontally
     },

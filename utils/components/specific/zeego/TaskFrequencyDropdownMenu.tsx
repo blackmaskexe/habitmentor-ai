@@ -6,6 +6,8 @@ import mmkvStorage from "@/utils/mmkvStorage";
 import { useRouter } from "expo-router";
 import FrequencyPickerOptionList from "../FrequencyPickerOptionList";
 
+const weekdays = ["Mon", "Tue", "We", "Thu", "Fri", "Sat", "Sun"];
+
 export default function TaskFrequencyDropdownMenu({
   index,
   onSetHabitFrequency,
@@ -13,7 +15,8 @@ export default function TaskFrequencyDropdownMenu({
   index: number;
   onSetHabitFrequency: any;
 }) {
-  const setHabitFrequency = function (frequency: string) {
+  const setHabitFrequency = function (frequency: string[]) {
+    // set the habit frequency array to have an array of days that the habit is to be done on
     onSetHabitFrequency((oldHabitFrequencies: any) => {
       const newHabitFrequencies = [...oldHabitFrequencies];
       newHabitFrequencies[index] = frequency;
@@ -32,7 +35,7 @@ export default function TaskFrequencyDropdownMenu({
         <DropdownMenu.DropdownMenuItem
           key="everyday"
           onSelect={() => {
-            setHabitFrequency("everyday");
+            setHabitFrequency([...weekdays]);
           }}
         >
           <DropdownMenu.DropdownMenuItemTitle>
@@ -42,48 +45,37 @@ export default function TaskFrequencyDropdownMenu({
         <DropdownMenu.DropdownMenuItem
           key="weekday"
           onSelect={() => {
-            setHabitFrequency("weekday");
+            setHabitFrequency([...weekdays.slice(0, 5)]);
           }}
         >
           <DropdownMenu.DropdownMenuItemTitle>
-            All Weekdays
+            Weekdays Only
           </DropdownMenu.DropdownMenuItemTitle>
         </DropdownMenu.DropdownMenuItem>
         <DropdownMenu.DropdownMenuItem
           key="weekend"
           onSelect={() => {
-            setHabitFrequency("weekend");
+            setHabitFrequency([...weekdays.slice(5, 7)]);
           }}
         >
           <DropdownMenu.DropdownMenuItemTitle>
-            All Weekend
+            Weekends Only
           </DropdownMenu.DropdownMenuItemTitle>
         </DropdownMenu.DropdownMenuItem>
-        <DropdownMenu.DropdownMenuItem key="custom">
+        <DropdownMenu.DropdownMenuItem
+          key="custom"
+          onSelect={() => {
+            setHabitFrequency([]);
+          }}
+        >
           <DropdownMenu.DropdownMenuItemTitle>
-            Custom (Coming Soon)
+            Custom
           </DropdownMenu.DropdownMenuItemTitle>
         </DropdownMenu.DropdownMenuItem>
         {/* <DropdownMenu.Group>
           <DropdownMenu.DropdownMenuItem />
         </DropdownMenu.Group> */}
-        <DropdownMenu.DropdownMenuCheckboxItem
-          key="checkmoneybenny"
-          value="on"
-          onSelect={(event) => {
-            event.preventDefault();
-          }}
-          onValueChange={(next, previous) => {
-            console.log("check money benny");
-          }}
-        >
-          <DropdownMenu.DropdownMenuItemTitle>
-            Check money benny
-          </DropdownMenu.DropdownMenuItemTitle>
-          <DropdownMenu.DropdownMenuItemIndicator>
-            Bom bom bom tigrelini watermelini
-          </DropdownMenu.DropdownMenuItemIndicator>
-        </DropdownMenu.DropdownMenuCheckboxItem>
+
         {/* <DropdownMenu.Sub>
           <DropdownMenu.SubTrigger />
           <DropdownMenu.SubContent />
