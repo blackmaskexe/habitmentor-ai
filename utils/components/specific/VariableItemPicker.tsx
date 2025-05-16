@@ -95,8 +95,39 @@ export default function VariableItemPicker({
       onModalSubmit();
     }, 100);
 
+    // modifying the moreHabitsArray to have a points as well based on the number of days the habit is being done
+    const newMoreHabitsArray = [...moreHabitsArray]; // not using setMoreHabitsArray to avoid re-render loop because of moreHabitsArray dependency on this useEffect
+    newMoreHabitsArray.forEach((item, index) => {
+      if (item && item.frequency) {
+        // if the frequency property exists within that habit item:
+        // seeing how many days the user is doing that particular habit:
+        const daysHabitIsActive = item.frequency.reduce(
+          (count: number, value: boolean) => {
+            return value ? count + 1 : count;
+          },
+          0
+        );
+
+        // and then add points as a property to the habit items of the moreHabitsArray:
+        // points are calculated in the following manner:
+        // daily habits give 20 points each (daysHabitIsActive == 7)
+        // 5-6 habit days give 15 points
+        // 1-4 habit days give 10 points
+
+        const habitPoints = [0, 10, 10, 10, 10, 15, 15, 20];
+        // adding a  0 in the start to make this array 1 indexable, and also work with 0 frequency days
+        // the 0 frequency days is implemented to prevent any crashes
+
+        item.points = habitPoints[daysHabitIsActive];
+      }
+    });
+
     // as well as store everything that is in the morHabitsArray in the mmkv storage
-    mmkvStorage.set("moreHabits", JSON.stringify(moreHabitsArray.slice(0, -1))); // saving all the habit items except the last one
+
+    mmkvStorage.set(
+      "moreHabits",
+      JSON.stringify(newMoreHabitsArray.slice(0, -1))
+    ); // saving all the habit items except the last one
     // because it's always gonna be null
   }, [moreHabitsArray]);
 

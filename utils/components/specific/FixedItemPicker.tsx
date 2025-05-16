@@ -98,12 +98,42 @@ export default function FixedItemPicker({
   };
 
   useEffect(() => {
+    // save habits to mmkvStorage when user filled all 3 habits + map points to each habit
     if (habitItems.length == numRows) {
       // when all the habit items are filled, trigger the callback onAllHabitSelected passed from prop
       onAllHabitSelected();
-      // as well as save eveything to the mmkv storage
-      mmkvStorage.set("coreHabits", JSON.stringify(habitItems));
-      mmkvStorage.set("activeHabits", JSON.stringify(habitItems));
+
+      // modifying the habitItems array to have a points as well based on the number of days the habit is being done
+      const newHabitItems = [...habitItems];
+      newHabitItems.forEach((item, index) => {
+        if (item && item.frequency) {
+          // if the frequency property exists within that habit item:
+          // seeing how many days the user is doing that particular habit:
+          const daysHabitIsActive = item.frequency.reduce(
+            (count: number, value: boolean) => {
+              return value ? count + 1 : count;
+            },
+            0
+          );
+
+          // and then add points as a property to the habit items of the moreHabitsArray:
+          // points are calculated in the following manner:
+          // daily habits give 20 points each (daysHabitIsActive == 7)
+          // 5-6 habit days give 15 points
+          // 1-4 habit days give 10 points
+
+          const habitPoints = [0, 10, 10, 10, 10, 15, 15, 20];
+          // adding a  0 in the start to make this array 1 indexable, and also work with 0 frequency days
+          // the 0 frequency days is implemented to prevent any crashes
+
+          item.points = habitPoints[daysHabitIsActive];
+        }
+      });
+
+      // as well as save an updated version of the habitItems (with points) to the mmkv storage
+      mmkvStorage.set("coreHabits", JSON.stringify(newHabitItems));
+      mmkvStorage.set("activeHabits", JSON.stringify(newHabitItems));
+      console.log("guess guess guess guess", newHabitItems);
     }
   }, [habitItems]);
 
