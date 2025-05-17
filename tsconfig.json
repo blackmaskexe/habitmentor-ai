@@ -11,6 +11,7 @@
     "**/*.tsx",
     ".expo/types/**/*.ts",
     "expo-env.d.ts",
-    "utils/database/habitCompletionHistory.js"
+    "utils/database/habitCompletionHistory.js",
+    "utils/database/habitHistory.js"
   ]
 }

@@ -168,6 +168,7 @@ export default function ChatMessages({
             // getEstimatedItemSize={(info) => { // use if items are different known sizes
             //   console.log("info", info);
             // }}
+            extraData={theme} // smooth switching bewteen dark mode and light mode
           />
           <ScrollView
             style={styles.tooltipContainer}
