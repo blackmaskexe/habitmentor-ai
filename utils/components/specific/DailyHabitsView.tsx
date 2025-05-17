@@ -12,7 +12,10 @@ import { SheetManager } from "react-native-actions-sheet";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import mmkvStorage from "@/utils/mmkvStorage";
 import { useFocusEffect } from "expo-router";
-
+import {
+  onMarkAsComplete,
+  onMarkAsIncomplete,
+} from "@/utils/database/habitHistory";
 // Components:
 
 interface HabitItem {
@@ -52,9 +55,17 @@ const DailyHabitsView: React.FC = () => {
   const theme = useTheme();
   const styles = createStyles(theme);
 
+  const date = new Date();
+  const weekdayNumber = date.getDay();
+  const formattedDate = `${date.getFullYear()}-${
+    date.getMonth() + 1
+  }-${date.getDate()}`;
+
   const [habitItems, setHabitItems] = useState<any>([]);
+  console.log("soano akhen khra", habitItems);
 
   const loadHabits = function () {
+    // fetch habits from mmkvStorage
     let loadedHabits: any[] = [];
     const storedHabitsString = mmkvStorage.getString("activeHabits");
     if (storedHabitsString) {
@@ -131,8 +142,17 @@ const DailyHabitsView: React.FC = () => {
           fontFamily: "JosefinSans-Regular",
           color: theme.colors.text,
         }}
-        onPress={() => handleToggleTaskCompletion(index)}
-        onLongPress={() => {}}
+        onPress={(isChecked: boolean) => {
+          handleToggleTaskCompletion(index);
+          if (isChecked) {
+            // if the task is not completed (just clicked completed), then mark as complete
+            onMarkAsComplete(habit.id, formattedDate);
+          } else {
+            // if the task is already checked, then mark as incomplete
+            onMarkAsIncomplete(habit.id, formattedDate);
+          }
+        }}
+        // onLongPress={() => {}}
         textComponent={
           <View style={styles.habitTextContainer}>
             <Text
@@ -146,7 +166,7 @@ const DailyHabitsView: React.FC = () => {
             >
               {habit.habitName}
             </Text>
-            <Text style={styles.habitInfo}>{habit.habitDeadline}</Text>
+            <Text style={styles.habitInfo}>{`+${habit.points} Points`}</Text>
           </View>
         }
       />
@@ -155,39 +175,43 @@ const DailyHabitsView: React.FC = () => {
 
   return (
     <ScrollView style={styles.container}>
-      {habitItems.map((habit: any, index: any) => (
-        <View key={index}>
-          <View style={styles.habitCard}>
-            {/* <View style={styles.habitInfo}>
-              <Text style={styles.habitName}>{habit.habitName}</Text>
-              <Text style={styles.habitDeadline}>{habit.habitDeadline}</Text>
-            </View> */}
-            {renderHabitItem(habit, index)}
+      {habitItems.map((habit: any, index: any) => {
+        if (habit && habit.frequency[weekdayNumber]) {
+          // if the current day matches with the day
+          // the habit is supposed to happen on
+          // therefore, renders habit based on if they are to be done today:
 
-            <TouchableOpacity
-              style={styles.habitOptions}
-              onPress={() => {
-                console.log("I think i've seen it twice all year", habit);
-                SheetManager.show("example-sheet", {
-                  payload: {
-                    sheetType: "habitItem",
-                    habitItem: {
-                      habit: habit,
-                      habitIndex: index,
-                    },
-                  },
-                });
-              }}
-            >
-              <Ionicons
-                name="ellipsis-vertical-outline"
-                size={20}
-                color={theme.colors.textSecondary}
-              />
-            </TouchableOpacity>
-          </View>
-        </View>
-      ))}
+          return (
+            <View key={index}>
+              <View style={styles.habitCard}>
+                {renderHabitItem(habit, index)}
+
+                <TouchableOpacity
+                  style={styles.habitOptions}
+                  onPress={() => {
+                    console.log("I think i've seen it twice all year", habit);
+                    SheetManager.show("example-sheet", {
+                      payload: {
+                        sheetType: "habitItem",
+                        habitItem: {
+                          habit: habit,
+                          habitIndex: index,
+                        },
+                      },
+                    });
+                  }}
+                >
+                  <Ionicons
+                    name="ellipsis-vertical-outline"
+                    size={20}
+                    color={theme.colors.textSecondary}
+                  />
+                </TouchableOpacity>
+              </View>
+            </View>
+          );
+        }
+      })}
     </ScrollView>
   );
 };

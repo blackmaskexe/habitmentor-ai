@@ -13,8 +13,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useTheme } from "@/utils/theme/ThemeContext";
 import { useEffect, useState } from "react";
 import { getHabitIcon } from "@/utils/misc/habitIcons";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-
+import { generateHabitId } from "@/utils/randomId";
 // Components:
 import GenericForm from "../general/GenericForm";
 import CTAButton from "../general/CTAButton";
@@ -95,7 +94,7 @@ export default function VariableItemPicker({
       onModalSubmit();
     }, 100);
 
-    // modifying the moreHabitsArray to have a points as well based on the number of days the habit is being done
+    // modifying the moreHabitsArray to have Unique ID + points as well based on the number of days the habit is being done
     const newMoreHabitsArray = [...moreHabitsArray]; // not using setMoreHabitsArray to avoid re-render loop because of moreHabitsArray dependency on this useEffect
     newMoreHabitsArray.forEach((item, index) => {
       if (item && item.frequency) {
@@ -119,6 +118,7 @@ export default function VariableItemPicker({
         // the 0 frequency days is implemented to prevent any crashes
 
         item.points = habitPoints[daysHabitIsActive];
+        item.id = generateHabitId();
       }
     });
 
@@ -229,7 +229,15 @@ export default function VariableItemPicker({
                   <View style={styles.spaceSmall} />
                   <WeekdayFrequencyPicker
                     currentFrequency={
-                      habitsFrequency[activeHabitItemIndex] || []
+                      habitsFrequency[activeHabitItemIndex] || [
+                        "Sun",
+                        "Mon",
+                        "Tue",
+                        "We",
+                        "Thu",
+                        "Fri",
+                        "Sat",
+                      ]
                     }
                     changeValues={setValues}
                   />

@@ -6,7 +6,7 @@ import mmkvStorage from "@/utils/mmkvStorage";
 import { useRouter } from "expo-router";
 import FrequencyPickerOptionList from "../FrequencyPickerOptionList";
 
-const weekdays = ["Mon", "Tue", "We", "Thu", "Fri", "Sat", "Sun"];
+const weekdays = ["Sun", "Mon", "Tue", "We", "Thu", "Fri", "Sat"];
 
 export default function TaskFrequencyDropdownMenu({
   index,
@@ -45,7 +45,7 @@ export default function TaskFrequencyDropdownMenu({
         <DropdownMenu.DropdownMenuItem
           key="weekday"
           onSelect={() => {
-            setHabitFrequency([...weekdays.slice(0, 5)]);
+            setHabitFrequency([...weekdays.slice(1, 6)]);
           }}
         >
           <DropdownMenu.DropdownMenuItemTitle>
@@ -55,7 +55,7 @@ export default function TaskFrequencyDropdownMenu({
         <DropdownMenu.DropdownMenuItem
           key="weekend"
           onSelect={() => {
-            setHabitFrequency([...weekdays.slice(5, 7)]);
+            setHabitFrequency([weekdays[0], weekdays[6]]);
           }}
         >
           <DropdownMenu.DropdownMenuItemTitle>

@@ -14,8 +14,7 @@ import { useTheme } from "@/utils/theme/ThemeContext";
 import { useEffect, useState } from "react";
 import mmkvStorage from "@/utils/mmkvStorage";
 import { getHabitIcon } from "@/utils/misc/habitIcons";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-
+import { generateHabitId } from "@/utils/randomId";
 // Components:
 import GenericForm from "../general/GenericForm";
 import CTAButton from "../general/CTAButton";
@@ -98,12 +97,12 @@ export default function FixedItemPicker({
   };
 
   useEffect(() => {
-    // save habits to mmkvStorage when user filled all 3 habits + map points to each habit
+    // Implementation for Unique ID, Points Awarding when all 3 habits are filled
     if (habitItems.length == numRows) {
       // when all the habit items are filled, trigger the callback onAllHabitSelected passed from prop
       onAllHabitSelected();
 
-      // modifying the habitItems array to have a points as well based on the number of days the habit is being done
+      // modifying the habitItems array to have UNIQUE ID + points as well based on the number of days the habit is being done
       const newHabitItems = [...habitItems];
       newHabitItems.forEach((item, index) => {
         if (item && item.frequency) {
@@ -127,6 +126,9 @@ export default function FixedItemPicker({
           // the 0 frequency days is implemented to prevent any crashes
 
           item.points = habitPoints[daysHabitIsActive];
+
+          // as well as assign the unique ID:
+          item.id = generateHabitId();
         }
       });
 
@@ -233,14 +235,21 @@ export default function FixedItemPicker({
                   <View style={styles.spaceSmall} />
                   <WeekdayFrequencyPicker
                     currentFrequency={
-                      habitsFrequency[activeHabitItemIndex] || []
+                      habitsFrequency[activeHabitItemIndex] || [
+                        "Sun",
+                        "Mon",
+                        "Tue",
+                        "We",
+                        "Thu",
+                        "Fri",
+                        "Sat",
+                      ]
                     }
                     changeValues={setValues}
                   />
 
                   <Text style={styles.formLabel}></Text>
                   {/* <WeekdayFrequencyPicker /> */}
-                  <View style={styles.space} />
                   <CTAButton
                     title={"Submit"}
                     disabled={values.habitName ? false : true}

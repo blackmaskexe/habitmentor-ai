@@ -53,7 +53,7 @@ export default function ChatMessages({
       loadedMessages = JSON.parse(storedMessages);
       setMessages(loadedMessages);
     } else {
-      throw new Error("Not able to fetch active habits from mmkvStorage");
+      setMessages([]); // just have an empty array when the chatMessages mmkvKey is empty
     }
   };
 
