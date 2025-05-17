@@ -1,130 +1,118 @@
-import * as SQLite from "expo-sqlite";
+import { formattedDate } from "../date";
+import mmkvStorage from "../mmkvStorage"; // Import the existing MMKV instance
 
-// Module-level variable to hold the database instance.
-// It's initialized to null and will be populated once the database is ready.
-let dbInstance = null;
-
-// A promise that resolves with the database instance when initialization is complete.
-// This is the core mechanism to manage asynchronous initialization without top-level await.
-let initializeDbPromise = null;
-
-// --- Database Initialization Logic ---
-
-/**
- * Asynchronously sets up the database.
- * This function opens the database connection and creates necessary tables.
- * It's designed to be called only once.
- * @returns {Promise<SQLite.SQLiteDatabase>} A promise that resolves with the database instance.
- */
-async function setupDatabase() {
-  // Open the database connection. This was previously a top-level await.
-  const db = await SQLite.openDatabaseAsync("databaseName");
-
-  // Execute initial setup queries (PRAGMA, CREATE TABLE).
-  // This was also part of the top-level awaited logic.
-  await db.execAsync(`
-    PRAGMA journal_mode = WAL;
-    CREATE TABLE IF NOT EXISTS habitHistory (id INTEGER PRIMARY KEY NOT NULL, habitId TEXT NOT NULL, completionDate TEXT NOT NULL);
-  `);
-
-  // console.log("Database initialized and tables created successfully."); // Uncomment for debugging
-  return db; // Return the initialized database instance.
+// Define an interface for the structure of a habit history entry
+interface HabitHistoryEntry {
+  id: number; // We'll use a timestamp for simplicity
+  habitId: string;
+  completionDate: string; // Expected format: YYYY-MM-DD
 }
 
-/**
- * Gets the singleton database instance, initializing it if necessary.
- * This function ensures that `setupDatabase` is called only once and returns
- * the promise that resolves with the database instance.
- * @returns {Promise<SQLite.SQLiteDatabase>} A promise that resolves with the initialized database instance.
- */
-function getDbInstance() {
-  if (!initializeDbPromise) {
-    // If the initialization promise doesn't exist, create it by calling setupDatabase.
-    // This ensures setupDatabase() is only invoked the first time getDbInstance() is called.
-    initializeDbPromise = setupDatabase();
+const HABIT_HISTORY_KEY = "habitHistory";
+
+// Helper function to get all habit history entries from MMKV
+function getHabitHistoryEntries(): HabitHistoryEntry[] {
+  const storedEntries = mmkvStorage.getString(HABIT_HISTORY_KEY);
+  if (storedEntries) {
+    try {
+      return JSON.parse(storedEntries) as HabitHistoryEntry[];
+    } catch (e) {
+      console.error("Error parsing habit history from MMKV:", e);
+      return []; // Return empty array on parsing error
+    }
   }
-  // Return the promise. Functions needing the DB will await this promise.
-  return initializeDbPromise;
+  return []; // Return empty array if no entries are found
 }
 
-// --- Start Database Initialization ---
+// Helper function to save habit history entries to MMKV
+function saveHabitHistoryEntries(entries: HabitHistoryEntry[]): void {
+  mmkvStorage.set(HABIT_HISTORY_KEY, JSON.stringify(entries));
+}
 
-// We initiate the database setup process as soon as this module is loaded.
-// The .then() and .catch() here handle the result of the initialization.
-// This does *not* block module loading because we are not awaiting `getDbInstance()` here.
-getDbInstance()
-  .then((db) => {
-    dbInstance = db; // Store the resolved DB instance globally within this module.
-    // console.log("Database instance is now globally available in this module."); // Uncomment for debugging
-  })
-  .catch((error) => {
-    console.error("Critical: Failed to initialize database:", error);
-    // Depending on your app's needs, you might want to throw an error here
-    // or set a flag indicating that the database is unavailable.
-    // For now, dbInstance will remain null, and operations will fail.
-  });
+// Log all items from habitHistory table upon module load (initialization)
+(() => {
+  const initialEntries = getHabitHistoryEntries();
+  console.log(
+    "MMKV Storage: Current items in habitHistory upon module load:",
+    initialEntries
+  );
+})();
 
-// --- Exported Database Operations ---
+// Marks a habit as complete for a given date.
+export function onMarkAsComplete(
+  habitId: string,
+  completionDate: string // Expected format: YYYY-MM-DD
+): { success: boolean; message?: string; entry?: HabitHistoryEntry } {
+  const entries = getHabitHistoryEntries();
+  const alreadyExists = entries.some(
+    (entry) =>
+      entry.habitId === habitId && entry.completionDate === completionDate
+  );
 
-/**
- * Marks a habit as complete for a given date.
- * @param {string} habitId - The ID of the habit.
- * @param {string} habitDate - The completion date (e.g., "YYYY-MM-DD").
- * @returns {Promise<SQLite.SQLiteRunResult>} The result of the insert operation.
- */
-const onMarkAsComplete = async (habitId, habitDate) => {
-  // Ensure the database is initialized before proceeding.
-  // If dbInstance is already set (initialization finished), use it.
-  // Otherwise, await the initialization promise.
-  const currentDb = dbInstance || (await getDbInstance());
-
-  // It's crucial to check if currentDb is actually available,
-  // especially if initialization could have failed.
-  if (!currentDb) {
-    console.error("Database not initialized. Cannot mark habit as complete.");
-    throw new Error(
-      "Database is not available. Initialization might have failed."
-    );
+  if (alreadyExists) {
+    console.warn("MMKV Storage: Habit already marked complete for this date.");
+    return { success: false, message: "Already marked complete" };
   }
 
-  // Perform the database insert operation.
-  const result = await currentDb.runAsync(
-    "INSERT INTO habitHistory (habitId, completionDate) VALUES (?, ?)",
+  const newEntry: HabitHistoryEntry = {
+    id: Date.now(), // Using timestamp as a simple ID
     habitId,
-    habitDate
+    completionDate,
+  };
+  entries.push(newEntry);
+  saveHabitHistoryEntries(entries);
+  console.log("MMKV Storage: Habit marked complete:", newEntry);
+  return { success: true, entry: newEntry };
+}
+
+// Marks a habit as incomplete for a given date by deleting the record.
+export function onMarkAsIncomplete(
+  habitId: string,
+  completionDate: string // Expected format: YYYY-MM-DD
+): { changes: number } {
+  const entries = getHabitHistoryEntries();
+  const initialLength = entries.length;
+  const updatedEntries = entries.filter(
+    (entry) =>
+      !(entry.habitId === habitId && entry.completionDate === completionDate)
   );
-  // console.log("Habit marked as complete. ID:", result.lastInsertRowId, "Changes:", result.changes);
-  console.log("lirili larila, the clock goes tic tac"); // Your original log
-  return result;
-};
 
-/**
- * Marks a habit as incomplete for a given date by deleting the record.
- * @param {string} habitId - The ID of the habit.
- * @param {string} habitDate - The date to mark as incomplete (e.g., "YYYY-MM-DD").
- * @returns {Promise<SQLite.SQLiteRunResult>} The result of the delete operation.
- */
-const onMarkAsIncomplete = async (habitId, habitDate) => {
-  // Ensure the database is initialized.
-  const currentDb = dbInstance || (await getDbInstance());
-
-  if (!currentDb) {
-    console.error("Database not initialized. Cannot mark habit as incomplete.");
-    throw new Error(
-      "Database is not available. Initialization might have failed."
-    );
+  const changes = initialLength - updatedEntries.length;
+  if (changes > 0) {
+    saveHabitHistoryEntries(updatedEntries);
   }
+  console.log("MMKV Storage: Habit marked incomplete, changes:", changes);
+  return { changes };
+}
 
-  // Perform the database delete operation.
-  const result = await currentDb.runAsync(
-    "DELETE FROM habitHistory WHERE habitId = ? AND completionDate = ?",
-    habitId,
-    habitDate
+// Retrieves all records from the habitHistory for today's date.
+export function getAllHabitHistoryToday(): HabitHistoryEntry[] {
+  const entries = getHabitHistoryEntries();
+
+  const todayEntries = entries.filter(
+    (entry) => entry.completionDate === formattedDate
   );
-  // console.log("Habit marked as incomplete. Changes:", result.changes);
-  console.log("trippi troppi, troppo trippa"); // Your original log
-  return result;
-};
+  console.log(
+    `MMKV Storage: Fetched habit history for today (${formattedDate}).`,
+    todayEntries
+  );
+  return todayEntries;
+}
 
-// Export the functions that components will use.
-export { onMarkAsComplete, onMarkAsIncomplete };
+// Retrieves all records from the habitHistory.
+export function getAllHabitHistory(): HabitHistoryEntry[] {
+  const entries = getHabitHistoryEntries();
+  console.log("MMKV Storage: Fetched all habit history.", entries);
+  return entries;
+}
+
+// Retrieves habit history records for a specific habitId.
+export function getHistoryForHabit(habitId: string): HabitHistoryEntry[] {
+  const entries = getHabitHistoryEntries();
+  const habitEntries = entries.filter((entry) => entry.habitId === habitId);
+  console.log(
+    `MMKV Storage: Fetched history for habit ${habitId}.`,
+    habitEntries
+  );
+  return habitEntries;
+}

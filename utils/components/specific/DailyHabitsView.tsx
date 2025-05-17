@@ -13,9 +13,12 @@ import BouncyCheckbox from "react-native-bouncy-checkbox";
 import mmkvStorage from "@/utils/mmkvStorage";
 import { useFocusEffect } from "expo-router";
 import {
+  getAllHabitHistoryToday,
   onMarkAsComplete,
   onMarkAsIncomplete,
 } from "@/utils/database/habitHistory";
+import { date, weekdayNumber, formattedDate } from "@/utils/date";
+
 // Components:
 
 interface HabitItem {
@@ -55,13 +58,7 @@ const DailyHabitsView: React.FC = () => {
   const theme = useTheme();
   const styles = createStyles(theme);
 
-  const date = new Date();
-  const weekdayNumber = date.getDay();
-  const formattedDate = `${date.getFullYear()}-${
-    date.getMonth() + 1
-  }-${date.getDate()}`;
-
-  const [habitItems, setHabitItems] = useState<any>([]);
+  const [habitItems, setHabitItems] = useState<any[]>([]);
   console.log("soano akhen khra", habitItems);
 
   const loadHabits = function () {
@@ -103,10 +100,27 @@ const DailyHabitsView: React.FC = () => {
   //   mmkvStorage.getString("activeHabits") || JSON.stringify([]);
   // const habitItems: any[] = JSON.parse(storedHabitsString);
 
-  const [taskCompletion, setTaskCompletion] = useState<any>(
-    Array(habitItems.length).fill(false)
-  ); // track the ticking of the habit items
+  const [taskCompletion, setTaskCompletion] = useState<any>([]); // track the ticking of the habit items
 
+  useEffect(() => {
+    setTaskCompletion(() => {
+      // upon loading of all the habits into the habitItems state variable,
+      const newTaskCompletion = Array(habitItems.length).fill(false);
+      // fill the above with falses, and switch those to true which have been completed
+
+      // looping throgu all the habitItem completions for today's date to see if
+      const completedHabitsToday = getAllHabitHistoryToday();
+      for (const habitEntry of completedHabitsToday) {
+        habitItems.forEach((item, index) => {
+          if (item.id == habitEntry.habitId) {
+            newTaskCompletion[index] = true;
+          }
+        });
+      }
+
+      return newTaskCompletion;
+    });
+  }, [habitItems]); // set the taskCompletion state according to the data stored in the database
   const handleToggleTaskCompletion = (index: number) => {
     setTaskCompletion((oldTaskCompletion: any) => {
       const newTaskCompletion = [...oldTaskCompletion];
@@ -115,23 +129,10 @@ const DailyHabitsView: React.FC = () => {
     });
   };
 
-  // const renderCheckmarks = (frequency: number, completed: number) => {
-  //   return Array.from({ length: frequency }).map((_, index) => (
-  //     <View key={index} style={styles.checkmarkContainer}>
-  //       <Ionicons
-  //         name="checkmark-circle-outline"
-  //         size={24}
-  //         color={
-  //           index < completed ? theme.colors.primary : theme.colors.textTertiary
-  //         }
-  //       />
-  //     </View>
-  //   ));
-  // };
-
   const renderHabitItem = (habit: any, index: number) => {
     return (
       <BouncyCheckbox
+        isChecked={taskCompletion[index]}
         size={28}
         fillColor={theme.colors.primary}
         // unFillColor="#FFFFFF"
