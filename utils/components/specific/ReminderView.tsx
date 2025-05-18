@@ -1,0 +1,174 @@
+import React, { useState, useEffect } from "react";
+import {
+  SafeAreaView,
+  Text,
+  StyleSheet,
+  View,
+  Platform,
+  TouchableOpacity,
+} from "react-native";
+import DateTimePicker, {
+  DateTimePickerEvent,
+} from "@react-native-community/datetimepicker";
+import { useTheme } from "@/utils/theme/ThemeContext";
+import { Ionicons } from "@expo/vector-icons";
+import CTAButton from "../general/CTAButton"; // Assuming this is your custom button
+
+interface ReminderViewProps {
+  initialTime?: Date;
+  onTimeChange?: (newTime: Date) => void;
+  onChangeDisplayScreen: (screen: string) => void;
+}
+
+export default function ReminderView({
+  initialTime,
+  onTimeChange,
+  onChangeDisplayScreen,
+}: ReminderViewProps) {
+  const theme = useTheme();
+  const styles = createStyles(theme);
+
+  const [time, setTime] = useState(initialTime || new Date());
+
+  const handleTimeChange = (
+    event: DateTimePickerEvent,
+    selectedDate?: Date
+  ) => {
+    if (selectedDate) {
+      const newTime = new Date(time);
+      newTime.setHours(selectedDate.getHours());
+      newTime.setMinutes(selectedDate.getMinutes());
+      newTime.setSeconds(0);
+      newTime.setMilliseconds(0);
+
+      setTime(newTime);
+      if (onTimeChange) {
+        onTimeChange(newTime);
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (initialTime) {
+      setTime(initialTime);
+    }
+  }, [initialTime]);
+
+  const handleSetReminder = () => {
+    console.log(
+      "Set Reminder CTA pressed for time:",
+      time.toLocaleTimeString()
+    );
+    // Actual reminder saving and notification scheduling logic would go here
+    onChangeDisplayScreen("main");
+  };
+
+  const handleBackPress = () => {
+    console.log("pressed back");
+    onChangeDisplayScreen("main");
+  };
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <View style={styles.headerBar}>
+        <TouchableOpacity onPress={handleBackPress} style={styles.backButton}>
+          <Ionicons
+            name="chevron-back"
+            size={28}
+            color={theme.colors.primary}
+          />
+        </TouchableOpacity>
+        <Text style={styles.headerText}>Set Reminder Time</Text>
+        <View style={styles.headerRightPlaceholder} />
+      </View>
+
+      <Text style={styles.tooltipText}>
+        The time you set here will be used to send you notifications for this
+        habit.
+      </Text>
+
+      <View style={styles.pickerContainer}>
+        <DateTimePicker
+          testID="timePicker"
+          value={time}
+          mode="time"
+          is24Hour={Platform.OS === "ios" ? undefined : true}
+          display="spinner"
+          onChange={handleTimeChange}
+          style={styles.dateTimePicker}
+        />
+      </View>
+
+      <View style={styles.buttonContainer}>
+        <CTAButton
+          title={`Set Reminder for ${time.toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          })}`}
+          onPress={handleSetReminder} // Use the actual handler
+        />
+      </View>
+    </SafeAreaView>
+  );
+}
+
+const createStyles = (theme: any) =>
+  StyleSheet.create({
+    container: {
+      width: "100%",
+      minHeight: 400, // Adjusted minHeight to accommodate tooltip
+      backgroundColor: theme.colors.background,
+      alignItems: "center",
+      justifyContent: "space-between",
+      paddingTop: Platform.OS === "android" ? 15 : 5, // Reduced top padding
+      paddingBottom: 30,
+      paddingHorizontal: 15,
+    },
+    headerBar: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
+      width: "100%",
+      marginBottom: 15, // Reduced margin below header
+      // marginTop: 15, // Removed marginTop to reduce space above title
+    },
+    backButton: {
+      padding: 5,
+    },
+    headerText: {
+      fontSize: 18,
+      fontWeight: "600",
+      color: theme.colors.text,
+      textAlign: "center",
+      flex: 1,
+    },
+    headerRightPlaceholder: {
+      width: 28 + 10,
+    },
+    tooltipText: {
+      fontSize: 13,
+      color: theme.colors.textSecondary || theme.colors.text,
+      textAlign: "center",
+      marginHorizontal: 20,
+      marginBottom: 15, // Space before the picker
+      lineHeight: 18,
+    },
+    pickerContainer: {
+      width: "100%",
+      minHeight: Platform.OS === "ios" ? 216 : 220,
+      justifyContent: "center",
+      alignItems: "center",
+      marginBottom: 20,
+    },
+    dateTimePicker: {
+      width: "100%",
+    },
+    buttonContainer: {
+      // Styles for the container of your CTAButton
+      width: "70%", // Takes 90% of the available width
+      alignSelf: "center", // Ensure it's centered if parent is alignItems: 'center'
+    },
+    // Removed ctaButton and ctaButtonText as you are using your CTAButton component
+    // If your CTAButton component needs specific styling for its container,
+    // you can apply it via buttonContainer or pass styles directly to CTAButton if it accepts them.
+  });

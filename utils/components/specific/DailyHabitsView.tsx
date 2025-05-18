@@ -17,7 +17,7 @@ import {
   onMarkAsComplete,
   onMarkAsIncomplete,
 } from "@/utils/database/habitHistory";
-import { date, weekdayNumber, formattedDate } from "@/utils/date";
+import { getFormattedDate, getWeekdayNumber } from "@/utils/date";
 
 // Components:
 
@@ -147,10 +147,10 @@ const DailyHabitsView: React.FC = () => {
           handleToggleTaskCompletion(index);
           if (isChecked) {
             // if the task is not completed (just clicked completed), then mark as complete
-            onMarkAsComplete(habit.id, formattedDate);
+            onMarkAsComplete(habit.id, getFormattedDate());
           } else {
             // if the task is already checked, then mark as incomplete
-            onMarkAsIncomplete(habit.id, formattedDate);
+            onMarkAsIncomplete(habit.id, getFormattedDate());
           }
         }}
         // onLongPress={() => {}}
@@ -177,7 +177,7 @@ const DailyHabitsView: React.FC = () => {
   return (
     <ScrollView style={styles.container}>
       {habitItems.map((habit: any, index: any) => {
-        if (habit && habit.frequency[weekdayNumber]) {
+        if (habit && habit.frequency[getWeekdayNumber()]) {
           // if the current day matches with the day
           // the habit is supposed to happen on
           // therefore, renders habit based on if they are to be done today:

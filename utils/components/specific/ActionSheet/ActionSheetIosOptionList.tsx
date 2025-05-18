@@ -11,7 +11,13 @@ import {
 } from "react-native";
 import { SheetManager } from "react-native-actions-sheet";
 
-export default function IosOptionList({ habitItem }: { habitItem: any }) {
+export default function IosOptionList({
+  habitItem,
+  onChangeDisplayScreen,
+}: {
+  habitItem: any;
+  onChangeDisplayScreen: any;
+}) {
   const router = useRouter();
   const theme = useTheme();
   const styles = createStyles(theme);
@@ -36,7 +42,7 @@ export default function IosOptionList({ habitItem }: { habitItem: any }) {
       >
         <View style={styles.settingItemContent}>
           <View style={styles.iconContainer}>
-            <Ionicons name={iconName} size={22} color={theme.colors.primary} />
+            <Ionicons name={iconName} size={26} color={theme.colors.primary} />
           </View>
           <Text style={styles.settingItemText}>{optionName}</Text>
         </View>
@@ -68,16 +74,21 @@ export default function IosOptionList({ habitItem }: { habitItem: any }) {
           }
         )}
 
+        {renderOptionItem("bottom", "alarm-outline", "Set Reminder", () => {
+          onChangeDisplayScreen("reminder");
+        })}
+
+        {renderOptionItem(
+          "bottom",
+          "play-skip-forward-outline",
+          "Skip Habit for Today",
+          () => {}
+        )}
+
         {renderOptionItem(
           "between",
           "stats-chart-outline",
           "View Consistency Graph",
-          () => {}
-        )}
-        {renderOptionItem(
-          "bottom",
-          "play-skip-forward-outline",
-          "Skip Task for Today",
           () => {}
         )}
 

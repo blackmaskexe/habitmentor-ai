@@ -12,10 +12,10 @@ const Chat = () => {
   return (
     <ChatMessages
       tooltips={[
-        "Buy a unun",
-        "Sell a unun",
-        "Dap up a unun",
-        "Get a unun pass",
+        "Help improve habit",
+        "Consistency Tips",
+        "What can I do better for",
+        "Where in the app can I find",
       ]}
       initialMessage={(initialMessage as any) || ""}
     />

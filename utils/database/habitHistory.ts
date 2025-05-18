@@ -1,4 +1,4 @@
-import { formattedDate } from "../date";
+import { getFormattedDate } from "../date";
 import mmkvStorage from "../mmkvStorage"; // Import the existing MMKV instance
 
 // Define an interface for the structure of a habit history entry
@@ -90,10 +90,10 @@ export function getAllHabitHistoryToday(): HabitHistoryEntry[] {
   const entries = getHabitHistoryEntries();
 
   const todayEntries = entries.filter(
-    (entry) => entry.completionDate === formattedDate
+    (entry) => entry.completionDate === getFormattedDate()
   );
   console.log(
-    `MMKV Storage: Fetched habit history for today (${formattedDate}).`,
+    `MMKV Storage: Fetched habit history for today (${getFormattedDate()}).`,
     todayEntries
   );
   return todayEntries;
