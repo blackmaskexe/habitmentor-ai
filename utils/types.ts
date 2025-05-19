@@ -4,4 +4,14 @@ interface Message {
   createdAt: String;
 }
 
-export type { Message };
+interface HabitObject {
+  frequency: boolean[];
+  habitDescription: string;
+  habitName: string;
+  iconName: string;
+  id: string;
+  points: number;
+  notificationId?: string;
+}
+
+export type { Message, HabitObject };

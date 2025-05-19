@@ -164,6 +164,8 @@ const DailyHabitsView: React.FC = () => {
                   color: theme.colors.textSecondary,
                 },
               ]}
+              numberOfLines={1}
+              ellipsizeMode="tail" // displya ... when habit name is too long
             >
               {habit.habitName}
             </Text>

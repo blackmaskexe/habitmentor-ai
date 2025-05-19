@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { useTheme } from "@/utils/theme/ThemeContext";
+import { Theme } from "@/utils/theme/themes";
 
 const screenWidth = Dimensions.get("window").width;
 
@@ -14,6 +15,7 @@ type CardProps = {
   title: string;
   description?: string;
   borderRadius?: number;
+  metadata?: string;
   padding?: number;
   onPress?: any;
   children?: any;
@@ -26,6 +28,7 @@ const CardWithoutImage: React.FC<CardProps> = ({
   padding = 16,
   onPress,
   children,
+  metadata,
 }) => {
   const theme = useTheme();
   const styles = createStyles(theme);
@@ -59,7 +62,22 @@ const CardWithoutImage: React.FC<CardProps> = ({
         <View style={styles.textContainer}>
           <Text style={styles.title}>{title}</Text>
           {description && description.trim().length > 0 ? (
-            <Text style={styles.description}>{description}</Text>
+            <Text
+              style={styles.description}
+              numberOfLines={1}
+              ellipsizeMode="tail" // ... when the length of the text is too long
+            >
+              {description}
+            </Text>
+          ) : null}
+          {metadata && metadata.trim().length > 0 ? (
+            <Text
+              style={styles.metadata}
+              numberOfLines={1}
+              ellipsizeMode="tail" // ... when the length of the text is too long
+            >
+              {metadata}
+            </Text>
           ) : null}
         </View>
       </View>
@@ -68,7 +86,7 @@ const CardWithoutImage: React.FC<CardProps> = ({
   );
 };
 
-function createStyles(theme: any) {
+function createStyles(theme: Theme) {
   return StyleSheet.create({
     card: {
       shadowColor: "#000",
@@ -91,6 +109,11 @@ function createStyles(theme: any) {
       fontSize: 14,
       opacity: 0.8,
       color: theme.colors.text,
+    },
+    metadata: {
+      fontSize: 14,
+      opacity: 0.8,
+      color: theme.colors.textSecondary,
     },
     cardContent: {
       flexDirection: "row",

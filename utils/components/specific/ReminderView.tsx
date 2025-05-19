@@ -6,6 +6,7 @@ import {
   View,
   Platform,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import DateTimePicker, {
   DateTimePickerEvent,
@@ -13,22 +14,29 @@ import DateTimePicker, {
 import { useTheme } from "@/utils/theme/ThemeContext";
 import { Ionicons } from "@expo/vector-icons";
 import CTAButton from "../general/CTAButton"; // Assuming this is your custom button
+import { Theme } from "@/utils/theme/themes";
+import { useNotifications } from "@/utils/useNotifications";
 
 interface ReminderViewProps {
   initialTime?: Date;
   onTimeChange?: (newTime: Date) => void;
   onChangeDisplayScreen: (screen: string) => void;
+  habitObject: any;
 }
 
 export default function ReminderView({
   initialTime,
   onTimeChange,
   onChangeDisplayScreen,
+  habitObject,
 }: ReminderViewProps) {
+  const { schedulePushNotification } = useNotifications();
+
   const theme = useTheme();
   const styles = createStyles(theme);
 
   const [time, setTime] = useState(initialTime || new Date());
+  console.log("in your birthday suit", time.getHours());
 
   const handleTimeChange = (
     event: DateTimePickerEvent,
@@ -48,6 +56,10 @@ export default function ReminderView({
     }
   };
 
+  const handleAddReminder = async () => {
+    schedulePushNotification(time);
+  };
+
   useEffect(() => {
     if (initialTime) {
       setTime(initialTime);
@@ -59,7 +71,7 @@ export default function ReminderView({
       "Set Reminder CTA pressed for time:",
       time.toLocaleTimeString()
     );
-    // Actual reminder saving and notification scheduling logic would go here
+    handleAddReminder();
     onChangeDisplayScreen("main");
   };
 
@@ -84,7 +96,8 @@ export default function ReminderView({
 
       <Text style={styles.tooltipText}>
         The time you set here will be used to send you notifications for this
-        habit.
+        habit. NOTE: app only currently supports daily reminders, and not custom
+        reminders
       </Text>
 
       <View style={styles.pickerContainer}>
@@ -106,13 +119,14 @@ export default function ReminderView({
             minute: "2-digit",
           })}`}
           onPress={handleSetReminder} // Use the actual handler
+          buttonHeight={44}
         />
       </View>
     </SafeAreaView>
   );
 }
 
-const createStyles = (theme: any) =>
+const createStyles = (theme: Theme) =>
   StyleSheet.create({
     container: {
       width: "100%",
@@ -146,12 +160,12 @@ const createStyles = (theme: any) =>
       width: 28 + 10,
     },
     tooltipText: {
-      fontSize: 13,
-      color: theme.colors.textSecondary || theme.colors.text,
+      ...theme.text.body,
+      color: theme.colors.text,
       textAlign: "center",
       marginHorizontal: 20,
       marginBottom: 15, // Space before the picker
-      lineHeight: 18,
+      // lineHeight: 18,
     },
     pickerContainer: {
       width: "100%",
@@ -168,7 +182,4 @@ const createStyles = (theme: any) =>
       width: "70%", // Takes 90% of the available width
       alignSelf: "center", // Ensure it's centered if parent is alignItems: 'center'
     },
-    // Removed ctaButton and ctaButtonText as you are using your CTAButton component
-    // If your CTAButton component needs specific styling for its container,
-    // you can apply it via buttonContainer or pass styles directly to CTAButton if it accepts them.
   });

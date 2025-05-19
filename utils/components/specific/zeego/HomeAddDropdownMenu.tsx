@@ -22,7 +22,9 @@ export default function HomeAddDropdownMenu() {
         </TouchableOpacity>
       </DropdownMenu.DropdownMenuTrigger>
       <DropdownMenu.DropdownMenuContent>
-        <DropdownMenu.DropdownMenuLabel />
+        <DropdownMenu.DropdownMenuLabel>
+          Home Options
+        </DropdownMenu.DropdownMenuLabel>
         <DropdownMenu.DropdownMenuItem
           key="add-habit"
           onSelect={() => {
@@ -31,6 +33,17 @@ export default function HomeAddDropdownMenu() {
         >
           <DropdownMenu.DropdownMenuItemTitle>
             Add Habit
+          </DropdownMenu.DropdownMenuItemTitle>
+        </DropdownMenu.DropdownMenuItem>
+
+        <DropdownMenu.DropdownMenuItem
+          key="clear-reminder"
+          onSelect={() => {
+            console.log("tung tung tung");
+          }}
+        >
+          <DropdownMenu.DropdownMenuItemTitle>
+            Clear All Reminders
           </DropdownMenu.DropdownMenuItemTitle>
         </DropdownMenu.DropdownMenuItem>
         {/* <DropdownMenu.Group>

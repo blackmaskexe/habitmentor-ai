@@ -30,6 +30,7 @@ export default function HabitItemSheet({ habitObject }: { habitObject: any }) {
         <CardWithoutImage
           title={habitObject.habitName}
           description={habitObject.habitDescription || ""}
+          metadata="Reminder: 10:00 PM"
         />
         <IosOptionList
           habitItem={habitObject}
@@ -40,7 +41,12 @@ export default function HabitItemSheet({ habitObject }: { habitObject: any }) {
   };
 
   const renderReminderView = function () {
-    return <ReminderView onChangeDisplayScreen={setDisplayScreen} />;
+    return (
+      <ReminderView
+        onChangeDisplayScreen={setDisplayScreen}
+        habit={habitObject}
+      />
+    );
   };
 
   return (

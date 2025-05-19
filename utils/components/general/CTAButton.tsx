@@ -18,6 +18,7 @@ interface CTAButtonProps {
   loading?: boolean;
   iconName?: IoniconsName; // Changed to string for Ionicons name
   iconSize?: number; // Optional size for the icon
+  buttonHeight?: number;
 }
 
 const CTAButton: React.FC<CTAButtonProps> = ({
@@ -26,10 +27,11 @@ const CTAButton: React.FC<CTAButtonProps> = ({
   disabled = false,
   loading = false,
   iconName,
-  iconSize = 20, // Default icon size
+  iconSize = 20, // Default icon size,
+  buttonHeight = 54,
 }) => {
   const theme = useTheme();
-  const styles = createStyles(theme);
+  const styles = createStyles(theme, buttonHeight);
   return (
     <TouchableOpacity
       style={[styles.button, disabled && styles.buttonDisabled]}
@@ -53,11 +55,11 @@ const CTAButton: React.FC<CTAButtonProps> = ({
   );
 };
 
-function createStyles(theme: any) {
+function createStyles(theme: any, buttonHeight: number) {
   return StyleSheet.create({
     button: {
       width: "100%",
-      height: 54,
+      height: buttonHeight,
       backgroundColor: theme.button.background,
       borderRadius: 12,
       justifyContent: "center",
