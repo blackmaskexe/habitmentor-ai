@@ -158,7 +158,7 @@ export default function ChatMessages({
                 </View>
               );
             }}
-            keyExtractor={(item) => item?.$createdAt.toISOString() ?? "unknown"}
+            keyExtractor={(item: any) => item?.$createdAt ?? "unknown"}
             contentContainerStyle={{ padding: 10 }}
             recycleItems={true}
             initialScrollIndex={messages.length - 1}
