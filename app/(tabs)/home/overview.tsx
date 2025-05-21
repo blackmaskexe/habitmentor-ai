@@ -16,6 +16,7 @@ import NavigationPill from "@/utils/components/general/NavigationPill";
 import AllHabitsOverview from "@/utils/components/specific/AllHabitsOverview";
 import MonthlyHabitActivityMonitor from "@/utils/components/specific/MonthlyHabitActivityMonitor";
 import mmkvStorage from "@/utils/mmkvStorage";
+import { Theme } from "@/utils/theme/themes";
 
 const OverviewScreen = () => {
   const router = useRouter();
@@ -86,7 +87,7 @@ const OverviewScreen = () => {
   );
 };
 
-function createStyles(theme: any) {
+function createStyles(theme: Theme) {
   // Assuming 'theme' matches your Theme type
   return StyleSheet.create({
     container: {
@@ -149,7 +150,7 @@ function createStyles(theme: any) {
     monthlyProgressSubText: {
       textAlign: "center",
       color: theme.colors.textSecondary,
-      ...theme.text.h4,
+      ...theme.text.h3,
       marginTop: theme.spacing.xs,
     },
     weeklyTaskText: {

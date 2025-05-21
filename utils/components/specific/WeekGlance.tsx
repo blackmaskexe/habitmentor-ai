@@ -2,6 +2,7 @@ import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { useTheme } from "@/utils/theme/ThemeContext";
 import ProgressBar from "../general/ProgressBar";
+import { Theme } from "@/utils/theme/themes";
 
 interface WeekAtAGlanceProps {
   // Array of percentages for each day (0-100)
@@ -92,7 +93,7 @@ const WeekAtAGlance: React.FC<WeekAtAGlanceProps> = ({
     </View>
   );
 };
-function createStyles(theme: any) {
+function createStyles(theme: Theme) {
   return StyleSheet.create({
     container: {
       padding: theme.spacing.m,

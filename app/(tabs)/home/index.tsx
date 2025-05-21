@@ -4,6 +4,7 @@ import { ScrollView, StyleSheet, Text, View } from "react-native";
 import TypewriterText from "@/utils/components/general/TypewriterText";
 import DailyHabitsView from "@/utils/components/specific/DailyHabitsView";
 import WeekAtAGlance from "@/utils/components/specific/WeekGlance";
+import { Theme } from "@/utils/theme/themes";
 
 export default function Index() {
   const theme = useTheme();
@@ -46,7 +47,7 @@ export default function Index() {
   );
 }
 
-function createStyle(theme: any) {
+function createStyle(theme: Theme) {
   return StyleSheet.create({
     container: {
       flex: 1,

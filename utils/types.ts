@@ -1,7 +1,7 @@
-interface Message {
-  messageSender: String;
-  messageContent: String;
-  createdAt: String;
+interface MessageType {
+  sender: String;
+  content: String;
+  $createdAt: Date;
 }
 
 interface HabitObject {
@@ -14,4 +14,13 @@ interface HabitObject {
   notificationId?: string;
 }
 
-export type { Message, HabitObject };
+interface FormValuesType {
+  habitName?: string;
+  habitDescription?: string;
+  frequency?: boolean[];
+  iconName?: string;
+  id?: string;
+  points?: number;
+}
+
+export type { MessageType, HabitObject, FormValuesType };

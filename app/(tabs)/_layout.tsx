@@ -63,13 +63,11 @@ export default function TabLayout() {
                 color={theme.colors.primary}
               />
               <Text
-                style={
-                  {
-                    color: theme.colors.primary,
-                    ...theme.text.body,
-                    marginLeft: 4,
-                  } as any
-                }
+                style={{
+                  color: theme.colors.primary,
+                  ...theme.text.body,
+                  marginLeft: 4,
+                }}
               >
                 Overview
               </Text>
@@ -110,13 +108,11 @@ export default function TabLayout() {
                 color={theme.colors.primary}
               />
               <Text
-                style={
-                  {
-                    color: theme.colors.primary,
-                    ...theme.text.body,
-                    marginLeft: 4,
-                  } as any
-                }
+                style={{
+                  color: theme.colors.primary,
+                  ...theme.text.body,
+                  marginLeft: 4,
+                }}
               >
                 Back
               </Text>

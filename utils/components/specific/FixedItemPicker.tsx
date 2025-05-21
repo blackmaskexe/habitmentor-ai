@@ -21,6 +21,7 @@ import CTAButton from "../general/CTAButton";
 import WeekdayFrequencyPicker from "./WeekdayFrequencyPicker";
 import FrequencyPickerOptionList from "./FrequencyPickerOptionList";
 import TaskFrequencyDropdownMenu from "./zeego/TaskFrequencyDropdownMenu";
+import { FormValuesType, HabitObject } from "@/utils/types";
 
 type ItemPickerProps = {
   numRows: number;
@@ -66,14 +67,14 @@ export default function FixedItemPicker({
 }: ItemPickerProps) {
   const theme = useTheme();
   const styles = createStyles(theme, BOX_SIZE);
-  const [values, setValues] = useState<any>({}); // values for the form inside the modal
+  const [values, setValues] = useState<FormValuesType>({}); // values for the form inside the modal
   const [activeHabitItemIndex, setActiveHabitItemIndex] = useState(0);
   const [habitsFrequency, setHabitFrequency] = useState(
     // this array contains array of days (In the format of Mon, Tue, Wed) that the user wants to do these habits on
     Array(numRows).fill(null)
   );
 
-  const [habitItems, setHabitItems] = useState<any>([]);
+  const [habitItems, setHabitItems] = useState<HabitObject[]>([]);
   const [modalVisible, setModalVisible] = useState(false);
 
   const handleNewHabitSubmission = function () {
@@ -83,7 +84,7 @@ export default function FixedItemPicker({
     setValues({}); // clearing form data upon submission
 
     // if (habitItems.length <= 3) {
-    setHabitItems((oldHabitItems: any) => {
+    setHabitItems((oldHabitItems: HabitObject[]) => {
       const newHabitItems = [...oldHabitItems];
       newHabitItems[activeHabitItemIndex] = habitData;
       // newHabitItems[activeHabitItemIndex].iconName = response.data.success
@@ -245,7 +246,7 @@ export default function FixedItemPicker({
                         "Sat",
                       ]
                     }
-                    changeValues={setValues}
+                    onChangeValues={setValues}
                   />
 
                   <Text style={styles.formLabel}></Text>

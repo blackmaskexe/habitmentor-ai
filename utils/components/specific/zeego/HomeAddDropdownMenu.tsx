@@ -4,10 +4,13 @@ import { Ionicons } from "@expo/vector-icons";
 import { useTheme } from "@/utils/theme/ThemeContext";
 import mmkvStorage from "@/utils/mmkvStorage";
 import { useRouter } from "expo-router";
+import { useNotifications } from "@/utils/useNotifications";
 
 export default function HomeAddDropdownMenu() {
   const router = useRouter();
   const theme = useTheme();
+
+  const { cancelAllScheduledNotifications } = useNotifications();
   return (
     <DropdownMenu.DropdownMenuRoot>
       <DropdownMenu.DropdownMenuTrigger>
@@ -39,11 +42,11 @@ export default function HomeAddDropdownMenu() {
         <DropdownMenu.DropdownMenuItem
           key="clear-reminder"
           onSelect={() => {
-            console.log("tung tung tung");
+            cancelAllScheduledNotifications();
           }}
         >
           <DropdownMenu.DropdownMenuItemTitle>
-            Clear All Reminders
+            Clear All Reminders get this outta here and into settings
           </DropdownMenu.DropdownMenuItemTitle>
         </DropdownMenu.DropdownMenuItem>
         {/* <DropdownMenu.Group>

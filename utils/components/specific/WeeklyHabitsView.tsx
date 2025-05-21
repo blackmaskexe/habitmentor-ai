@@ -6,6 +6,7 @@ import { useTheme } from "@/utils/theme/ThemeContext";
 // Components:
 import ProgressBar from "../general/ProgressBar";
 import CardWithoutImage from "../general/CardWithoutImage";
+import { Theme } from "@/utils/theme/themes";
 
 // --- Data Structures ---
 interface WeeklyHabitItem {
@@ -97,7 +98,7 @@ const WeeklyHabitsView: React.FC<WeeklyHabitsViewProps> = ({
 };
 
 // --- Styles ---
-const createStyles = (theme: any) =>
+const createStyles = (theme: Theme) =>
   StyleSheet.create({
     container: {
       flex: 1,
@@ -123,7 +124,7 @@ const createStyles = (theme: any) =>
     },
     headerStreaksText: {
       ...theme.text.body,
-      color: theme.colors.accent,
+      color: theme.colors.surface,
       fontWeight: "600",
     },
     levelProgressContainer: {

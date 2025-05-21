@@ -2,6 +2,7 @@ import * as React from "react";
 import { View, useWindowDimensions, Text, StyleSheet } from "react-native";
 import { TabView, SceneMap, TabBar } from "react-native-tab-view";
 import { useTheme } from "@/utils/theme/ThemeContext";
+import { Theme } from "@/utils/theme/themes";
 
 const FirstRoute = () => {
   const theme = useTheme();
@@ -70,7 +71,7 @@ export default function TabViewExample() {
   );
 }
 
-function createStyles(theme: any) {
+function createStyles(theme: Theme) {
   return StyleSheet.create({
     scene: {
       flex: 1,

@@ -1,7 +1,9 @@
 import mmkvStorage from "@/utils/mmkvStorage";
 import { useTheme } from "@/utils/theme/ThemeContext";
+import { Theme } from "@/utils/theme/themes";
+import { MessageType } from "@/utils/types";
 import { Ionicons } from "@expo/vector-icons";
-import { LegendList } from "@legendapp/list";
+import { LegendList, LegendListRef } from "@legendapp/list";
 import { useHeaderHeight } from "@react-navigation/elements";
 import { useFocusEffect } from "expo-router";
 import React, { useCallback, useEffect, useRef, useState } from "react"; // Ensure useCallback is imported
@@ -33,21 +35,21 @@ import { SafeAreaView } from "react-native-safe-area-context";
 export default function ChatMessages({
   // userName = "Person",
   tooltips,
-  initialMessage,
+  prefilledText,
 }: {
   userName?: string;
   tooltips?: string[];
-  initialMessage: string;
+  prefilledText: string;
 }) {
   const theme = useTheme();
   const styles = createStyles(theme);
-  const textInputRef = React.useRef<any>(null);
-  const listRef = useRef<any>(null); // Ref for LegendList
+  const textInputRef = React.useRef<TextInput>(null);
+  const listRef = useRef<LegendListRef>(null); // Ref for LegendList
 
-  const [messages, setMessages] = useState<any>([]);
+  const [messages, setMessages] = useState<MessageType[]>([]);
 
   const loadMessages = function () {
-    let loadedMessages: any[] = [];
+    let loadedMessages: MessageType[] = [];
     const storedMessages = mmkvStorage.getString("chatMessages");
     if (storedMessages) {
       loadedMessages = JSON.parse(storedMessages);
@@ -72,12 +74,12 @@ export default function ChatMessages({
     };
   }, []);
 
-  const [messageContent, setMessageContent] = useState(initialMessage);
+  const [messageContent, setMessageContent] = useState(prefilledText);
 
   useEffect(() => {
     // to be able to load different initial messages when rendered using different parameters
-    setMessageContent(initialMessage);
-  }, [initialMessage]);
+    setMessageContent(prefilledText);
+  }, [prefilledText]);
 
   useFocusEffect(
     useCallback(() => {
@@ -94,7 +96,7 @@ export default function ChatMessages({
   const headerHeight = Platform.OS === "ios" ? useHeaderHeight() : 0;
 
   const handleSendMessage = function () {
-    const newMessages = [
+    const newMessages: MessageType[] = [
       ...messages,
       {
         sender: "user",
@@ -120,7 +122,7 @@ export default function ChatMessages({
           <LegendList
             data={messages}
             ref={listRef}
-            renderItem={({ item }: { item: any }) => {
+            renderItem={({ item }: { item: MessageType }) => {
               const isSender = item.sender == "user";
               return (
                 <View
@@ -156,7 +158,7 @@ export default function ChatMessages({
                 </View>
               );
             }}
-            keyExtractor={(item) => item?.$createdAt ?? "unknown"}
+            keyExtractor={(item) => item?.$createdAt.toISOString() ?? "unknown"}
             contentContainerStyle={{ padding: 10 }}
             recycleItems={true}
             initialScrollIndex={messages.length - 1}
@@ -238,7 +240,7 @@ export default function ChatMessages({
   );
 }
 
-function createStyles(theme: any) {
+function createStyles(theme: Theme) {
   return StyleSheet.create({
     container: {
       flex: 1,

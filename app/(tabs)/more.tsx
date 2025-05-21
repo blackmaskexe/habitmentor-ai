@@ -1,5 +1,6 @@
 import { View, Text, StyleSheet } from "react-native";
 import { useTheme } from "@/utils/theme/ThemeContext";
+import { Theme } from "@/utils/theme/themes";
 
 export default function Index() {
   const theme = useTheme();
@@ -11,7 +12,7 @@ export default function Index() {
   );
 }
 
-function createStyle(theme: any) {
+function createStyle(theme: Theme) {
   return StyleSheet.create({
     container: {
       flex: 1,

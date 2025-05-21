@@ -1,4 +1,6 @@
 import { useTheme } from "@/utils/theme/ThemeContext";
+import { Theme } from "@/utils/theme/themes";
+import { HabitObject } from "@/utils/types";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React from "react";
@@ -11,11 +13,11 @@ import {
 } from "react-native";
 import { SheetManager } from "react-native-actions-sheet";
 
-export default function IosOptionList({
+export default function ActionSheetIosOptionList({
   habitItem,
   onChangeDisplayScreen,
 }: {
-  habitItem: any;
+  habitItem: HabitObject;
   onChangeDisplayScreen: any;
 }) {
   const router = useRouter();
@@ -68,7 +70,7 @@ export default function IosOptionList({
             router.navigate({
               pathname: "/(tabs)/chat",
               params: {
-                initialMessage: `Can you help me improve and be more consistent in the habit of ${habitItem.habitName}`,
+                prefilledText: `Can you help me improve and be more consistent in the habit of ${habitItem.habitName}`,
               },
             });
           }
@@ -99,7 +101,7 @@ export default function IosOptionList({
   );
 }
 
-function createStyles(theme: any) {
+function createStyles(theme: Theme) {
   return StyleSheet.create({
     sectionHeader: {
       paddingHorizontal: 16,
@@ -161,9 +163,6 @@ function createStyles(theme: any) {
       marginLeft: 56, // Align with text start
       opacity: 0.5,
     },
-    spacer: {
-      height: 40,
-    },
     signOutButton: {
       marginTop: 8,
       marginBottom: 16,
@@ -174,7 +173,7 @@ function createStyles(theme: any) {
       marginHorizontal: 16,
     },
     signOutText: {
-      color: theme.colors.onPrimary || theme.colors.white, // Replaced "white", assuming onPrimary or a white color exists
+      color: theme.colors.primary || theme.colors.textSecondary, // Replaced "white", assuming onPrimary or a white color exists
       fontSize: 16,
       fontWeight: "600",
     },

@@ -49,11 +49,11 @@ export const lightTheme = {
 
   // Simplified typography
   text: {
-    h1: { fontSize: 32, fontWeight: "700" },
-    h2: { fontSize: 24, fontWeight: "600" },
-    h3: { fontSize: 20, fontWeight: "500" },
-    body: { fontSize: 16, fontWeight: "400" },
-    small: { fontSize: 14, fontWeight: "400" },
+    h1: { fontSize: 32, fontWeight: 700 as any },
+    h2: { fontSize: 24, fontWeight: 600 as any },
+    h3: { fontSize: 20, fontWeight: 500 as any },
+    body: { fontSize: 16, fontWeight: 400 as any },
+    small: { fontSize: 14, fontWeight: 400 as any },
   },
 
   // Common spacing
@@ -124,13 +124,7 @@ export const darkTheme = {
   },
 
   // Reuse other properties
-  text: {
-    h1: { fontSize: 32, fontWeight: "700" },
-    h2: { fontSize: 24, fontWeight: "600" },
-    h3: { fontSize: 20, fontWeight: "500" },
-    body: { fontSize: 16, fontWeight: "400" },
-    small: { fontSize: 14, fontWeight: "400" },
-  },
+  text: lightTheme.text,
   spacing: lightTheme.spacing,
   radius: lightTheme.radius,
 };

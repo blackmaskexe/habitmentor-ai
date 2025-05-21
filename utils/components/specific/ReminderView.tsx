@@ -16,12 +16,13 @@ import { Ionicons } from "@expo/vector-icons";
 import CTAButton from "../general/CTAButton"; // Assuming this is your custom button
 import { Theme } from "@/utils/theme/themes";
 import { useNotifications } from "@/utils/useNotifications";
+import { HabitObject } from "@/utils/types";
 
 interface ReminderViewProps {
   initialTime?: Date;
   onTimeChange?: (newTime: Date) => void;
   onChangeDisplayScreen: (screen: string) => void;
-  habitObject: any;
+  habitObject: HabitObject;
 }
 
 export default function ReminderView({
@@ -57,7 +58,7 @@ export default function ReminderView({
   };
 
   const handleAddReminder = async () => {
-    schedulePushNotification(time);
+    schedulePushNotification(time, habitObject);
   };
 
   useEffect(() => {
@@ -165,6 +166,7 @@ const createStyles = (theme: Theme) =>
       textAlign: "center",
       marginHorizontal: 20,
       marginBottom: 15, // Space before the picker
+      fontWeight: "normal",
       // lineHeight: 18,
     },
     pickerContainer: {

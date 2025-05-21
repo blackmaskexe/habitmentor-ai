@@ -31,6 +31,8 @@ type ItemPickerProps = {
   }>;
 };
 
+type FormValues = {};
+
 const fields = [
   {
     key: "habitName",
@@ -67,10 +69,7 @@ export default function VariableItemPicker({
   const [modalVisible, setModalVisible] = useState(false);
   const [moreHabitsArray, setMoreHabitsArray] = useState(Array(1).fill(null));
 
-  console.log("baburao ka style", moreHabitsArray);
-
   const handleNewHabitSubmission = function () {
-    console.log(moreHabitsArray, "WOOOO YEAH WOOHOHHOOH YEAH WOHOHOH YWAH");
     setModalVisible(false);
     const habitData = values;
     habitData.iconName = getHabitIcon(habitData.habitName);
@@ -217,7 +216,6 @@ export default function VariableItemPicker({
                     fields={fields}
                     onValueChange={(key, value) => {
                       setValues((prev: any) => ({ ...prev, [key]: value }));
-                      console.log(values);
                     }}
                     values={values}
                   />

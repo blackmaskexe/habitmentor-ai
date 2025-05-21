@@ -18,16 +18,10 @@ import {
   onMarkAsIncomplete,
 } from "@/utils/database/habitHistory";
 import { getFormattedDate, getWeekdayNumber } from "@/utils/date";
+import { HabitObject } from "@/utils/types";
+import { Theme } from "@/utils/theme/themes";
 
 // Components:
-
-interface HabitItem {
-  habitName: string;
-  habitDeadline: string;
-  habitFrequency: number;
-  completedFrequency: number;
-  points: number;
-}
 
 // Dummy data
 // const habitItems: HabitItem[] = [
@@ -58,8 +52,7 @@ const DailyHabitsView: React.FC = () => {
   const theme = useTheme();
   const styles = createStyles(theme);
 
-  const [habitItems, setHabitItems] = useState<any[]>([]);
-  console.log("soano akhen khra", habitItems);
+  const [habitItems, setHabitItems] = useState<HabitObject[]>([]);
 
   const loadHabits = function () {
     // fetch habits from mmkvStorage
@@ -76,7 +69,6 @@ const DailyHabitsView: React.FC = () => {
   useFocusEffect(
     useCallback(() => {
       loadHabits();
-      console.log("damn this page was loaded, I am surprised that it did");
     }, [])
   );
 
@@ -85,7 +77,7 @@ const DailyHabitsView: React.FC = () => {
 
     const listener = mmkvStorage.addOnValueChangedListener((changedKey) => {
       if (changedKey == "activeHabits") {
-        console.log("habits were changed somehow");
+        // reload the habits if the activeHabits change
         loadHabits();
       }
     });
@@ -100,7 +92,7 @@ const DailyHabitsView: React.FC = () => {
   //   mmkvStorage.getString("activeHabits") || JSON.stringify([]);
   // const habitItems: any[] = JSON.parse(storedHabitsString);
 
-  const [taskCompletion, setTaskCompletion] = useState<any>([]); // track the ticking of the habit items
+  const [taskCompletion, setTaskCompletion] = useState<boolean[]>([]); // track the ticking of the habit items
 
   useEffect(() => {
     setTaskCompletion(() => {
@@ -122,14 +114,14 @@ const DailyHabitsView: React.FC = () => {
     });
   }, [habitItems]); // set the taskCompletion state according to the data stored in the database
   const handleToggleTaskCompletion = (index: number) => {
-    setTaskCompletion((oldTaskCompletion: any) => {
+    setTaskCompletion((oldTaskCompletion: boolean[]) => {
       const newTaskCompletion = [...oldTaskCompletion];
       newTaskCompletion[index] = !oldTaskCompletion[index];
       return newTaskCompletion;
     });
   };
 
-  const renderHabitItem = (habit: any, index: number) => {
+  const renderHabitItem = (habit: HabitObject, index: number) => {
     return (
       <BouncyCheckbox
         isChecked={taskCompletion[index]}
@@ -165,9 +157,10 @@ const DailyHabitsView: React.FC = () => {
                 },
               ]}
               numberOfLines={1}
-              ellipsizeMode="tail" // displya ... when habit name is too long
+              ellipsizeMode="tail" // displays ... when habit name is too long
             >
-              {habit.habitName}
+              {habit.habitName.slice(0, 30)}
+              {habit.habitName.length > 29 ? "..." : null}
             </Text>
             <Text style={styles.habitInfo}>{`+${habit.points} Points`}</Text>
           </View>
@@ -178,7 +171,7 @@ const DailyHabitsView: React.FC = () => {
 
   return (
     <ScrollView style={styles.container}>
-      {habitItems.map((habit: any, index: any) => {
+      {habitItems.map((habit: HabitObject, index: number) => {
         if (habit && habit.frequency[getWeekdayNumber()]) {
           // if the current day matches with the day
           // the habit is supposed to happen on
@@ -219,7 +212,7 @@ const DailyHabitsView: React.FC = () => {
   );
 };
 
-const createStyles = (theme: any) =>
+const createStyles = (theme: Theme) =>
   StyleSheet.create({
     container: {
       flex: 1,

@@ -1,11 +1,12 @@
 import ChatMessages from "@/utils/components/general/ChatMessage";
 import { useTheme } from "@/utils/theme/ThemeContext";
+import { Theme } from "@/utils/theme/themes";
 import { useLocalSearchParams } from "expo-router";
 import React from "react";
 import { StyleSheet } from "react-native";
 
 const Chat = () => {
-  const { initialMessage } = useLocalSearchParams();
+  const { prefilledText }: { prefilledText: string } = useLocalSearchParams();
   const theme = useTheme();
   const styles = createStyles(theme);
 
@@ -17,12 +18,12 @@ const Chat = () => {
         "What can I do better for",
         "Where in the app can I find",
       ]}
-      initialMessage={(initialMessage as any) || ""}
+      prefilledText={prefilledText || ""}
     />
   );
 };
 
-function createStyles(theme: any) {
+function createStyles(theme: Theme) {
   return StyleSheet.create({
     container: {},
 

@@ -4,13 +4,14 @@ import { StyleSheet, TouchableOpacity, View, Text } from "react-native";
 
 const weekdays = ["Sun", "Mon", "Tue", "We", "Thu", "Fri", "Sat"];
 import * as Haptics from "expo-haptics";
+import { Theme } from "@/utils/theme/themes";
 
 export default function WeekdayFrequencyPicker({
   currentFrequency,
-  changeValues,
+  onChangeValues,
 }: {
   currentFrequency: string[];
-  changeValues: any;
+  onChangeValues: (updater: (oldValue: any) => any) => void;
 }) {
   useEffect(() => {
     // When currentFrequency changes, then change how the
@@ -30,9 +31,11 @@ export default function WeekdayFrequencyPicker({
   }, [activeDays]);
 
   const updateValueState = function (newActiveDays: any) {
-    changeValues((oldValue: any) => {
+    onChangeValues((oldValue: any) => {
       const newValue = oldValue;
       newValue.frequency = activeDays;
+      console.log("my style ain't free", newValue);
+
       return newValue;
     });
   };
@@ -85,7 +88,7 @@ export default function WeekdayFrequencyPicker({
   );
 }
 
-function createStyles(theme: any) {
+function createStyles(theme: Theme) {
   return StyleSheet.create({
     weekdayFrequencyContainer: {
       flexDirection: "row",
@@ -109,7 +112,7 @@ function createStyles(theme: any) {
       backgroundColor: theme.colors.textTertiary, // Primary color background
     },
     weekdayText: {
-      color: theme.colors.onPrimary || "white", // Ensure good contrast
+      color: "white", // Ensure good contrast
       fontWeight: "bold",
     },
   });

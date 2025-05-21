@@ -7,6 +7,8 @@ import CardWithoutImage from "../../general/CardWithoutImage";
 import IosOptionList from "./ActionSheetIosOptionList";
 import ReminderView from "../ReminderView";
 import { useState } from "react";
+import { Theme } from "@/utils/theme/themes";
+import { HabitObject } from "@/utils/types";
 
 // SheetManager.show("example-sheet", {
 //   payload: {
@@ -18,7 +20,11 @@ import { useState } from "react";
 //   },
 // });
 
-export default function HabitItemSheet({ habitObject }: { habitObject: any }) {
+export default function HabitItemSheet({
+  habitObject,
+}: {
+  habitObject: HabitObject;
+}) {
   const theme = useTheme();
   const styles = createStyles(theme);
 
@@ -57,7 +63,7 @@ export default function HabitItemSheet({ habitObject }: { habitObject: any }) {
   );
 }
 
-function createStyles(theme: any) {
+function createStyles(theme: Theme) {
   return StyleSheet.create({
     habitItemSheetContainer: {
       marginVertical: theme.spacing.s,
