@@ -22,14 +22,14 @@ interface ReminderViewProps {
   initialTime?: Date;
   onTimeChange?: (newTime: Date) => void;
   onChangeDisplayScreen: (screen: string) => void;
-  habitObject: HabitObject;
+  habit: HabitObject;
 }
 
 export default function ReminderView({
   initialTime,
   onTimeChange,
   onChangeDisplayScreen,
-  habitObject,
+  habit,
 }: ReminderViewProps) {
   const { schedulePushNotification } = useNotifications();
 
@@ -58,7 +58,7 @@ export default function ReminderView({
   };
 
   const handleAddReminder = async () => {
-    schedulePushNotification(time, habitObject);
+    schedulePushNotification(time, habit);
   };
 
   useEffect(() => {

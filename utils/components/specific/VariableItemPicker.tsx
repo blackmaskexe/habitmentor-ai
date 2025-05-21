@@ -20,6 +20,7 @@ import CTAButton from "../general/CTAButton";
 import mmkvStorage from "@/utils/mmkvStorage";
 import TaskFrequencyDropdownMenu from "./zeego/TaskFrequencyDropdownMenu";
 import WeekdayFrequencyPicker from "./WeekdayFrequencyPicker";
+import { FormValuesType } from "@/utils/types";
 
 type ItemPickerProps = {
   onItemPress?: (index: number) => void;
@@ -57,7 +58,7 @@ export default function VariableItemPicker({
 }: ItemPickerProps) {
   const theme = useTheme();
   const styles = createStyles(theme, BOX_SIZE);
-  const [values, setValues] = useState<any>({}); // values for the form inside the modal
+  const [values, setValues] = useState<FormValuesType>({}); // values for the form inside the modal
 
   const [activeHabitItemIndex, setActiveHabitItemIndex] = useState(0);
 
@@ -237,7 +238,7 @@ export default function VariableItemPicker({
                         "Sat",
                       ]
                     }
-                    changeValues={setValues}
+                    onChangeValues={setValues}
                   />
 
                   <Text style={styles.formLabel}></Text>

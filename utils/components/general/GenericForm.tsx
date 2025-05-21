@@ -1,5 +1,7 @@
 import { View, Text, TextInput, StyleSheet, ScrollView } from "react-native";
 import { useTheme } from "@/utils/theme/ThemeContext";
+import { FormValuesType } from "@/utils/types";
+import { Theme } from "@/utils/theme/themes";
 
 /**
  * GenericForm Component
@@ -89,7 +91,7 @@ type FormField = {
 type GenericFormProps = {
   fields: FormField[];
   onValueChange: (key: string, value: string) => void;
-  values?: Record<string, string>;
+  values?: FormValuesType;
   errors?: Record<string, string>;
 };
 
@@ -115,7 +117,7 @@ export default function GenericForm({
             style={[styles.input, errors[field.key] && styles.inputError]}
             placeholder={field.placeholder}
             placeholderTextColor={theme.colors.placeholder}
-            value={values[field.key]}
+            value={(values as any)[field.key]}
             onChangeText={(text) => onValueChange(field.key, text)}
             secureTextEntry={field.secureTextEntry}
           />
@@ -129,7 +131,7 @@ export default function GenericForm({
   );
 }
 
-function createStyles(theme: any) {
+function createStyles(theme: Theme) {
   return StyleSheet.create({
     container: {
       width: "100%",

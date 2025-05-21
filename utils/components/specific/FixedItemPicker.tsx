@@ -67,7 +67,7 @@ export default function FixedItemPicker({
 }: ItemPickerProps) {
   const theme = useTheme();
   const styles = createStyles(theme, BOX_SIZE);
-  const [values, setValues] = useState<FormValuesType>({}); // values for the form inside the modal
+  const [values, setValues] = useState<any>({}); // values for the form inside the modal
   const [activeHabitItemIndex, setActiveHabitItemIndex] = useState(0);
   const [habitsFrequency, setHabitFrequency] = useState(
     // this array contains array of days (In the format of Mon, Tue, Wed) that the user wants to do these habits on
@@ -154,7 +154,7 @@ export default function FixedItemPicker({
         >
           <View style={styles.box}>
             <Ionicons
-              name={habitItems[index] ? habitItems[index].iconName : "add"}
+              name={(habitItems[index]?.iconName as any) || "add"}
               size={BOX_SIZE * 0.5}
               color={theme.colors.textSecondary}
             />
