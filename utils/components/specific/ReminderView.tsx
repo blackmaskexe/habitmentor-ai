@@ -89,6 +89,8 @@ export default function ReminderView({
     onChangeDisplayScreen("main");
   };
 
+  console.log("I know you'll love it", getHabitObjectFromId(habitId));
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.headerBar}>
@@ -124,8 +126,8 @@ export default function ReminderView({
       <View style={styles.buttonContainer}>
         <CTAButton
           title={`${
-            getHabitObjectFromId(habitId) ? "Reset" : "Set"
-          } Reminder for ${time.toLocaleTimeString([], {
+            getHabitObjectFromId(habitId)?.notificationId ? "Reset" : "Set"
+          } Reminder to ${time.toLocaleTimeString([], {
             hour: "2-digit",
             minute: "2-digit",
           })}`}

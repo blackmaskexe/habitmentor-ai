@@ -5,24 +5,33 @@ import { useTheme } from "@/utils/theme/ThemeContext";
 import mmkvStorage from "@/utils/mmkvStorage";
 import { useRouter } from "expo-router";
 import { useNotifications } from "@/utils/useNotifications";
+import AddNewHabitModal from "../AddNewHabitModal";
+import { useState } from "react";
 
 export default function HomeAddDropdownMenu() {
   const router = useRouter();
   const theme = useTheme();
 
   const { cancelAllScheduledNotifications } = useNotifications();
+  const [isModalVisible, setIsModalVisible] = useState(false);
   return (
     <DropdownMenu.DropdownMenuRoot>
       <DropdownMenu.DropdownMenuTrigger>
-        <TouchableOpacity
-          style={{
-            marginRight: theme.spacing.m,
-            alignSelf: "center",
-            justifyContent: "center",
-          }}
-        >
-          <Ionicons name="add" size={28} color={theme.colors.primary} />
-        </TouchableOpacity>
+        <>
+          <TouchableOpacity
+            style={{
+              marginRight: theme.spacing.m,
+              alignSelf: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Ionicons name="add" size={28} color={theme.colors.primary} />
+          </TouchableOpacity>
+          <AddNewHabitModal
+            isModalVisible={isModalVisible}
+            setIsModalVisible={setIsModalVisible}
+          />
+        </>
       </DropdownMenu.DropdownMenuTrigger>
       <DropdownMenu.DropdownMenuContent>
         <DropdownMenu.DropdownMenuLabel>
@@ -32,6 +41,7 @@ export default function HomeAddDropdownMenu() {
           key="add-habit"
           onSelect={() => {
             console.log("tung tung tung");
+            setIsModalVisible(true);
           }}
         >
           <DropdownMenu.DropdownMenuItemTitle>

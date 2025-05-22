@@ -31,3 +31,14 @@ export function getHabitObjectFromId(habitId: string) {
     }
   }
 }
+
+export function addNewHabit(newHabitObject: HabitObject) {
+  const activeHabits: HabitObject[] = JSON.parse(
+    mmkvStorage.getString("activeHabits") || "[]"
+  );
+
+  mmkvStorage.set(
+    "activeHabits",
+    JSON.stringify([...activeHabits, newHabitObject])
+  );
+}
