@@ -63,8 +63,15 @@ export function useNotifications() {
   }, []);
 
   async function schedulePushNotification(time: Date, habit: HabitObject) {
+    console.log("Current habit:", habit);
+    const allScheduledNotis = await getAllScheduledNotifications();
+    console.log("currently scheduled notis:", allScheduledNotis);
     // checking if there is already an identifier attached to that habit, cancel the previous one first:
     if (habit.notificationId) {
+      console.log(
+        habit.notificationId,
+        "bro totally was hiding his other family as well as the notificaitonId"
+      );
       await cancelScheduledNotificationById(habit.notificationId);
     }
     // then proceed with creating a new notification scheduler:
@@ -136,7 +143,9 @@ export function useNotifications() {
         token = `${e}`;
       }
     } else {
-      alert("Must use physical device for Push Notifications");
+      console.log(
+        "shouldn't use simulator for handling expo token notifications, local notifications are fine"
+      );
     }
 
     return token;
@@ -168,7 +177,9 @@ export function useNotifications() {
 
   async function cancelScheduledNotificationById(notificationId: string) {
     try {
-      Notifications.cancelScheduledNotificationAsync(notificationId);
+      const cancelResult = await Notifications.cancelScheduledNotificationAsync(
+        notificationId
+      );
       console.log("successfully cancelled for id", notificationId);
     } catch (err) {
       console.log("not able to cancel,", err);

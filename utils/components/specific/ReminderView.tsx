@@ -16,20 +16,24 @@ import { Ionicons } from "@expo/vector-icons";
 import CTAButton from "../general/CTAButton"; // Assuming this is your custom button
 import { Theme } from "@/utils/theme/themes";
 import { useNotifications } from "@/utils/useNotifications";
-import { HabitObject } from "@/utils/types";
+import { getHabitObjectFromId } from "@/utils/database/habits";
+
+// update state variable that holds habit when habit changes in the mmkvStorage
+// now the todo right now is what is the root component that houses the habit item so that
+// I can add the event listener there and it can propagate downwards
 
 interface ReminderViewProps {
   initialTime?: Date;
   onTimeChange?: (newTime: Date) => void;
   onChangeDisplayScreen: (screen: string) => void;
-  habit: HabitObject;
+  habitId: string;
 }
 
 export default function ReminderView({
   initialTime,
   onTimeChange,
   onChangeDisplayScreen,
-  habit,
+  habitId,
 }: ReminderViewProps) {
   const { schedulePushNotification } = useNotifications();
 
@@ -58,7 +62,11 @@ export default function ReminderView({
   };
 
   const handleAddReminder = async () => {
-    schedulePushNotification(time, habit);
+    const habit = getHabitObjectFromId(habitId); // using id to get the latest version of the habitObject
+    // (need latest copy in order to manage notifications)
+    if (habit) {
+      schedulePushNotification(time, habit);
+    }
   };
 
   useEffect(() => {
@@ -115,7 +123,9 @@ export default function ReminderView({
 
       <View style={styles.buttonContainer}>
         <CTAButton
-          title={`Set Reminder for ${time.toLocaleTimeString([], {
+          title={`${
+            getHabitObjectFromId(habitId) ? "Reset" : "Set"
+          } Reminder for ${time.toLocaleTimeString([], {
             hour: "2-digit",
             minute: "2-digit",
           })}`}

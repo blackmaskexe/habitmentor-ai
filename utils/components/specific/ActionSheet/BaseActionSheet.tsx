@@ -6,8 +6,6 @@ import ActionSheet, { SheetProps } from "react-native-actions-sheet";
 import NavigationPill from "../../general/NavigationPill";
 import HabitItemSheet from "./HabitItemSheet";
 
-const { height } = Dimensions.get("window");
-
 function ExampleSheet(props: SheetProps<"example-sheet">) {
   const theme = useTheme();
   const styles = createStyles(theme);
@@ -15,15 +13,14 @@ function ExampleSheet(props: SheetProps<"example-sheet">) {
   const payloadData = props.payload;
   const sheetContentType = (payloadData.sheetType as any) || "default";
 
-  console.log("love you like i should tonight", theme.colors.primary);
-
   const componentOptions: { [key: string]: any } = {
+    // decide which component to render based on the sheetContentType
+    // this is kind of like variant selection passed as prop
     habitItem: HabitItemSheet,
+    default: null,
   };
 
   const SheetContentComponent = componentOptions[sheetContentType];
-
-  console.log("She not nice", payloadData);
 
   return (
     <ActionSheet
@@ -34,7 +31,7 @@ function ExampleSheet(props: SheetProps<"example-sheet">) {
     >
       <NavigationPill />
 
-      <SheetContentComponent habitObject={payloadData.habitItem.habit} />
+      <SheetContentComponent habitObject={payloadData.habit} />
     </ActionSheet>
   );
 }

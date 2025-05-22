@@ -19,3 +19,15 @@ export function updateHabitNotificationId(
 
   mmkvStorage.set("activeHabits", JSON.stringify(activeHabits));
 }
+
+export function getHabitObjectFromId(habitId: string) {
+  const activeHabits: HabitObject[] = JSON.parse(
+    mmkvStorage.getString("activeHabits") || "[]"
+  );
+  // looping through the currentActiveHabits array, return the object if found
+  for (const habit of activeHabits) {
+    if (habit.id == habitId) {
+      return habit;
+    }
+  }
+}

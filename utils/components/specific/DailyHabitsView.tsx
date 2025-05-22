@@ -78,6 +78,10 @@ const DailyHabitsView: React.FC = () => {
     const listener = mmkvStorage.addOnValueChangedListener((changedKey) => {
       if (changedKey == "activeHabits") {
         // reload the habits if the activeHabits change
+        console.log(
+          mmkvStorage.getString("activeHabits"),
+          "the active habits has changed somewhat, please see"
+        );
         loadHabits();
       }
     });
@@ -122,6 +126,7 @@ const DailyHabitsView: React.FC = () => {
   };
 
   const renderHabitItem = (habit: HabitObject, index: number) => {
+    // rendering logic for each of the habit tasks for today
     return (
       <BouncyCheckbox
         isChecked={taskCompletion[index]}
@@ -189,10 +194,7 @@ const DailyHabitsView: React.FC = () => {
                     SheetManager.show("example-sheet", {
                       payload: {
                         sheetType: "habitItem",
-                        habitItem: {
-                          habit: habit,
-                          habitIndex: index,
-                        },
+                        habit: habit,
                       },
                     });
                   }}
