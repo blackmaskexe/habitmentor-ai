@@ -13,7 +13,7 @@ interface HabitObject {
   iconName: keyof typeof Ionicons.glyphMap | string; // Type for Ionicons, complicated but that's what is used
   id: string;
   points: number;
-  notificationId?: string;
+  notificationIds?: string[];
 }
 
 interface FormValuesType {

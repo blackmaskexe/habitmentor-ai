@@ -4,7 +4,7 @@ import { HabitObject } from "../types";
 
 export function updateHabitNotificationId(
   habitId: string,
-  notificationId: string
+  notificationIdArray: string[]
 ) {
   // getting the activeHabits from mmkvStorage:
   const activeHabits: HabitObject[] = JSON.parse(
@@ -13,7 +13,7 @@ export function updateHabitNotificationId(
   // looping through the currentActiveHabits array, setting the notificationId to the new one:
   for (const habit of activeHabits) {
     if (habit.id == habitId) {
-      habit.notificationId = notificationId;
+      habit.notificationIds = notificationIdArray;
     }
   }
 

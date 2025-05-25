@@ -12,7 +12,6 @@ export default function HomeAddDropdownMenu() {
   const router = useRouter();
   const theme = useTheme();
 
-  const { cancelAllScheduledNotifications } = useNotifications();
   const [isModalVisible, setIsModalVisible] = useState(false);
   return (
     <DropdownMenu.DropdownMenuRoot>
@@ -49,12 +48,7 @@ export default function HomeAddDropdownMenu() {
           </DropdownMenu.DropdownMenuItemTitle>
         </DropdownMenu.DropdownMenuItem>
 
-        <DropdownMenu.DropdownMenuItem
-          key="clear-reminder"
-          onSelect={() => {
-            cancelAllScheduledNotifications();
-          }}
-        >
+        <DropdownMenu.DropdownMenuItem key="clear-reminder" onSelect={() => {}}>
           <DropdownMenu.DropdownMenuItemTitle>
             Clear All Reminders get this outta here and into settings
           </DropdownMenu.DropdownMenuItemTitle>

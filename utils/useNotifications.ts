@@ -67,29 +67,42 @@ export function useNotifications() {
     const allScheduledNotis = await getAllScheduledNotifications();
     console.log("currently scheduled notis:", allScheduledNotis);
     // checking if there is already an identifier attached to that habit, cancel the previous one first:
-    if (habit.notificationId) {
+    if (habit.notificationIds) {
       console.log(
-        habit.notificationId,
+        habit.notificationIds,
         "bro totally was hiding his other family as well as the notificaitonId"
       );
-      await cancelScheduledNotificationById(habit.notificationId);
+      for (const notificationId of habit.notificationIds) {
+        // cancel all of the scheduled notifications within the notificationIds array to cancel for all (selected) days of the week
+        await cancelScheduledNotificationById(notificationId);
+      }
     }
-    // then proceed with creating a new notification scheduler:
-    const identifier = await Notifications.scheduleNotificationAsync({
-      content: {
-        title: "Daily Reminder",
-        body: "Don't forget to check the app today!",
-      },
-      trigger: {
-        type: Notifications.SchedulableTriggerInputTypes.CALENDAR,
-        hour: time.getHours(),
-        minute: time.getMinutes(),
-        repeats: true,
-      },
-    });
-    if (identifier) {
-      // updating the mmkvStorage activeHabits with the updated notificationId:
-      updateHabitNotificationId(habit.id, identifier);
+    // then proceed with creating a new notification scheduler for EACH day the habit is active:
+    const notificationIdArray: string[] = [];
+    for (let i = 0; i < habit.frequency.length; i++) {
+      const dayOfWeek = i + 1; // calendar trigger assumes 1 = sunday, .... 7 = saturday, so adding one
+      if (habit.frequency[i]) {
+        // checks for if that habit is to be done on the particular day of the week (frequency[] is array of 7 bools)
+        const identifier = await Notifications.scheduleNotificationAsync({
+          content: {
+            title: "HabitMentor AI",
+            body: `You are overdue for ${habit.habitName}`,
+          },
+          trigger: {
+            type: Notifications.SchedulableTriggerInputTypes.CALENDAR,
+            hour: time.getHours(),
+            minute: time.getMinutes(),
+            weekday: dayOfWeek,
+            repeats: true,
+          },
+        });
+        notificationIdArray.push(identifier);
+      }
+    }
+
+    if (notificationIdArray) {
+      // updating the mmkvStorage activeHabits with the updated notificationIds for all the scheduled days:
+      updateHabitNotificationId(habit.id, notificationIdArray);
     }
 
     console.log(

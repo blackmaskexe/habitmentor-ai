@@ -20,6 +20,7 @@ import {
 import { getFormattedDate, getWeekdayNumber } from "@/utils/date";
 import { HabitObject } from "@/utils/types";
 import { Theme } from "@/utils/theme/themes";
+import * as Haptics from "expo-haptics";
 
 // Components:
 
@@ -141,6 +142,7 @@ const DailyHabitsView: React.FC = () => {
           color: theme.colors.text,
         }}
         onPress={(isChecked: boolean) => {
+          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
           handleToggleTaskCompletion(index);
           if (isChecked) {
             // if the task is not completed (just clicked completed), then mark as complete
@@ -190,6 +192,7 @@ const DailyHabitsView: React.FC = () => {
                 <TouchableOpacity
                   style={styles.habitOptions}
                   onPress={() => {
+                    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
                     console.log("I think i've seen it twice all year", habit);
                     SheetManager.show("example-sheet", {
                       payload: {

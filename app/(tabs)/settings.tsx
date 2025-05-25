@@ -1,28 +1,20 @@
-import { useTheme } from "@/utils/theme/ThemeContext";
-import { Theme } from "@/utils/theme/themes";
-import { HabitObject } from "@/utils/types";
-import { Ionicons } from "@expo/vector-icons";
-import { useRouter } from "expo-router";
-import React from "react";
 import {
   View,
   Text,
   StyleSheet,
-  ScrollView,
   TouchableOpacity,
+  ScrollView,
 } from "react-native";
-import { SheetManager } from "react-native-actions-sheet";
+import { useTheme } from "@/utils/theme/ThemeContext";
+import { Theme } from "@/utils/theme/themes";
+import { Ionicons } from "@expo/vector-icons";
+import { useNotifications } from "@/utils/useNotifications";
 
-export default function ActionSheetIosOptionList({
-  habitItem,
-  onChangeDisplayScreen,
-}: {
-  habitItem: HabitObject;
-  onChangeDisplayScreen: any;
-}) {
-  const router = useRouter();
+export default function Settings() {
   const theme = useTheme();
   const styles = createStyles(theme);
+
+  const { cancelAllScheduledNotifications } = useNotifications();
 
   const renderOptionItem = function (
     position: "top" | "between" | "bottom",
@@ -52,8 +44,9 @@ export default function ActionSheetIosOptionList({
       </TouchableOpacity>
     );
   };
+
   return (
-    <ScrollView>
+    <ScrollView style={styles.container}>
       <View style={styles.sectionHeader}>
         <Text style={styles.sectionHeaderText}>OPTIONS</Text>
       </View>
@@ -63,28 +56,10 @@ export default function ActionSheetIosOptionList({
         {renderOptionItem(
           "top",
           "sparkles-outline",
-          "Improve Habit using AI",
+          "Cancel All Notifications",
           () => {
-            // router.replace("/(tabs)/home");
-            SheetManager.hide("example-sheet");
-            router.navigate({
-              pathname: "/(tabs)/chat",
-              params: {
-                prefilledText: `Can you help me improve and be more consistent in the habit of ${habitItem.habitName}`,
-              },
-            });
+            cancelAllScheduledNotifications();
           }
-        )}
-
-        {renderOptionItem("bottom", "alarm-outline", "Set Reminder", () => {
-          onChangeDisplayScreen("reminder");
-        })}
-
-        {renderOptionItem(
-          "between",
-          "play-skip-forward-outline",
-          "Skip Habit for Today",
-          () => {}
         )}
 
         {renderOptionItem(
@@ -103,6 +78,9 @@ export default function ActionSheetIosOptionList({
 
 function createStyles(theme: Theme) {
   return StyleSheet.create({
+    container: {
+      backgroundColor: theme.colors.background,
+    },
     sectionHeader: {
       paddingHorizontal: 16,
       paddingTop: 30,
