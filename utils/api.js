@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const apiUrl = "http://10.0.0.162:3000";
+const apiUrl = "http://localhost:3001/habit-mentor";
 
 const api = axios.create({
   baseURL: apiUrl,

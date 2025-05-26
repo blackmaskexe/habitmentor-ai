@@ -2,6 +2,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Redirect } from "expo-router";
 import { useEffect, useState } from "react";
 import "react-native-gesture-handler";
+import "react-native-reanimated";
+import "react-native-gesture-handler";
 
 // Components:
 import LoadingScreen from "@/utils/components/general/LoadingScreen";
@@ -34,6 +36,3 @@ export default function Index() {
 
   return <Redirect href={hasOnboarded ? "/(tabs)/home" : "/(onboarding)"} />;
 }
-
-// Implementation for Zeego Alternative:
-// https://github.com/react-native-menu/menu

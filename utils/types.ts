@@ -1,9 +1,11 @@
 import { Ionicons } from "@expo/vector-icons";
 
 interface MessageType {
-  sender: String;
-  content: String;
+  id: string;
+  sender: string;
+  content: string;
   $createdAt: Date;
+  loading: boolean;
 }
 
 interface HabitObject {
@@ -25,4 +27,12 @@ interface FormValuesType {
   points?: number;
 }
 
-export type { MessageType, HabitObject, FormValuesType };
+interface UserChatRequestType {
+  message: string;
+  importantMessageHistory?: string[];
+  recentMissedHabits?: string[];
+  timeOfDay?: "morning" | "afternoon" | "evening";
+  proActive: boolean;
+}
+
+export type { MessageType, HabitObject, FormValuesType, UserChatRequestType };

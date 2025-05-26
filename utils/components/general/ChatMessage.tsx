@@ -19,6 +19,8 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import api from "@/utils/api";
+import ChatMessagesSkeleton from "./ChatMessagesSkeleton";
 
 // Prop Instructions:
 // Send a message prop as follows:
@@ -95,17 +97,76 @@ export default function ChatMessages({
 
   const headerHeight = Platform.OS === "ios" ? useHeaderHeight() : 0;
 
+  const handleAIInteraction = async function (
+    messageContent: string,
+    aiMessageId: string
+  ) {
+    // creating a skeleton as the last message to indicate AI Activity:
+    // setMessages((oldMessages) => {
+    //   return [
+    //     ...oldMessages,
+    //     {
+    //       sender: "system",
+    //       content: "",
+    //       loading: true, // loading set to true will make it render as a skeleton
+    //       $createdAt: new Date(Date.now() + 212121),
+    //     },
+    //   ];
+    // });
+
+    // call the API to send a request to the server to fetch a response
+    const response = await api.post("/chat", {
+      message: messageContent,
+      proActive: false,
+    });
+
+    console.log("It's not for romance", response);
+
+    // populating the newly created message with the actual content:
+    setMessages((prevMessages) => {
+      const updatedMessages = prevMessages.map((msg) =>
+        msg.id === aiMessageId
+          ? {
+              ...msg,
+              content: response.data.response,
+              loading: false,
+            }
+          : msg
+      );
+      // Save to storage AFTER AI response is processed and state is updated
+      mmkvStorage.set("chatMessages", JSON.stringify(updatedMessages));
+      return updatedMessages;
+    });
+  };
+
   const handleSendMessage = function () {
+    // update immediately with user's message:
+    const timeStamp = new Date();
+    const userMessageId = timeStamp.toISOString() + "-user";
+    const aiMessageId = timeStamp.toISOString() + "-ai";
+
     const newMessages: MessageType[] = [
       ...messages,
       {
+        // user's message
+        id: userMessageId,
         sender: "user",
         content: messageContent,
         $createdAt: new Date(),
+        loading: false, // user's messages don't load because it is asynchronous
+      },
+      {
+        // ai's message (skemleton rn, will become real one in the future)
+        id: aiMessageId,
+        sender: "ai",
+        content: "",
+        $createdAt: new Date(Date.now() + 5000),
+        loading: true,
       },
     ];
     setMessages(newMessages);
-    mmkvStorage.set("chatMessages", JSON.stringify(newMessages));
+    handleAIInteraction(messageContent, aiMessageId); // send message content before it's wiped
+
     setMessageContent("");
 
     listRef.current?.scrollToEnd({ animated: true });
@@ -125,37 +186,45 @@ export default function ChatMessages({
             renderItem={({ item }: { item: MessageType }) => {
               const isSender = item.sender == "user";
               return (
-                <View
-                  style={
-                    isSender
-                      ? styles.userMessageContainer
-                      : styles.systemMessageContainer
-                  }
-                >
-                  <View
-                    style={
-                      isSender
-                        ? styles.userMessageContent
-                        : styles.systemMessageContent
-                    }
-                  >
-                    <Text style={{ fontWeight: "500", marginBottom: 4 }}>
-                      {item.sender}
-                    </Text>
-                    <Text>{item.content}</Text>
-                    <Text
-                      style={{
-                        fontSize: 10,
-                        textAlign: "right",
-                      }}
+                <>
+                  {item.loading ? (
+                    <View style={styles.skeletonContainer}>
+                      <ChatMessagesSkeleton />
+                    </View>
+                  ) : (
+                    <View
+                      style={
+                        isSender
+                          ? styles.userMessageContainer
+                          : styles.systemMessageContainer
+                      }
                     >
-                      {new Date(item.$createdAt!).toLocaleTimeString([], {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })}
-                    </Text>
-                  </View>
-                </View>
+                      <View
+                        style={
+                          isSender
+                            ? styles.userMessageContent
+                            : styles.systemMessageContent
+                        }
+                      >
+                        <Text style={{ fontWeight: "500", marginBottom: 4 }}>
+                          {item.sender}
+                        </Text>
+                        <Text>{item.content}</Text>
+                        <Text
+                          style={{
+                            fontSize: 10,
+                            textAlign: "right",
+                          }}
+                        >
+                          {new Date(item.$createdAt!).toLocaleTimeString([], {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })}
+                        </Text>
+                      </View>
+                    </View>
+                  )}
+                </>
               );
             }}
             keyExtractor={(item: any) => item?.$createdAt ?? "unknown"}
@@ -225,6 +294,7 @@ export default function ChatMessages({
                 alignItems: "center",
                 justifyContent: "center",
               }}
+              disabled={messageContent == "" ? true : false}
               onPress={handleSendMessage}
             >
               <Ionicons
@@ -244,6 +314,9 @@ function createStyles(theme: Theme) {
   return StyleSheet.create({
     container: {
       flex: 1,
+      backgroundColor: theme.colors.background,
+    },
+    skeletonContainer: {
       backgroundColor: theme.colors.background,
     },
     kbAvoidingView: {
