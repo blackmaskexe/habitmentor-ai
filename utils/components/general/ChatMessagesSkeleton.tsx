@@ -2,32 +2,27 @@ import { useReducer } from "react";
 import { StyleSheet, Pressable, View } from "react-native";
 import { MotiView } from "moti";
 import { Skeleton } from "moti/skeleton";
+import { useTheme } from "@/utils/theme/ThemeContext";
 
 export default function HelloWorld() {
-  const [dark, toggle] = useReducer((s) => !s, true);
-
-  const colorMode = dark ? "dark" : "light";
+  const theme = useTheme();
 
   return (
-    <Pressable onPress={toggle} style={styles.container}>
-      <MotiView
-        transition={{
-          type: "timing",
-        }}
-        style={[styles.container, styles.padded]}
-        animate={{ backgroundColor: dark ? "#1a1a1a" : "#ffffff" }}
-      >
-        <Skeleton colorMode={colorMode} width={250} />
-        {/* <Spacer height={8} />
+    <MotiView
+      transition={{
+        type: "timing",
+      }}
+      style={[styles.container, styles.padded]}
+      animate={{ backgroundColor: theme.colors.background }}
+    >
+      <Skeleton width={250} backgroundColor={theme.colors.altBackground} />
+      {/* <Spacer height={8} />
         <Skeleton colorMode={colorMode} width={"100%"} />
         <Spacer height={8} />
         <Skeleton colorMode={colorMode} width={"100%"} /> */}
-      </MotiView>
-    </Pressable>
+    </MotiView>
   );
 }
-
-const Spacer = ({ height = 16 }) => <View style={{ height }} />;
 
 const styles = StyleSheet.create({
   shape: {

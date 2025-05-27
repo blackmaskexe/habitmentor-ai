@@ -67,6 +67,18 @@ export default function ChatMessages({
   // load messages on mount
   useEffect(() => {
     loadMessages();
+
+    // add listener to see changes to messages (to detect message clearing)
+    const listener = mmkvStorage.addOnValueChangedListener((changedKey) => {
+      if (changedKey == "chatMessages") {
+        // detect when there is a change in the chat messages, and refresh the chat
+        loadMessages();
+      }
+    });
+
+    return () => {
+      listener.remove(); // remove the listener on dismount
+    };
   }, []);
 
   // scroll down to bottom on screen focus
@@ -101,6 +113,9 @@ export default function ChatMessages({
     setMessages((prevMessages) => {
       return [...prevMessages, userMessage, aiMessage];
     });
+
+    // clear the text input:
+    setMessageContent("");
 
     // make response request to the API:
     const response = await api.post("/chat", {
