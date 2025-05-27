@@ -21,7 +21,6 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import api from "@/utils/api";
 import ChatMessagesSkeleton from "./ChatMessagesSkeleton";
-import { generateMessageId } from "@/utils/randomId";
 
 // Prop Instructions:
 // Send a message prop as follows:
@@ -48,15 +47,13 @@ export default function ChatMessages({
   const styles = createStyles(theme);
   const textInputRef = React.useRef<TextInput>(null);
   const listRef = useRef<LegendListRef>(null); // Ref for LegendList
-  const headerHeight = Platform.OS === "ios" ? useHeaderHeight() : 0;
 
-  const [messages, setMessages] = useState<MessageType[]>([]); // initialize a null messages state
-  const [messageContent, setMessageContent] = useState(prefilledText); // manages contents of input box
+  const [messages, setMessages] = useState<MessageType[]>([]);
 
   const loadMessages = function () {
     let loadedMessages: MessageType[] = [];
     const storedMessages = mmkvStorage.getString("chatMessages");
-    if (storedMessages && storedMessages.length > 0) {
+    if (storedMessages) {
       loadedMessages = JSON.parse(storedMessages);
       setMessages(loadedMessages);
     } else {
@@ -64,72 +61,115 @@ export default function ChatMessages({
     }
   };
 
-  // load messages on mount
   useEffect(() => {
-    loadMessages();
-  }, []);
+    loadMessages(); // try and load the messages on mount
 
-  // scroll down to bottom on screen focus
-  useFocusEffect(
-    useCallback(() => {
-      listRef.current?.scrollToEnd({
-        animated: true,
-      });
-    }, [])
-  );
-
-  const handleSendMessage = async function () {
-    // creating objects for user and ai's messages:
-
-    const userMessage: MessageType = {
-      id: generateMessageId(),
-      sender: "user",
-      content: messageContent,
-      $createdAt: new Date(),
-      loading: false,
-    };
-
-    const aiMessage: MessageType = {
-      id: generateMessageId(),
-      sender: "ai",
-      content: "",
-      $createdAt: new Date(),
-      loading: true,
-    };
-
-    // update the messages immediately with the user's message + ai's message skeleton
-    setMessages((prevMessages) => {
-      return [...prevMessages, userMessage, aiMessage];
+    const listener = mmkvStorage.addOnValueChangedListener((changedKey) => {
+      if (changedKey == "chatMessages") {
+        // detect when there is a change in the chat messages, and refresh the chat
+        loadMessages();
+      }
     });
 
-    // make response request to the API:
+    return () => {
+      listener.remove(); // remove the listener on dismount
+    };
+  }, []);
+
+  const [messageContent, setMessageContent] = useState(prefilledText);
+
+  useEffect(() => {
+    // to be able to load different initial messages when rendered using different parameters
+    setMessageContent(prefilledText);
+  }, [prefilledText]);
+
+  useFocusEffect(
+    useCallback(() => {
+      // Invoked whenever the route is focused.
+      // scrolls the chat to the absolute bottom (bottomest of the bottom)
+      listRef.current?.scrollToEnd({ animated: true });
+
+      return () => {
+        // cleanup function
+      };
+    }, [messages])
+  );
+
+  const headerHeight = Platform.OS === "ios" ? useHeaderHeight() : 0;
+
+  const handleAIInteraction = async function (
+    messageContent: string,
+    aiMessageId: string
+  ) {
+    // creating a skeleton as the last message to indicate AI Activity:
+    // setMessages((oldMessages) => {
+    //   return [
+    //     ...oldMessages,
+    //     {
+    //       sender: "system",
+    //       content: "",
+    //       loading: true, // loading set to true will make it render as a skeleton
+    //       $createdAt: new Date(Date.now() + 212121),
+    //     },
+    //   ];
+    // });
+
+    // call the API to send a request to the server to fetch a response
     const response = await api.post("/chat", {
       message: messageContent,
       proActive: false,
     });
 
-    // populating the ai message skeleton with response data:
+    console.log("It's not for romance", response);
+
+    // populating the newly created message with the actual content:
     setMessages((prevMessages) => {
-      const updatedMessages = prevMessages.map((msg) => {
-        if (msg.id == aiMessage.id) {
-          return {
-            ...msg,
-            content: response.data.response || "ai failed to load message",
-            loading: false,
-          };
-        }
-
-        return msg;
-      });
-
+      const updatedMessages = prevMessages.map((msg) =>
+        msg.id === aiMessageId
+          ? {
+              ...msg,
+              content: response.data.response,
+              loading: false,
+            }
+          : msg
+      );
+      // Save to storage AFTER AI response is processed and state is updated
       mmkvStorage.set("chatMessages", JSON.stringify(updatedMessages));
       return updatedMessages;
     });
+  };
 
-    // smooth scroll to bottom once the state is updated
-    setTimeout(() => {
-      listRef.current?.scrollToEnd({ animated: true });
-    }, 100);
+  const handleSendMessage = function () {
+    // update immediately with user's message:
+    const timeStamp = new Date();
+    const userMessageId = timeStamp.toISOString() + "-user";
+    const aiMessageId = timeStamp.toISOString() + "-ai";
+
+    const newMessages: MessageType[] = [
+      ...messages,
+      {
+        // user's message
+        id: userMessageId,
+        sender: "user",
+        content: messageContent,
+        $createdAt: new Date(),
+        loading: false, // user's messages don't load because it is asynchronous
+      },
+      {
+        // ai's message (skemleton rn, will become real one in the future)
+        id: aiMessageId,
+        sender: "ai",
+        content: "",
+        $createdAt: new Date(Date.now() + 5000),
+        loading: true,
+      },
+    ];
+    setMessages(newMessages);
+    handleAIInteraction(messageContent, aiMessageId); // send message content before it's wiped
+
+    setMessageContent("");
+
+    listRef.current?.scrollToEnd({ animated: true });
   };
 
   return (
@@ -187,7 +227,7 @@ export default function ChatMessages({
                 </>
               );
             }}
-            keyExtractor={(item: any) => item?.id ?? "unknown"}
+            keyExtractor={(item: any) => item?.$createdAt ?? "unknown"}
             contentContainerStyle={{ padding: 10 }}
             recycleItems={true}
             initialScrollIndex={messages.length - 1}
