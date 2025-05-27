@@ -44,16 +44,18 @@ const OverviewScreen = () => {
       >
         <View style={styles.headerContainer}>
           <View style={styles.headerItem}>
-            <Text style={styles.headerTextTop}>Habit Streak</Text>
+            <Text style={styles.headerTextTop}>Longest Streak</Text>
             <Text style={styles.headerTextBottom}>21 days</Text>
           </View>
           <View style={styles.headerItem}>
             <Text style={styles.headerTextTop}>Global Rank:</Text>
-            <Text style={styles.headerTextBottom}>21</Text>
+            <Text style={styles.headerTextBottom}>1</Text>
           </View>
           <View style={styles.headerItem}>
             <Text style={styles.headerTextTop}>Total Points</Text>
-            <Text style={styles.headerTextBottom}>21</Text>
+            <Text style={styles.headerTextBottom}>
+              {mmkvStorage.getNumber("totalPoints") || 0}
+            </Text>
           </View>
         </View>
 

@@ -21,6 +21,7 @@ import { getFormattedDate, getWeekdayNumber } from "@/utils/date";
 import { HabitObject } from "@/utils/types";
 import { Theme } from "@/utils/theme/themes";
 import * as Haptics from "expo-haptics";
+import { addPoints, subtractPoints } from "@/utils/database/points";
 
 // Components:
 
@@ -145,11 +146,13 @@ const DailyHabitsView: React.FC = () => {
           Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
           handleToggleTaskCompletion(index);
           if (isChecked) {
-            // if the task is not completed (just clicked completed), then mark as complete
+            // if the task is not completed (just clicked completed), then mark as complete + add points
             onMarkAsComplete(habit.id, getFormattedDate());
+            addPoints(habit.points);
           } else {
-            // if the task is already checked, then mark as incomplete
+            // if the task is already checked, then mark as incomplete + subtract points
             onMarkAsIncomplete(habit.id, getFormattedDate());
+            subtractPoints(habit.points);
           }
         }}
         // onLongPress={() => {}}

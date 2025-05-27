@@ -35,6 +35,16 @@ import { generateMessageId } from "@/utils/randomId";
 
 // ];
 
+type UserMessageType = {
+  message: string;
+  imoprtantMessageHistory?: string[];
+  metadata?: string;
+  recentMissedHabits?: string[];
+  habitStreaks?: string[];
+  timeOfDay?: "morning" | "afternoon" | "evening";
+  preferredTone?: string;
+};
+
 export default function ChatMessages({
   // userName = "Person",
   tooltips,
@@ -118,10 +128,11 @@ export default function ChatMessages({
     setMessageContent("");
 
     // make response request to the API:
+
     const response = await api.post("/chat", {
       message: messageContent,
       proActive: false,
-    });
+    } as UserMessageType);
 
     // populating the ai message skeleton with response data:
     setMessages((prevMessages) => {
