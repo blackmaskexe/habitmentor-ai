@@ -48,11 +48,6 @@ export default function HomeAddDropdownMenu() {
           </DropdownMenu.DropdownMenuItemTitle>
         </DropdownMenu.DropdownMenuItem>
 
-        <DropdownMenu.DropdownMenuItem key="clear-reminder" onSelect={() => {}}>
-          <DropdownMenu.DropdownMenuItemTitle>
-            Clear All Reminders get this outta here and into settings
-          </DropdownMenu.DropdownMenuItemTitle>
-        </DropdownMenu.DropdownMenuItem>
         {/* <DropdownMenu.Group>
           <DropdownMenu.DropdownMenuItem />
         </DropdownMenu.Group>

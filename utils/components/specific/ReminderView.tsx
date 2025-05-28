@@ -61,26 +61,22 @@ export default function ReminderView({
     }
   };
 
-  const handleAddReminder = async () => {
-    const habit = getHabitObjectFromId(habitId); // using id to get the latest version of the habitObject
-    // (need latest copy in order to manage notifications)
-    if (habit) {
-      schedulePushNotification(time, habit);
-    }
-  };
-
   useEffect(() => {
     if (initialTime) {
       setTime(initialTime);
     }
   }, [initialTime]);
 
-  const handleSetReminder = () => {
+  const handleSetReminder = async () => {
     console.log(
       "Set Reminder CTA pressed for time:",
       time.toLocaleTimeString()
     );
-    handleAddReminder();
+    const habit = getHabitObjectFromId(habitId); // using id to get the latest version of the habitObject
+    // (need latest copy in order to manage notifications)
+    if (habit) {
+      await schedulePushNotification(time, habit);
+    }
     onChangeDisplayScreen("main");
   };
 
@@ -126,7 +122,7 @@ export default function ReminderView({
       <View style={styles.buttonContainer}>
         <CTAButton
           title={`${
-            getHabitObjectFromId(habitId)?.notificationId ? "Reset" : "Set"
+            getHabitObjectFromId(habitId)?.notificationIds ? "Reset" : "Set"
           } Reminder to ${time.toLocaleTimeString([], {
             hour: "2-digit",
             minute: "2-digit",

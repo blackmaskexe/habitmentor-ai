@@ -63,8 +63,15 @@ export function useNotifications() {
   }, []);
 
   async function schedulePushNotification(time: Date, habit: HabitObject) {
+    console.log("Current habit:", habit);
+    const allScheduledNotis = await getAllScheduledNotifications();
+    console.log("currently scheduled notis:", allScheduledNotis);
     // checking if there is already an identifier attached to that habit, cancel the previous one first:
-    if (habit.notificationIds && habit.notificationIds.length > 0) {
+    if (habit.notificationIds) {
+      console.log(
+        habit.notificationIds,
+        "bro totally was hiding his other family as well as the notificaitonId"
+      );
       for (const notificationId of habit.notificationIds) {
         // cancel all of the scheduled notifications within the notificationIds array to cancel for all (selected) days of the week
         await cancelScheduledNotificationById(notificationId);

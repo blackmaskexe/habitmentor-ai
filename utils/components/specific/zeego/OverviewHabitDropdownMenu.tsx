@@ -3,6 +3,7 @@ import * as DropdownMenu from "./dropdown-menu";
 import { Ionicons } from "@expo/vector-icons";
 import { useTheme } from "@/utils/theme/ThemeContext";
 import { useRouter } from "expo-router";
+import * as Haptics from "expo-haptics";
 
 export default function OverviewHabitdropdownMenu({
   habitItem,
@@ -16,7 +17,12 @@ export default function OverviewHabitdropdownMenu({
   return (
     <DropdownMenu.DropdownMenuRoot>
       <DropdownMenu.DropdownMenuTrigger>
-        <TouchableOpacity style={styles.habitOptions}>
+        <TouchableOpacity
+          style={styles.habitOptions}
+          onPress={() => {
+            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+          }}
+        >
           <Ionicons
             name="ellipsis-vertical-outline"
             size={20}

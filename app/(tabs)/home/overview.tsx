@@ -4,6 +4,7 @@ import { useTheme } from "@/utils/theme/ThemeContext";
 import { useRouter } from "expo-router";
 import React from "react";
 import {
+  Alert,
   ScrollView,
   StyleSheet,
   Text,
@@ -64,7 +65,11 @@ const OverviewScreen = () => {
             Monthly Progress Chart:
           </Text>
 
-          <TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              Alert.alert("Coming in the next update");
+            }}
+          >
             <MonthlyHabitActivityMonitor activities={[]} />
           </TouchableOpacity>
           <Text style={styles.monthlyProgressSubText}>
@@ -152,7 +157,7 @@ function createStyles(theme: Theme) {
     monthlyProgressSubText: {
       textAlign: "center",
       color: theme.colors.textSecondary,
-      ...theme.text.h3,
+      ...theme.text.small,
       marginTop: theme.spacing.xs,
     },
     weeklyTaskText: {
