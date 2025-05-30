@@ -1,0 +1,26 @@
+import { appSchema, tableSchema } from "@nozbe/watermelondb";
+
+export default appSchema({
+  version: 1,
+  tables: [
+    tableSchema({
+      name: "missed_habits",
+      columns: [
+        { name: "date_string", type: "string" },
+        { name: "missed_habits_id_array", type: "string" }, // we will JSON.parse it to extract relevant information
+      ],
+    }),
+    tableSchema({
+      name: "important_messages",
+      columns: [{ name: "important_message", type: "string" }],
+    }),
+    tableSchema({
+      name: "habit_completion_data",
+      columns: [
+        { name: "habit_id", type: "string" },
+        { name: "times_completed", type: "number" },
+        { name: "times_missed", type: "number" },
+      ],
+    }),
+  ],
+});
