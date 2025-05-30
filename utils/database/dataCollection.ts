@@ -10,20 +10,19 @@
 
 import { HabitObject } from "../types";
 import mmkvStorage from "../mmkvStorage";
-import { getFormattedDate } from "../date";
 
 type MissedHabitsStoreType = {
   [dateString: string]: HabitObject[]; // key is formatted date, value is array of missed habits
 };
 
-export function addMissedHabits(missedHabits: HabitObject[], missedDate: Date) {
-  const oldMissedHabits: MissedHabitsStoreType = JSON.parse(
-    mmkvStorage.getString("missedHabits") || "{}"
-  );
+// export function addMissedHabits(missedHabits: HabitObject[], missedDate: Date) {
+//   const oldMissedHabits: MissedHabitsStoreType = JSON.parse(
+//     mmkvStorage.getString("missedHabits") || "{}"
+//   );
 
-  oldMissedHabits[getFormattedDate()] = [...missedHabits];
-  mmkvStorage.set("missedHabits", JSON.stringify(oldMissedHabits));
-}
+//   oldMissedHabits[getFormattedDate()] = [...missedHabits];
+//   mmkvStorage.set("missedHabits", JSON.stringify(oldMissedHabits));
+// }
 
 export function addImportantMessage(importantMessage: string) {
   // messages that will be sent to AI for better responses
@@ -35,4 +34,10 @@ export function addImportantMessage(importantMessage: string) {
     "importantMessages",
     JSON.stringify([...oldImportantMessages, importantMessage])
   );
+}
+
+import { useSQLiteContext } from "expo-sqlite";
+
+export function addMissedHabits(missedHabits: MissedHabitsStoreType) {
+  const db = useSQLiteContext();
 }

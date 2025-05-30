@@ -4328,6 +4328,13 @@ expo-device@~7.1.4:
   dependencies:
     ua-parser-js "^0.7.33"
 
+expo-drizzle-studio-plugin@^0.1.2:
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/expo-drizzle-studio-plugin/-/expo-drizzle-studio-plugin-0.1.2.tgz#3ed5c401cfed7e6bbd0d6cc3fb2ac476f26843d8"
+  integrity sha512-lodzNOOhSPpnd62PNTM7kWdWnQQn+j3WSWC4R/ehbYXRwZK1kvM9fjz50MnoMGrOcFDL9RtzY1zdXF/flrT3Gw==
+  dependencies:
+    expo-sqlite "^15.0.3"
+
 expo-file-system@~18.1.10:
   version "18.1.10"
   resolved "https://registry.npmjs.org/expo-file-system/-/expo-file-system-18.1.10.tgz"
@@ -4441,7 +4448,7 @@ expo-splash-screen@~0.30.7:
   dependencies:
     "@expo/prebuild-config" "^9.0.5"
 
-expo-sqlite@~15.2.10:
+expo-sqlite@^15.0.3, expo-sqlite@~15.2.10:
   version "15.2.10"
   resolved "https://registry.npmjs.org/expo-sqlite/-/expo-sqlite-15.2.10.tgz"
   integrity sha512-F7IYvXSOh3vIqhRkmaUvIP595Oqh8888CV5wpys94/437LkMYAOzMnqoscr+TCCmcO9XWURsMbBGsCVPHanlYQ==
