@@ -1,3 +1,5 @@
+// this is mainly to mark and unmark as incomplete, and to remember that
+
 import { getFormattedDate } from "../date";
 import mmkvStorage from "../mmkvStorage"; // Import the existing MMKV instance
 
@@ -9,6 +11,7 @@ interface HabitHistoryEntry {
 }
 
 const HABIT_HISTORY_KEY = "habitHistory";
+// this key
 
 // Helper function to get all habit history entries from MMKV
 function getHabitHistoryEntries(): HabitHistoryEntry[] {
@@ -39,14 +42,15 @@ function saveHabitHistoryEntries(entries: HabitHistoryEntry[]): void {
 })();
 
 // Marks a habit as complete for a given date.
-export function onMarkAsComplete(
-  habitId: string,
-  completionDate: string // Expected format: YYYY-MM-DD
-): { success: boolean; message?: string; entry?: HabitHistoryEntry } {
+export function onMarkAsComplete(habitId: string): {
+  success: boolean;
+  message?: string;
+  entry?: HabitHistoryEntry;
+} {
   const entries = getHabitHistoryEntries();
   const alreadyExists = entries.some(
     (entry) =>
-      entry.habitId === habitId && entry.completionDate === completionDate
+      entry.habitId === habitId && entry.completionDate === getFormattedDate()
   );
 
   if (alreadyExists) {
@@ -56,9 +60,10 @@ export function onMarkAsComplete(
 
   const newEntry: HabitHistoryEntry = {
     id: Date.now(), // Using timestamp as a simple ID
-    habitId,
-    completionDate,
+    habitId: habitId,
+    completionDate: getFormattedDate(),
   };
+
   entries.push(newEntry);
   saveHabitHistoryEntries(entries);
   console.log("MMKV Storage: Habit marked complete:", newEntry);
@@ -66,15 +71,14 @@ export function onMarkAsComplete(
 }
 
 // Marks a habit as incomplete for a given date by deleting the record.
-export function onMarkAsIncomplete(
-  habitId: string,
-  completionDate: string // Expected format: YYYY-MM-DD
-): { changes: number } {
+export function onMarkAsIncomplete(habitId: string): { changes: number } {
   const entries = getHabitHistoryEntries();
   const initialLength = entries.length;
   const updatedEntries = entries.filter(
     (entry) =>
-      !(entry.habitId === habitId && entry.completionDate === completionDate)
+      !(
+        entry.habitId === habitId && entry.completionDate === getFormattedDate()
+      )
   );
 
   const changes = initialLength - updatedEntries.length;

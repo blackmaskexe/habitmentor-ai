@@ -12,16 +12,21 @@ import { SheetManager } from "react-native-actions-sheet";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import mmkvStorage from "@/utils/mmkvStorage";
 import { useFocusEffect } from "expo-router";
-import {
-  getAllHabitHistoryToday,
-  onMarkAsComplete,
-  onMarkAsIncomplete,
-} from "@/utils/database/habitHistory";
+// import {
+//   getAllHabitHistoryToday,
+//   onMarkAsComplete,
+//   onMarkAsIncomplete,
+// } from "@/utils/database/habitHistory";
 import { getFormattedDate, getWeekdayNumber } from "@/utils/date";
 import { HabitObject } from "@/utils/types";
 import { Theme } from "@/utils/theme/themes";
 import * as Haptics from "expo-haptics";
 import { addPoints, subtractPoints } from "@/utils/database/points";
+import {
+  getAllHabitHistoryToday,
+  onMarkAsComplete,
+  onMarkAsIncomplete,
+} from "@/utils/database/habitHistory";
 
 // Components:
 
@@ -147,11 +152,11 @@ const DailyHabitsView: React.FC = () => {
           handleToggleTaskCompletion(index);
           if (isChecked) {
             // if the task is not completed (just clicked completed), then mark as complete + add points
-            onMarkAsComplete(habit.id, getFormattedDate());
+            onMarkAsComplete(habit.id);
             addPoints(habit.points);
           } else {
             // if the task is already checked, then mark as incomplete + subtract points
-            onMarkAsIncomplete(habit.id, getFormattedDate());
+            onMarkAsIncomplete(habit.id);
             subtractPoints(habit.points);
           }
         }}
