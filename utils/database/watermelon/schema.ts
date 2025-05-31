@@ -20,6 +20,7 @@ export default appSchema({
         { name: "habit_id", type: "string", isIndexed: true },
         { name: "times_completed", type: "number" },
         { name: "times_missed", type: "number" },
+        { name: "streak", type: "number" },
       ],
     }),
   ],

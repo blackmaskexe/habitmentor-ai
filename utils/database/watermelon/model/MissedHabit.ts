@@ -5,6 +5,5 @@ export default class MissedHabits extends Model {
   static table = "missed_habits";
 
   @text("date_string") dateString!: string;
-  @text("times_completed") timesCompleted!: number;
-  @text("times_missed") timesMissed!: number;
+  @text("missed_habits_id_array") missedHabitsIdArray!: string;
 }

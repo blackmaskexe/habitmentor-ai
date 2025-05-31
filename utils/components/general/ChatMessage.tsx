@@ -257,14 +257,11 @@ export default function ChatMessages({
             contentContainerStyle={{ padding: 10 }}
             recycleItems={true}
             initialScrollIndex={messages.length - 1}
-            alignItemsAtEnd // Aligns to the end of the screen, so if there's only a few items there will be enough padding at the top to make them appear to be at the bottom.
-            maintainScrollAtEnd // prop will check if you are already scrolled to the bottom when data changes, and if so it keeps you scrolled to the bottom.
-            maintainScrollAtEndThreshold={0.5} // prop will check if you are already scrolled to the bottom when data changes, and if so it keeps you scrolled to the bottom.
-            maintainVisibleContentPosition //Automatically adjust item positions when items are added/removed/resized above the viewport so that there is no shift in the visible content.
-            estimatedItemSize={100} // estimated height of the item
-            // getEstimatedItemSize={(info) => { // use if items are different known sizes
-            //   console.log("info", info);
-            // }}
+            alignItemsAtEnd
+            maintainScrollAtEnd
+            maintainScrollAtEndThreshold={0.5}
+            maintainVisibleContentPosition
+            estimatedItemSize={100}
             extraData={theme} // smooth switching bewteen dark mode and light mode
           />
           <ScrollView

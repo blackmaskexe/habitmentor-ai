@@ -5,6 +5,7 @@ import TypewriterText from "@/utils/components/general/TypewriterText";
 import DailyHabitsView from "@/utils/components/specific/DailyHabitsView";
 import WeekAtAGlance from "@/utils/components/specific/WeekGlance";
 import { Theme } from "@/utils/theme/themes";
+import { getDateFromFormattedDate, getFormattedDate } from "@/utils/date";
 
 export default function Index() {
   const theme = useTheme();
