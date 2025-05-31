@@ -50,11 +50,19 @@ export default function GenericList({
   items,
   spacing,
   textColor,
+  textSize,
   bulletSize = 6,
   bulletAlign = "left",
-}: any) {
+}: {
+  items: any[];
+  spacing?: number;
+  textColor?: string;
+  textSize?: number;
+  bulletSize?: number;
+  bulletAlign?: "left" | "right";
+}) {
   const theme: any = useTheme();
-  const styles = createStyles(theme, spacing, textColor, bulletSize);
+  const styles = createStyles(theme, spacing, textColor, bulletSize, textSize);
 
   const renderBullet = (bullet: any, index: number) => {
     switch (bullet.type) {
@@ -105,7 +113,8 @@ function createStyles(
   theme: any,
   customSpacing?: any,
   customTextColor?: any,
-  bulletSize: any = 6
+  bulletSize: any = 6,
+  fontSize: number = 14
 ) {
   return StyleSheet.create({
     container: {
@@ -120,6 +129,7 @@ function createStyles(
       width: bulletSize * 3,
       alignItems: "center",
       paddingTop: 2, // Slight offset to align with first line of text
+      marginRight: theme.spacing.s,
     },
     textContainer: {
       flex: 1,
@@ -135,7 +145,8 @@ function createStyles(
       color: customTextColor || theme.colors.text,
     },
     text: {
-      ...theme.text.body,
+      fontSize: fontSize,
+      fontWeight: "500",
       color: customTextColor || theme.colors.text,
       flexWrap: "wrap",
     },

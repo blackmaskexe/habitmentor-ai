@@ -6,6 +6,9 @@ interface MessageType {
   content: string;
   $createdAt: Date;
   loading: boolean;
+  additionalData?: {
+    actionableSteps?: string[];
+  };
 }
 
 interface HabitObject {

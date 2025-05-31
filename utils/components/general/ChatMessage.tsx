@@ -22,6 +22,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import api from "@/utils/api";
 import ChatMessagesSkeleton from "./ChatMessagesSkeleton";
 import { generateMessageId } from "@/utils/randomId";
+import GenericList from "./GenericList";
 
 // Prop Instructions:
 // Send a message prop as follows:
@@ -35,14 +36,22 @@ import { generateMessageId } from "@/utils/randomId";
 
 // ];
 
-type UserMessageType = {
+type UserPromptType = {
   message: string;
-  imoprtantMessageHistory?: string[];
+  importantMessageHistory?: string[];
   metadata?: string;
   recentMissedHabits?: string[];
   habitStreaks?: string[];
   timeOfDay?: "morning" | "afternoon" | "evening";
   preferredTone?: string;
+};
+
+type AIResponseType = {
+  data: {
+    actionableSteps: string[];
+    importantMesssage: boolean;
+    response: string;
+  };
 };
 
 export default function ChatMessages({
@@ -77,6 +86,11 @@ export default function ChatMessages({
   // load messages on mount
   useEffect(() => {
     loadMessages();
+    setTimeout(() => {
+      listRef.current?.scrollToEnd({
+        animated: true,
+      });
+    }, 500);
 
     // add listener to see changes to messages (to detect message clearing)
     const listener = mmkvStorage.addOnValueChangedListener((changedKey) => {
@@ -129,10 +143,9 @@ export default function ChatMessages({
 
     // make response request to the API:
 
-    const response = await api.post("/chat", {
+    const response: AIResponseType = await api.post("/chat", {
       message: messageContent,
-      proActive: false,
-    } as UserMessageType);
+    } as UserPromptType);
 
     // populating the ai message skeleton with response data:
     setMessages((prevMessages) => {
@@ -142,6 +155,9 @@ export default function ChatMessages({
             ...msg,
             content: response.data.response || "ai failed to load message",
             loading: false,
+            additionalData: {
+              actionableSteps: response.data.actionableSteps,
+            },
           };
         }
 
@@ -196,6 +212,30 @@ export default function ChatMessages({
                           {item.sender}
                         </Text>
                         <Text>{item.content}</Text>
+                        {item.additionalData?.actionableSteps ? (
+                          <Text
+                            style={{
+                              marginTop: theme.spacing.s,
+                            }}
+                          >
+                            <GenericList
+                              textSize={12}
+                              textColor="#1a1a1a"
+                              items={item.additionalData.actionableSteps.map(
+                                (actionableStep, index) => {
+                                  return {
+                                    listText: actionableStep,
+                                    bullet: {
+                                      type: "text",
+                                      bulletText: "⭐️",
+                                    },
+                                  };
+                                }
+                              )}
+                            />
+                          </Text>
+                        ) : null}
+
                         <Text
                           style={{
                             fontSize: 10,

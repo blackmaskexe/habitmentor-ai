@@ -1,116 +1,169 @@
-// Dependencies:
 import {
   View,
-  Text,
-  StyleSheet,
   ScrollView,
-  SafeAreaView,
   Image,
+  StyleSheet,
+  Dimensions,
+  Animated,
 } from "react-native";
-import React, { useRef } from "react";
+import React from "react";
 import { useTheme } from "@/utils/theme/ThemeContext";
+import { useEffect, useState, useRef } from "react";
 import { useRouter } from "expo-router";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // Components:
+import GenericList from "@/utils/components/general/GenericList";
 import CTAButton from "@/utils/components/general/CTAButton";
-import VariableItemPicker from "@/utils/components/specific/VariableItemPicker";
 
-const AddMoreHabitsPrompt = () => {
-  const theme = useTheme();
-  const styles = createStyles(theme);
-
+const AppMissionIntroduction = () => {
   const router = useRouter();
-  const scrollViewRef = useRef<any>(null);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDisabled(false);
+      Animated.timing(buttonOpacity, {
+        toValue: 1,
+        duration: 800,
+        useNativeDriver: true,
+      }).start();
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, []);
+  const [disabled, setDisabled] = useState(true);
+  const buttonOpacity = useRef(new Animated.Value(0.5)).current;
+
+  const { height, width } = Dimensions.get("window");
+
+  const theme = useTheme();
+  const styles = createStyles(theme, width);
+  AsyncStorage.getItem("coreHabits")
+    .then((result) => {
+      console.log(
+        result,
+        "ye hai core habits can you believe dat brah jalidi wa se hato"
+      );
+    })
+    .catch((err) => {
+      console.log(err, "JALDI WAHA SE HATOO");
+    });
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.innerContainer}>
-        <Text style={styles.title}>Add Even More! (Optional)</Text>
-        <Text style={styles.subtitle}>
-          List future habits that you would like to add to your roster once you
-          become consistent with the first three
-        </Text>
+    <View style={styles.container}>
+      <ScrollView contentContainerStyle={styles.scrollContent}>
         <View style={styles.imageContainer}>
           <Image
             source={require("@/assets/placeholder.png")}
-            style={styles.image}
+            style={styles.logo}
           />
         </View>
-        <ScrollView
-          contentContainerStyle={styles.scrollContent}
-          showsVerticalScrollIndicator={true}
-          ref={scrollViewRef}
-          keyboardShouldPersistTaps="handled"
-        >
-          <View style={styles.habitAddPicker}>
-            <VariableItemPicker
-              onModalSubmit={() => {
-                // to make the scrolling of incrementing habits smoother
-                scrollViewRef.current?.scrollToEnd({ animated: true });
-              }}
-            />
-          </View>
-        </ScrollView>
 
-        <View style={styles.buttonWrapper}>
-          <CTAButton
-            title="Proceed"
-            onPress={() => {
-              router.push("/(onboarding)/3");
-            }}
+        <View style={styles.contentContainer}>
+          <GenericList
+            items={[
+              {
+                listText:
+                  "It is said that good habits are built over 21 days of consistency",
+                bullet: {
+                  type: "text",
+                  bulletText: "✨",
+                },
+              },
+              {
+                listText:
+                  "Your challenge will be to hold be consistent with a habit for atleast 21 days",
+                bullet: {
+                  type: "text",
+                  bulletText: "✨",
+                },
+              },
+              {
+                listText:
+                  "Once you successfully have completed a habit for more than 21 days, you will get an opportunity to add even more habits",
+                bullet: {
+                  type: "text",
+                  bulletText: "✨",
+                },
+              },
+            ]}
           />
         </View>
+      </ScrollView>
+
+      <View style={styles.buttonContainer}>
+        <Animated.View style={{ opacity: buttonOpacity }}>
+          <CTAButton
+            title="I accept the challenge"
+            onPress={() => {
+              console.log("pressed");
+              router.push("/(onboarding)/4");
+            }}
+            disabled={disabled}
+          />
+        </Animated.View>
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 
-function createStyles(theme: any) {
+function createStyles(theme: any, width: any) {
   return StyleSheet.create({
     container: {
       flex: 1,
       backgroundColor: theme.colors.background,
-    },
-    innerContainer: {
-      flex: 1,
-      width: "100%",
-      paddingHorizontal: theme.spacing.m, // Move padding here from scrollContent
-    },
-    title: {
-      ...theme.text.h1,
-      color: theme.colors.text,
-      marginBottom: theme.spacing.m,
-      textAlign: "center",
-      marginTop: theme.spacing.l, // Add top margin
-    },
-    subtitle: {
-      ...theme.text.body,
-      textAlign: "center",
-      color: theme.colors.textSecondary,
-      marginBottom: theme.spacing.xl, // Add bottom margin
-      paddingHorizontal: theme.spacing.l, // Add horizontal padding for better text width
-    },
-    imageContainer: {
-      // New style for image wrapper
-      alignItems: "center",
-      marginBottom: theme.spacing.l,
-    },
-    image: {
-      height: 200,
-      width: 300,
-      alignSelf: "center",
+      // Remove justifyContent and alignItems as they interfere with ScrollView
     },
     scrollContent: {
       flexGrow: 1,
+      alignItems: "center", // Center children horizontally
+      paddingVertical: theme.spacing.xl,
+      paddingHorizontal: theme.spacing.m,
     },
-    buttonWrapper: {
-      width: "100%",
-      paddingBottom: theme.spacing.m,
+    heading: {
+      ...theme.text.h1,
+      color: theme.colors.text,
+      textAlign: "center",
+      marginTop: 90,
+      marginBottom: theme.spacing.l,
     },
-    habitAddPicker: {
+    imageContainer: {
+      marginVertical: theme.spacing.l,
+      alignItems: "center",
+      marginTop: theme.spacing.xl * 3,
+    },
+    logo: {
+      height: 200,
+      width: 200,
+      borderRadius: 5,
+      transform: [{ scale: 1.5 }],
+    },
+    contentContainer: {
+      flex: 1,
+      justifyContent: "center",
       width: "100%",
+      paddingVertical: theme.spacing.l,
+    },
+    buttonContainer: {
+      width: width,
+      paddingHorizontal: theme.spacing.m,
+      marginTop: theme.spacing.l,
+      marginBottom: theme.spacing.l * 2,
+    },
+    subtitle: {
+      ...theme.text.h3,
+      color: theme.colors.textSecondary,
+      textAlign: "center",
+      marginBottom: theme.spacing.l,
+    },
+    description: {
+      ...theme.text.h3,
+      color: theme.colors.textSecondary,
+      textAlign: "center",
+      paddingHorizontal: theme.spacing.l,
+      lineHeight: 24, // Add some breathing room between lines
     },
   });
 }
 
-export default AddMoreHabitsPrompt;
+export default AppMissionIntroduction;

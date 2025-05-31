@@ -125,7 +125,7 @@ export default function VariableItemPicker({
     // as well as store everything that is in the morHabitsArray in the mmkv storage
 
     mmkvStorage.set(
-      "moreHabits",
+      "activeHabits",
       JSON.stringify(newMoreHabitsArray.slice(0, -1))
     ); // saving all the habit items except the last one
     // because it's always gonna be null
