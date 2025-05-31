@@ -15,9 +15,9 @@ export default appSchema({
       columns: [{ name: "important_message", type: "string" }],
     }),
     tableSchema({
-      name: "habit_completion_data",
+      name: "habit_completions",
       columns: [
-        { name: "habit_id", type: "string" },
+        { name: "habit_id", type: "string", isIndexed: true },
         { name: "times_completed", type: "number" },
         { name: "times_missed", type: "number" },
       ],

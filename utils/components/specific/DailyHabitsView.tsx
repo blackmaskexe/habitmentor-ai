@@ -26,34 +26,7 @@ import {
   getAllHabitHistoryToday,
   onMarkAsComplete,
   onMarkAsIncomplete,
-} from "@/utils/database/habitHistory";
-
-// Components:
-
-// Dummy data
-// const habitItems: HabitItem[] = [
-//   {
-//     habitName: "Morning Meditation",
-//     habitDeadline: "8:00 AM",
-//     habitFrequency: 1,
-//     completedFrequency: 0,
-//     points: 50,
-//   },
-//   {
-//     habitName: "Drink Water",
-//     habitDeadline: "Every 2 hours",
-//     habitFrequency: 4,
-//     completedFrequency: 1,
-//     points: 100,
-//   },
-//   {
-//     habitName: "Exercise",
-//     habitDeadline: "6:00 PM",
-//     habitFrequency: 1,
-//     completedFrequency: 1,
-//     points: 150,
-//   },
-// ];
+} from "@/utils/database/habitHistoryManager";
 
 const DailyHabitsView: React.FC = () => {
   const theme = useTheme();
