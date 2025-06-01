@@ -1,7 +1,7 @@
 import { Model } from "@nozbe/watermelondb";
 import { text } from "@nozbe/watermelondb/decorators";
 
-export default class MissedHabits extends Model {
+export default class MissedHabit extends Model {
   static table = "missed_habits";
 
   @text("date_string") dateString!: string;

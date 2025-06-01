@@ -32,7 +32,7 @@ export default class HabitCompletion extends Model {
 
   @writer async incrementTimesMissed(timesMissed: number) {
     await this.update((record) => {
-      record.timesMissed += 1; // taking input as we don't know when the user is going to open app after a long time
+      record.timesMissed += timesMissed; // taking input as we don't know when the user is going to open app after a long time
       // therefore programmatically calculate the number of days missed by the user
 
       record.streak = 0; // reset streak to 0 if the user misses a habit

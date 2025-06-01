@@ -40,6 +40,9 @@ export async function runHabitDataCollection() {
         });
       }
     }
+
+    // finally, set the last date the data was collected to today
+    mmkvStorage.set("lastDataCollectionDate", getFormattedDate());
   }
 }
 
@@ -47,14 +50,15 @@ export async function addImportantMessage(importantMessage: string) {
   const importantMessagesCollection =
     database.get<ImportantMessage>("important_messages");
 
-  importantMessagesCollection.create((record) => {
+  await importantMessagesCollection.create((record) => {
     record.importantMessage = importantMessage;
   });
 }
 
 export async function getImportantMessages(limit?: number) {
-  const importantMessagesCollection =
-    database.get<ImportantMessage>("habit_completions");
+  const importantMessagesCollection = database.get<ImportantMessage>(
+    "important_messsages"
+  );
 
   let importantMessagesArray = [];
   let records: ImportantMessage[] = [];
