@@ -40,7 +40,7 @@ export async function onMarkAsComplete(habitId: string) {
 
   // MANAGING THE DATA COLLECTION PART:
   const habitCompletion = await getOrCreateHabitCompletionRecord(habitId);
-  habitCompletion.incrementTimesCompleted();
+  await habitCompletion.incrementTimesCompleted();
 }
 
 // Marks a habit as incomplete for a given date by deleting the record.
@@ -58,13 +58,13 @@ export async function onMarkAsIncomplete(habitId: string) {
 
   // MANAGING THE DATA COLLECTION PART:
   const habitCompletion = await getOrCreateHabitCompletionRecord(habitId);
-  habitCompletion.decrementTimesCompleted();
+  await habitCompletion.decrementTimesCompleted();
 }
 
 // ALL HELPER FUNCTIONS:
 
 // Helper function to fetch or create data collection record for the associated habitId
-async function getOrCreateHabitCompletionRecord(habitId: string) {
+export async function getOrCreateHabitCompletionRecord(habitId: string) {
   return await database.write(async () => {
     const existingRecord = await habitCompletionCollection
       .query(Q.where("habit_id", habitId))
@@ -78,6 +78,7 @@ async function getOrCreateHabitCompletionRecord(habitId: string) {
         record.habitId = habitId;
         record.timesCompleted = 0;
         record.timesMissed = 0;
+        record.prevDaysSinceLast = 0;
       });
 
       return newRecord;

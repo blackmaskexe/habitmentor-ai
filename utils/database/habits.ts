@@ -42,3 +42,11 @@ export function addNewHabit(newHabitObject: HabitObject) {
     JSON.stringify([...activeHabits, newHabitObject])
   );
 }
+
+export function getAllHabits() {
+  const activeHabits: HabitObject[] = JSON.parse(
+    mmkvStorage.getString("activeHabits") || "[]"
+  );
+
+  return activeHabits;
+}

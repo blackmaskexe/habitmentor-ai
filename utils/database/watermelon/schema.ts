@@ -21,6 +21,7 @@ export default appSchema({
         { name: "times_completed", type: "number" },
         { name: "times_missed", type: "number" },
         { name: "streak", type: "number" },
+        { name: "prev_days_since_last", type: "number" }, // helper attribute, no real data collection value
       ],
     }),
   ],

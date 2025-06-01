@@ -10,3 +10,4 @@ export default mmkvStorage;
 // activeHabits: array of all the habits that the user is currently doing
 // moreHabits: array of all the potential / future habits that the user would want to do
 // habitHistory: A database-like array of all the past completed habits from the user
+// lastDataCollectionDate: formatted date of the last time the habit data collection helper function was run
