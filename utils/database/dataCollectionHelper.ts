@@ -16,13 +16,15 @@ import { Q } from "@nozbe/watermelondb";
 
 export async function runHabitDataCollection() {
   if (shouldCollectData()) {
+    console.log("tatatat SAHURRRR");
     for (const habit of getAllHabits()) {
       // running data collection on each of them:
       const habitCompletion = await getOrCreateHabitCompletionRecord(habit.id); // this is the record of datacollection for that habit
-
+      console.log("birthday suit typeshi");
       const daysMissedSinceLast = daysUserMissedHabitSinceLastCompletion(
         habit.id
       );
+      console.log("this da days missed since last:", daysMissedSinceLast);
       if (daysMissedSinceLast > 0) {
         const prevDaysMissedSinceLast = await habitCompletion.prevDaysSinceLast;
 
@@ -43,7 +45,7 @@ export async function runHabitDataCollection() {
 
 export async function addImportantMessage(importantMessage: string) {
   const importantMessagesCollection =
-    database.get<ImportantMessage>("habit_completions");
+    database.get<ImportantMessage>("important_messages");
 
   importantMessagesCollection.create((record) => {
     record.importantMessage = importantMessage;

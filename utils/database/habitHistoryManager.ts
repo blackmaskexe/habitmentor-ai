@@ -65,25 +65,25 @@ export async function onMarkAsIncomplete(habitId: string) {
 
 // Helper function to fetch or create data collection record for the associated habitId
 export async function getOrCreateHabitCompletionRecord(habitId: string) {
-  return await database.write(async () => {
-    const existingRecord = await habitCompletionCollection
-      .query(Q.where("habit_id", habitId))
-      .fetch();
+  const existingRecord = await habitCompletionCollection
+    .query(Q.where("habit_id", habitId))
+    .fetch();
 
-    if (existingRecord.length > 1) {
-      // if there is a record with the asssociated habit_id
-      return existingRecord[0];
-    } else {
-      const newRecord = await habitCompletionCollection.create((record) => {
-        record.habitId = habitId;
-        record.timesCompleted = 0;
-        record.timesMissed = 0;
-        record.prevDaysSinceLast = 0;
-      });
+  console.log("THERE IS!!!");
 
-      return newRecord;
-    }
-  });
+  if (existingRecord.length > 0) {
+    // if there is a record with the asssociated habit_id
+    return existingRecord[0];
+  } else {
+    const newRecord = await habitCompletionCollection.create((record) => {
+      record.habitId = habitId;
+      record.timesCompleted = 0;
+      record.timesMissed = 0;
+      record.prevDaysSinceLast = 0;
+    });
+
+    return newRecord;
+  }
 }
 
 // Helper function to save habit history entries to MMKV

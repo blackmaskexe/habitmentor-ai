@@ -22,6 +22,7 @@ const adapter = new SQLiteAdapter({
   // (optional, but you should implement this method)
   onSetUpError: (error) => {
     // Database failed to load -- offer the user to reload the app or log out
+    console.log(error, "this is the error is the the the is the");
   },
 });
 
