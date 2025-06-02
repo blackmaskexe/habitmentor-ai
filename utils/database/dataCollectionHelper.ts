@@ -55,15 +55,17 @@ export async function addImportantMessage(importantMessage: string) {
   const importantMessagesCollection =
     database.get<ImportantMessage>("important_messages");
 
-  await importantMessagesCollection.create((record) => {
-    record.importantMessage = importantMessage;
+  return database.write(async () => {
+    await importantMessagesCollection.create((record) => {
+      record.importantMessage = importantMessage;
+    });
   });
 }
 
 export async function getImportantMessages(limit?: number) {
-  const importantMessagesCollection = database.get<ImportantMessage>(
-    "important_messsages"
-  );
+  const importantMessagesCollection =
+    database.get<ImportantMessage>("important_messages");
+  console.log("the crowd feel my pain");
 
   let importantMessagesArray = [];
   let records: ImportantMessage[] = [];
@@ -79,6 +81,8 @@ export async function getImportantMessages(limit?: number) {
   for (const record of records) {
     importantMessagesArray.push(record.importantMessage);
   }
+
+  console.log(importantMessagesArray, "I don't suppose tomorrow's coming");
 
   return importantMessagesArray;
 }

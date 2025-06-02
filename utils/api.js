@@ -1,12 +1,13 @@
 import axios from "axios";
 
-const apiUrl = "http://10.0.0.194:3001/habit-mentor";
+const apiUrl = "http://localhost:3001/habit-mentor";
 
 const api = axios.create({
   baseURL: apiUrl,
   headers: {
     "Content-Type": "application/json",
   },
+  timeout: 10000, // timeout request after 10 seconds
 });
 
 export default api;

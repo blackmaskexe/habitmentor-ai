@@ -23,6 +23,10 @@ import api from "@/utils/api";
 import ChatMessagesSkeleton from "./ChatMessagesSkeleton";
 import { generateMessageId } from "@/utils/randomId";
 import GenericList from "./GenericList";
+import {
+  addImportantMessage,
+  getImportantMessages,
+} from "@/utils/database/dataCollectionHelper";
 
 // Prop Instructions:
 // Send a message prop as follows:
@@ -49,7 +53,7 @@ type UserPromptType = {
 type AIResponseType = {
   data: {
     actionableSteps: string[];
-    importantMesssage: boolean;
+    importantMessage: boolean;
     response: string;
   };
 };
@@ -144,8 +148,11 @@ export default function ChatMessages({
     // make response request to the API:
 
     const response: AIResponseType = await api.post("/chat", {
-      message: messageContent,
+      message: userMessage.content,
+      importantMessageHistory: await getImportantMessages(),
     } as UserPromptType);
+
+    console.log("DONT CRY DONT CRY DONT CRY");
 
     // populating the ai message skeleton with response data:
     setMessages((prevMessages) => {
@@ -153,7 +160,9 @@ export default function ChatMessages({
         if (msg.id == aiMessage.id) {
           return {
             ...msg,
-            content: response.data.response || "ai failed to load message",
+            content: response
+              ? response.data.response
+              : "the AI failed to load message",
             loading: false,
             additionalData: {
               actionableSteps: response.data.actionableSteps,
@@ -167,6 +176,14 @@ export default function ChatMessages({
       mmkvStorage.set("chatMessages", JSON.stringify(updatedMessages));
       return updatedMessages;
     });
+
+    // store message if it was deemed important by the AI
+    // console.log("A PROFESSIONAL", response);
+
+    if (response.data.importantMessage) {
+      console.log("It's everything you know...");
+      await addImportantMessage(userMessage.content);
+    }
 
     // smooth scroll to bottom once the state is updated
     setTimeout(() => {
