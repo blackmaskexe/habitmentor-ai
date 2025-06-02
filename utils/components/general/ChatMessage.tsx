@@ -23,6 +23,13 @@ import api from "@/utils/api";
 import ChatMessagesSkeleton from "./ChatMessagesSkeleton";
 import { generateMessageId } from "@/utils/randomId";
 import GenericList from "./GenericList";
+import {
+  addImportantMessage,
+  getImportantMessages,
+} from "@/utils/database/dataCollectionHelper";
+import { getTimeOfDay } from "@/utils/date";
+import { getAllHabits } from "@/utils/database/habits";
+import { getAllHabitCompletionRecords } from "@/utils/database/habitHistoryManager";
 
 // Prop Instructions:
 // Send a message prop as follows:
@@ -39,17 +46,16 @@ import GenericList from "./GenericList";
 type UserPromptType = {
   message: string;
   importantMessageHistory?: string[];
-  metadata?: string;
-  recentMissedHabits?: string[];
-  habitStreaks?: string[];
+  metadata?: any;
+  // recentMissedHabits?: string[];
   timeOfDay?: "morning" | "afternoon" | "evening";
-  preferredTone?: string;
+  // preferredTone?: string;
 };
 
 type AIResponseType = {
   data: {
     actionableSteps: string[];
-    importantMesssage: boolean;
+    importantMessage: boolean;
     response: string;
   };
 };
@@ -144,8 +150,26 @@ export default function ChatMessages({
     // make response request to the API:
 
     const response: AIResponseType = await api.post("/chat", {
-      message: messageContent,
+      message: userMessage.content,
+      importantMessageHistory: await getImportantMessages(),
+      timeOfDay: getTimeOfDay(),
+      metadata: {
+        activeHabits: getAllHabits(), // already plain
+        habitCompletions: (
+          await getAllHabitCompletionRecords()
+        ).map((record) => ({
+          // need to do this because watermelini db doesn't return
+          // plain js objects but tigrelini watermelini records
+          id: record.id,
+          habitId: record.habitId,
+          timesCompleted: record.timesCompleted,
+          timesMissed: record.timesMissed,
+          prevDaysSinceLast: record.prevDaysSinceLast,
+        })),
+      },
     } as UserPromptType);
+
+    console.log("DONT CRY DONT CRY DONT CRY");
 
     // populating the ai message skeleton with response data:
     setMessages((prevMessages) => {
@@ -153,7 +177,9 @@ export default function ChatMessages({
         if (msg.id == aiMessage.id) {
           return {
             ...msg,
-            content: response.data.response || "ai failed to load message",
+            content: response
+              ? response.data.response
+              : "the AI failed to load message",
             loading: false,
             additionalData: {
               actionableSteps: response.data.actionableSteps,
@@ -167,6 +193,14 @@ export default function ChatMessages({
       mmkvStorage.set("chatMessages", JSON.stringify(updatedMessages));
       return updatedMessages;
     });
+
+    // store message if it was deemed important by the AI
+    // console.log("A PROFESSIONAL", response);
+
+    if (response.data.importantMessage) {
+      console.log("It's everything you know...");
+      await addImportantMessage(userMessage.content);
+    }
 
     // smooth scroll to bottom once the state is updated
     setTimeout(() => {

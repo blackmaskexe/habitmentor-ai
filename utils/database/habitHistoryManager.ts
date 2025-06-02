@@ -3,6 +3,7 @@ import mmkvStorage from "../mmkvStorage";
 import database from "./watermelon";
 import { Q } from "@nozbe/watermelondb";
 import HabitCompletion from "./watermelon/model/HabitCompletion";
+import { getAllHabits } from "./habits";
 
 // Define an interface for the structure of a habit history entry in the mmkvStorage
 interface HabitHistoryEntry {
@@ -92,6 +93,16 @@ export async function getOrCreateHabitCompletionRecord(habitId: string) {
       return newRecord;
     });
   }
+}
+
+export async function getAllHabitCompletionRecords() {
+  const habitCompletionRecords = [];
+  for (const habit of getAllHabits()) {
+    const record = await getOrCreateHabitCompletionRecord(habit.id);
+    habitCompletionRecords.push(record);
+  }
+
+  return habitCompletionRecords;
 }
 
 // Helper function to save habit history entries to MMKV
