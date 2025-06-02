@@ -18,6 +18,11 @@ export async function runHabitDataCollection() {
   if (shouldCollectData()) {
     console.log("tatatat SAHURRRR");
     for (const habit of getAllHabits()) {
+      if (!shouldCollectDataForHabit(habit.id)) {
+        return; // early return if the habit is not to be done today
+        // this makes sure streak is not increased everyday for tasks
+        // that are scheduled not everyday
+      }
       // running data collection on each of them:
       const habitCompletion = await getOrCreateHabitCompletionRecord(habit.id); // this is the record of datacollection for that habit
       console.log("birthday suit typeshi");
@@ -181,7 +186,13 @@ function daysUserMissedHabitSinceLastCompletion(habitId: string) {
   return 0; // in the case of unhandled exceptions, we return 0
   // to be forgiving towards the user
 }
-
+function shouldCollectDataForHabit(habitId: string) {
+  const habitFrequency = getHabitObjectFromId(habitId)!.frequency;
+  if (habitFrequency[getWeekdayNumber()]) {
+    return true;
+  }
+  return false;
+}
 function shouldCollectData() {
   const formattedDateToday = getFormattedDate();
 
@@ -197,6 +208,8 @@ function shouldCollectData() {
     ) {
       return true;
     }
+    console.log("abbey kar chuka hu mai data collection chal nikal yaha se ab");
+
     return false;
   } else {
     // there's nothing in the mmkvStorage, we create an entry ourselves (arbitrary past entry)
