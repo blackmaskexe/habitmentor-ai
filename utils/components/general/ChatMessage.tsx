@@ -27,6 +27,9 @@ import {
   addImportantMessage,
   getImportantMessages,
 } from "@/utils/database/dataCollectionHelper";
+import { getTimeOfDay } from "@/utils/date";
+import { getAllHabits } from "@/utils/database/habits";
+import { getAllHabitCompletionRecords } from "@/utils/database/habitHistoryManager";
 
 // Prop Instructions:
 // Send a message prop as follows:
@@ -43,11 +46,10 @@ import {
 type UserPromptType = {
   message: string;
   importantMessageHistory?: string[];
-  metadata?: string;
-  recentMissedHabits?: string[];
-  habitStreaks?: string[];
+  metadata?: any;
+  // recentMissedHabits?: string[];
   timeOfDay?: "morning" | "afternoon" | "evening";
-  preferredTone?: string;
+  // preferredTone?: string;
 };
 
 type AIResponseType = {
@@ -150,6 +152,21 @@ export default function ChatMessages({
     const response: AIResponseType = await api.post("/chat", {
       message: userMessage.content,
       importantMessageHistory: await getImportantMessages(),
+      timeOfDay: getTimeOfDay(),
+      metadata: {
+        activeHabits: getAllHabits(), // already plain
+        habitCompletions: (
+          await getAllHabitCompletionRecords()
+        ).map((record) => ({
+          // need to do this because watermelini db doesn't return
+          // plain js objects but tigrelini watermelini records
+          id: record.id,
+          habitId: record.habitId,
+          timesCompleted: record.timesCompleted,
+          timesMissed: record.timesMissed,
+          prevDaysSinceLast: record.prevDaysSinceLast,
+        })),
+      },
     } as UserPromptType);
 
     console.log("DONT CRY DONT CRY DONT CRY");

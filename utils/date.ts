@@ -34,10 +34,19 @@ const getDateFromFormattedDate = function (formattedDate: string) {
   return new Date(fullYear, month, date);
 };
 
+const getTimeOfDay = function () {
+  const date = new Date();
+  const hourOfDay = date.getHours();
+  if (hourOfDay < 10) return "morning";
+  if (hourOfDay < 15) return "afternoon";
+  return "evening";
+};
+
 export {
   getDate,
   getWeekdayNumber,
   getFormattedDate,
   getDateFromFormattedDate,
   getWeekNumber,
+  getTimeOfDay,
 };
