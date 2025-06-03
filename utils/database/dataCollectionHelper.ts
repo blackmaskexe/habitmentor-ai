@@ -13,6 +13,7 @@ import mmkvStorage from "../mmkvStorage";
 import database from "./watermelon";
 import ImportantMessage from "./watermelon/model/ImportantMessage";
 import { Q } from "@nozbe/watermelondb";
+import HabitCompletion from "./watermelon/model/HabitCompletion";
 
 export async function runHabitDataCollection() {
   if (shouldCollectData()) {
@@ -67,8 +68,8 @@ export async function getImportantMessages(limit?: number) {
     database.get<ImportantMessage>("important_messages");
   console.log("the crowd feel my pain");
 
-  let importantMessagesArray = [];
-  let records: ImportantMessage[] = [];
+  const importantMessagesArray = [];
+  let records: ImportantMessage[] | null = null;
 
   if (limit) {
     records = await importantMessagesCollection
@@ -85,6 +86,28 @@ export async function getImportantMessages(limit?: number) {
   console.log(importantMessagesArray, "I don't suppose tomorrow's coming");
 
   return importantMessagesArray;
+}
+
+export async function getHabitCompletionCollection() {
+  const habitCompletionCollection =
+    database.get<HabitCompletion>("habit_completions");
+
+  const habitCompletionsArray = [];
+  const records: HabitCompletion[] = await habitCompletionCollection
+    .query()
+    .fetch();
+
+  for (const record of records) {
+    habitCompletionsArray.push({
+      timesMissed: record.timesMissed,
+      timesCompleted: record.timesCompleted,
+      streak: record.streak,
+      habitId: record.habitId,
+      habitName: record.habitName,
+    });
+  }
+
+  return habitCompletionsArray;
 }
 
 function daysUserMissedHabitSinceLastCompletion(habitId: string) {

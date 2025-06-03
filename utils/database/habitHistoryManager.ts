@@ -3,7 +3,7 @@ import mmkvStorage from "../mmkvStorage";
 import database from "./watermelon";
 import { Q } from "@nozbe/watermelondb";
 import HabitCompletion from "./watermelon/model/HabitCompletion";
-import { getAllHabits } from "./habits";
+import { getAllHabits, getHabitObjectFromId } from "./habits";
 
 // Define an interface for the structure of a habit history entry in the mmkvStorage
 interface HabitHistoryEntry {
@@ -83,6 +83,7 @@ export async function getOrCreateHabitCompletionRecord(habitId: string) {
     return await database.write(async () => {
       const newRecord = await habitCompletionCollection.create((record) => {
         record.habitId = habitId;
+        record.habitName = getHabitObjectFromId(habitId)!.habitName;
         record.timesCompleted = 0;
         record.timesMissed = 0;
         record.prevDaysSinceLast = 0;

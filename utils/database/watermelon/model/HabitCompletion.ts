@@ -5,6 +5,7 @@ export default class HabitCompletion extends Model {
   static table = "habit_completions";
 
   @text("habit_id") habitId!: string;
+  @field("habit_name") habitName!: string;
   @field("times_completed") timesCompleted!: number;
   @field("times_missed") timesMissed!: number;
   @field("streak") streak!: number;

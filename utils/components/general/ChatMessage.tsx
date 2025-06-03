@@ -25,6 +25,7 @@ import { generateMessageId } from "@/utils/randomId";
 import GenericList from "./GenericList";
 import {
   addImportantMessage,
+  getHabitCompletionCollection,
   getImportantMessages,
 } from "@/utils/database/dataCollectionHelper";
 import { getTimeOfDay } from "@/utils/date";
@@ -155,17 +156,7 @@ export default function ChatMessages({
       timeOfDay: getTimeOfDay(),
       metadata: {
         activeHabits: getAllHabits(), // already plain
-        habitCompletions: (
-          await getAllHabitCompletionRecords()
-        ).map((record) => ({
-          // need to do this because watermelini db doesn't return
-          // plain js objects but tigrelini watermelini records
-          id: record.id,
-          habitId: record.habitId,
-          timesCompleted: record.timesCompleted,
-          timesMissed: record.timesMissed,
-          prevDaysSinceLast: record.prevDaysSinceLast,
-        })),
+        habitCompletions: await getHabitCompletionCollection(),
       },
     } as UserPromptType);
 
