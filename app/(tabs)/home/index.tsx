@@ -12,7 +12,7 @@ export default function Index() {
   const theme = useTheme();
   const styles = createStyle(theme);
 
-  const [proActiveMessage, setProActiveMessage] = useState("Loading..."); // will eventually fetch it's last value from a key-value store so that the user doesn't have to stare at the "loading" for 1-3 seconds
+  const [proActiveMessage, setProActiveMessage] = useState(null); // will eventually fetch it's last value from a key-value store so that the user doesn't have to stare at the "loading" for 1-3 seconds
 
   useEffect(() => {
     // call the method that starts the process of sending the proActiveMessage
@@ -37,10 +37,11 @@ export default function Index() {
         />
         <View style={styles.aiSection}>
           <Text style={styles.aiSectionText}>Top AI Suggestion:</Text>
-          <TypewriterText
-            textContent="When the AI feature will be implemented, this will suggest a new and differnt suggestion everyday based on your activity"
-            typingSpeed={0.95}
-          />
+          {proActiveMessage ? (
+            <TypewriterText textContent={proActiveMessage} typingSpeed={0.95} />
+          ) : (
+            <Text>Loading...</Text>
+          )}
         </View>
         <View style={styles.habitsSection}>
           <Text style={styles.habitSectionText}>Habits for Today:</Text>

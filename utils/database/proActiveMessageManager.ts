@@ -7,7 +7,7 @@ import {
 } from "./dataCollectionHelper";
 
 function shouldRequestProActiveMessage() {
-  return true; // for debugging purposes, YOU'LL RUN WHEN RUNEN TO
+  // return true; // for debugging purposes, YOU'LL RUN WHEN RUNEN TO
   const formattedDateToday = getFormattedDate();
   const lastProActiveMessageDate = mmkvStorage.getString(
     "lastProActiveMessageDate"
@@ -29,9 +29,10 @@ function shouldRequestProActiveMessage() {
 }
 
 export async function showProActiveMessage(
-  setProActiveCallback: (message: string) => any
+  setProActiveCallback: (message: string | null) => any
 ) {
-  if (shouldRequestProActiveMessage()) {
+  if (true || shouldRequestProActiveMessage()) {
+    // for testing purpose rn
     console.log("we should lol");
     // this is the part where I send all of the metadata and related information of user's habits
     // to the fine tuned ai model, and return whatever it gives out
@@ -41,20 +42,13 @@ export async function showProActiveMessage(
       importantMessages: await getImportantMessages(),
     });
 
-    console.log(response);
+    console.log(response, "ayy bouta know right now i be going solo now");
 
-    setProActiveCallback("proActiveMessage as received from the AI");
+    if (response && response.data.response) {
+      console.log("I won't let you down");
+      setProActiveCallback(response.data.response);
+    }
   } else {
-    console.log("we shouldn't");
-    console.log(
-      "I think you wanna wanna",
-      "habitCompletionCollection:",
-      await getHabitCompletionCollection()
-    );
-    console.log(
-      "I think you got a sports car, and you drive it real fast, yeah you know what this is",
-      "importantMessages:",
-      await getImportantMessages()
-    );
+    console.log("You don't have to fetch the important messages bro");
   }
 }
