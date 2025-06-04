@@ -1,3 +1,4 @@
+import api from "../api";
 import { getDateFromFormattedDate, getFormattedDate } from "../date";
 import mmkvStorage from "../mmkvStorage";
 import {
@@ -6,6 +7,7 @@ import {
 } from "./dataCollectionHelper";
 
 function shouldRequestProActiveMessage() {
+  return true; // for debugging purposes, YOU'LL RUN WHEN RUNEN TO
   const formattedDateToday = getFormattedDate();
   const lastProActiveMessageDate = mmkvStorage.getString(
     "lastProActiveMessageDate"
@@ -26,26 +28,22 @@ function shouldRequestProActiveMessage() {
   }
 }
 
-export async function getProActiveMessage(
+export async function showProActiveMessage(
   setProActiveCallback: (message: string) => any
 ) {
   if (shouldRequestProActiveMessage()) {
     console.log("we should lol");
     // this is the part where I send all of the metadata and related information of user's habits
     // to the fine tuned ai model, and return whatever it gives out
-    console.log(
-      "no you got a sports car",
-      "habitCompletionCollection:",
-      await getHabitCompletionCollection()
-    );
-    console.log(
-      "We can unun in it",
-      "importantMessages:",
-      await getImportantMessages()
-    );
+
+    const response = await api.post("/pro-active", {
+      habitCompletionCollection: await getHabitCompletionCollection(),
+      importantMessages: await getImportantMessages(),
+    });
+
+    console.log(response);
 
     setProActiveCallback("proActiveMessage as received from the AI");
-    return true;
   } else {
     console.log("we shouldn't");
     console.log(
@@ -58,8 +56,5 @@ export async function getProActiveMessage(
       "importantMessages:",
       await getImportantMessages()
     );
-
-    return false;
-    // or return null and have a case
   }
 }

@@ -6,6 +6,7 @@ import DailyHabitsView from "@/utils/components/specific/DailyHabitsView";
 import WeekAtAGlance from "@/utils/components/specific/WeekGlance";
 import { Theme } from "@/utils/theme/themes";
 import { useEffect, useState } from "react";
+import { showProActiveMessage } from "@/utils/database/proActiveMessageManager";
 
 export default function Index() {
   const theme = useTheme();
@@ -15,7 +16,7 @@ export default function Index() {
 
   useEffect(() => {
     // call the method that starts the process of sending the proActiveMessage
-    async function showProActiveMessage() {}
+    showProActiveMessage(setProActiveMessage);
   }, []);
 
   return (
