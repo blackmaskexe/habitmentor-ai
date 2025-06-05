@@ -7189,6 +7189,11 @@ react-native-tab-view@^4.0.12:
   dependencies:
     use-latest-callback "^0.2.3"
 
+react-native-type-animation@^0.4.4:
+  version "0.4.4"
+  resolved "https://registry.yarnpkg.com/react-native-type-animation/-/react-native-type-animation-0.4.4.tgz#50c21b3b1361b0444e422c6050db52445549aa5c"
+  integrity sha512-l1SbeRZGdNbeAVtjtkvvl8e1rJCy1nDiLsFrd5aMVLcX6LmYWBv7PK7j+rdR6gWcl2+fGqdmNWH7/sJkr9joAA==
+
 react-native-web@~0.20.0:
   version "0.20.0"
   resolved "https://registry.npmjs.org/react-native-web/-/react-native-web-0.20.0.tgz"

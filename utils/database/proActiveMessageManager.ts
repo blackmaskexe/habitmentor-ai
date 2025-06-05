@@ -6,7 +6,7 @@ import {
   getImportantMessages,
 } from "./dataCollectionHelper";
 
-function shouldRequestProActiveMessage() {
+export function shouldRequestProActiveMessage() {
   // return true; // for debugging purposes, YOU'LL RUN WHEN RUNEN TO
   const formattedDateToday = getFormattedDate();
   const lastProActiveMessageDate = mmkvStorage.getString(
@@ -31,9 +31,8 @@ function shouldRequestProActiveMessage() {
 export async function showProActiveMessage(
   setProActiveCallback: (message: string | null) => any
 ) {
-  if (true || shouldRequestProActiveMessage()) {
+  if (shouldRequestProActiveMessage()) {
     // for testing purpose rn
-    console.log("we should lol");
     // this is the part where I send all of the metadata and related information of user's habits
     // to the fine tuned ai model, and return whatever it gives out
 
@@ -42,10 +41,7 @@ export async function showProActiveMessage(
       importantMessages: await getImportantMessages(),
     });
 
-    console.log(response, "ayy bouta know right now i be going solo now");
-
     if (response && response.data.response) {
-      console.log("I won't let you down");
       setProActiveCallback(response.data.response);
     }
   } else {

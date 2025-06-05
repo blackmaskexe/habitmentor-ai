@@ -136,7 +136,6 @@ export default function FixedItemPicker({
       // as well as save an updated version of the habitItems (with points) to the mmkv storage
       mmkvStorage.set("coreHabits", JSON.stringify(newHabitItems));
       mmkvStorage.set("activeHabits", JSON.stringify(newHabitItems));
-      console.log("guess guess guess guess", newHabitItems);
     }
   }, [habitItems]);
 

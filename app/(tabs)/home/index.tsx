@@ -6,7 +6,17 @@ import DailyHabitsView from "@/utils/components/specific/DailyHabitsView";
 import WeekAtAGlance from "@/utils/components/specific/WeekGlance";
 import { Theme } from "@/utils/theme/themes";
 import { useEffect, useState } from "react";
-import { showProActiveMessage } from "@/utils/database/proActiveMessageManager";
+import {
+  shouldRequestProActiveMessage,
+  showProActiveMessage,
+} from "@/utils/database/proActiveMessageManager";
+import { TypeAnimation } from "react-native-type-animation";
+import {
+  getHabitCompletionCollection,
+  getImportantMessages,
+} from "@/utils/database/dataCollectionHelper";
+import api from "@/utils/api";
+import AISuggestionSkeleton from "@/utils/components/specific/AISuggestionSkeleton";
 
 export default function Index() {
   const theme = useTheme();
@@ -16,7 +26,27 @@ export default function Index() {
 
   useEffect(() => {
     // call the method that starts the process of sending the proActiveMessage
-    showProActiveMessage(setProActiveMessage);
+    // showProActiveMessage(setProActiveMessage);
+
+    async function showProActiveMessage() {
+      if (true || shouldRequestProActiveMessage()) {
+        // for testing purpose rn
+        // this is the part where I send all of the metadata and related information of user's habits
+        // to the fine tuned ai model, and return whatever it gives out
+
+        const response = await api.post("/pro-active", {
+          habitCompletionCollection: await getHabitCompletionCollection(),
+          importantMessages: await getImportantMessages(),
+        });
+
+        if (response && response.data.response) {
+          setProActiveMessage(response.data.response);
+        }
+      } else {
+        console.log("You don't have to fetch the important messages bro");
+      }
+    }
+    showProActiveMessage();
   }, []);
 
   return (
@@ -38,9 +68,15 @@ export default function Index() {
         <View style={styles.aiSection}>
           <Text style={styles.aiSectionText}>Top AI Suggestion:</Text>
           {proActiveMessage ? (
-            <TypewriterText textContent={proActiveMessage} typingSpeed={0.95} />
+            <TypeAnimation
+              sequence={[{ text: proActiveMessage }]}
+              style={styles.aiSuggestionText}
+              typeSpeed={1}
+            />
           ) : (
-            <Text>Loading...</Text>
+            // <Text style={styles.aiSuggestionText}>{proActiveMessage}</Text>
+
+            <AISuggestionSkeleton />
           )}
         </View>
         <View style={styles.habitsSection}>
@@ -81,7 +117,14 @@ function createStyle(theme: Theme) {
       ...theme.text.h3,
       marginRight: "10%",
     },
+    aiSuggestionText: {
+      ...theme.text.body, // Changed from h3 to body for smaller text
+      color: theme.colors.textSecondary,
+      width: "100%",
+      textAlign: "left",
+    },
     habitsSection: {
+      flex: 1,
       paddingTop: theme.spacing.s,
       marginTop: theme.spacing.l,
     },
@@ -93,6 +136,7 @@ function createStyle(theme: Theme) {
     aiSection: {
       paddingTop: theme.spacing.s,
       marginTop: theme.spacing.m,
+      height: 120,
     },
     aiSectionText: {
       color: theme.colors.text,

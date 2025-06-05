@@ -1,6 +1,6 @@
 import { useTheme } from "@/utils/theme/ThemeContext";
 import { Ionicons } from "@expo/vector-icons";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import {
   ScrollView,
   StyleSheet,
@@ -32,44 +32,61 @@ const DailyHabitsView: React.FC = () => {
   const theme = useTheme();
   const styles = createStyles(theme);
 
-  const [habitItems, setHabitItems] = useState<HabitObject[]>([]);
-
-  const loadHabits = function () {
+  const habitItems: HabitObject[] = useMemo(() => {
     // fetch habits from mmkvStorage
     let loadedHabits: any[] = [];
     const storedHabitsString = mmkvStorage.getString("activeHabits");
+    console.log("This da storedHabitsString type shi", storedHabitsString);
     if (storedHabitsString) {
       loadedHabits = JSON.parse(storedHabitsString);
-      setHabitItems(loadedHabits);
+      console.log("mera katta bhi loaded hai bro", loadedHabits);
+      return loadedHabits;
     } else {
-      throw new Error("Not able to fetch active habits from mmkvStorage");
+      console.log("Unable to load the habits from mmkv");
+      // throw new Error("Not able to fetch active habits from mmkvStorage");
+      return [];
     }
-  };
-
-  useFocusEffect(
-    useCallback(() => {
-      loadHabits();
-    }, [])
-  );
-
-  useEffect(() => {
-    loadHabits(); // try and load the habits on mount
-
-    const listener = mmkvStorage.addOnValueChangedListener((changedKey) => {
-      if (changedKey == "activeHabits") {
-        // reload the habits if the activeHabits change
-        console.log(
-          mmkvStorage.getString("activeHabits"),
-          "the active habits has changed somewhat, please see"
-        );
-        loadHabits();
-      }
-    });
-
-    return () => {
-      listener.remove();
-    };
   }, []);
+
+  // const loadHabits = function () {
+  //   console.log("Starting to log this brah");
+  //   // fetch habits from mmkvStorage
+  //   let loadedHabits: any[] = [];
+  //   const storedHabitsString = mmkvStorage.getString("activeHabits");
+  //   console.log("This da storedHabitsString type shi", storedHabitsString);
+  //   if (storedHabitsString) {
+  //     loadedHabits = JSON.parse(storedHabitsString);
+  //     console.log("mera katta bhi loaded hai bro", loadedHabits);
+  //     setHabitItems(loadedHabits);
+  //   } else {
+  //     throw new Error("Not able to fetch active habits from mmkvStorage");
+  //   }
+  // };
+
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     loadHabits();
+  //   }, [])
+  // );
+
+  // useEffect(() => {
+  //   loadHabits(); // try and load the habits on mount
+
+  //   const listener = mmkvStorage.addOnValueChangedListener((changedKey) => {
+  //     if (changedKey == "activeHabits") {
+  //       // reload the habits if the activeHabits change
+  //       console.log(
+  //         mmkvStorage.getString("activeHabits"),
+  //         "the active habits has changed somewhat, please see"
+  //       );
+  //       loadHabits();
+  //     }
+  //   });
+
+  //   return () => {
+  //     listener.remove();
+  //   };
+  // }, []);
 
   // extracting habit items that are active from the mmkvStorage
   // const storedHabitsString =

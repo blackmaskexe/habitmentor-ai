@@ -4,7 +4,7 @@ import { MotiView } from "moti";
 import { Skeleton } from "moti/skeleton";
 import { useTheme } from "@/utils/theme/ThemeContext";
 
-export default function HelloWorld() {
+export default function ChatMessagesSkeleton() {
   const theme = useTheme();
 
   return (

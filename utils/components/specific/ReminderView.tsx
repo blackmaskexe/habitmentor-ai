@@ -41,7 +41,6 @@ export default function ReminderView({
   const styles = createStyles(theme);
 
   const [time, setTime] = useState(initialTime || new Date());
-  console.log("in your birthday suit", time.getHours());
 
   const handleTimeChange = (
     event: DateTimePickerEvent,
@@ -84,8 +83,6 @@ export default function ReminderView({
     console.log("pressed back");
     onChangeDisplayScreen("main");
   };
-
-  console.log("I know you'll love it", getHabitObjectFromId(habitId));
 
   return (
     <SafeAreaView style={styles.container}>

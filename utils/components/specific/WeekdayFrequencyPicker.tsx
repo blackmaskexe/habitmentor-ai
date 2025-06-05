@@ -34,15 +34,12 @@ export default function WeekdayFrequencyPicker({
     onChangeValues((oldValue: any) => {
       const newValue = oldValue;
       newValue.frequency = activeDays;
-      console.log("my style ain't free", newValue);
 
       return newValue;
     });
   };
 
   const onHabitFrequencyChange = function () {
-    console.log(currentFrequency);
-
     const newActiveDays = Array(7).fill(false);
     weekdays.forEach((item, index) => {
       if (currentFrequency.includes(item)) {
@@ -50,8 +47,6 @@ export default function WeekdayFrequencyPicker({
       }
     });
     setActiveDays(newActiveDays);
-
-    console.log("these are the new active days after update", newActiveDays);
   };
 
   const handleDayPress = function (index: number) {

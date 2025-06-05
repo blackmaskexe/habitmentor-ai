@@ -70,15 +70,11 @@ export async function getOrCreateHabitCompletionRecord(habitId: string) {
     .query(Q.where("habit_id", habitId))
     .fetch();
 
-  console.log("THERE IS!!! tung tung harkat");
-
   if (existingRecord.length > 0) {
-    console.log("back to back to back to you, yu yu ano a back");
     // if there is a record with the asssociated habit_id
     return existingRecord[0];
   } else {
     const allRecords = await habitCompletionCollection.query().fetch();
-    console.log("have you seen the hunkunkun", allRecords);
 
     return await database.write(async () => {
       const newRecord = await habitCompletionCollection.create((record) => {
@@ -88,8 +84,6 @@ export async function getOrCreateHabitCompletionRecord(habitId: string) {
         record.timesMissed = 0;
         record.prevDaysSinceLast = 0;
       });
-
-      console.log("damn lavelas gimme a run for my manni");
 
       return newRecord;
     });

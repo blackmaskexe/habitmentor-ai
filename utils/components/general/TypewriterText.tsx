@@ -12,6 +12,14 @@ export default function TypewriterText({
   textContent,
   typingSpeed = 0.5,
 }: TypewriterTextProps) {
+  useEffect(() => {
+    setDisplayedText("");
+    setCurrentIndex(0);
+    textComplete.current = false;
+    // Optionally, if textHeight should also reset (e.g., if new text could be shorter)
+    // setTextHeight(0); // This might cause a flicker, test thoroughly
+  }, [textContent]);
+
   const theme = useTheme();
   const styles = createStyles(theme);
 

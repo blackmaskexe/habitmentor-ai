@@ -17,7 +17,6 @@ import HabitCompletion from "./watermelon/model/HabitCompletion";
 
 export async function runHabitDataCollection() {
   if (shouldCollectData()) {
-    console.log("tatatat SAHURRRR");
     for (const habit of getAllHabits()) {
       if (!shouldCollectDataForHabit(habit.id)) {
         return; // early return if the habit is not to be done today
@@ -26,7 +25,6 @@ export async function runHabitDataCollection() {
       }
       // running data collection on each of them:
       const habitCompletion = await getOrCreateHabitCompletionRecord(habit.id); // this is the record of datacollection for that habit
-      console.log("birthday suit typeshi");
       const daysMissedSinceLast = daysUserMissedHabitSinceLastCompletion(
         habit.id
       );
@@ -66,7 +64,6 @@ export async function addImportantMessage(importantMessage: string) {
 export async function getImportantMessages(limit?: number) {
   const importantMessagesCollection =
     database.get<ImportantMessage>("important_messages");
-  console.log("the crowd feel my pain");
 
   const importantMessagesArray = [];
   let records: ImportantMessage[] | null = null;
@@ -83,7 +80,6 @@ export async function getImportantMessages(limit?: number) {
     importantMessagesArray.push(record.importantMessage);
   }
 
-  console.log(importantMessagesArray, "I don't suppose tomorrow's coming");
 
   return importantMessagesArray;
 }
