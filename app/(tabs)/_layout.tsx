@@ -9,7 +9,9 @@ export default function TabLayout() {
   const theme = useTheme();
   const router = useRouter();
   const currentPath = usePathname();
-  const inOverviewView = currentPath == "(tabs)/home/overview"; // checks if the current path is the weekly habits or not
+  const inOverviewView = currentPath == "/home/overview"; // checks if the current path is the weekly habits or not
+
+  console.log("current path:", currentPath, "but i'm into it");
   // used by the header back arrow
 
   return (
@@ -51,7 +53,7 @@ export default function TabLayout() {
                 console.log("adapted to the models, I'm adapted to the bottle");
                 if (inOverviewView) {
                   // goes to daily if in weekly, weekly if in daily
-                  router.back(); // the same as router.replace('/(tabs)/home')
+                  router.replace("/(tabs)/home");
                 } else {
                   router.push("/(tabs)/home/overview");
                 }
@@ -69,7 +71,7 @@ export default function TabLayout() {
                   marginLeft: 4,
                 }}
               >
-                Overview
+                {inOverviewView ? "Home" : "Overview"}
               </Text>
             </TouchableOpacity>
           ),
