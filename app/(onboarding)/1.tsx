@@ -6,18 +6,23 @@ import {
   ScrollView,
   SafeAreaView,
   Image,
+  Platform,
 } from "react-native";
 import React, { useRef } from "react";
 import { useTheme } from "@/utils/theme/ThemeContext";
 import { useRouter } from "expo-router";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 // Components:
 import CTAButton from "@/utils/components/general/CTAButton";
 import VariableItemPicker from "@/utils/components/specific/VariableItemPicker";
 
 const AddMoreHabitsPrompt = () => {
+  const insets = useSafeAreaInsets();
+  const topSafeAreaHeight = insets.top; // Height of the top unsafe area
+
   const theme = useTheme();
-  const styles = createStyles(theme);
+  const styles = createStyles(theme, topSafeAreaHeight);
 
   const router = useRouter();
   const scrollViewRef = useRef<any>(null);
@@ -65,11 +70,12 @@ const AddMoreHabitsPrompt = () => {
   );
 };
 
-function createStyles(theme: any) {
+function createStyles(theme: any, topMargin: number) {
   return StyleSheet.create({
     container: {
       flex: 1,
       backgroundColor: theme.colors.background,
+      marginTop: Platform.OS == "android" ? topMargin : 0,
     },
     innerContainer: {
       flex: 1,
