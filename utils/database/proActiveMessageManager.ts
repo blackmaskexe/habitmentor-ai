@@ -28,23 +28,14 @@ export function shouldRequestProActiveMessage() {
   }
 }
 
-export async function showProActiveMessage(
-  setProActiveCallback: (message: string | null) => any
-) {
-  if (shouldRequestProActiveMessage()) {
-    // for testing purpose rn
-    // this is the part where I send all of the metadata and related information of user's habits
-    // to the fine tuned ai model, and return whatever it gives out
+export function setRecentProActiveMessage(message: string) {
+  mmkvStorage.set("recentProActiveMessage", message);
+}
 
-    const response = await api.post("/pro-active", {
-      habitCompletionCollection: await getHabitCompletionCollection(),
-      importantMessages: await getImportantMessages(),
-    });
-
-    if (response && response.data.response) {
-      setProActiveCallback(response.data.response);
-    }
-  } else {
-    console.log("You don't have to fetch the important messages bro");
+export function getRecentProActiveMessage() {
+  const recentMessage = mmkvStorage.getString("recentProActiveMessage");
+  if (recentMessage) {
+    return recentMessage;
   }
+  return "Loading...";
 }

@@ -1,6 +1,7 @@
 import { runHabitDataCollection } from "@/utils/database/dataCollectionHelper";
 import { Stack } from "expo-router";
 import { useEffect } from "react";
+import { Platform } from "react-native";
 
 export default function RootLayout() {
   useEffect(() => {
@@ -15,13 +16,14 @@ export default function RootLayout() {
       <Stack.Screen
         name="index"
         options={{
-          animation: "fade",
+          animation: Platform.OS == "android" ? "none" : "fade",
         }}
       />
       <Stack.Screen
         name="overview"
         options={{
           presentation: "modal",
+          animation: Platform.OS == "android" ? "fade_from_bottom" : "default",
         }}
       />
     </Stack>

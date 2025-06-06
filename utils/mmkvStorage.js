@@ -12,3 +12,4 @@ export default mmkvStorage;
 // habitHistory: A database-like array of all the past completed habits from the user
 // lastDataCollectionDate: formatted date of the last time the habit data collection helper function was run
 // lastProActiveMessageDate: the last date the server fetched pro-active advice for the user to display on the homescreen
+// recentProActiveMessage: gives the last fetched pro active message from the server

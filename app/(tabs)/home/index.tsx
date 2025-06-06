@@ -7,8 +7,9 @@ import WeekAtAGlance from "@/utils/components/specific/WeekGlance";
 import { Theme } from "@/utils/theme/themes";
 import { useEffect, useState } from "react";
 import {
+  getRecentProActiveMessage,
+  setRecentProActiveMessage,
   shouldRequestProActiveMessage,
-  showProActiveMessage,
 } from "@/utils/database/proActiveMessageManager";
 import { TypeAnimation } from "react-native-type-animation";
 import {
@@ -17,19 +18,22 @@ import {
 } from "@/utils/database/dataCollectionHelper";
 import api from "@/utils/api";
 import AISuggestionSkeleton from "@/utils/components/specific/AISuggestionSkeleton";
+import mmkvStorage from "@/utils/mmkvStorage";
 
 export default function Index() {
   const theme = useTheme();
   const styles = createStyle(theme);
 
-  const [proActiveMessage, setProActiveMessage] = useState(null); // will eventually fetch it's last value from a key-value store so that the user doesn't have to stare at the "loading" for 1-3 seconds
+  const [proActiveMessage, setProActiveMessage] = useState(
+    getRecentProActiveMessage()
+  ); // will eventually fetch it's last value from a key-value store so that the user doesn't have to stare at the "loading" for 1-3 seconds
 
   useEffect(() => {
     // call the method that starts the process of sending the proActiveMessage
     // showProActiveMessage(setProActiveMessage);
 
     async function showProActiveMessage() {
-      if (true || shouldRequestProActiveMessage()) {
+      if (shouldRequestProActiveMessage()) {
         // for testing purpose rn
         // this is the part where I send all of the metadata and related information of user's habits
         // to the fine tuned ai model, and return whatever it gives out
@@ -41,6 +45,9 @@ export default function Index() {
 
         if (response && response.data.response) {
           setProActiveMessage(response.data.response);
+
+          // set the mmkvstorage with the recent pro active message:
+          setRecentProActiveMessage(response.data.response);
         }
       } else {
         console.log("You don't have to fetch the important messages bro");

@@ -5,6 +5,7 @@ import { useRouter } from "expo-router";
 import React from "react";
 import {
   Alert,
+  Platform,
   ScrollView,
   StyleSheet,
   Text,
@@ -30,14 +31,19 @@ const OverviewScreen = () => {
 
   return (
     <View style={styles.container}>
-      <NavigationPill />
-      <View style={styles.closeButtonContainer}>
-        <CrossButton
-          onPress={() => router.replace("/(tabs)/home")}
-          size={20}
-          outline={false}
-        />
-      </View>
+      {Platform.OS == "ios" ? (
+        <>
+          <NavigationPill />
+          <View style={styles.closeButtonContainer}>
+            <CrossButton
+              onPress={() => router.replace("/(tabs)/home")}
+              size={20}
+              outline={false}
+            />
+          </View>
+        </>
+      ) : null}
+
       {/* changed from it being a modal to a standard screen */}
       <ScrollView
         style={styles.scrollContainer}

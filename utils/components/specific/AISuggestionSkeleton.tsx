@@ -36,7 +36,7 @@ function createStyles(theme: Theme) {
   return StyleSheet.create({
     container: {
       flex: 1,
-      marginTop: theme.spacing.s,
+      marginTop: theme.spacing.m,
       // justifyContent: "center",
     },
     padded: {
