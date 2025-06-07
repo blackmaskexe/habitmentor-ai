@@ -50,3 +50,15 @@ export function getAllHabits() {
 
   return activeHabits;
 }
+
+export function getTotalHabitNumberOnDay(weekdayNumber: number) {
+  const allHabits = getAllHabits();
+  let totalNum = 0;
+  for (const habit of allHabits) {
+    if (habit.frequency[weekdayNumber]) {
+      totalNum++;
+    }
+  }
+
+  return totalNum;
+}

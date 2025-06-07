@@ -106,7 +106,7 @@ function saveHabitHistoryEntries(entries: HabitHistoryEntry[]): void {
 }
 
 // Helper function to get all habit history entries from MMKV
-function getHabitHistoryEntries(): HabitHistoryEntry[] {
+export function getHabitHistoryEntries(): HabitHistoryEntry[] {
   const storedEntries = mmkvStorage.getString(HABIT_HISTORY_KEY);
   if (storedEntries) {
     try {

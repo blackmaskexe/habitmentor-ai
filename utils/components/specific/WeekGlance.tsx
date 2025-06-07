@@ -1,17 +1,25 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { useTheme } from "@/utils/theme/ThemeContext";
 import ProgressBar from "../general/ProgressBar";
 import { Theme } from "@/utils/theme/themes";
-import { getDatesThisWeek } from "@/utils/date";
+import {
+  getDateFromFormattedDate,
+  getDatesThisWeek,
+  getFormattedDatesThisWeek,
+  getWeekdayNumber,
+} from "@/utils/date";
+import { getHabitHistoryEntries } from "@/utils/database/habitHistoryManager";
+import { getTotalHabitNumberOnDay } from "@/utils/database/habits";
+import mmkvStorage from "@/utils/mmkvStorage";
 
 interface WeekAtAGlanceProps {
   // Array of percentages for each day (0-100)
-  dayPercentages: number[];
+  // dayPercentages: number[];
   // Overall completion percentage
-  completionPercentage: number;
+  // completionPercentage: number;
   // Optional start date (defaults to current week)
-  startDate?: Date;
+  // startDate?: Date;
 }
 
 const monthLabels = [
@@ -29,13 +37,47 @@ const monthLabels = [
   "Dec",
 ];
 
-const WeekAtAGlance: React.FC<WeekAtAGlanceProps> = ({
-  dayPercentages = [0, 0, 0, 0, 0, 0, 0],
-  completionPercentage = 0,
-  startDate = new Date(),
-}) => {
+const WeekAtAGlance: React.FC<WeekAtAGlanceProps> = () => {
   const theme = useTheme();
   const styles = createStyles(theme);
+
+  const [dayPercentages, setDayPercentages] = useState<number[]>([]);
+
+  useEffect(() => {
+    function calculateAndSetDayPercentages() {
+      const formattedWeekDayArray = getFormattedDatesThisWeek();
+      const newDayPercentages = formattedWeekDayArray.map((item, index) => {
+        let habitsCompleted = 0;
+        for (const habitHistoryEntry of getHabitHistoryEntries()) {
+          if (habitHistoryEntry.completionDate == item) {
+            habitsCompleted++;
+          }
+        }
+        return (
+          (habitsCompleted /
+            getTotalHabitNumberOnDay(
+              getWeekdayNumber(getDateFromFormattedDate(item))
+            )) *
+          100
+        );
+      });
+      setDayPercentages(newDayPercentages);
+    }
+
+    // calculate percentages on mount:
+    calculateAndSetDayPercentages();
+
+    const listener = mmkvStorage.addOnValueChangedListener((changedKey) => {
+      if (changedKey == "habitHistory") {
+        // re-run calculation of percentages:
+        calculateAndSetDayPercentages();
+      }
+    });
+
+    return () => {
+      listener.remove();
+    };
+  }, []);
 
   // Calculate the date range for the week
   const getDateRange = (): string => {
@@ -48,6 +90,14 @@ const WeekAtAGlance: React.FC<WeekAtAGlanceProps> = ({
     };
 
     return `${formatDate(weekStart)} - ${formatDate(weekEnd)}`;
+  };
+
+  const calculateOpacity: any = (percent: number) => {
+    if (percent < 20) return 0.2;
+    if (percent < 40) return 0.4;
+    if (percent < 60) return 0.6;
+    if (percent < 80) return 0.8;
+    return 1;
   };
 
   // Day labels
@@ -68,10 +118,7 @@ const WeekAtAGlance: React.FC<WeekAtAGlanceProps> = ({
               style={[
                 styles.daySquare,
                 {
-                  opacity:
-                    dayPercentages[index] < 40
-                      ? 0.4
-                      : dayPercentages[index] / 100,
+                  opacity: calculateOpacity(dayPercentages[index]),
                 },
               ]}
             />

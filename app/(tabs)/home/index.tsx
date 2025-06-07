@@ -1,5 +1,5 @@
 import { useTheme } from "@/utils/theme/ThemeContext";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { Platform, ScrollView, StyleSheet, Text, View } from "react-native";
 
 import TypewriterText from "@/utils/components/general/TypewriterText";
 import DailyHabitsView from "@/utils/components/specific/DailyHabitsView";
@@ -19,14 +19,13 @@ import {
 import api from "@/utils/api";
 import AISuggestionSkeleton from "@/utils/components/specific/AISuggestionSkeleton";
 import { getFormattedDatesThisWeek } from "@/utils/date";
+import mmkvStorage from "@/utils/mmkvStorage";
 
 export default function Index() {
   const theme = useTheme();
   const styles = createStyle(theme);
 
-  const [proActiveMessage, setProActiveMessage] = useState(
-    getRecentProActiveMessage()
-  ); // will eventually fetch it's last value from a key-value store so that the user doesn't have to stare at the "loading" for 1-3 seconds
+  const [proActiveMessage, setProActiveMessage] = useState<string | null>(null); // will eventually fetch it's last value from a key-value store so that the user doesn't have to stare at the "loading" for 1-3 seconds
 
   useEffect(() => {
     // call the method that starts the process of sending the proActiveMessage
@@ -53,6 +52,11 @@ export default function Index() {
         }
       } else {
         console.log("You don't have to fetch the important messages bro");
+        console.log(
+          "hum hai chhapri ahhh",
+          mmkvStorage.getString("recentProActiveMessage")
+        );
+        setProActiveMessage(getRecentProActiveMessage());
       }
     }
     showProActiveMessage();
@@ -70,10 +74,7 @@ export default function Index() {
         }}
         showsVerticalScrollIndicator={false}
       >
-        <WeekAtAGlance
-          dayPercentages={[90, 20, 50, 60, 70, 10, 100]}
-          completionPercentage={99}
-        />
+        <WeekAtAGlance />
         <View style={styles.aiSection}>
           <Text style={styles.aiSectionText}>Top AI Suggestion:</Text>
           {proActiveMessage ? (
@@ -81,6 +82,7 @@ export default function Index() {
               sequence={[{ text: proActiveMessage }]}
               style={styles.aiSuggestionText}
               typeSpeed={1}
+              cursor={Platform.OS == "ios"}
             />
           ) : (
             // <Text style={styles.aiSuggestionText}>{proActiveMessage}</Text>
