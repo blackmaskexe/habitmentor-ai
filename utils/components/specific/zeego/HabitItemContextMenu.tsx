@@ -65,6 +65,8 @@ export default function HabitItemContextMenu({
         <ContextMenu.ContextMenuItem
           key={"ai-improves"}
           onSelect={() => {
+            console.log("I got m's on my mind. I got tens");
+
             router.replace("/(tabs)/home");
             router.navigate({
               pathname: "/(tabs)/chat",

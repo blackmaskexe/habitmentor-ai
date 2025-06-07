@@ -90,6 +90,11 @@ export default function ChatMessages({
     }
   };
 
+  useEffect(() => {
+    // ensure that prefilled text is set whenever it is updated
+    setMessageContent(prefilledText);
+  }, [prefilledText]);
+
   // load messages on mount
   useEffect(() => {
     loadMessages();
