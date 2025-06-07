@@ -145,6 +145,11 @@ export default function ChatMessages({
       return [...prevMessages, userMessage, aiMessage];
     });
 
+    // scroll after user sends the message
+    setTimeout(() => {
+      listRef.current?.scrollToEnd({ animated: true });
+    }, 100);
+
     // clear the text input:
     setMessageContent("");
 
@@ -204,7 +209,7 @@ export default function ChatMessages({
       <SafeAreaView style={styles.container} edges={["bottom"]}>
         <KeyboardAvoidingView
           style={styles.kbAvoidingView}
-          behavior={"padding"}
+          behavior={Platform.OS == "ios" ? "padding" : "height"}
           keyboardVerticalOffset={headerHeight}
         >
           <LegendList

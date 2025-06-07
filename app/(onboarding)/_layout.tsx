@@ -59,25 +59,9 @@ export default function OnboardingLayout() {
           },
         }}
       />
-      <Stack.Screen
-        name="1"
-        // options={{
-        //   headerTitle: () => (
-        //     <View style={styles.headerContainer}>
-        //       <Image
-        //         source={{
-        //           uri: "https://preview.redd.it/random-ahh-images-from-my-gallery-v0-nu3zm16ez23a1.jpg?width=336&format=pjpg&auto=webp&s=64b04af8bda026b29a4f8034da55e826020864ed",
-        //         }}
-        //         style={styles.headerIcon}
-        //       />
-        //       <Text style={styles.headerText}>Life AI</Text>
-        //     </View>
-        //   ),
-        // }}
-      />
+      <Stack.Screen name="1" />
       <Stack.Screen name="2" />
       <Stack.Screen name="3" />
-      <Stack.Screen name="4" />
     </Stack>
   );
 }

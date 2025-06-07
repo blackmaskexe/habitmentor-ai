@@ -3,9 +3,11 @@ import { StyleSheet, Pressable, View } from "react-native";
 import { MotiView } from "moti";
 import { Skeleton } from "moti/skeleton";
 import { useTheme } from "@/utils/theme/ThemeContext";
+import { Theme } from "@/utils/theme/themes";
 
 export default function AISuggestionSkeleton() {
   const theme = useTheme();
+  const styles = createStyles(theme);
 
   return (
     <>
@@ -13,7 +15,7 @@ export default function AISuggestionSkeleton() {
         transition={{
           type: "timing",
         }}
-        style={[styles.container, styles.padded]}
+        style={[styles.container]}
         animate={{ backgroundColor: theme.colors.background }}
       >
         <Skeleton
@@ -30,12 +32,15 @@ export default function AISuggestionSkeleton() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    // justifyContent: "center",
-  },
-  padded: {
-    padding: 16,
-  },
-});
+function createStyles(theme: Theme) {
+  return StyleSheet.create({
+    container: {
+      flex: 1,
+      marginTop: theme.spacing.m,
+      // justifyContent: "center",
+    },
+    padded: {
+      padding: 16,
+    },
+  });
+}

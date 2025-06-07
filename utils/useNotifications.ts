@@ -86,7 +86,7 @@ export function useNotifications() {
         const identifier = await Notifications.scheduleNotificationAsync({
           content: {
             title: "HabitMentor AI",
-            body: `You are overdue for ${habit.habitName}`,
+            body: `Gentle reminder for the habit: ${habit.habitName}`,
           },
           trigger: {
             type: Notifications.SchedulableTriggerInputTypes.CALENDAR,
@@ -94,6 +94,7 @@ export function useNotifications() {
             minute: time.getMinutes(),
             weekday: dayOfWeek,
             repeats: true,
+            channelId: "default",
           },
         });
         notificationIdArray.push(identifier);
@@ -115,8 +116,8 @@ export function useNotifications() {
     let token;
 
     if (Platform.OS === "android") {
-      await Notifications.setNotificationChannelAsync("myNotificationChannel", {
-        name: "A channel is needed for the permissions prompt to appear",
+      await Notifications.setNotificationChannelAsync("default", {
+        name: "default",
         importance: Notifications.AndroidImportance.MAX,
         vibrationPattern: [0, 250, 250, 250],
         lightColor: "#FF231F7C",

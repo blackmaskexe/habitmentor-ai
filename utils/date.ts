@@ -20,8 +20,13 @@ const getWeekNumber = function (date: Date) {
   return getISOWeek(date);
 };
 
-const getFormattedDate = function () {
-  const date = getDate();
+const getFormattedDate = function (customDate?: Date) {
+  let date = null;
+  if (customDate) {
+    date = customDate;
+  } else {
+    date = getDate();
+  }
   return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
 };
 
@@ -42,6 +47,40 @@ const getTimeOfDay = function () {
   return "evening";
 };
 
+const getFormattedDatesThisWeek = function () {
+  const today = new Date(); // suppose today is wednesday
+  const todayWeekdayNumber = today.getDay(); // returns 3
+  // we have to loop in such a way that the first day is obtained by subtracting 3, and end at adding 7 - 3
+  console.log("poore lag gaye", todayWeekdayNumber);
+
+  const formattedDatesThisWeekArray = [];
+  for (let i = -1 * todayWeekdayNumber; i < 7 - todayWeekdayNumber; i++) {
+    let dateOnThisDay = new Date();
+    dateOnThisDay.setDate(today.getDate() + i);
+    console.log("with your loi vi bag, tats on your arms,", dateOnThisDay);
+    formattedDatesThisWeekArray.push(getFormattedDate(dateOnThisDay));
+  }
+
+  return formattedDatesThisWeekArray;
+};
+
+const getDatesThisWeek = function () {
+  const today = new Date(); // suppose today is wednesday
+  const todayWeekdayNumber = today.getDay(); // returns 3
+  // we have to loop in such a way that the first day is obtained by subtracting 3, and end at adding 7 - 3
+  console.log("poore lag gaye", todayWeekdayNumber);
+
+  const formattedDatesThisWeekArray = [];
+  for (let i = -1 * todayWeekdayNumber; i < 7 - todayWeekdayNumber; i++) {
+    let dateOnThisDay = new Date();
+    dateOnThisDay.setDate(today.getDate() + i);
+    console.log("with your loi vi bag, tats on your arms,", dateOnThisDay);
+    formattedDatesThisWeekArray.push(dateOnThisDay);
+  }
+
+  return formattedDatesThisWeekArray;
+};
+
 export {
   getDate,
   getWeekdayNumber,
@@ -49,4 +88,6 @@ export {
   getDateFromFormattedDate,
   getWeekNumber,
   getTimeOfDay,
+  getFormattedDatesThisWeek,
+  getDatesThisWeek,
 };

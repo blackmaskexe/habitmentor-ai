@@ -69,7 +69,7 @@ export default function HabitItemContextMenu({
             router.navigate({
               pathname: "/(tabs)/chat",
               params: {
-                initialMessage: `Can you help me improve and be more consistent in the habit of ${habitItem.habitName}`,
+                prefilledText: `Can you help me improve and be more consistent in the habit of ${habitItem.habitName}`,
               },
             });
           }}
