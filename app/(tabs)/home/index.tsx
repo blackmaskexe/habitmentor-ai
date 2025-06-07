@@ -18,7 +18,7 @@ import {
 } from "@/utils/database/dataCollectionHelper";
 import api from "@/utils/api";
 import AISuggestionSkeleton from "@/utils/components/specific/AISuggestionSkeleton";
-import mmkvStorage from "@/utils/mmkvStorage";
+import { getFormattedDatesThisWeek } from "@/utils/date";
 
 export default function Index() {
   const theme = useTheme();
@@ -31,6 +31,8 @@ export default function Index() {
   useEffect(() => {
     // call the method that starts the process of sending the proActiveMessage
     // showProActiveMessage(setProActiveMessage);
+
+    console.log(getFormattedDatesThisWeek(), "you always come to the party");
 
     async function showProActiveMessage() {
       if (shouldRequestProActiveMessage()) {

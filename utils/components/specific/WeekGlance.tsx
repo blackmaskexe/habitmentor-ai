@@ -3,6 +3,7 @@ import { View, Text, StyleSheet } from "react-native";
 import { useTheme } from "@/utils/theme/ThemeContext";
 import ProgressBar from "../general/ProgressBar";
 import { Theme } from "@/utils/theme/themes";
+import { getDatesThisWeek } from "@/utils/date";
 
 interface WeekAtAGlanceProps {
   // Array of percentages for each day (0-100)
@@ -37,15 +38,10 @@ const WeekAtAGlance: React.FC<WeekAtAGlanceProps> = ({
   const styles = createStyles(theme);
 
   // Calculate the date range for the week
-  const getDateRange = (date: Date): string => {
-    const currentDay = date.getDay();
-    const diff = date.getDate() - currentDay + (currentDay === 0 ? -6 : 1); // Adjust for Sunday
-
-    const weekStart = new Date(date);
-    weekStart.setDate(diff);
-
-    const weekEnd = new Date(weekStart);
-    weekEnd.setDate(weekStart.getDate() + 6);
+  const getDateRange = (): string => {
+    const weekDateArray = getDatesThisWeek();
+    const weekStart = weekDateArray[0];
+    const weekEnd = weekDateArray[6];
 
     const formatDate = (d: Date) => {
       return `${monthLabels[d.getMonth()]} ${d.getDate()}`;
@@ -55,13 +51,13 @@ const WeekAtAGlance: React.FC<WeekAtAGlanceProps> = ({
   };
 
   // Day labels
-  const dayLabels = ["M", "T", "W", "T", "F", "S", "S"];
+  const dayLabels = ["S", "M", "T", "W", "T", "F", "S"];
 
   return (
     <View style={styles.container}>
       <View style={styles.headerContainer}>
         <Text style={styles.headerText}>Weekly Completion Progress</Text>
-        <Text style={styles.dateRange}>{getDateRange(startDate)}</Text>
+        <Text style={styles.dateRange}>{getDateRange()}</Text>
       </View>
 
       {/* Days Grid */}

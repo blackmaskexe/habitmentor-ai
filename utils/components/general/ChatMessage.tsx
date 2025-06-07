@@ -209,7 +209,7 @@ export default function ChatMessages({
       <SafeAreaView style={styles.container} edges={["bottom"]}>
         <KeyboardAvoidingView
           style={styles.kbAvoidingView}
-          behavior={"padding"}
+          behavior={Platform.OS == "ios" ? "padding" : "height"}
           keyboardVerticalOffset={headerHeight}
         >
           <LegendList
