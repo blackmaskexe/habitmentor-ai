@@ -13,26 +13,28 @@ export default function AllHabitsOverview({
 }: {
   allHabitsArray: HabitObject[];
 }) {
-  const [habitStreaks, setHabitStreaks] = useState<any>({});
+  const [habitRecords, setHabitRecords] = useState<any>({});
 
   useEffect(() => {
     // calculate habit streaks on mount
     // will be assigning the key of object as habitId, value as streak
-    const loadHabitStreaks = async function () {
+    const loadHabitRecords = async function () {
       const habitCompletionCollection = await getHabitCompletionCollection();
 
-      setHabitStreaks(() => {
-        const newHabitStreaks: any = {};
+      setHabitRecords(() => {
+        const newHabitRecords: any = {};
         for (const habit of habitCompletionCollection) {
-          newHabitStreaks[habit.habitId] = habit.streak;
-          console.log("MAD CAKE GET MAD CAKE", habit.habitId, habit.streak);
+          newHabitRecords[habit.habitId] = {
+            streak: habit.streak,
+            completed: habit.timesCompleted,
+            missed: habit.timesMissed,
+          };
         }
-        console.log("COLGATE COLD CASE FOREVER A THUG", newHabitStreaks);
-        return newHabitStreaks;
+        return newHabitRecords;
       });
     };
 
-    loadHabitStreaks();
+    loadHabitRecords();
   }, []);
 
   const theme = useTheme();
@@ -40,11 +42,6 @@ export default function AllHabitsOverview({
   return (
     <View style={styles.allHabitsContainer}>
       {allHabitsArray.map((habitItem, index) => {
-        console.log(
-          "bands forever ever",
-          habitItem.id,
-          habitStreaks[habitItem.id]
-        );
         return (
           <View
             style={styles.habitCard}
@@ -54,7 +51,8 @@ export default function AllHabitsOverview({
             <View style={styles.habitCardText}>
               <Text style={styles.habitName}>{habitItem.habitName}</Text>
               <Text style={styles.habitDetails}>
-                Streak: {habitStreaks[habitItem.id] || 0}
+                Streak: {habitRecords[habitItem.id]?.streak || 0} | Completed:{" "}
+                {habitRecords[habitItem.id]?.completed || 0}
               </Text>
             </View>
             <View style={styles.habitCompletionDotContainer}>

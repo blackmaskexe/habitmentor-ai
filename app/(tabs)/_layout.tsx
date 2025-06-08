@@ -75,7 +75,11 @@ export default function TabLayout() {
                   marginLeft: 4,
                 }}
               >
-                {inOverviewView ? "Home" : "Overview"}
+                {Platform.OS == "ios" ? "Overview" : null}
+                {Platform.OS == "android" && inOverviewView ? "Home" : null}
+                {Platform.OS == "android" && !inOverviewView
+                  ? "Overview"
+                  : null}
               </Text>
             </TouchableOpacity>
           ),

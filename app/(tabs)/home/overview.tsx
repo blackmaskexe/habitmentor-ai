@@ -2,7 +2,7 @@
 
 import { useTheme } from "@/utils/theme/ThemeContext";
 import { useRouter } from "expo-router";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Alert,
   Platform,
@@ -19,11 +19,38 @@ import AllHabitsOverview from "@/utils/components/specific/AllHabitsOverview";
 import MonthlyHabitActivityMonitor from "@/utils/components/specific/MonthlyHabitActivityMonitor";
 import mmkvStorage from "@/utils/mmkvStorage";
 import { Theme } from "@/utils/theme/themes";
+import { getHabitCompletionCollection } from "@/utils/database/dataCollectionHelper";
+
+async function calculateLongestStreak() {
+  const habitCompletionRecords = await getHabitCompletionCollection();
+  let longestOverallStreak = habitCompletionRecords[0].streak; // stores the least of all the habit streaks
+
+  for (const record of habitCompletionRecords) {
+    if (record.streak < longestOverallStreak) {
+      longestOverallStreak = record.streak; // if find a streak that is lower than what it found for for previous elements
+      // then it will choose the lower streak number
+    }
+  }
+
+  return longestOverallStreak;
+}
 
 const OverviewScreen = () => {
   const router = useRouter();
   const theme = useTheme();
   const styles = createStyles(theme);
+
+  const [currentStreak, setCurrentStreak] = useState(0);
+
+  useEffect(() => {
+    // calculate and set longest streak on mount
+    const getAndSetCurrentStreak = async () => {
+      const longestStreak = await calculateLongestStreak();
+      setCurrentStreak(longestStreak);
+    };
+
+    getAndSetCurrentStreak();
+  }, []);
 
   const activeHabits = JSON.parse(
     mmkvStorage.getString("activeHabits") || "[]"
@@ -51,8 +78,10 @@ const OverviewScreen = () => {
       >
         <View style={styles.headerContainer}>
           <View style={styles.headerItem}>
-            <Text style={styles.headerTextTop}>Longest Streak</Text>
-            <Text style={styles.headerTextBottom}>21 days</Text>
+            <Text style={styles.headerTextTop}>Combined Streak</Text>
+            <Text style={styles.headerTextBottom}>
+              {currentStreak} day{currentStreak > 1 ? "s" : ""}
+            </Text>
           </View>
           <View style={styles.headerItem}>
             <Text style={styles.headerTextTop}>Global Rank:</Text>
@@ -67,9 +96,7 @@ const OverviewScreen = () => {
         </View>
 
         <View style={styles.habitCompletion}>
-          <Text style={styles.monthlyProgressText}>
-            Monthly Progress Chart:
-          </Text>
+          <Text style={styles.monthlyProgressText}>Monthly Progress:</Text>
 
           {/* <TouchableOpacity
             onPress={() => {
@@ -86,7 +113,7 @@ const OverviewScreen = () => {
         </View>
 
         <View style={styles.allHabitsInfo}>
-          <Text style={styles.monthlyProgressText}>All Habits Info</Text>
+          <Text style={styles.monthlyProgressText}>All Habits:</Text>
           <AllHabitsOverview allHabitsArray={activeHabits} />
         </View>
       </ScrollView>
