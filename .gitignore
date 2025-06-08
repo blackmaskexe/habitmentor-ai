@@ -14,8 +14,8 @@ node_modules/
 dist/
 web-build/
 expo-env.d.ts
-eas.json
-app.json
+# eas.json
+# app.json
 
 # Native
 *.orig.*
@@ -88,5 +88,5 @@ yarn-error.*
 # @end expo-cli
 
 # build files
-ios
-android
+# ios
+# android
