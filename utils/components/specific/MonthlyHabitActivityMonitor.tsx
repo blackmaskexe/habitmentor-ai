@@ -1,40 +1,69 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { View, StyleSheet } from "react-native";
 import { useTheme } from "@/utils/theme/ThemeContext";
+import { getHabitHistoryEntries } from "@/utils/database/habitHistoryManager";
+import {
+  getDateFromFormattedDate,
+  getFormattedDate,
+  getWeekdayNumber,
+} from "@/utils/date";
+import { getTotalHabitNumberOnDay } from "@/utils/database/habits";
 
 interface DayActivity {
   date: Date;
   completionPercentage: number; // 0-100
 }
 
-interface MonthlyHabitActivityMonitorProps {
-  activities: DayActivity[];
-}
-
-export const MonthlyHabitActivityMonitor: React.FC<
-  MonthlyHabitActivityMonitorProps
-> = ({ activities }) => {
-  const dummyActivities: DayActivity[] = Array.from(
-    { length: 30 },
-    (_, index) => {
-      const date = new Date();
-      date.setDate(date.getDate() - (29 - index)); // This will give last 30 days
-
-      return {
-        date: date,
-        completionPercentage: Math.floor(Math.random() * 100), // Random percentage between 0-100
-      };
-    }
+export const MonthlyHabitActivityMonitor: React.FC = () => {
+  const [activities, setActivities] = useState<DayActivity[]>(
+    Array.from({ length: 30 }, () => ({
+      // Use Array.from
+      date: new Date(Math.random() * 1000000), // Create a new Date object each time
+      completionPercentage: 0,
+    }))
   );
-  activities = dummyActivities;
+
+  function calculatePercentageForDay(date: Date) {
+    let habitsCompleted = 0;
+    for (const habitHistoryEntry of getHabitHistoryEntries()) {
+      if (habitHistoryEntry.completionDate == getFormattedDate(date)) {
+        habitsCompleted++;
+      }
+    }
+
+    return (
+      (habitsCompleted / getTotalHabitNumberOnDay(getWeekdayNumber(date))) * 100
+    );
+  }
+
+  useEffect(() => {
+    // calculate completion percentages (content of activities state) on mount
+    const today = new Date();
+    const dayToday = today.getDate();
+
+    setActivities((oldActivities) => {
+      const newActivities = [...oldActivities];
+      for (let i = 1; i < dayToday + 1; i++) {
+        // looping for days of month until today
+        const dateThisDay = new Date(today.getFullYear(), today.getMonth(), i);
+        newActivities[i - 1] = {
+          date: dateThisDay, // ith day of the month
+          completionPercentage: calculatePercentageForDay(dateThisDay),
+        };
+      }
+
+      return newActivities;
+    });
+  }, []);
+
   const theme = useTheme();
   const styles = createStyles(theme);
 
-  const getOpacityForCompletion = (percentage: number) => {
-    if (percentage === 0) return 0.1;
-    if (percentage < 25) return 0.3;
-    if (percentage < 50) return 0.5;
-    if (percentage < 75) return 0.7;
+  const getOpacityForCompletion: any = (percent: number) => {
+    if (percent < 20) return 0.2;
+    if (percent < 40) return 0.4;
+    if (percent < 60) return 0.6;
+    if (percent < 80) return 0.8;
     return 1;
   };
 

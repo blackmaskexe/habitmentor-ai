@@ -71,16 +71,16 @@ const OverviewScreen = () => {
             Monthly Progress Chart:
           </Text>
 
-          <TouchableOpacity
+          {/* <TouchableOpacity
             onPress={() => {
               Alert.alert("Coming in the next update");
             }}
-          >
-            <MonthlyHabitActivityMonitor activities={[]} />
-          </TouchableOpacity>
-          <Text style={styles.monthlyProgressSubText}>
+          > */}
+          <MonthlyHabitActivityMonitor />
+          {/* </TouchableOpacity> */}
+          {/* <Text style={styles.monthlyProgressSubText}>
             click to view detailed consistency graph
-          </Text>
+          </Text> */}
           {/* <Text style={styles.weeklyTaskText}>Weekly Task Overview:</Text> */}
           {/* <WeeklyHabitsView /> */}
         </View>

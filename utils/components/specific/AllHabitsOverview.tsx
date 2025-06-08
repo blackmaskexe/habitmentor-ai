@@ -4,19 +4,47 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SheetManager } from "react-native-actions-sheet";
 import HabitItemContextMenu from "./zeego/HabitItemContextMenu";
 import OverviewHabitdropdownMenu from "./zeego/OverviewHabitDropdownMenu";
+import { useEffect, useState } from "react";
+import { getHabitCompletionCollection } from "@/utils/database/dataCollectionHelper";
+import { HabitObject } from "@/utils/types";
 
 export default function AllHabitsOverview({
   allHabitsArray,
 }: {
-  allHabitsArray: any[];
+  allHabitsArray: HabitObject[];
 }) {
+  const [habitStreaks, setHabitStreaks] = useState<any>({});
+
+  useEffect(() => {
+    // calculate habit streaks on mount
+    // will be assigning the key of object as habitId, value as streak
+    const loadHabitStreaks = async function () {
+      const habitCompletionCollection = await getHabitCompletionCollection();
+
+      setHabitStreaks(() => {
+        const newHabitStreaks: any = {};
+        for (const habit of habitCompletionCollection) {
+          newHabitStreaks[habit.habitId] = habit.streak;
+          console.log("MAD CAKE GET MAD CAKE", habit.habitId, habit.streak);
+        }
+        console.log("COLGATE COLD CASE FOREVER A THUG", newHabitStreaks);
+        return newHabitStreaks;
+      });
+    };
+
+    loadHabitStreaks();
+  }, []);
+
   const theme = useTheme();
   const styles = createStyles(theme);
-  console.log("Drop down yeah", theme.colors.altBackground);
   return (
     <View style={styles.allHabitsContainer}>
       {allHabitsArray.map((habitItem, index) => {
-        console.log("SIYUHHHHHHH", habitItem);
+        console.log(
+          "bands forever ever",
+          habitItem.id,
+          habitStreaks[habitItem.id]
+        );
         return (
           <View
             style={styles.habitCard}
@@ -26,7 +54,7 @@ export default function AllHabitsOverview({
             <View style={styles.habitCardText}>
               <Text style={styles.habitName}>{habitItem.habitName}</Text>
               <Text style={styles.habitDetails}>
-                Streak: 12 | 9 days until 21
+                Streak: {habitStreaks[habitItem.id] || 0}
               </Text>
             </View>
             <View style={styles.habitCompletionDotContainer}>
