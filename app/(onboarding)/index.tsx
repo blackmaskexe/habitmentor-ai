@@ -30,8 +30,8 @@ const AppIntroduction = () => {
         })} */}
 
         <CardWithoutImage
-          title="Better Life"
-          description="bro do you even want to improve your life? Click this message if you do"
+          title="Habit Mentor"
+          description="+1 message. Click to view."
           onPress={() => {
             console.log("don't you stop");
             router.push("/(onboarding)/1");

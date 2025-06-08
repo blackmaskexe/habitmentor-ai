@@ -20,7 +20,7 @@ import CTAButton from "../general/CTAButton";
 import mmkvStorage from "@/utils/mmkvStorage";
 import TaskFrequencyDropdownMenu from "./zeego/TaskFrequencyDropdownMenu";
 import WeekdayFrequencyPicker from "./WeekdayFrequencyPicker";
-import { FormValuesType } from "@/utils/types";
+import { FormValuesType, HabitObject } from "@/utils/types";
 
 type ItemPickerProps = {
   onItemPress?: (index: number) => void;
@@ -60,7 +60,7 @@ export default function VariableItemPicker({
   const styles = createStyles(theme, BOX_SIZE);
   const [values, setValues] = useState<FormValuesType>({}); // values for the form inside the modal
 
-  const [activeHabitItemIndex, setActiveHabitItemIndex] = useState(0);
+  const [activeHabitItemIndex, setActiveHabitItemIndex] = useState(0); // tracks which habit item is being pressed
 
   const [habitsFrequency, setHabitFrequency] = useState(
     // this array contains array of days (In the format of Mon, Tue, Wed) that the user wants to do these habits on
@@ -77,14 +77,19 @@ export default function VariableItemPicker({
 
     setValues({}); // clear the form upon submission
 
-    setMoreHabitsArray((oldMoreHabitsArray: any) => {
+    setMoreHabitsArray((oldMoreHabitsArray: any[]) => {
       // all this yapping basically does is replaces the last element
       // (which is a null to generate a blank habit adder) with the typed habit,
       // and add another null to keep the cycle going
       const newMoreHabitsArray = [...oldMoreHabitsArray];
-      newMoreHabitsArray[newMoreHabitsArray.length - 1] = habitData;
+      newMoreHabitsArray[activeHabitItemIndex] = habitData;
 
-      return [...newMoreHabitsArray, null];
+      if (activeHabitItemIndex == oldMoreHabitsArray.length - 1) {
+        // make it so that if not adding to the latest (editing old), don't add more nulls to the array
+        return [...newMoreHabitsArray, null];
+      } else {
+        return [...newMoreHabitsArray];
+      }
     });
   };
 
@@ -249,6 +254,7 @@ export default function VariableItemPicker({
                     onPress={() => {
                       handleNewHabitSubmission();
                     }}
+                    disabled={values.habitName ? false : true}
                     iconName="checkmark-circle-outline"
                   />
                 </ScrollView>

@@ -8,7 +8,7 @@ import {
   Image,
   Platform,
 } from "react-native";
-import React, { useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useTheme } from "@/utils/theme/ThemeContext";
 import { useRouter } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -16,6 +16,8 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 // Components:
 import CTAButton from "@/utils/components/general/CTAButton";
 import VariableItemPicker from "@/utils/components/specific/VariableItemPicker";
+import { TypeAnimation } from "react-native-type-animation";
+import mmkvStorage from "@/utils/mmkvStorage";
 
 const AddMoreHabitsPrompt = () => {
   const insets = useSafeAreaInsets();
@@ -27,18 +29,73 @@ const AddMoreHabitsPrompt = () => {
   const router = useRouter();
   const scrollViewRef = useRef<any>(null);
 
+  const [buttonDisabled, setButtonDisabled] = useState(true);
+
+  useEffect(() => {
+    // detect user adding habits so that they can proceed (make button enabled)
+    const listener = mmkvStorage.addOnValueChangedListener((changedKey) => {
+      if (changedKey == "activeHabits") {
+        setButtonDisabled(
+          mmkvStorage.getString("activeHabits") != undefined ? false : true
+        );
+      }
+    });
+
+    return () => {
+      listener.remove();
+    };
+  }, []);
+
+  console.log("ridin low like an instinct");
+
+  console.log(
+    "tory lanez on the beat yuh",
+    mmkvStorage.getString("brokinaminute")
+  );
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.innerContainer}>
         <Text style={styles.title}>Add Your Habits</Text>
         <Text style={styles.subtitle}>
-          It is recommended that you add the habits that you desperately want to
-          improve. Tip is to not overwhelm yourself with lots of habits!
+          Tip: Don't add too many habits. It is better to do one habit than to
+          set many and do none!
         </Text>
-        <View style={styles.imageContainer}>
-          <Image
+        <View style={styles.quoteContainer}>
+          {/* <Image
             source={require("@/assets/placeholder.png")}
             style={styles.image}
+          /> */}
+          <TypeAnimation
+            sequence={[
+              {
+                text: `“Small steps every day lead to big change.” — Anonymous`,
+              },
+              {
+                text: `“You do not rise to the level of your goals. You fall to the level of your systems.” — James Clear`,
+              },
+              {
+                text: `“Consistency is more important than intensity.” — A consistent person (probably)`,
+              },
+              {
+                text: `“Motivation gets you going, habit keeps you growing.”  — John C. Maxwell`,
+              },
+              {
+                text: `“Success is the sum of small efforts repeated day in and day out.” — Robert Collier`,
+              },
+            ]}
+            typeSpeed={25}
+            delayBetweenSequence={3000}
+            deletionSpeed={25}
+            loop
+            style={{
+              color: "white",
+              // backgroundColor: "green",
+              ...theme.text.h3,
+
+              textAlign: "center",
+              fontStyle: "italic",
+            }}
           />
         </View>
         <ScrollView
@@ -63,6 +120,7 @@ const AddMoreHabitsPrompt = () => {
             onPress={() => {
               router.push("/(onboarding)/3");
             }}
+            disabled={buttonDisabled}
           />
         </View>
       </View>
@@ -96,10 +154,14 @@ function createStyles(theme: any, topMargin: number) {
       marginBottom: theme.spacing.xl, // Add bottom margin
       paddingHorizontal: theme.spacing.l, // Add horizontal padding for better text width
     },
-    imageContainer: {
+    quoteContainer: {
       // New style for image wrapper
+      // flex: 1,
       alignItems: "center",
-      marginBottom: theme.spacing.l,
+      marginBottom: theme.spacing.l * 2,
+      marginTop: theme.spacing.l,
+      height: 100,
+      paddingHorizontal: theme.spacing.l, // Add horizontal padding for better text width
     },
     image: {
       height: 200,
