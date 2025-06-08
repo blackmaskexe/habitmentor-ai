@@ -1,23 +1,36 @@
 import {
   View,
   ScrollView,
-  Image,
+  Text,
   StyleSheet,
-  Dimensions,
+  Pressable,
   Animated,
+  SafeAreaView,
+  Dimensions,
+  Alert,
 } from "react-native";
 import React from "react";
 import { useTheme } from "@/utils/theme/ThemeContext";
 import { useEffect, useState, useRef } from "react";
 import { useRouter } from "expo-router";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Ionicons } from "@expo/vector-icons";
 
 // Components:
-import GenericList from "@/utils/components/general/GenericList";
+import ToggleSwitch from "@/utils/components/general/ToggleSwitch";
 import CTAButton from "@/utils/components/general/CTAButton";
+import GenericList from "@/utils/components/general/GenericList";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const AppMissionIntroduction = () => {
+const UserSettingsPrompt = () => {
   const router = useRouter();
+  const theme = useTheme();
+  const { width } = Dimensions.get("window");
+  const styles = createStyles(theme, width);
+
+  const [disabled, setDisabled] = useState(true);
+  const buttonOpacity = useRef(new Animated.Value(0.5)).current;
+  const [notificationsEnabled, setNotificationsEnabled] = useState(false);
+  const [cloudSaveEnabled, setCloudSaveEnabled] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -27,63 +40,95 @@ const AppMissionIntroduction = () => {
         duration: 800,
         useNativeDriver: true,
       }).start();
-    }, 2000);
+    }, 5000);
 
     return () => clearTimeout(timer);
   }, []);
-  const [disabled, setDisabled] = useState(true);
-  const buttonOpacity = useRef(new Animated.Value(0.5)).current;
-
-  const { height, width } = Dimensions.get("window");
-
-  const theme = useTheme();
-  const styles = createStyles(theme, width);
-  AsyncStorage.getItem("coreHabits")
-    .then((result) => {
-      console.log(
-        result,
-        "ye hai core habits can you believe dat brah jalidi wa se hato"
-      );
-    })
-    .catch((err) => {
-      console.log(err, "JALDI WAHA SE HATOO");
-    });
 
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContent}>
-        <View style={styles.imageContainer}>
-          <Image
-            source={require("@/assets/placeholder.png")}
-            style={styles.logo}
-          />
-        </View>
+        <Text style={styles.heading}>Configure Your Experience</Text>
+        <Text style={styles.subtitle}>
+          Customize how you want to use the app
+        </Text>
 
         <View style={styles.contentContainer}>
+          <View style={styles.settingsGroup}>
+            <Pressable
+              style={[styles.settingItem, styles.topSettingItem]}
+              onPress={() => setNotificationsEnabled(!notificationsEnabled)}
+            >
+              <View style={styles.settingItemContent}>
+                <View style={styles.iconContainer}>
+                  <Ionicons
+                    name="notifications-outline"
+                    size={22}
+                    color={theme.colors.primary}
+                  />
+                </View>
+                <Text style={styles.settingItemText}>
+                  Reminder Notifications
+                </Text>
+              </View>
+              <ToggleSwitch
+                isEnabled={notificationsEnabled}
+                onToggle={setNotificationsEnabled}
+                size="medium"
+              />
+            </Pressable>
+
+            <View style={styles.divider} />
+
+            <Pressable
+              style={[styles.settingItem, styles.bottomSettingItem]}
+              onPress={() => setCloudSaveEnabled(!cloudSaveEnabled)}
+            >
+              <View style={styles.settingItemContent}>
+                <View style={styles.iconContainer}>
+                  <Ionicons
+                    name="cloud-outline"
+                    size={22}
+                    color={theme.colors.primary}
+                  />
+                </View>
+                <Text style={styles.settingItemText}>Sync to Cloud</Text>
+              </View>
+              <ToggleSwitch
+                isEnabled={cloudSaveEnabled}
+                onToggle={(enabled) => {
+                  setCloudSaveEnabled(enabled);
+                  Alert.alert("Feature coming soon");
+                }}
+                size="medium"
+              />
+            </Pressable>
+          </View>
+
           <GenericList
             items={[
               {
                 listText:
-                  "It is said that good habits are built over 21 days of consistency",
+                  "‎ ‎ Get notified when it's time to complete your habits",
                 bullet: {
                   type: "text",
-                  bulletText: "✨",
+                  bulletText: "🔔",
                 },
               },
               {
                 listText:
-                  "Your challenge will be to hold be consistent with a habit for atleast 21 days",
+                  "‎ ‎ Save your progress to the cloud and sync across devices",
                 bullet: {
                   type: "text",
-                  bulletText: "✨",
+                  bulletText: "☁️",
                 },
               },
               {
                 listText:
-                  "Once you successfully have completed a habit for more than 21 days, you will get an opportunity to add even more habits",
+                  "‎ ‎ You can change these settings anytime from the settings menu",
                 bullet: {
                   type: "text",
-                  bulletText: "✨",
+                  bulletText: "⚙️",
                 },
               },
             ]}
@@ -94,10 +139,13 @@ const AppMissionIntroduction = () => {
       <View style={styles.buttonContainer}>
         <Animated.View style={{ opacity: buttonOpacity }}>
           <CTAButton
-            title="I accept the challenge"
+            title="Begin Your Journey"
             onPress={() => {
-              console.log("pressed");
-              router.push("/(onboarding)/4");
+              AsyncStorage.setItem("hasOnboarded", "true")
+                .then((result) => {
+                  router.replace("/(tabs)/home"); // send the user to home (i just wanan drive to homeeeeeeeeeeeeeee)
+                })
+                .catch((err) => console.log(err));
             }}
             disabled={disabled}
           />
@@ -107,16 +155,15 @@ const AppMissionIntroduction = () => {
   );
 };
 
-function createStyles(theme: any, width: any) {
+function createStyles(theme: any, width: number) {
   return StyleSheet.create({
     container: {
       flex: 1,
       backgroundColor: theme.colors.background,
-      // Remove justifyContent and alignItems as they interfere with ScrollView
     },
     scrollContent: {
       flexGrow: 1,
-      alignItems: "center", // Center children horizontally
+      alignItems: "center",
       paddingVertical: theme.spacing.xl,
       paddingHorizontal: theme.spacing.m,
     },
@@ -124,25 +171,69 @@ function createStyles(theme: any, width: any) {
       ...theme.text.h1,
       color: theme.colors.text,
       textAlign: "center",
-      marginTop: 90,
+      marginTop: theme.spacing.xl * 2,
       marginBottom: theme.spacing.l,
     },
-    imageContainer: {
-      marginVertical: theme.spacing.l,
-      alignItems: "center",
-      marginTop: theme.spacing.xl * 3,
-    },
-    logo: {
-      height: 200,
-      width: 200,
-      borderRadius: 5,
-      transform: [{ scale: 1.5 }],
+    subtitle: {
+      ...theme.text.h3,
+      color: theme.colors.textSecondary,
+      textAlign: "center",
+      marginBottom: theme.spacing.xl,
+      paddingHorizontal: theme.spacing.l,
     },
     contentContainer: {
       flex: 1,
-      justifyContent: "center",
+      justifyContent: "flex-start",
       width: "100%",
       paddingVertical: theme.spacing.l,
+      gap: theme.spacing.xl * 2,
+    },
+    settingsGroup: {
+      backgroundColor: theme.colors.altBackground,
+      borderRadius: 10,
+      width: "100%",
+      shadowColor: "#000",
+      shadowOffset: { width: 0, height: 1 },
+      shadowOpacity: 0.04,
+      shadowRadius: 1,
+      elevation: 1,
+    },
+    settingItem: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
+      paddingVertical: 12,
+      paddingHorizontal: 16,
+      backgroundColor: theme.colors.altBackground,
+    },
+    topSettingItem: {
+      borderTopLeftRadius: 10,
+      borderTopRightRadius: 10,
+    },
+    bottomSettingItem: {
+      borderBottomLeftRadius: 10,
+      borderBottomRightRadius: 10,
+    },
+    settingItemContent: {
+      flexDirection: "row",
+      alignItems: "center",
+    },
+    iconContainer: {
+      width: 28,
+      height: 28,
+      justifyContent: "center",
+      alignItems: "center",
+      marginRight: 12,
+    },
+    settingItemText: {
+      fontSize: 17,
+      color: theme.colors.text,
+    },
+    divider: {
+      height: 0.5,
+      backgroundColor: "#C7C7CC",
+      marginLeft: 56,
+      opacity: 0.5,
     },
     buttonContainer: {
       width: width,
@@ -150,20 +241,7 @@ function createStyles(theme: any, width: any) {
       marginTop: theme.spacing.l,
       marginBottom: theme.spacing.l * 2,
     },
-    subtitle: {
-      ...theme.text.h3,
-      color: theme.colors.textSecondary,
-      textAlign: "center",
-      marginBottom: theme.spacing.l,
-    },
-    description: {
-      ...theme.text.h3,
-      color: theme.colors.textSecondary,
-      textAlign: "center",
-      paddingHorizontal: theme.spacing.l,
-      lineHeight: 24, // Add some breathing room between lines
-    },
   });
 }
 
-export default AppMissionIntroduction;
+export default UserSettingsPrompt;

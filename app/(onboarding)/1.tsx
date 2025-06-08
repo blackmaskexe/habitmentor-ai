@@ -118,7 +118,7 @@ const AddMoreHabitsPrompt = () => {
           <CTAButton
             title="Proceed"
             onPress={() => {
-              router.push("/(onboarding)/3");
+              router.push("/(onboarding)/2");
             }}
             disabled={buttonDisabled}
           />
