@@ -163,6 +163,7 @@ export default function ChatMessages({
     const response: AIResponseType = await api.post("/chat", {
       message: userMessage.content,
       importantMessageHistory: await getImportantMessages(),
+      recentMessageHistory: messages.slice(-20), // send the last 20 messages in the payload
       timeOfDay: getTimeOfDay(),
       metadata: {
         activeHabits: getAllHabits(), // already plain
