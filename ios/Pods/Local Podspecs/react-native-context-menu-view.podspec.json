@@ -1,0 +1,23 @@
+{
+  "name": "react-native-context-menu-view",
+  "version": "1.19.0",
+  "summary": "Use native context menu views from React Native",
+  "description": "react-native-context-menu-view",
+  "homepage": "https://github.com/mpiannucci/react-native-context-menu-view",
+  "license": "MIT",
+  "authors": {
+    "Matthew Iannucci": "mpiannucci@gmail.com"
+  },
+  "platforms": {
+    "ios": "9.0"
+  },
+  "source": {
+    "git": "https://github.com/mpiannucci/react-native-context-menu-view.git",
+    "tag": "1.19.0"
+  },
+  "source_files": "ios/**/*.{h,m,swift}",
+  "requires_arc": true,
+  "dependencies": {
+    "React": []
+  }
+}

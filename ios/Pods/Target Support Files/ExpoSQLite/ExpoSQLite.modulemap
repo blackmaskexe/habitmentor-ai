@@ -1,0 +1,6 @@
+module ExpoSQLite {
+  umbrella header "ExpoSQLite-umbrella.h"
+
+  export *
+  module * { export * }
+}

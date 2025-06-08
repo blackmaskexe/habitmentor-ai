@@ -1,0 +1,6 @@
+module Pods_HabitMentorAI {
+  umbrella header "Pods-HabitMentorAI-umbrella.h"
+
+  export *
+  module * { export * }
+}
