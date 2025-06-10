@@ -4,6 +4,7 @@ import { useTheme } from "@/utils/theme/ThemeContext";
 import { Ionicons } from "@expo/vector-icons";
 import { Tabs, usePathname, useRouter } from "expo-router";
 import { Text, TouchableOpacity, Dimensions, Platform } from "react-native";
+import { TourGuideZone } from "rn-tourguide";
 
 export default function TabLayout() {
   const theme = useTheme();
@@ -68,19 +69,25 @@ export default function TabLayout() {
                 size={24}
                 color={theme.colors.primary}
               />
-              <Text
-                style={{
-                  color: theme.colors.primary,
-                  ...theme.text.body,
-                  marginLeft: 4,
-                }}
+              <TourGuideZone
+                zone={2}
+                text={"A react-native-copilot remastered! 🎉"}
+                borderRadius={8}
               >
-                {Platform.OS == "ios" ? "Overview" : null}
-                {Platform.OS == "android" && inOverviewView ? "Home" : null}
-                {Platform.OS == "android" && !inOverviewView
-                  ? "Overview"
-                  : null}
-              </Text>
+                <Text
+                  style={{
+                    color: theme.colors.primary,
+                    ...theme.text.body,
+                    marginLeft: 4,
+                  }}
+                >
+                  {Platform.OS == "ios" ? "Overview" : null}
+                  {Platform.OS == "android" && inOverviewView ? "Home" : null}
+                  {Platform.OS == "android" && !inOverviewView
+                    ? "Overview"
+                    : null}
+                </Text>
+              </TourGuideZone>
             </TouchableOpacity>
           ),
           headerRight: () => {
@@ -94,7 +101,13 @@ export default function TabLayout() {
           animation: "none",
           title: "AI Chat",
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="chatbubbles" size={size} color={color} />
+            <TourGuideZone
+              zone={3}
+              text={"A react-native-copilot remastered! 🎉"}
+              borderRadius={16}
+            >
+              <Ionicons name="chatbubbles" size={size} color={color} />
+            </TourGuideZone>
           ),
           tabBarStyle: {
             display: "none",

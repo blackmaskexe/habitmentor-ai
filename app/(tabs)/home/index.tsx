@@ -27,6 +27,8 @@ import api from "@/utils/api";
 import AISuggestionSkeleton from "@/utils/components/specific/AISuggestionSkeleton";
 import { getFormattedDatesThisWeek } from "@/utils/date";
 import mmkvStorage from "@/utils/mmkvStorage";
+import { TourGuideZone, useTourGuideController } from "rn-tourguide";
+import React from "react";
 
 export default function Index() {
   const [proActiveMessage, setProActiveMessage] = useState<string | null>(null); // will eventually fetch it's last value from a key-value store so that the user doesn't have to stare at the "loading" for 1-3 seconds
@@ -42,6 +44,38 @@ export default function Index() {
       useNativeDriver: false, // Important: height cannot be natively animated
     }).start();
   }, [proActiveMessageHeight]);
+
+  const {
+    canStart, // a boolean indicate if you can start tour guide
+    start, // a function to start the tourguide
+    stop, // a function  to stopping it
+    eventEmitter, // an object for listening some events
+  } = useTourGuideController();
+
+  useEffect(() => {
+    if (canStart) {
+      // 👈 test if you can start otherwise nothing will happen
+      start();
+    }
+  }, [canStart]); // 👈 don't miss it!
+
+  const handleOnStart = () => console.log("start");
+  const handleOnStop = () => console.log("stop");
+  const handleOnStepChange = () => console.log(`stepChange`);
+
+  React.useEffect(() => {
+    if (eventEmitter) {
+      eventEmitter.on("start", handleOnStart);
+      eventEmitter.on("stop", handleOnStop);
+      eventEmitter.on("stepChange", handleOnStepChange);
+
+      return () => {
+        eventEmitter.off("start", handleOnStart);
+        eventEmitter.off("stop", handleOnStop);
+        eventEmitter.off("stepChange", handleOnStepChange);
+      };
+    }
+  }, []);
 
   const theme = useTheme();
   const styles = createStyle(theme, proActiveMessageHeight);
@@ -59,7 +93,7 @@ export default function Index() {
     console.log(getFormattedDatesThisWeek(), "you always come to the party");
 
     async function showProActiveMessage() {
-      if (true || shouldRequestProActiveMessage()) {
+      if (shouldRequestProActiveMessage()) {
         // for testing purpose rn
         // this is the part where I send all of the metadata and related information of user's habits
         // to the fine tuned ai model, and return whatever it gives out
@@ -101,7 +135,13 @@ export default function Index() {
       >
         <WeekAtAGlance />
         <Animated.View style={[styles.aiSection]}>
-          <Text style={styles.aiSectionHeading}>Top AI Suggestion:</Text>
+          <TourGuideZone
+            zone={1}
+            text={"A react-native-copilot remastered! 🎉"}
+            borderRadius={999}
+          >
+            <Text style={styles.aiSectionHeading}>Top AI Suggestion:</Text>
+          </TourGuideZone>
           {proActiveMessage ? (
             <>
               <Text

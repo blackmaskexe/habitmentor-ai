@@ -27,6 +27,7 @@ import {
   onMarkAsComplete,
   onMarkAsIncomplete,
 } from "@/utils/database/habitHistoryManager";
+import { TourGuideZone } from "rn-tourguide";
 
 const DailyHabitsView: React.FC = () => {
   const theme = useTheme();
@@ -176,42 +177,59 @@ const DailyHabitsView: React.FC = () => {
     );
   };
 
+  const renderHabitCard = (habit: HabitObject, index: number) => {
+    if (habit && habit.frequency[getWeekdayNumber()]) {
+      // if the current day matches with the day
+      // the habit is supposed to happen on
+      // therefore, renders habit based on if they are to be done today:
+
+      return (
+        <View key={index}>
+          <View style={styles.habitCard}>
+            {renderHabitItem(habit, index)}
+
+            <TouchableOpacity
+              style={styles.habitOptions}
+              onPress={() => {
+                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                console.log("I think i've seen it twice all year", habit);
+                SheetManager.show("example-sheet", {
+                  payload: {
+                    sheetType: "habitItem",
+                    habit: habit,
+                  },
+                });
+              }}
+            >
+              <Ionicons
+                name="ellipsis-vertical-outline"
+                size={20}
+                color={theme.colors.textSecondary}
+              />
+            </TouchableOpacity>
+          </View>
+        </View>
+      );
+    }
+  };
+
   return (
     <ScrollView style={styles.container}>
       {habitItems.map((habit: HabitObject, index: number) => {
-        if (habit && habit.frequency[getWeekdayNumber()]) {
-          // if the current day matches with the day
-          // the habit is supposed to happen on
-          // therefore, renders habit based on if they are to be done today:
-
+        if (index == 0) {
+          // rendering the first habit card to be wrapped in the rn tourguide
           return (
-            <View key={index}>
-              <View style={styles.habitCard}>
-                {renderHabitItem(habit, index)}
-
-                <TouchableOpacity
-                  style={styles.habitOptions}
-                  onPress={() => {
-                    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-                    console.log("I think i've seen it twice all year", habit);
-                    SheetManager.show("example-sheet", {
-                      payload: {
-                        sheetType: "habitItem",
-                        habit: habit,
-                      },
-                    });
-                  }}
-                >
-                  <Ionicons
-                    name="ellipsis-vertical-outline"
-                    size={20}
-                    color={theme.colors.textSecondary}
-                  />
-                </TouchableOpacity>
-              </View>
-            </View>
+            <TourGuideZone
+              key={index}
+              zone={4}
+              text={"A react-native-copilot remastered! 🎉"}
+              borderRadius={16}
+            >
+              {renderHabitCard(habit, index)}
+            </TourGuideZone>
           );
         }
+        return renderHabitCard(habit, index);
       })}
     </ScrollView>
   );
