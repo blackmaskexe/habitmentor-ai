@@ -1,1 +1,0 @@
-../../../SDWebImageSVGCoder/SDWebImageSVGCoder/Module/SDWebImageSVGCoder.h

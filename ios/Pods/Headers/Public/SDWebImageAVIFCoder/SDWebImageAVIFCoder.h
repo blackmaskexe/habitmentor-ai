@@ -1,1 +1,0 @@
-../../../SDWebImageAVIFCoder/SDWebImageAVIFCoder/Module/SDWebImageAVIFCoder.h

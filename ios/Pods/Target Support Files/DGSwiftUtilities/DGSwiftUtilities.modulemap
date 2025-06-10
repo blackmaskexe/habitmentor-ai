@@ -1,6 +1,0 @@
-module DGSwiftUtilities {
-  umbrella header "DGSwiftUtilities-umbrella.h"
-
-  export *
-  module * { export * }
-}

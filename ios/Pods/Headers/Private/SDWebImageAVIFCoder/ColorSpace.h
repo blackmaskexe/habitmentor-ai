@@ -1,1 +1,0 @@
-../../../SDWebImageAVIFCoder/SDWebImageAVIFCoder/Classes/Private/ColorSpace.h
