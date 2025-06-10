@@ -45,7 +45,7 @@ with_node \
   --no-warnings \
   --eval "require(require.resolve('expo-modules-autolinking', { paths: [require.resolve('expo/package.json')] }))(process.argv.slice(1))" \
   generate-modules-provider  \
-  --target "/Users/prathams/Gramming/ReactNative/practice/2025-5-9/habitmentor-rn/ios/Pods/Target Support Files/Pods-HabitMentorAI/ExpoModulesProvider.swift" \
-  --entitlement "/Users/prathams/Gramming/ReactNative/practice/2025-5-9/habitmentor-rn/ios/HabitMentorAI/HabitMentorAI.entitlements" \
+  --target "/Users/prathams/Gramming/ReactNative/practice/2025-5-9 (habitmentor-ai)/Testflight versions/1.1.0/habitmentor-rn/ios/Pods/Target Support Files/Pods-HabitMentorAI/ExpoModulesProvider.swift" \
+  --entitlement "/Users/prathams/Gramming/ReactNative/practice/2025-5-9 (habitmentor-ai)/Testflight versions/1.1.0/habitmentor-rn/ios/HabitMentorAI/HabitMentorAI.entitlements" \
   --platform "apple" \
   --packages "expo" "expo-application" "expo-asset" "expo-blur" "expo-constants" "expo-dev-launcher" "expo-dev-menu" "expo-device" "expo-file-system" "expo-font" "expo-haptics" "expo-image" "expo-keep-awake" "expo-linear-gradient" "expo-linking" "expo-notifications" "expo-router" "expo-splash-screen" "expo-sqlite" "expo-symbols" "expo-system-ui" "expo-web-browser"

@@ -68,8 +68,8 @@ const WeekAtAGlance: React.FC<WeekAtAGlanceProps> = () => {
     calculateAndSetDayPercentages();
 
     const listener = mmkvStorage.addOnValueChangedListener((changedKey) => {
-      if (changedKey == "habitHistory") {
-        // re-run calculation of percentages:
+      if (changedKey == "habitHistory" || changedKey == "activeHabits") {
+        // re-run calculation of percentages if user does any habits + new habits are added to the system:
         calculateAndSetDayPercentages();
       }
     });

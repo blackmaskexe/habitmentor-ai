@@ -1,11 +1,18 @@
 import { useTheme } from "@/utils/theme/ThemeContext";
-import { Platform, ScrollView, StyleSheet, Text, View } from "react-native";
+import {
+  Animated,
+  LayoutAnimation,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 
-import TypewriterText from "@/utils/components/general/TypewriterText";
 import DailyHabitsView from "@/utils/components/specific/DailyHabitsView";
 import WeekAtAGlance from "@/utils/components/specific/WeekGlance";
 import { Theme } from "@/utils/theme/themes";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   getRecentProActiveMessage,
   setRecentProActiveMessage,
@@ -22,10 +29,28 @@ import { getFormattedDatesThisWeek } from "@/utils/date";
 import mmkvStorage from "@/utils/mmkvStorage";
 
 export default function Index() {
-  const theme = useTheme();
-  const styles = createStyle(theme);
-
   const [proActiveMessage, setProActiveMessage] = useState<string | null>(null); // will eventually fetch it's last value from a key-value store so that the user doesn't have to stare at the "loading" for 1-3 seconds
+  const [proActiveMessageHeight, setProActiveMessageHeight] =
+    useState<number>(76); // 76 because it is the height of the skeleton (60 height + 16 margin)
+
+  const animatedHeight = useRef(new Animated.Value(76)).current; // starting value is 76 because of same above reason
+
+  useEffect(() => {
+    Animated.timing(animatedHeight, {
+      toValue: proActiveMessageHeight,
+      duration: 150, // Animation duration
+      useNativeDriver: false, // Important: height cannot be natively animated
+    }).start();
+  }, [proActiveMessageHeight]);
+
+  const theme = useTheme();
+  const styles = createStyle(theme, proActiveMessageHeight);
+
+  console.log(
+    "tung tung tung sahur, anamaro marameko, daradeko",
+    proActiveMessage,
+    "tatatat SAHURRRR"
+  );
 
   useEffect(() => {
     // call the method that starts the process of sending the proActiveMessage
@@ -34,7 +59,7 @@ export default function Index() {
     console.log(getFormattedDatesThisWeek(), "you always come to the party");
 
     async function showProActiveMessage() {
-      if (shouldRequestProActiveMessage()) {
+      if (true || shouldRequestProActiveMessage()) {
         // for testing purpose rn
         // this is the part where I send all of the metadata and related information of user's habits
         // to the fine tuned ai model, and return whatever it gives out
@@ -75,21 +100,43 @@ export default function Index() {
         showsVerticalScrollIndicator={false}
       >
         <WeekAtAGlance />
-        <View style={styles.aiSection}>
-          <Text style={styles.aiSectionText}>Top AI Suggestion:</Text>
+        <Animated.View style={[styles.aiSection]}>
+          <Text style={styles.aiSectionHeading}>Top AI Suggestion:</Text>
           {proActiveMessage ? (
-            <TypeAnimation
-              sequence={[{ text: proActiveMessage }]}
-              style={styles.aiSuggestionText}
-              typeSpeed={1}
-              cursor={Platform.OS == "ios"}
-            />
+            <>
+              <Text
+                style={{
+                  // ghost element, serves as getting the size of the actual Top AI Suggestion text, so can pre-position the Habits for Today
+                  opacity: 0,
+                  position: "absolute",
+                  ...styles.aiSuggestionText,
+                }}
+                onLayout={(event) => {
+                  const { height } = event.nativeEvent.layout;
+                  setProActiveMessageHeight(height);
+                }}
+              >
+                {proActiveMessage}
+              </Text>
+              <Animated.View
+                style={{
+                  height: animatedHeight,
+                }}
+              >
+                <TypeAnimation
+                  sequence={[{ text: proActiveMessage }]}
+                  style={{
+                    ...styles.aiSuggestionText,
+                  }}
+                  typeSpeed={1}
+                  cursor={Platform.OS == "ios"}
+                />
+              </Animated.View>
+            </>
           ) : (
-            // <Text style={styles.aiSuggestionText}>{proActiveMessage}</Text>
-
             <AISuggestionSkeleton />
           )}
-        </View>
+        </Animated.View>
         <View style={styles.habitsSection}>
           <Text style={styles.habitSectionText}>Habits for Today:</Text>
           <DailyHabitsView />
@@ -104,7 +151,7 @@ export default function Index() {
   );
 }
 
-function createStyle(theme: Theme) {
+function createStyle(theme: Theme, proActiveMessageHeight: number) {
   return StyleSheet.create({
     container: {
       flex: 1,
@@ -136,20 +183,18 @@ function createStyle(theme: Theme) {
     },
     habitsSection: {
       flex: 1,
-      paddingTop: theme.spacing.s,
       marginTop: theme.spacing.l,
     },
     habitSectionText: {
       color: theme.colors.text,
       ...theme.text.h2,
-      marginBottom: 5,
+      marginBottom: theme.spacing.s,
     },
     aiSection: {
       paddingTop: theme.spacing.s,
       marginTop: theme.spacing.m,
-      height: 120,
     },
-    aiSectionText: {
+    aiSectionHeading: {
       color: theme.colors.text,
       ...theme.text.h2,
       marginBottom: 7,
