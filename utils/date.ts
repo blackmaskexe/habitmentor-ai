@@ -30,6 +30,16 @@ const getFormattedDate = function (customDate?: Date) {
   return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
 };
 
+const getFormattedTime = function (date: Date) {
+  let hours = date.getHours();
+  let minutes: string | number = date.getMinutes();
+  const ampm = hours >= 12 ? "PM" : "AM";
+  hours = hours % 12;
+  hours = hours ? hours : 12; // the hour '0' should be '12'
+  minutes = minutes < 10 ? "0" + minutes : minutes;
+  const strTime = hours + ":" + minutes + " " + ampm;
+  return strTime;
+};
 const getDateFromFormattedDate = function (formattedDate: string) {
   const splitDate = formattedDate.split("-");
   const fullYear = +splitDate[0];
@@ -85,6 +95,7 @@ export {
   getDate,
   getWeekdayNumber,
   getFormattedDate,
+  getFormattedTime,
   getDateFromFormattedDate,
   getWeekNumber,
   getTimeOfDay,

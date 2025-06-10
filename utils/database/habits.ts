@@ -20,6 +20,34 @@ export function updateHabitNotificationId(
   mmkvStorage.set("activeHabits", JSON.stringify(activeHabits));
 }
 
+export function updateHabitNotificationTime(habitId: string, time: string) {
+  const activeHabits: HabitObject[] = JSON.parse(
+    mmkvStorage.getString("activeHabits") || "[]"
+  );
+  // looping through the currentActiveHabits array, setting the notificationId to the new one:
+  for (const habit of activeHabits) {
+    if (habit.id == habitId) {
+      habit.notificationTime = time;
+    }
+  }
+
+  mmkvStorage.set("activeHabits", JSON.stringify(activeHabits));
+}
+
+export function getHabitNotificationTime(habitId: string) {
+  const activeHabits: HabitObject[] = JSON.parse(
+    mmkvStorage.getString("activeHabits") || "[]"
+  );
+  // looping through the currentActiveHabits array, setting the notificationId to the new one:
+  for (const habit of activeHabits) {
+    if (habit.id == habitId) {
+      return habit.notificationTime;
+    }
+  }
+
+  return undefined;
+}
+
 export function getHabitObjectFromId(habitId: string) {
   const activeHabits: HabitObject[] = JSON.parse(
     mmkvStorage.getString("activeHabits") || "[]"

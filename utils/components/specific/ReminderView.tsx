@@ -16,7 +16,11 @@ import { Ionicons } from "@expo/vector-icons";
 import CTAButton from "../general/CTAButton"; // Assuming this is your custom button
 import { Theme } from "@/utils/theme/themes";
 import { useNotifications } from "@/utils/useNotifications";
-import { getHabitObjectFromId } from "@/utils/database/habits";
+import {
+  getHabitObjectFromId,
+  updateHabitNotificationTime,
+} from "@/utils/database/habits";
+import { getFormattedTime } from "@/utils/date";
 
 // update state variable that holds habit when habit changes in the mmkvStorage
 // now the todo right now is what is the root component that houses the habit item so that
@@ -75,6 +79,7 @@ export default function ReminderView({
     // (need latest copy in order to manage notifications)
     if (habit) {
       await schedulePushNotification(time, habit);
+      updateHabitNotificationTime(habitId, getFormattedTime(time));
     }
     onChangeDisplayScreen("main");
   };

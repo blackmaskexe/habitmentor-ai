@@ -19,6 +19,7 @@ interface HabitObject {
   id: string;
   points: number;
   notificationIds?: string[];
+  notificationTime?: string;
 }
 
 interface FormValuesType {

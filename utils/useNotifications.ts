@@ -4,7 +4,11 @@ import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
 import Constants from "expo-constants";
 import { HabitObject } from "./types";
-import { updateHabitNotificationId } from "./database/habits";
+import {
+  updateHabitNotificationId,
+  updateHabitNotificationTime,
+} from "./database/habits";
+import { getFormattedTime } from "./date";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -104,6 +108,7 @@ export function useNotifications() {
     if (notificationIdArray) {
       // updating the mmkvStorage activeHabits with the updated notificationIds for all the scheduled days:
       updateHabitNotificationId(habit.id, notificationIdArray);
+      // updateHabitNotificationTime(habit.id, getFormattedTime(time)); did this in th reminder view component itself
     }
 
     console.log(
