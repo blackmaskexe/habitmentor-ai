@@ -26,7 +26,10 @@ import {
 } from "@/utils/database/dataCollectionHelper";
 import api from "@/utils/api";
 import AISuggestionSkeleton from "@/utils/components/specific/AISuggestionSkeleton";
-import { getFormattedDatesThisWeek } from "@/utils/date";
+import {
+  getFormattedDatesThisWeek,
+  relationBetweenTodayAndDate,
+} from "@/utils/date";
 import mmkvStorage from "@/utils/mmkvStorage";
 import { TourGuideZone, useTourGuideController } from "rn-tourguide";
 import React from "react";
@@ -55,7 +58,6 @@ export default function Index() {
   } = useTourGuideController();
 
   function shouldStartTour() {
-    return true;
     // makes sure the user only tours the app once
     const didTourApp = mmkvStorage.getString("didTourApp");
     if (didTourApp == undefined || didTourApp == "false") {
@@ -77,7 +79,7 @@ export default function Index() {
   const handleOnStop = () => console.log("stop");
   const handleOnStepChange = () => console.log(`stepChange`);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (eventEmitter) {
       eventEmitter.on("start", handleOnStart);
       eventEmitter.on("stop", handleOnStop);
@@ -90,6 +92,23 @@ export default function Index() {
       };
     }
   }, []);
+
+  const [habitsDate, setHabitsDate] = useState(new Date());
+
+  function handleDateBack() {
+    setHabitsDate((oldDate) => {
+      const newDate = new Date(oldDate);
+      newDate.setDate(oldDate.getDate() - 1);
+      return newDate;
+    });
+  }
+  function handleDateForward() {
+    setHabitsDate((oldDate) => {
+      const newDate = new Date(oldDate);
+      newDate.setDate(oldDate.getDate() + 1);
+      return newDate;
+    });
+  }
 
   const theme = useTheme();
   const styles = createStyle(theme, proActiveMessageHeight);
@@ -187,16 +206,24 @@ export default function Index() {
         </Animated.View>
         <View style={styles.habitsSection}>
           <View style={styles.habitSectionHeading}>
-            <Text style={styles.habitSectionText}>Habits for Today:</Text>
+            <Text style={styles.habitSectionText}>
+              Habits for {relationBetweenTodayAndDate(habitsDate)}:
+            </Text>
             <View style={styles.jumpToDayContainer}>
-              <TouchableOpacity style={styles.jumpToDayButton}>
+              <TouchableOpacity
+                style={styles.jumpToDayButton}
+                onPress={handleDateBack}
+              >
                 <Ionicons
                   name="chevron-back-outline"
                   size={20}
                   color={theme.colors.textSecondary}
                 />
               </TouchableOpacity>
-              <TouchableOpacity style={styles.jumpToDayButton}>
+              <TouchableOpacity
+                style={styles.jumpToDayButton}
+                onPress={handleDateForward}
+              >
                 <Ionicons
                   name="chevron-forward-outline"
                   size={20}
@@ -205,7 +232,7 @@ export default function Index() {
               </TouchableOpacity>
             </View>
           </View>
-          <DailyHabitsView />
+          <DailyHabitsView date={habitsDate} />
         </View>
 
         {shouldStartTour() ? (

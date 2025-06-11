@@ -29,7 +29,8 @@ import {
 } from "@/utils/database/habitHistoryManager";
 import { TourGuideZone } from "rn-tourguide";
 
-const DailyHabitsView: React.FC = () => {
+const DailyHabitsView = ({ date }: { date: Date }) => {
+  // date prop used to show the habits for different days
   const theme = useTheme();
   const styles = createStyles(theme);
 
@@ -143,9 +144,10 @@ const DailyHabitsView: React.FC = () => {
         onPress={(isChecked: boolean) => {
           Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
           handleToggleTaskCompletion(index);
+          // the isChecked is updated, then all of this is triggered, so isChecked = true means we gotta do the action when button will be checked
           if (isChecked) {
             // if the task is not completed (just clicked completed), then mark as complete + add points
-            onMarkAsComplete(habit.id);
+            onMarkAsComplete(habit.id, date);
             addPoints(habit.points);
           } else {
             // if the task is already checked, then mark as incomplete + subtract points
@@ -178,7 +180,7 @@ const DailyHabitsView: React.FC = () => {
   };
 
   const renderHabitCard = (habit: HabitObject, index: number) => {
-    if (habit && habit.frequency[getWeekdayNumber()]) {
+    if (habit && habit.frequency[getWeekdayNumber(date)]) {
       // if the current day matches with the day
       // the habit is supposed to happen on
       // therefore, renders habit based on if they are to be done today:

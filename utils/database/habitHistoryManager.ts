@@ -17,12 +17,13 @@ const habitCompletionCollection =
   database.get<HabitCompletion>("habit_completions");
 
 // Marks a habit as complete for a given date.
-export async function onMarkAsComplete(habitId: string) {
+export async function onMarkAsComplete(habitId: string, date: Date) {
   // MANAGING THE MMKV PART:
   const entries = getHabitHistoryEntries();
   const alreadyExists = entries.some(
     (entry) =>
-      entry.habitId === habitId && entry.completionDate === getFormattedDate()
+      entry.habitId === habitId &&
+      entry.completionDate === getFormattedDate(date)
   );
 
   if (alreadyExists) {
@@ -33,13 +34,14 @@ export async function onMarkAsComplete(habitId: string) {
   const newEntry: HabitHistoryEntry = {
     id: Date.now(), // Using timestamp as a simple ID
     habitId: habitId,
-    completionDate: getFormattedDate(),
+    completionDate: getFormattedDate(date),
   };
 
   entries.push(newEntry);
   saveHabitHistoryEntries(entries);
 
   // MANAGING THE DATA COLLECTION PART:
+  // these are not date dependent
   const habitCompletion = await getOrCreateHabitCompletionRecord(habitId);
   await habitCompletion.incrementTimesCompleted();
 }

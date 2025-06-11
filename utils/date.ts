@@ -91,6 +91,28 @@ const getDatesThisWeek = function () {
   return formattedDatesThisWeekArray;
 };
 
+const relationBetweenTodayAndDate = function (date: Date) {
+  const dateToday = new Date();
+
+  // Helper function to calculate the difference in days
+  const diffInDays = (date1: Date, date2: Date): number => {
+    const timeDiff = date1.getTime() - date2.getTime();
+    return Math.floor(timeDiff / (1000 * 3600 * 24));
+  };
+
+  const daysDifference = diffInDays(dateToday, date);
+
+  if (daysDifference === 0) {
+    return "Today";
+  } else if (daysDifference === 1) {
+    return "Yesterday";
+  } else if (daysDifference > 1) {
+    return `${daysDifference} days ago`;
+  } else {
+    return "Future Date"; // Or handle future dates as you see fit
+  }
+};
+
 export {
   getDate,
   getWeekdayNumber,
@@ -101,4 +123,5 @@ export {
   getTimeOfDay,
   getFormattedDatesThisWeek,
   getDatesThisWeek,
+  relationBetweenTodayAndDate,
 };
