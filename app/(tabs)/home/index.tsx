@@ -6,6 +6,7 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from "react-native";
 
@@ -29,6 +30,7 @@ import { getFormattedDatesThisWeek } from "@/utils/date";
 import mmkvStorage from "@/utils/mmkvStorage";
 import { TourGuideZone, useTourGuideController } from "rn-tourguide";
 import React from "react";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function Index() {
   const [proActiveMessage, setProActiveMessage] = useState<string | null>(null); // will eventually fetch it's last value from a key-value store so that the user doesn't have to stare at the "loading" for 1-3 seconds
@@ -184,7 +186,25 @@ export default function Index() {
           )}
         </Animated.View>
         <View style={styles.habitsSection}>
-          <Text style={styles.habitSectionText}>Habits for Today:</Text>
+          <View style={styles.habitSectionHeading}>
+            <Text style={styles.habitSectionText}>Habits for Today:</Text>
+            <View style={styles.jumpToDayContainer}>
+              <TouchableOpacity style={styles.jumpToDayButton}>
+                <Ionicons
+                  name="chevron-back-outline"
+                  size={20}
+                  color={theme.colors.textSecondary}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.jumpToDayButton}>
+                <Ionicons
+                  name="chevron-forward-outline"
+                  size={20}
+                  color={theme.colors.textSecondary}
+                />
+              </TouchableOpacity>
+            </View>
+          </View>
           <DailyHabitsView />
         </View>
 
@@ -244,6 +264,22 @@ function createStyle(theme: Theme, proActiveMessageHeight: number) {
     habitsSection: {
       flex: 1,
       marginTop: theme.spacing.l,
+    },
+    habitSectionHeading: {
+      // New or significantly changed
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
+      marginBottom: theme.spacing.s,
+    },
+    jumpToDayContainer: {
+      // New
+      flexDirection: "row",
+    },
+    jumpToDayButton: {
+      // New
+      marginLeft: theme.spacing.s,
+      padding: theme.spacing.xs,
     },
     habitSectionText: {
       color: theme.colors.text,
