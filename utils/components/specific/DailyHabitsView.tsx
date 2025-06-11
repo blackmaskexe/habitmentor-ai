@@ -201,11 +201,29 @@ const DailyHabitsView: React.FC = () => {
                 });
               }}
             >
-              <Ionicons
-                name="ellipsis-vertical-outline"
-                size={20}
-                color={theme.colors.textSecondary}
-              />
+              {index == 0 ? (
+                <TourGuideZone
+                  key={index}
+                  zone={4}
+                  text={
+                    "Click to set reminders 🔔, get AI tools 🤖, and much more!"
+                  }
+                  borderRadius={8}
+                  shape="circle"
+                >
+                  <Ionicons
+                    name="ellipsis-vertical-outline"
+                    size={20}
+                    color={theme.colors.textSecondary}
+                  />
+                </TourGuideZone>
+              ) : (
+                <Ionicons
+                  name="ellipsis-vertical-outline"
+                  size={20}
+                  color={theme.colors.textSecondary}
+                />
+              )}
             </TouchableOpacity>
           </View>
         </View>
@@ -216,19 +234,6 @@ const DailyHabitsView: React.FC = () => {
   return (
     <ScrollView style={styles.container}>
       {habitItems.map((habit: HabitObject, index: number) => {
-        if (index == 0) {
-          // rendering the first habit card to be wrapped in the rn tourguide
-          return (
-            <TourGuideZone
-              key={index}
-              zone={4}
-              text={"A react-native-copilot remastered! 🎉"}
-              borderRadius={16}
-            >
-              {renderHabitCard(habit, index)}
-            </TourGuideZone>
-          );
-        }
         return renderHabitCard(habit, index);
       })}
     </ScrollView>

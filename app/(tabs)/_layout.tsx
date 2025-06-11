@@ -71,7 +71,9 @@ export default function TabLayout() {
               />
               <TourGuideZone
                 zone={2}
-                text={"A react-native-copilot remastered! 🎉"}
+                text={
+                  "View all of your habit streaks 🔥, completion graph 📈, and much more at a glance 👀!"
+                }
                 borderRadius={8}
               >
                 <Text
@@ -103,8 +105,10 @@ export default function TabLayout() {
           tabBarIcon: ({ color, size }) => (
             <TourGuideZone
               zone={3}
-              text={"A react-native-copilot remastered! 🎉"}
-              borderRadius={16}
+              text={
+                "Chat with the AI 🤖! Ask about ways to improve, be more consistent, and more!"
+              }
+              borderRadius={8}
             >
               <Ionicons name="chatbubbles" size={size} color={color} />
             </TourGuideZone>

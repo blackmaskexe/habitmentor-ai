@@ -10,7 +10,15 @@ export default function RootLayout() {
   return (
     <SheetProvider>
       <ThemeProvider>
-        <TourGuideProvider backdropColor="rgba(0,0,0,0.7)">
+        <TourGuideProvider
+          backdropColor="rgba(0,0,0,0.7)"
+          labels={{
+            previous: "Previous",
+            next: "Next",
+            finish: "Finish",
+            skip: "‎",
+          }}
+        >
           <Stack
             screenOptions={{
               headerShown: false,

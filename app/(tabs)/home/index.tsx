@@ -52,8 +52,20 @@ export default function Index() {
     eventEmitter, // an object for listening some events
   } = useTourGuideController();
 
+  function shouldStartTour() {
+    return true;
+    // makes sure the user only tours the app once
+    const didTourApp = mmkvStorage.getString("didTourApp");
+    if (didTourApp == undefined || didTourApp == "false") {
+      mmkvStorage.set("didTourApp", "true");
+      return true;
+    }
+    return false;
+  }
+
   useEffect(() => {
-    if (canStart) {
+    if (canStart && shouldStartTour()) {
+      console.log("this is what i do aha", canStart);
       // 👈 test if you can start otherwise nothing will happen
       start();
     }
@@ -135,13 +147,7 @@ export default function Index() {
       >
         <WeekAtAGlance />
         <Animated.View style={[styles.aiSection]}>
-          <TourGuideZone
-            zone={1}
-            text={"A react-native-copilot remastered! 🎉"}
-            borderRadius={999}
-          >
-            <Text style={styles.aiSectionHeading}>Top AI Suggestion:</Text>
-          </TourGuideZone>
+          <Text style={styles.aiSectionHeading}>Top AI Suggestion:</Text>
           {proActiveMessage ? (
             <>
               <Text
@@ -181,6 +187,20 @@ export default function Index() {
           <Text style={styles.habitSectionText}>Habits for Today:</Text>
           <DailyHabitsView />
         </View>
+
+        {shouldStartTour() ? (
+          <View
+            style={{
+              marginTop: 200,
+            }}
+          >
+            <TourGuideZone
+              zone={1}
+              text={"Let's walk you through the cool features of this app"}
+              borderRadius={8}
+            />
+          </View>
+        ) : null}
 
         {/* <View style={styles.habitsSection}>
           <Text style={styles.habitSectionText}>Upcoming Milestones:</Text>

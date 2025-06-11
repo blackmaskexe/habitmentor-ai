@@ -13,3 +13,4 @@ export default mmkvStorage;
 // lastDataCollectionDate: formatted date of the last time the habit data collection helper function was run
 // lastProActiveMessageDate: the last date the server fetched pro-active advice for the user to display on the homescreen
 // recentProActiveMessage: gives the last fetched pro active message from the server
+// didTourApp: true or false based on whether the rn-tourguide triggered for the user, as only want it to happen once
