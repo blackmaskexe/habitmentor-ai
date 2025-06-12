@@ -129,8 +129,11 @@ const WeekAtAGlance: React.FC<WeekAtAGlanceProps> = () => {
 
       {/* Completion Percentage */}
       <ProgressBar
-        currentValue={10}
-        maxValue={20}
+        currentValue={
+          dayPercentages.reduce((sum, value) => sum + value, 0) /
+          dayPercentages.length
+        }
+        maxValue={100}
         showColoredPercentage={false}
       />
     </View>
