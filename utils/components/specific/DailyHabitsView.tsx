@@ -23,6 +23,7 @@ import { Theme } from "@/utils/theme/themes";
 import * as Haptics from "expo-haptics";
 import { addPoints, subtractPoints } from "@/utils/database/points";
 import {
+  getAllHabitHistoryOnDate,
   getAllHabitHistoryToday,
   onMarkAsComplete,
   onMarkAsIncomplete,
@@ -106,8 +107,8 @@ const DailyHabitsView = ({ date }: { date: Date }) => {
       // fill the above with falses, and switch those to true which have been completed
 
       // looping throgu all the habitItem completions for today's date to see if
-      const completedHabitsToday = getAllHabitHistoryToday();
-      for (const habitEntry of completedHabitsToday) {
+      const completedHabitsOnDate = getAllHabitHistoryOnDate(date);
+      for (const habitEntry of completedHabitsOnDate) {
         habitItems.forEach((item, index) => {
           if (item.id == habitEntry.habitId) {
             newTaskCompletion[index] = true;
@@ -117,7 +118,7 @@ const DailyHabitsView = ({ date }: { date: Date }) => {
 
       return newTaskCompletion;
     });
-  }, [habitItems]); // set the taskCompletion state according to the data stored in the database
+  }, [habitItems, date]); // set the taskCompletion state according to the data stored in the database
   const handleToggleTaskCompletion = (index: number) => {
     setTaskCompletion((oldTaskCompletion: boolean[]) => {
       const newTaskCompletion = [...oldTaskCompletion];
@@ -151,7 +152,7 @@ const DailyHabitsView = ({ date }: { date: Date }) => {
             addPoints(habit.points);
           } else {
             // if the task is already checked, then mark as incomplete + subtract points
-            onMarkAsIncomplete(habit.id);
+            onMarkAsIncomplete(habit.id, date);
             subtractPoints(habit.points);
           }
         }}

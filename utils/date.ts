@@ -30,6 +30,10 @@ const getFormattedDate = function (customDate?: Date) {
   return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
 };
 
+const getPrettyDate = function (date: Date) {
+  return `${date.getMonth() + 1}/${date.getDate()}`;
+};
+
 const getFormattedTime = function (date: Date) {
   let hours = date.getHours();
   let minutes: string | number = date.getMinutes();
@@ -107,7 +111,7 @@ const relationBetweenTodayAndDate = function (date: Date) {
   } else if (daysDifference === 1) {
     return "Yesterday";
   } else if (daysDifference > 1) {
-    return `${daysDifference} days ago`;
+    return getPrettyDate(date);
   } else {
     return "Future Date"; // Or handle future dates as you see fit
   }
@@ -117,6 +121,7 @@ export {
   getDate,
   getWeekdayNumber,
   getFormattedDate,
+  getPrettyDate,
   getFormattedTime,
   getDateFromFormattedDate,
   getWeekNumber,

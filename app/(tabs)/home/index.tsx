@@ -27,6 +27,7 @@ import {
 import api from "@/utils/api";
 import AISuggestionSkeleton from "@/utils/components/specific/AISuggestionSkeleton";
 import {
+  getFormattedDate,
   getFormattedDatesThisWeek,
   relationBetweenTodayAndDate,
 } from "@/utils/date";
@@ -103,6 +104,8 @@ export default function Index() {
     });
   }
   function handleDateForward() {
+    if (getFormattedDate(habitsDate) == getFormattedDate(new Date())) return; // early return to prevent going into the fuuture
+
     setHabitsDate((oldDate) => {
       const newDate = new Date(oldDate);
       newDate.setDate(oldDate.getDate() + 1);

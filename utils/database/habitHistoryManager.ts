@@ -47,13 +47,14 @@ export async function onMarkAsComplete(habitId: string, date: Date) {
 }
 
 // Marks a habit as incomplete for a given date by deleting the record.
-export async function onMarkAsIncomplete(habitId: string) {
+export async function onMarkAsIncomplete(habitId: string, date: Date) {
   // MANAGING THE MMKV PART:
   const entries = getHabitHistoryEntries();
   const updatedEntries = entries.filter(
     (entry) =>
       !(
-        entry.habitId === habitId && entry.completionDate === getFormattedDate()
+        entry.habitId === habitId &&
+        entry.completionDate === getFormattedDate(date)
       )
   );
 
@@ -133,6 +134,21 @@ export function getAllHabitHistoryToday(): HabitHistoryEntry[] {
     todayEntries
   );
   return todayEntries;
+}
+
+export function getAllHabitHistoryOnDate(date: Date) {
+  const entries = getHabitHistoryEntries();
+
+  const entriesOnDate = entries.filter(
+    (entry) => entry.completionDate === getFormattedDate(date)
+  );
+  console.log(
+    `MMKV Storage: Fetched habit history for today (${getFormattedDate(
+      date
+    )}).`,
+    date
+  );
+  return entriesOnDate;
 }
 
 // Retrieves all records from the habitHistory.
