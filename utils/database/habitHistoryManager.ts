@@ -10,6 +10,7 @@ interface HabitHistoryEntry {
   id: number; // timestamp based id
   habitId: string;
   completionDate: string; // Expected format: YYYY-MM-DD
+  skipped?: boolean;
 }
 
 const HABIT_HISTORY_KEY = "habitHistory";
@@ -17,7 +18,11 @@ const habitCompletionCollection =
   database.get<HabitCompletion>("habit_completions");
 
 // Marks a habit as complete for a given date.
-export async function onMarkAsComplete(habitId: string, date: Date) {
+export async function onMarkAsComplete(
+  habitId: string,
+  date: Date,
+  skip?: boolean
+) {
   // MANAGING THE MMKV PART:
   const entries = getHabitHistoryEntries();
   const alreadyExists = entries.some(
@@ -37,13 +42,20 @@ export async function onMarkAsComplete(habitId: string, date: Date) {
     completionDate: getFormattedDate(date),
   };
 
+  if (skip) {
+    newEntry.skipped = true;
+  }
+
   entries.push(newEntry);
   saveHabitHistoryEntries(entries);
 
   // MANAGING THE DATA COLLECTION PART:
   // these are not date dependent
-  const habitCompletion = await getOrCreateHabitCompletionRecord(habitId);
-  await habitCompletion.incrementTimesCompleted();
+  if (!skip) {
+    // these will only trigger if skip is false (this is so that I can tap into this function by providing a skip=true for skipping habits)
+    const habitCompletion = await getOrCreateHabitCompletionRecord(habitId);
+    await habitCompletion.incrementTimesCompleted();
+  }
 }
 
 // Marks a habit as incomplete for a given date by deleting the record.

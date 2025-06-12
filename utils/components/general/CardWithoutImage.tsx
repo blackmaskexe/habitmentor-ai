@@ -60,7 +60,9 @@ const CardWithoutImage: React.FC<CardProps> = ({
         </View>
 
         <View style={styles.textContainer}>
-          <Text style={styles.title}>{title}</Text>
+          <Text style={styles.title} numberOfLines={1} ellipsizeMode="tail">
+            {title}
+          </Text>
           {description && description.trim().length > 0 ? (
             <Text
               style={styles.description}

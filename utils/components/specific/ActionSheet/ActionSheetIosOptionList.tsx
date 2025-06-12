@@ -1,3 +1,5 @@
+import { skipHabitToday } from "@/utils/database/habits";
+import { getDate } from "@/utils/date";
 import { useTheme } from "@/utils/theme/ThemeContext";
 import { Theme } from "@/utils/theme/themes";
 import { HabitObject } from "@/utils/types";
@@ -81,18 +83,20 @@ export default function ActionSheetIosOptionList({
         })}
 
         {renderOptionItem(
-          "between",
+          "bottom",
           "play-skip-forward-outline",
           "Skip Habit for Today",
-          () => {}
+          () => {
+            skipHabitToday(habitItem.id, getDate());
+          }
         )}
 
-        {renderOptionItem(
+        {/* {renderOptionItem(
           "bottom",
           "stats-chart-outline",
           "View Consistency Graph",
           () => {}
-        )}
+        )} */}
 
         {/* Divider */}
         <View style={styles.divider} />

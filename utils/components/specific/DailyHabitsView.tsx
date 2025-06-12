@@ -54,15 +54,29 @@ const DailyHabitsView = ({ date }: { date: Date }) => {
   // }, []);
 
   const loadHabits = function () {
-    console.log("Starting to log this brah");
     // fetch habits from mmkvStorage
     let loadedHabits: any[] = [];
     const storedHabitsString = mmkvStorage.getString("activeHabits");
-    console.log("This da storedHabitsString type shi", storedHabitsString);
     if (storedHabitsString) {
       loadedHabits = JSON.parse(storedHabitsString);
-      console.log("mera katta bhi loaded hai bro", loadedHabits);
-      setHabitItems(loadedHabits);
+
+      // gotta run the logic of if the habit is skipped or not here (if the entry for today exists, and there's a skipped in it, then don't return that)
+
+      const unskippedHabits = loadedHabits.filter((habit, index) => {
+        if (getFormattedDate(new Date()) != getFormattedDate(date)) return true; // return the loadedHabits as is if the day isn't today for skipping
+
+        for (const habitEntry of getAllHabitHistoryToday()) {
+          console.log("girl i got your back, got it all", habitEntry);
+
+          if (habit.id == habitEntry.habitId && habitEntry.skipped) {
+            console.log("TUNG TUNG SAHURRIYYAA");
+            return false; // don't render the item if it is skipped ONLY TODAY
+          }
+        }
+        return true; // return true if the item is not skipped
+      });
+
+      setHabitItems(unskippedHabits);
     } else {
       throw new Error("Not able to fetch active habits from mmkvStorage");
     }

@@ -59,7 +59,6 @@ export default function Index() {
   } = useTourGuideController();
 
   function shouldStartTour() {
-    return true;
     // makes sure the user only tours the app once
     const didTourApp = mmkvStorage.getString("didTourApp");
     if (didTourApp == undefined || didTourApp == "false") {

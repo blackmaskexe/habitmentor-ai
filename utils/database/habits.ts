@@ -1,6 +1,8 @@
 // this file is based off the activeHabits key found in the mmkvStorage
+import { getFormattedDate } from "../date";
 import mmkvStorage from "../mmkvStorage";
 import { HabitObject } from "../types";
+import { onMarkAsComplete } from "./habitHistoryManager";
 
 export function updateHabitNotificationId(
   habitId: string,
@@ -89,4 +91,10 @@ export function getTotalHabitNumberOnDay(weekdayNumber: number) {
   }
 
   return totalNum;
+}
+
+export function skipHabitToday(habitId: string, date: Date) {
+  if (getFormattedDate(new Date()) != getFormattedDate(date)) return; // cannot skip habits other than for today
+
+  onMarkAsComplete(habitId, date, true); // specify skip = true
 }
