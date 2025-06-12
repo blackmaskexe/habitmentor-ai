@@ -59,6 +59,7 @@ export default function Index() {
   } = useTourGuideController();
 
   function shouldStartTour() {
+    return true;
     // makes sure the user only tours the app once
     const didTourApp = mmkvStorage.getString("didTourApp");
     if (didTourApp == undefined || didTourApp == "false") {
@@ -75,24 +76,6 @@ export default function Index() {
       start();
     }
   }, [canStart]); // 👈 don't miss it!
-
-  const handleOnStart = () => console.log("start");
-  const handleOnStop = () => console.log("stop");
-  const handleOnStepChange = () => console.log(`stepChange`);
-
-  useEffect(() => {
-    if (eventEmitter) {
-      eventEmitter.on("start", handleOnStart);
-      eventEmitter.on("stop", handleOnStop);
-      eventEmitter.on("stepChange", handleOnStepChange);
-
-      return () => {
-        eventEmitter.off("start", handleOnStart);
-        eventEmitter.off("stop", handleOnStop);
-        eventEmitter.off("stepChange", handleOnStepChange);
-      };
-    }
-  }, []);
 
   const [habitsDate, setHabitsDate] = useState(new Date());
 
@@ -241,12 +224,14 @@ export default function Index() {
         {shouldStartTour() ? (
           <View
             style={{
-              marginTop: 200,
+              marginTop: 100,
             }}
           >
             <TourGuideZone
               zone={1}
-              text={"Let's walk you through the cool features of this app"}
+              text={
+                "😤 Let's walk you through the cool features of this app 😤"
+              }
               borderRadius={8}
             />
           </View>
