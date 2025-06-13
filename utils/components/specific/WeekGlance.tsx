@@ -10,7 +10,10 @@ import {
   getWeekdayNumber,
 } from "@/utils/date";
 import { getHabitHistoryEntries } from "@/utils/database/habitHistoryManager";
-import { getTotalHabitNumberOnDay } from "@/utils/database/habits";
+import {
+  getAllHabitsOnWeekday,
+  getTotalHabitNumberOnDay,
+} from "@/utils/database/habits";
 import mmkvStorage from "@/utils/mmkvStorage";
 
 interface WeekAtAGlanceProps {
@@ -42,25 +45,53 @@ const WeekAtAGlance: React.FC<WeekAtAGlanceProps> = () => {
   const styles = createStyles(theme);
 
   const [dayPercentages, setDayPercentages] = useState<number[]>([]);
+  // function calculatePercentageForDay(date: Date) {
+  //   let habitsCompleted = 0;
+  //   let futureHabits = 0; // habits that have not yet been started, their start date is later than habitDate input
+  //   for (const habitHistoryEntry of getHabitHistoryEntries()) {
+  //     if (habitHistoryEntry.completionDate == getFormattedDate(date)) {
+  //       habitsCompleted++;
+  //     }
+  //   }
 
+  //   for (const habit of getAllHabitsOnWeekday(getWeekdayNumber(date))) {
+  //     if (new Date() < getDateFromFormattedDate(habit.startDate!)) {
+  //       futureHabits++;
+  //     }
+  //   }
+
+  //   const effectiveTotalHabits =
+  //     getTotalHabitNumberOnDay(getWeekdayNumber(date)) - futureHabits;
+
+  //   return (habitsCompleted / effectiveTotalHabits) * 100;
+  // }
   useEffect(() => {
     function calculateAndSetDayPercentages() {
       const formattedWeekDayArray = getFormattedDatesThisWeek();
-      const newDayPercentages = formattedWeekDayArray.map((item, index) => {
-        let habitsCompleted = 0;
-        for (const habitHistoryEntry of getHabitHistoryEntries()) {
-          if (habitHistoryEntry.completionDate == item) {
-            habitsCompleted++;
+      const newDayPercentages = formattedWeekDayArray.map(
+        (item, weekdayIndex) => {
+          let habitsCompleted = 0;
+          let futureHabits = 0; // habits that have not yet been started, their start date is later than habitDate input
+
+          for (const habitHistoryEntry of getHabitHistoryEntries()) {
+            if (habitHistoryEntry.completionDate == item) {
+              habitsCompleted++;
+            }
           }
+
+          for (const habit of getAllHabitsOnWeekday(weekdayIndex)) {
+            if (new Date() < getDateFromFormattedDate(habit.startDate!)) {
+              futureHabits++;
+            }
+          }
+
+          const effectiveTotalHabits =
+            getTotalHabitNumberOnDay(weekdayIndex) - futureHabits;
+
+          return (habitsCompleted / effectiveTotalHabits) * 100;
         }
-        return (
-          (habitsCompleted /
-            getTotalHabitNumberOnDay(
-              getWeekdayNumber(getDateFromFormattedDate(item))
-            )) *
-          100
-        );
-      });
+      );
+
       setDayPercentages(newDayPercentages);
     }
 

@@ -7,7 +7,11 @@ import {
   getFormattedDate,
   getWeekdayNumber,
 } from "@/utils/date";
-import { getTotalHabitNumberOnDay } from "@/utils/database/habits";
+import {
+  getAllHabits,
+  getAllHabitsOnWeekday,
+  getTotalHabitNumberOnDay,
+} from "@/utils/database/habits";
 
 interface DayActivity {
   date: Date;
@@ -25,15 +29,23 @@ export const MonthlyHabitActivityMonitor: React.FC = () => {
 
   function calculatePercentageForDay(date: Date) {
     let habitsCompleted = 0;
+    let futureHabits = 0; // habits that have not yet been started, their start date is later than habitDate input
     for (const habitHistoryEntry of getHabitHistoryEntries()) {
       if (habitHistoryEntry.completionDate == getFormattedDate(date)) {
         habitsCompleted++;
       }
     }
 
-    return (
-      (habitsCompleted / getTotalHabitNumberOnDay(getWeekdayNumber(date))) * 100
-    );
+    for (const habit of getAllHabitsOnWeekday(getWeekdayNumber(date))) {
+      if (new Date() < getDateFromFormattedDate(habit.startDate!)) {
+        futureHabits++;
+      }
+    }
+
+    const effectiveTotalHabits =
+      getTotalHabitNumberOnDay(getWeekdayNumber(date)) - futureHabits;
+
+    return (habitsCompleted / effectiveTotalHabits) * 100;
   }
 
   useEffect(() => {

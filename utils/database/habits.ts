@@ -1,5 +1,5 @@
 // this file is based off the activeHabits key found in the mmkvStorage
-import { getFormattedDate } from "../date";
+import { getDateFromFormattedDate, getFormattedDate } from "../date";
 import mmkvStorage from "../mmkvStorage";
 import { HabitObject } from "../types";
 import { onMarkAsComplete } from "./habitHistoryManager";
@@ -79,6 +79,16 @@ export function getAllHabits() {
   );
 
   return activeHabits;
+}
+
+export function getAllHabitsOnWeekday(weekdayNumber: number) {
+  const activeHabits: HabitObject[] = JSON.parse(
+    mmkvStorage.getString("activeHabits") || "[]"
+  );
+
+  return activeHabits.filter((habit, index) => {
+    return habit.frequency[weekdayNumber]; // only those habits will be returned that are active on that weekday
+  });
 }
 
 export function getTotalHabitNumberOnDay(weekdayNumber: number) {

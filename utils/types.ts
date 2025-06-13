@@ -20,6 +20,7 @@ interface HabitObject {
   points: number;
   notificationIds?: string[];
   notificationTime?: string;
+  startDate?: string; // formattedDate
 }
 
 interface FormValuesType {
@@ -29,6 +30,7 @@ interface FormValuesType {
   iconName?: keyof typeof Ionicons.glyphMap | string;
   id?: string;
   points?: number;
+  startDate?: string; // formattedDate
 }
 
 interface UserChatRequestType {

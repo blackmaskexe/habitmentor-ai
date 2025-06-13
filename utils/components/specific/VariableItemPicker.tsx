@@ -21,6 +21,7 @@ import mmkvStorage from "@/utils/mmkvStorage";
 import TaskFrequencyDropdownMenu from "./zeego/TaskFrequencyDropdownMenu";
 import WeekdayFrequencyPicker from "./WeekdayFrequencyPicker";
 import { FormValuesType, HabitObject } from "@/utils/types";
+import { getFormattedDate } from "@/utils/date";
 
 type ItemPickerProps = {
   onItemPress?: (index: number) => void;
@@ -99,7 +100,7 @@ export default function VariableItemPicker({
       onModalSubmit();
     }, 100);
 
-    // modifying the moreHabitsArray to have Unique ID + points as well based on the number of days the habit is being done
+    // modifying the moreHabitsArray to have Unique ID + points  + startDate as well based on the number of days the habit is being done
     const newMoreHabitsArray = [...moreHabitsArray]; // not using setMoreHabitsArray to avoid re-render loop because of moreHabitsArray dependency on this useEffect
     newMoreHabitsArray.forEach((item, index) => {
       if (item && item.frequency) {
@@ -124,6 +125,7 @@ export default function VariableItemPicker({
 
         item.points = habitPoints[daysHabitIsActive];
         item.id = generateHabitId();
+        item.startDate = getFormattedDate();
       }
     });
 

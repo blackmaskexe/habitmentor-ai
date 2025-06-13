@@ -20,6 +20,7 @@ import { Theme } from "@/utils/theme/themes";
 import { useTheme } from "@/utils/theme/ThemeContext";
 import { generateHabitId } from "@/utils/randomId";
 import { addNewHabit } from "@/utils/database/habits";
+import { getFormattedDate } from "@/utils/date";
 
 const { width } = Dimensions.get("window");
 const BOX_SIZE = Math.min(width * 0.18, 80); // Responsive but capped at 80px in length and width
@@ -159,6 +160,9 @@ export default function AddNewHabitModal({
 
                       // as well as assign the unique ID:
                       newHabit.id = generateHabitId();
+
+                      // and associate a startDate with it:
+                      newHabit.startDate = getFormattedDate();
                       addNewHabit(newHabit as any);
 
                       setIsModalVisible(false);
