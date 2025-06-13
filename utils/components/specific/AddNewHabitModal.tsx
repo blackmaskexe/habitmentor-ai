@@ -51,7 +51,6 @@ export default function AddNewHabitModal({
   const [values, setValues] = useState<FormValuesType>({});
   const [habitFrequency, setHabitFrequency] = useState([]);
 
-  console.log("in your birthday suit, take it all along", values);
   return (
     <Modal
       animationType="slide"

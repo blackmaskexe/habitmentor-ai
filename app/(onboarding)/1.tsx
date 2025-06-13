@@ -46,13 +46,6 @@ const AddMoreHabitsPrompt = () => {
     };
   }, []);
 
-  console.log("ridin low like an instinct");
-
-  console.log(
-    "tory lanez on the beat yuh",
-    mmkvStorage.getString("brokinaminute")
-  );
-
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.innerContainer}>

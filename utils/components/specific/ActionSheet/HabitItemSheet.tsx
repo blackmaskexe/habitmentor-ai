@@ -24,9 +24,12 @@ import { getHabitNotificationTime } from "@/utils/database/habits";
 
 export default function HabitItemSheet({
   habitObject,
+  habitDate,
 }: {
   habitObject: HabitObject;
+  habitDate: Date;
 }) {
+  console.log(habitDate, "this is the anstrong the nanstrom");
   const theme = useTheme();
   const styles = createStyles(theme);
 
@@ -67,6 +70,7 @@ export default function HabitItemSheet({
         <ActionSheetIosOptionList
           habitItem={habitObject}
           onChangeDisplayScreen={setDisplayScreen}
+          habitDate={habitDate}
         />
       </>
     );

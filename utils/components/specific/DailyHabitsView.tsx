@@ -63,13 +63,14 @@ const DailyHabitsView = ({ date }: { date: Date }) => {
       // gotta run the logic of if the habit is skipped or not here (if the entry for today exists, and there's a skipped in it, then don't return that)
 
       const unskippedHabits = loadedHabits.filter((habit, index) => {
-        if (getFormattedDate(new Date()) != getFormattedDate(date)) return true; // return the loadedHabits as is if the day isn't today for skipping
+        if (getFormattedDate(new Date()) != getFormattedDate(date)) {
+          // return the loadedHabits as is if the day isn't today for skipping
+          console.log("in the past i am");
+          return true;
+        }
 
         for (const habitEntry of getAllHabitHistoryToday()) {
-          console.log("girl i got your back, got it all", habitEntry);
-
           if (habit.id == habitEntry.habitId && habitEntry.skipped) {
-            console.log("TUNG TUNG SAHURRIYYAA");
             return false; // don't render the item if it is skipped ONLY TODAY
           }
         }
@@ -85,7 +86,7 @@ const DailyHabitsView = ({ date }: { date: Date }) => {
   useFocusEffect(
     useCallback(() => {
       loadHabits();
-    }, [])
+    }, [date]) // date dependency to reload habits when date changes
   );
 
   useEffect(() => {
@@ -94,10 +95,7 @@ const DailyHabitsView = ({ date }: { date: Date }) => {
     const listener = mmkvStorage.addOnValueChangedListener((changedKey) => {
       if (changedKey == "activeHabits") {
         // reload the habits if the activeHabits change
-        console.log(
-          mmkvStorage.getString("activeHabits"),
-          "the active habits has changed somewhat, please see"
-        );
+
         loadHabits();
       }
     });
@@ -209,11 +207,12 @@ const DailyHabitsView = ({ date }: { date: Date }) => {
               style={styles.habitOptions}
               onPress={() => {
                 Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-                console.log("I think i've seen it twice all year", habit);
+                console.log("sahuriya hai tu be", date);
                 SheetManager.show("example-sheet", {
                   payload: {
                     sheetType: "habitItem",
                     habit: habit,
+                    habitDate: date,
                   },
                 });
               }}

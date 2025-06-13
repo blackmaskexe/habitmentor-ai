@@ -61,7 +61,6 @@ export default function OnboardingLayout() {
       />
       <Stack.Screen name="1" />
       <Stack.Screen name="2" />
-      <Stack.Screen name="3" />
     </Stack>
   );
 }

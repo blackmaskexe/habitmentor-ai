@@ -1,5 +1,5 @@
-import { skipHabitToday } from "@/utils/database/habits";
-import { getDate } from "@/utils/date";
+import { getRemainingSkips, skipHabitToday } from "@/utils/database/habits";
+import { getDate, getFormattedDate } from "@/utils/date";
 import { useTheme } from "@/utils/theme/ThemeContext";
 import { Theme } from "@/utils/theme/themes";
 import { HabitObject } from "@/utils/types";
@@ -12,16 +12,20 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import { SheetManager } from "react-native-actions-sheet";
 
 export default function ActionSheetIosOptionList({
   habitItem,
   onChangeDisplayScreen,
+  habitDate,
 }: {
   habitItem: HabitObject;
   onChangeDisplayScreen: any;
+  habitDate: Date;
 }) {
+  console.log("i be like woho wohoho yeah", habitDate);
   const router = useRouter();
   const theme = useTheme();
   const styles = createStyles(theme);
@@ -82,14 +86,34 @@ export default function ActionSheetIosOptionList({
           onChangeDisplayScreen("reminder");
         })}
 
-        {renderOptionItem(
-          "bottom",
-          "play-skip-forward-outline",
-          "Skip Habit for Today",
-          () => {
-            skipHabitToday(habitItem.id, getDate());
-          }
-        )}
+        {getFormattedDate(habitDate) == getFormattedDate(new Date()) &&
+          renderOptionItem(
+            "bottom",
+            "play-skip-forward-outline",
+            "Skip Habit for Today",
+            () => {
+              if (getRemainingSkips()! > 0) {
+                Alert.alert(
+                  `${getRemainingSkips()} Skips left this week`,
+                  "Proceeding would consume a skip",
+                  [
+                    {
+                      text: "Cancel",
+                      onPress: () => console.log("Cancel Pressed"),
+                      style: "cancel",
+                    },
+                    {
+                      text: "Proceed",
+                      onPress: () => skipHabitToday(habitItem.id, habitDate),
+                    },
+                  ],
+                  { cancelable: false }
+                );
+              } else {
+                Alert.alert("Skips for this week exhausted");
+              }
+            }
+          )}
 
         {/* {renderOptionItem(
           "bottom",

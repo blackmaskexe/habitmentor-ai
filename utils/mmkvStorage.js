@@ -14,3 +14,4 @@ export default mmkvStorage;
 // lastProActiveMessageDate: the last date the server fetched pro-active advice for the user to display on the homescreen
 // recentProActiveMessage: gives the last fetched pro active message from the server
 // didTourApp: true or false based on whether the rn-tourguide triggered for the user, as only want it to happen once
+// skipsLeft: stores how many skips does the user have remaining for the week, and is recalculated each week on sunday

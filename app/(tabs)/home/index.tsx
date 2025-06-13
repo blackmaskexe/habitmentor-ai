@@ -51,6 +51,8 @@ export default function Index() {
     }).start();
   }, [proActiveMessageHeight]);
 
+  const [shouldUserTour, setShouldUserTour] = useState<boolean | null>(null);
+
   const {
     canStart, // a boolean indicate if you can start tour guide
     start, // a function to start the tourguide
@@ -58,19 +60,21 @@ export default function Index() {
     eventEmitter, // an object for listening some events
   } = useTourGuideController();
 
-  function shouldStartTour() {
-    // makes sure the user only tours the app once
-    const didTourApp = mmkvStorage.getString("didTourApp");
-    if (didTourApp == undefined || didTourApp == "false") {
-      mmkvStorage.set("didTourApp", "true");
-      return true;
+  useEffect(() => {
+    const didTourApp = mmkvStorage.getBoolean("didTourApp");
+    if (didTourApp == undefined) {
+      // the user hasn't toured in this case, and should be the only time the tour should show
+      setShouldUserTour(() => {
+        mmkvStorage.set("didTourApp", true);
+        return true;
+      });
+    } else {
+      setShouldUserTour(false);
     }
-    return false;
-  }
+  }, []);
 
   useEffect(() => {
-    if (canStart && shouldStartTour()) {
-      console.log("this is what i do aha", canStart);
+    if (canStart && shouldUserTour) {
       // 👈 test if you can start otherwise nothing will happen
       start();
     }
@@ -98,17 +102,9 @@ export default function Index() {
   const theme = useTheme();
   const styles = createStyle(theme, proActiveMessageHeight);
 
-  console.log(
-    "tung tung tung sahur, anamaro marameko, daradeko",
-    proActiveMessage,
-    "tatatat SAHURRRR"
-  );
-
   useEffect(() => {
     // call the method that starts the process of sending the proActiveMessage
     // showProActiveMessage(setProActiveMessage);
-
-    console.log(getFormattedDatesThisWeek(), "you always come to the party");
 
     async function showProActiveMessage() {
       if (shouldRequestProActiveMessage()) {
@@ -128,11 +124,6 @@ export default function Index() {
           setRecentProActiveMessage(response.data.response);
         }
       } else {
-        console.log("You don't have to fetch the important messages bro");
-        console.log(
-          "hum hai chhapri ahhh",
-          mmkvStorage.getString("recentProActiveMessage")
-        );
         setProActiveMessage(getRecentProActiveMessage());
       }
     }
@@ -220,7 +211,7 @@ export default function Index() {
           <DailyHabitsView date={habitsDate} />
         </View>
 
-        {shouldStartTour() ? (
+        {shouldUserTour ? (
           <View
             style={{
               marginTop: 100,
