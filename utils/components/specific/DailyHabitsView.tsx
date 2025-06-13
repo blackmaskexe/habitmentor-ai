@@ -93,8 +93,9 @@ const DailyHabitsView = ({ date }: { date: Date }) => {
     loadHabits(); // try and load the habits on mount
 
     const listener = mmkvStorage.addOnValueChangedListener((changedKey) => {
-      if (changedKey == "activeHabits") {
+      if (changedKey == "activeHabits" || changedKey == "habitHistory") {
         // reload the habits if the activeHabits change
+        // or habits are skipped (change in habitHistory key)
 
         loadHabits();
       }

@@ -197,7 +197,19 @@ export default function Index() {
                 />
               </TouchableOpacity>
               <TouchableOpacity
-                style={styles.jumpToDayButton}
+                disabled={
+                  getFormattedDate(habitsDate) == getFormattedDate(new Date())
+                }
+                style={[
+                  styles.jumpToDayButton,
+                  {
+                    opacity:
+                      getFormattedDate(habitsDate) ==
+                      getFormattedDate(new Date())
+                        ? 0.5
+                        : 1,
+                  },
+                ]}
                 onPress={handleDateForward}
               >
                 <Ionicons
