@@ -69,6 +69,7 @@ const DailyHabitsView = ({ date }: { date: Date }) => {
           return true;
         }
 
+        console.log("bruh am i even getting triggered");
         for (const habitEntry of getAllHabitHistoryToday()) {
           if (habit.id == habitEntry.habitId && habitEntry.skipped) {
             return false; // don't render the item if it is skipped ONLY TODAY
@@ -93,7 +94,7 @@ const DailyHabitsView = ({ date }: { date: Date }) => {
     loadHabits(); // try and load the habits on mount
 
     const listener = mmkvStorage.addOnValueChangedListener((changedKey) => {
-      if (changedKey == "activeHabits" || changedKey == "habitHistory") {
+      if (changedKey == "activeHabits") {
         // reload the habits if the activeHabits change
         // or habits are skipped (change in habitHistory key)
 
@@ -161,7 +162,7 @@ const DailyHabitsView = ({ date }: { date: Date }) => {
           // the isChecked is updated, then all of this is triggered, so isChecked = true means we gotta do the action when button will be checked
           if (isChecked) {
             // if the task is not completed (just clicked completed), then mark as complete + add points
-            onMarkAsComplete(habit.id, date);
+            onMarkAsComplete(habit.id, date, false); // skip is false
             addPoints(habit.points);
           } else {
             // if the task is already checked, then mark as incomplete + subtract points
@@ -215,6 +216,9 @@ const DailyHabitsView = ({ date }: { date: Date }) => {
                     habit: habit,
                     habitDate: date,
                   },
+                }).then((res) => {
+                  // on closing of the ActionSheet (is when the promise is fullfilled, refresh habits)
+                  loadHabits();
                 });
               }}
             >
