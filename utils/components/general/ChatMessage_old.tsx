@@ -21,6 +21,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import api from "@/utils/api";
 import ChatMessagesSkeleton from "./ChatMessagesSkeleton";
+import { getDate } from "@/utils/date";
 
 // Prop Instructions:
 // Send a message prop as follows:
@@ -141,7 +142,7 @@ export default function ChatMessages({
 
   const handleSendMessage = function () {
     // update immediately with user's message:
-    const timeStamp = new Date();
+    const timeStamp = getDate();
     const userMessageId = timeStamp.toISOString() + "-user";
     const aiMessageId = timeStamp.toISOString() + "-ai";
 
@@ -152,7 +153,7 @@ export default function ChatMessages({
         id: userMessageId,
         sender: "user",
         content: messageContent,
-        $createdAt: new Date(),
+        $createdAt: getDate(),
         loading: false, // user's messages don't load because it is asynchronous
       },
       {

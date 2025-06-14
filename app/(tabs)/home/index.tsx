@@ -27,6 +27,7 @@ import {
 import api from "@/utils/api";
 import AISuggestionSkeleton from "@/utils/components/specific/AISuggestionSkeleton";
 import {
+  getDate,
   getFormattedDate,
   getFormattedDatesThisWeek,
   relationBetweenTodayAndDate,
@@ -80,7 +81,7 @@ export default function Index() {
     }
   }, [canStart]); // 👈 don't miss it!
 
-  const [habitsDate, setHabitsDate] = useState(new Date());
+  const [habitsDate, setHabitsDate] = useState(getDate());
 
   function handleDateBack() {
     setHabitsDate((oldDate) => {
@@ -90,7 +91,7 @@ export default function Index() {
     });
   }
   function handleDateForward() {
-    if (getFormattedDate(habitsDate) == getFormattedDate(new Date())) return; // early return to prevent going into the fuuture
+    if (getFormattedDate(habitsDate) == getFormattedDate(getDate())) return; // early return to prevent going into the fuuture
 
     setHabitsDate((oldDate) => {
       const newDate = new Date(oldDate);
@@ -198,14 +199,14 @@ export default function Index() {
               </TouchableOpacity>
               <TouchableOpacity
                 disabled={
-                  getFormattedDate(habitsDate) == getFormattedDate(new Date())
+                  getFormattedDate(habitsDate) == getFormattedDate(getDate())
                 }
                 style={[
                   styles.jumpToDayButton,
                   {
                     opacity:
                       getFormattedDate(habitsDate) ==
-                      getFormattedDate(new Date())
+                      getFormattedDate(getDate())
                         ? 0.5
                         : 1,
                   },

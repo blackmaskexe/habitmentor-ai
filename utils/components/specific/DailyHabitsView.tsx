@@ -18,6 +18,7 @@ import { useFocusEffect } from "expo-router";
 //   onMarkAsIncomplete,
 // } from "@/utils/database/habitHistory";
 import {
+  getDate,
   getDateFromFormattedDate,
   getFormattedDate,
   getWeekdayNumber,
@@ -68,9 +69,9 @@ const DailyHabitsView = ({ date }: { date: Date }) => {
 
       // writing the visible habits (habits that haven't been skipped + habits that have a start date on or before the date of display)
       const visibleHabits = loadedHabits.filter((habit, index) => {
-        if (getFormattedDate(new Date()) != getFormattedDate(date)) {
+        if (getFormattedDate(getDate()) != getFormattedDate(date)) {
           // if not viewing today's habits
-          if (new Date() > getDateFromFormattedDate(habit.startDate!)) {
+          if (getDate() > getDateFromFormattedDate(habit.startDate!)) {
             return false; // don't show habit if the habit is added after this date
           } else {
             return true; // if it is added on or before that date, then show bindaas

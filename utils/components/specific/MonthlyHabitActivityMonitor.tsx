@@ -3,6 +3,7 @@ import { View, StyleSheet } from "react-native";
 import { useTheme } from "@/utils/theme/ThemeContext";
 import { getHabitHistoryEntries } from "@/utils/database/habitHistoryManager";
 import {
+  getDate,
   getDateFromFormattedDate,
   getFormattedDate,
   getWeekdayNumber,
@@ -37,7 +38,7 @@ export const MonthlyHabitActivityMonitor: React.FC = () => {
     }
 
     for (const habit of getAllHabitsOnWeekday(getWeekdayNumber(date))) {
-      if (new Date() < getDateFromFormattedDate(habit.startDate!)) {
+      if (getDate() < getDateFromFormattedDate(habit.startDate!)) {
         futureHabits++;
       }
     }
@@ -50,7 +51,7 @@ export const MonthlyHabitActivityMonitor: React.FC = () => {
 
   useEffect(() => {
     // calculate completion percentages (content of activities state) on mount
-    const today = new Date();
+    const today = getDate();
     const dayToday = today.getDate();
 
     setActivities((oldActivities) => {

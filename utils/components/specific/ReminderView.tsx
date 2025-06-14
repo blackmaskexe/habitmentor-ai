@@ -20,7 +20,7 @@ import {
   getHabitObjectFromId,
   updateHabitNotificationTime,
 } from "@/utils/database/habits";
-import { getFormattedTime } from "@/utils/date";
+import { getDate, getFormattedTime } from "@/utils/date";
 
 // update state variable that holds habit when habit changes in the mmkvStorage
 // now the todo right now is what is the root component that houses the habit item so that
@@ -44,7 +44,7 @@ export default function ReminderView({
   const theme = useTheme();
   const styles = createStyles(theme);
 
-  const [time, setTime] = useState(initialTime || new Date());
+  const [time, setTime] = useState(initialTime || getDate());
 
   const handleTimeChange = (
     event: DateTimePickerEvent,

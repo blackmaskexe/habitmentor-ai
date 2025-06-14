@@ -4,6 +4,7 @@ import { useTheme } from "@/utils/theme/ThemeContext";
 import ProgressBar from "../general/ProgressBar";
 import { Theme } from "@/utils/theme/themes";
 import {
+  getDate,
   getDateFromFormattedDate,
   getDatesThisWeek,
   getFormattedDatesThisWeek,
@@ -55,7 +56,7 @@ const WeekAtAGlance: React.FC<WeekAtAGlanceProps> = () => {
   //   }
 
   //   for (const habit of getAllHabitsOnWeekday(getWeekdayNumber(date))) {
-  //     if (new Date() < getDateFromFormattedDate(habit.startDate!)) {
+  //     if (getDate() < getDateFromFormattedDate(habit.startDate!)) {
   //       futureHabits++;
   //     }
   //   }
@@ -80,7 +81,7 @@ const WeekAtAGlance: React.FC<WeekAtAGlanceProps> = () => {
           }
 
           for (const habit of getAllHabitsOnWeekday(weekdayIndex)) {
-            if (new Date() < getDateFromFormattedDate(habit.startDate!)) {
+            if (getDate() < getDateFromFormattedDate(habit.startDate!)) {
               futureHabits++;
             }
           }

@@ -6,6 +6,7 @@
 import { getISOWeek } from "date-fns";
 
 const getDate = function () {
+  // this function is to be able to change date from this central location easily
   return new Date();
 };
 
@@ -13,7 +14,7 @@ const getWeekdayNumber = function (date?: Date) {
   if (date) {
     return date.getDay();
   }
-  return new Date().getDay(); // 0 is sunday, 1 is monday, so on
+  return getDate().getDay(); // 0 is sunday, 1 is monday, so on
 };
 
 const getWeekNumber = function (date: Date) {
@@ -54,7 +55,7 @@ const getDateFromFormattedDate = function (formattedDate: string) {
 };
 
 const getTimeOfDay = function () {
-  const date = new Date();
+  const date = getDate();
   const hourOfDay = date.getHours();
   if (hourOfDay < 10) return "morning";
   if (hourOfDay < 15) return "afternoon";
@@ -62,13 +63,13 @@ const getTimeOfDay = function () {
 };
 
 const getFormattedDatesThisWeek = function () {
-  const today = new Date(); // suppose today is wednesday
+  const today = getDate(); // suppose today is wednesday
   const todayWeekdayNumber = today.getDay(); // returns 3
   // we have to loop in such a way that the first day is obtained by subtracting 3, and end at adding 7 - 3
 
   const formattedDatesThisWeekArray = [];
   for (let i = -1 * todayWeekdayNumber; i < 7 - todayWeekdayNumber; i++) {
-    let dateOnThisDay = new Date();
+    let dateOnThisDay = getDate();
     dateOnThisDay.setDate(today.getDate() + i);
     formattedDatesThisWeekArray.push(getFormattedDate(dateOnThisDay));
   }
@@ -77,13 +78,13 @@ const getFormattedDatesThisWeek = function () {
 };
 
 const getDatesThisWeek = function () {
-  const today = new Date(); // suppose today is wednesday
+  const today = getDate(); // suppose today is wednesday
   const todayWeekdayNumber = today.getDay(); // returns 3
   // we have to loop in such a way that the first day is obtained by subtracting 3, and end at adding 7 - 3
 
   const formattedDatesThisWeekArray = [];
   for (let i = -1 * todayWeekdayNumber; i < 7 - todayWeekdayNumber; i++) {
-    let dateOnThisDay = new Date();
+    let dateOnThisDay = getDate();
     dateOnThisDay.setDate(today.getDate() + i);
     formattedDatesThisWeekArray.push(dateOnThisDay);
   }
@@ -92,7 +93,7 @@ const getDatesThisWeek = function () {
 };
 
 const relationBetweenTodayAndDate = function (date: Date) {
-  const dateToday = new Date();
+  const dateToday = getDate();
 
   // Helper function to calculate the difference in days
   const diffInDays = (date1: Date, date2: Date): number => {

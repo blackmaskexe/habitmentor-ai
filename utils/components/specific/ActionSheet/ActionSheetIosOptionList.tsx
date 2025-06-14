@@ -86,7 +86,7 @@ export default function ActionSheetIosOptionList({
           onChangeDisplayScreen("reminder");
         })}
 
-        {getFormattedDate(habitDate) == getFormattedDate(new Date()) &&
+        {getFormattedDate(habitDate) == getFormattedDate(getDate()) &&
           renderOptionItem(
             "bottom",
             "play-skip-forward-outline",

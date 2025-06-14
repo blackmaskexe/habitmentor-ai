@@ -28,7 +28,7 @@ import {
   getHabitCompletionCollection,
   getImportantMessages,
 } from "@/utils/database/dataCollectionHelper";
-import { getTimeOfDay } from "@/utils/date";
+import { getDate, getTimeOfDay } from "@/utils/date";
 import { getAllHabits } from "@/utils/database/habits";
 import { getAllHabitCompletionRecords } from "@/utils/database/habitHistoryManager";
 
@@ -133,7 +133,7 @@ export default function ChatMessages({
       id: generateMessageId(),
       sender: "user",
       content: messageContent,
-      $createdAt: new Date(),
+      $createdAt: getDate(),
       loading: false,
     };
 
@@ -141,7 +141,7 @@ export default function ChatMessages({
       id: generateMessageId(),
       sender: "ai",
       content: "",
-      $createdAt: new Date(),
+      $createdAt: getDate(),
       loading: true,
     };
 

@@ -1,4 +1,5 @@
 import {
+  getDate,
   getDateFromFormattedDate,
   getFormattedDate,
   getWeekdayNumber,
@@ -80,7 +81,6 @@ export async function getImportantMessages(limit?: number) {
     importantMessagesArray.push(record.importantMessage);
   }
 
-
   return importantMessagesArray;
 }
 
@@ -127,7 +127,7 @@ function daysUserMissedHabitSinceLastCompletion(habitId: string) {
       // we gotta create as many arrays as there are weeks difference
 
       const weeksToCompare =
-        getWeekNumber(new Date()) - getWeekNumber(lastHabitCompletionDate) + 1; // adding one because if both week numbers are same, we still have to compare
+        getWeekNumber(getDate()) - getWeekNumber(lastHabitCompletionDate) + 1; // adding one because if both week numbers are same, we still have to compare
       // THE ABOVE STATEMENT WILL CRASH IF IT IS THE NEW YEAR
 
       const observedFrequency = []; // what the user actually did
@@ -149,8 +149,8 @@ function daysUserMissedHabitSinceLastCompletion(habitId: string) {
         // BUG: DOESN'T DEAL WITH IF THE WEEKS TO COMPARE IS 1 ONLY (need to do both operations below in that case)
         if (weeksToCompare == 1) {
           // if there's only one week to compare, have to cut items from both start and end
-          observedFrequency[i].length = getWeekdayNumber(new Date());
-          experimentalFrequency[i].length = getWeekdayNumber(new Date());
+          observedFrequency[i].length = getWeekdayNumber(getDate());
+          experimentalFrequency[i].length = getWeekdayNumber(getDate());
 
           observedFrequency[i].splice(
             0,
@@ -177,8 +177,8 @@ function daysUserMissedHabitSinceLastCompletion(habitId: string) {
         } else if (i == weeksToCompare - 1) {
           // if weeks to compare > 1, and we're editing the last week
           // chop off future dates from the last
-          observedFrequency[i].length = getWeekdayNumber(new Date());
-          experimentalFrequency[i].length = getWeekdayNumber(new Date());
+          observedFrequency[i].length = getWeekdayNumber(getDate());
+          experimentalFrequency[i].length = getWeekdayNumber(getDate());
           // this makes it so that today is excluded as well
         }
       }

@@ -83,8 +83,8 @@ export default function Settings() {
         )}
         {renderOptionItem(
           "bottom",
-          "airplane",
-          "Erase All Habits",
+          "trash-outline",
+          "Erase All Data",
           async () => {
             Alert.alert(
               `Erase all Habit Data?`,

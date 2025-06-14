@@ -1,6 +1,6 @@
 // this file is based off the activeHabits key found in the mmkvStorage
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { getDateFromFormattedDate, getFormattedDate } from "../date";
+import { getDate, getDateFromFormattedDate, getFormattedDate } from "../date";
 import mmkvStorage from "../mmkvStorage";
 import { HabitObject } from "../types";
 import { onMarkAsComplete } from "./habitHistoryManager";
@@ -106,7 +106,7 @@ export function getTotalHabitNumberOnDay(weekdayNumber: number) {
 }
 
 export function skipHabitToday(habitId: string, date: Date) {
-  if (getFormattedDate(new Date()) != getFormattedDate(date)) return; // cannot skip habits other than for today
+  if (getFormattedDate(getDate()) != getFormattedDate(date)) return; // cannot skip habits other than for today
 
   if (!shouldSkipHabit()) return; // early return if the user cant skip a habit
 
@@ -158,7 +158,9 @@ export async function eraseAllHabitData() {
   // first, loggin the user out of the app (so that mmkv can be safely cleared)
   AsyncStorage.setItem("hasOnboarded", "false");
   // then clearing all the shid in the tigrelini watermelini db:
-  await database.unsafeResetDatabase();
+  await database.write(async () => {
+    await database.unsafeResetDatabase();
+  });
   // then uda-ing mmkv as a whole
   mmkvStorage.clearAll();
 }
