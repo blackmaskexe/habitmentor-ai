@@ -79,7 +79,7 @@ export const darkTheme = {
   colors: {
     // Core colors
     primary: "#FF6347",
-    background: "#1A1A1A",
+    background: "#151515",
     altBackground: "#2A2A2A", // used for background for modal
     surface: "#2C2C2C",
     text: "#F5F5F5",
