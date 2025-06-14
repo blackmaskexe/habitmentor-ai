@@ -17,7 +17,11 @@ import { useFocusEffect } from "expo-router";
 //   onMarkAsComplete,
 //   onMarkAsIncomplete,
 // } from "@/utils/database/habitHistory";
-import { getFormattedDate, getWeekdayNumber } from "@/utils/date";
+import {
+  getDateFromFormattedDate,
+  getFormattedDate,
+  getWeekdayNumber,
+} from "@/utils/date";
 import { HabitObject } from "@/utils/types";
 import { Theme } from "@/utils/theme/themes";
 import * as Haptics from "expo-haptics";
@@ -55,21 +59,24 @@ const DailyHabitsView = ({ date }: { date: Date }) => {
 
   const loadHabits = function () {
     // fetch habits from mmkvStorage
-    let loadedHabits: any[] = [];
+    let loadedHabits: HabitObject[] = [];
     const storedHabitsString = mmkvStorage.getString("activeHabits");
     if (storedHabitsString) {
       loadedHabits = JSON.parse(storedHabitsString);
 
       // gotta run the logic of if the habit is skipped or not here (if the entry for today exists, and there's a skipped in it, then don't return that)
 
-      const unskippedHabits = loadedHabits.filter((habit, index) => {
+      // writing the visible habits (habits that haven't been skipped + habits that have a start date on or before the date of display)
+      const visibleHabits = loadedHabits.filter((habit, index) => {
         if (getFormattedDate(new Date()) != getFormattedDate(date)) {
-          // return the loadedHabits as is if the day isn't today for skipping
-          console.log("in the past i am");
-          return true;
+          // if not viewing today's habits
+          if (new Date() > getDateFromFormattedDate(habit.startDate!)) {
+            return false; // don't show habit if the habit is added after this date
+          } else {
+            return true; // if it is added on or before that date, then show bindaas
+          }
         }
 
-        console.log("bruh am i even getting triggered");
         for (const habitEntry of getAllHabitHistoryToday()) {
           if (habit.id == habitEntry.habitId && habitEntry.skipped) {
             return false; // don't render the item if it is skipped ONLY TODAY
@@ -78,7 +85,7 @@ const DailyHabitsView = ({ date }: { date: Date }) => {
         return true; // return true if the item is not skipped
       });
 
-      setHabitItems(unskippedHabits);
+      setHabitItems(visibleHabits);
     } else {
       throw new Error("Not able to fetch active habits from mmkvStorage");
     }

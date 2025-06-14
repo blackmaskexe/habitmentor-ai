@@ -1,8 +1,10 @@
 // this file is based off the activeHabits key found in the mmkvStorage
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { getDateFromFormattedDate, getFormattedDate } from "../date";
 import mmkvStorage from "../mmkvStorage";
 import { HabitObject } from "../types";
 import { onMarkAsComplete } from "./habitHistoryManager";
+import database from "./watermelon";
 
 export function updateHabitNotificationId(
   habitId: string,
@@ -150,4 +152,13 @@ export function getRemainingSkips() {
   }
 
   return mmkvStorage.getNumber("skipsLeft");
+}
+
+export async function eraseAllHabitData() {
+  // first, loggin the user out of the app (so that mmkv can be safely cleared)
+  AsyncStorage.setItem("hasOnboarded", "false");
+  // then clearing all the shid in the tigrelini watermelini db:
+  await database.unsafeResetDatabase();
+  // then uda-ing mmkv as a whole
+  mmkvStorage.clearAll();
 }

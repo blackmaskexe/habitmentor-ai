@@ -85,10 +85,13 @@ const WeekAtAGlance: React.FC<WeekAtAGlanceProps> = () => {
             }
           }
 
-          const effectiveTotalHabits =
-            getTotalHabitNumberOnDay(weekdayIndex) - futureHabits;
+          const effectiveHabitsCompleted = habitsCompleted + futureHabits;
 
-          return (habitsCompleted / effectiveTotalHabits) * 100;
+          return (
+            (effectiveHabitsCompleted /
+              getTotalHabitNumberOnDay(weekdayIndex)) *
+            100
+          );
         }
       );
 

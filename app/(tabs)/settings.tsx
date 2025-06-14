@@ -4,15 +4,20 @@ import {
   StyleSheet,
   TouchableOpacity,
   ScrollView,
+  Alert,
 } from "react-native";
 import { useTheme } from "@/utils/theme/ThemeContext";
 import { Theme } from "@/utils/theme/themes";
 import { Ionicons } from "@expo/vector-icons";
 import { useNotifications } from "@/utils/useNotifications";
+import { eraseAllHabitData } from "@/utils/database/habits";
+import { useRouter } from "expo-router";
 
 export default function Settings() {
   const theme = useTheme();
   const styles = createStyles(theme);
+
+  const router = useRouter();
 
   const { cancelAllScheduledNotifications } = useNotifications();
 
@@ -58,15 +63,49 @@ export default function Settings() {
           "sparkles-outline",
           "Cancel All Notifications",
           () => {
-            cancelAllScheduledNotifications();
+            Alert.alert(
+              `Cancel all Notification?`,
+              "Are you sure?",
+              [
+                {
+                  text: "Cancel",
+                  onPress: () => console.log("Cancel Pressed"),
+                  style: "cancel",
+                },
+                {
+                  text: "Yes",
+                  onPress: () => cancelAllScheduledNotifications(),
+                },
+              ],
+              { cancelable: false }
+            );
           }
         )}
-
         {renderOptionItem(
           "bottom",
-          "stats-chart-outline",
-          "View Consistency Graph",
-          () => {}
+          "airplane",
+          "Erase All Habits",
+          async () => {
+            Alert.alert(
+              `Erase all Habit Data?`,
+              "Are you sure?",
+              [
+                {
+                  text: "Cancel",
+                  onPress: () => console.log("Cancel Pressed"),
+                  style: "cancel",
+                },
+                {
+                  text: "Yes",
+                  onPress: async () => {
+                    router.replace("/(onboarding)");
+                    await eraseAllHabitData();
+                  },
+                },
+              ],
+              { cancelable: false }
+            );
+          }
         )}
 
         {/* Divider */}

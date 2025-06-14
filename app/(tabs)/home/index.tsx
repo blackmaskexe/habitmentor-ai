@@ -107,7 +107,7 @@ export default function Index() {
     // showProActiveMessage(setProActiveMessage);
 
     async function showProActiveMessage() {
-      if (shouldRequestProActiveMessage()) {
+      if (true || shouldRequestProActiveMessage()) {
         // for testing purpose rn
         // this is the part where I send all of the metadata and related information of user's habits
         // to the fine tuned ai model, and return whatever it gives out

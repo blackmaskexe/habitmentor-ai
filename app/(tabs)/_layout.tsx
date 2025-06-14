@@ -13,9 +13,7 @@ export default function TabLayout() {
   const inOverviewView = currentPath == "/home/overview"; // checks if the current path is the weekly habits or not
 
   const { width } = Dimensions.get("window");
-  console.log("said she wonna fa me later girl i'm into it", width);
 
-  console.log("current path:", currentPath, "but i'm into it");
   // used by the header back arrow
 
   return (

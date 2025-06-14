@@ -40,7 +40,7 @@ const UserSettingsPrompt = () => {
         duration: 800,
         useNativeDriver: true,
       }).start();
-    }, 5000);
+    }, 1000);
 
     return () => clearTimeout(timer);
   }, []);
