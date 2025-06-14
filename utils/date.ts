@@ -7,7 +7,12 @@ import { getISOWeek } from "date-fns";
 
 const getDate = function () {
   // this function is to be able to change date from this central location easily
-  return new Date();
+  // return new Date();
+
+  const today = new Date();
+  const tomorrow = new Date(today);
+  tomorrow.setDate(today.getDate());
+  return tomorrow;
 };
 
 const getWeekdayNumber = function (date?: Date) {

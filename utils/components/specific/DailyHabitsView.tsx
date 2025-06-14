@@ -69,15 +69,17 @@ const DailyHabitsView = ({ date }: { date: Date }) => {
 
       // writing the visible habits (habits that haven't been skipped + habits that have a start date on or before the date of display)
       const visibleHabits = loadedHabits.filter((habit, index) => {
+        // filtering logic for habits added at a future date
         if (getFormattedDate(getDate()) != getFormattedDate(date)) {
           // if not viewing today's habits
-          if (getDate() > getDateFromFormattedDate(habit.startDate!)) {
-            return false; // don't show habit if the habit is added after this date
-          } else {
+          if (date > getDateFromFormattedDate(habit.startDate!)) {
             return true; // if it is added on or before that date, then show bindaas
+          } else {
+            return false; // don't show habit if the habit is added after this date
           }
         }
 
+        // filtering logic for habits that are skipped todday
         for (const habitEntry of getAllHabitHistoryToday()) {
           if (habit.id == habitEntry.habitId && habitEntry.skipped) {
             return false; // don't render the item if it is skipped ONLY TODAY
