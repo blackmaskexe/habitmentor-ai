@@ -70,7 +70,8 @@ export default function Index() {
         return true;
       });
     } else {
-      setShouldUserTour(false);
+      // setShouldUserTour(false);
+      setShouldUserTour(true);
     }
   }, []);
 
@@ -144,6 +145,7 @@ export default function Index() {
         showsVerticalScrollIndicator={false}
       >
         <WeekAtAGlance />
+
         <Animated.View style={[styles.aiSection]}>
           <Text style={styles.aiSectionHeading}>Top AI Suggestion:</Text>
           {proActiveMessage ? (
@@ -180,6 +182,12 @@ export default function Index() {
           ) : (
             <AISuggestionSkeleton />
           )}
+
+          <TourGuideZone
+            zone={1}
+            text={"😤 Let's walk you through the cool features of this app 😤"}
+            borderRadius={8}
+          />
         </Animated.View>
         <View style={styles.habitsSection}>
           <View style={styles.habitSectionHeading}>
@@ -223,22 +231,6 @@ export default function Index() {
           </View>
           <DailyHabitsView date={habitsDate} />
         </View>
-
-        {shouldUserTour ? (
-          <View
-            style={{
-              marginTop: 100,
-            }}
-          >
-            <TourGuideZone
-              zone={1}
-              text={
-                "😤 Let's walk you through the cool features of this app 😤"
-              }
-              borderRadius={8}
-            />
-          </View>
-        ) : null}
 
         {/* <View style={styles.habitsSection}>
           <Text style={styles.habitSectionText}>Upcoming Milestones:</Text>
