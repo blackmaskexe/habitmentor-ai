@@ -29,7 +29,6 @@ export default function HabitItemSheet({
   habitObject: HabitObject;
   habitDate: Date;
 }) {
-  console.log(habitDate, "this is the anstrong the nanstrom");
   const theme = useTheme();
   const styles = createStyles(theme);
 
@@ -42,10 +41,6 @@ export default function HabitItemSheet({
     // run on mount, detect changes to activeHabits (if reminder changed, should populate again)
     const listener = mmkvStorage.addOnValueChangedListener((changedKey) => {
       if (changedKey == "activeHabits") {
-        console.log(
-          "sat down every party, watched you laugh and laugh again............."
-        );
-        console.log("giving all of my love didn't do it for you........");
         setNotificationTime(getHabitNotificationTime(habitObject.id));
       }
     });

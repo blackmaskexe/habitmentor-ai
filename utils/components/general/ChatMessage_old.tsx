@@ -121,8 +121,6 @@ export default function ChatMessages({
       proActive: false,
     });
 
-    console.log("It's not for romance", response);
-
     // populating the newly created message with the actual content:
     setMessages((prevMessages) => {
       const updatedMessages = prevMessages.map((msg) =>

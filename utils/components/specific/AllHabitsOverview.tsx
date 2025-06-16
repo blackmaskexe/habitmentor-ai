@@ -89,7 +89,6 @@ export default function AllHabitsOverview({
           //   <TouchableOpacity
           //     style={styles.habitOptions}
           //     onPress={() => {
-          //       console.log("things i should of said", habitItem);
           //       SheetManager.show("example-sheet", {
           //         payload: {
           //           sheetType: "habitItem",

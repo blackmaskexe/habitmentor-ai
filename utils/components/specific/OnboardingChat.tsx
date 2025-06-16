@@ -51,9 +51,7 @@ export default function OnboardingChatMessages() {
 
   const headerHeight = Platform.OS === "ios" ? useHeaderHeight() : 0;
 
-  const handleSendMessage = function () {
-    console.log("meep");
-  };
+  const handleSendMessage = function () {};
 
   return (
     <>

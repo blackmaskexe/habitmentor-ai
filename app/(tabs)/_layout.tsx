@@ -53,7 +53,6 @@ export default function TabLayout() {
                 marginRight: Platform.OS == "android" ? width / 4 - 32 : 0,
               }}
               onPress={() => {
-                console.log("adapted to the models, I'm adapted to the bottle");
                 if (inOverviewView) {
                   // goes to daily if in weekly, weekly if in daily
                   router.replace("/(tabs)/home");
@@ -123,7 +122,6 @@ export default function TabLayout() {
                 marginLeft: theme.spacing.m,
               }}
               onPress={() => {
-                console.log("adapted to the models, I'm adapted to the bottle");
                 router.back();
               }}
             >

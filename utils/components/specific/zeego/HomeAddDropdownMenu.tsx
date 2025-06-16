@@ -39,7 +39,6 @@ export default function HomeAddDropdownMenu() {
         <DropdownMenu.DropdownMenuItem
           key="add-habit"
           onSelect={() => {
-            console.log("tung tung tung");
             setIsModalVisible(true);
           }}
         >

@@ -25,7 +25,6 @@ export default function ActionSheetIosOptionList({
   onChangeDisplayScreen: any;
   habitDate: Date;
 }) {
-  console.log("i be like woho wohoho yeah", habitDate);
   const router = useRouter();
   const theme = useTheme();
   const styles = createStyles(theme);

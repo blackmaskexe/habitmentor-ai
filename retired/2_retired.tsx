@@ -38,16 +38,6 @@ const AppMissionIntroduction = () => {
 
   const theme = useTheme();
   const styles = createStyles(theme, width);
-  AsyncStorage.getItem("coreHabits")
-    .then((result) => {
-      console.log(
-        result,
-        "ye hai core habits can you believe dat brah jalidi wa se hato"
-      );
-    })
-    .catch((err) => {
-      console.log(err, "JALDI WAHA SE HATOO");
-    });
 
   return (
     <View style={styles.container}>
@@ -97,7 +87,7 @@ const AppMissionIntroduction = () => {
             title="I accept the challenge"
             onPress={() => {
               console.log("pressed");
-              router.push("/(onboarding)/3");
+              router.push("/(onboarding)/2");
             }}
             disabled={disabled}
           />

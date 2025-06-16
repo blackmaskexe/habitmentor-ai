@@ -20,10 +20,6 @@ function ExampleSheet(props: SheetProps<"example-sheet">) {
     default: null,
   };
 
-  console.log("thugga padega tereko typeshi", payloadData);
-  console.log(payloadData.habitDate, "ra ra rahahha ramma ramma aa a ullala ");
-  console.log(payloadData.habitDate.getDate(), "ene lasforla");
-
   const SheetContentComponent = componentOptions[sheetContentType];
 
   return (

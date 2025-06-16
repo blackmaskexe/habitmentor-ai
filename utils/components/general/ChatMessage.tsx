@@ -171,8 +171,6 @@ export default function ChatMessages({
       },
     } as UserPromptType);
 
-    console.log("DONT CRY DONT CRY DONT CRY");
-
     // populating the ai message skeleton with response data:
     setMessages((prevMessages) => {
       const updatedMessages = prevMessages.map((msg) => {
@@ -197,10 +195,8 @@ export default function ChatMessages({
     });
 
     // store message if it was deemed important by the AI
-    // console.log("A PROFESSIONAL", response);
 
     if (response.data.importantMessage) {
-      console.log("It's everything you know...");
       await addImportantMessage(userMessage.content);
     }
 

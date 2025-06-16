@@ -24,7 +24,6 @@ import { Theme } from "@/utils/theme/themes";
  *
  * <GenericForm
  *   fields={fields}
- *   onValueChange={(key, value) => console.log(key, value)}
  *   values={formValues}     // Optional: controlled form values
  *   errors={formErrors}     // Optional: error messages for fields
  * />

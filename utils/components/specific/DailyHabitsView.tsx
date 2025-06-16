@@ -46,10 +46,8 @@ const DailyHabitsView = ({ date }: { date: Date }) => {
   //   // fetch habits from mmkvStorage
   //   let loadedHabits: any[] = [];
   //   const storedHabitsString = mmkvStorage.getString("activeHabits");
-  //   console.log("This da storedHabitsString type shi", storedHabitsString);
   //   if (storedHabitsString) {
   //     loadedHabits = JSON.parse(storedHabitsString);
-  //     console.log("mera katta bhi loaded hai bro", loadedHabits);
   //     return loadedHabits;
   //   } else {
   //     console.log("Unable to load the habits from mmkv");
@@ -219,7 +217,6 @@ const DailyHabitsView = ({ date }: { date: Date }) => {
               style={styles.habitOptions}
               onPress={() => {
                 Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-                console.log("sahuriya hai tu be", date);
                 SheetManager.show("example-sheet", {
                   payload: {
                     sheetType: "habitItem",

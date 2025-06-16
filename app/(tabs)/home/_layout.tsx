@@ -8,7 +8,6 @@ export default function RootLayout() {
   useEffect(() => {
     async function backgroundTasks() {
       await runHabitDataCollection();
-      console.log("check money benny-ing");
     }
     backgroundTasks();
   }, []);

@@ -29,7 +29,6 @@ export async function runHabitDataCollection() {
       const daysMissedSinceLast = daysUserMissedHabitSinceLastCompletion(
         habit.id
       );
-      console.log("this da days missed since last:", daysMissedSinceLast);
       if (daysMissedSinceLast > 0) {
         const prevDaysMissedSinceLast = await habitCompletion.prevDaysSinceLast;
 
@@ -231,7 +230,6 @@ function shouldCollectData() {
     ) {
       return true;
     }
-    console.log("abbey kar chuka hu mai data collection chal nikal yaha se ab");
 
     return false;
   } else {
