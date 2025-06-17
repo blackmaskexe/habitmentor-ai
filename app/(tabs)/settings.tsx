@@ -12,6 +12,8 @@ import { Ionicons } from "@expo/vector-icons";
 import { useNotifications } from "@/utils/useNotifications";
 import { eraseAllHabitData } from "@/utils/database/habits";
 import { useRouter } from "expo-router";
+import ToggleSwitch from "@/utils/components/general/ToggleSwitch";
+import mmkvStorage from "@/utils/mmkvStorage";
 
 export default function Settings() {
   const theme = useTheme();
@@ -22,7 +24,7 @@ export default function Settings() {
   const { cancelAllScheduledNotifications } = useNotifications();
 
   const renderOptionItem = function (
-    position: "top" | "between" | "bottom",
+    position: "top" | "between" | "bottom" | "single",
     iconName: any,
     optionName: string,
     onPress: () => void
@@ -50,17 +52,59 @@ export default function Settings() {
     );
   };
 
+  const renderOptionToggleItem = function (
+    position: "top" | "between" | "bottom",
+    iconName: any,
+    optionName: string,
+    onToggle: (isSwitchedOn: boolean) => void,
+    initialState: boolean
+  ) {
+    return (
+      <View
+        style={[
+          styles.settingItem,
+          position == "top" && styles.topSettingItem,
+          position == "bottom" && styles.bottomSettingItem,
+        ]}
+      >
+        <View style={styles.settingItemContent}>
+          <View style={styles.iconContainer}>
+            <Ionicons name={iconName} size={26} color={theme.colors.primary} />
+          </View>
+          <Text style={styles.settingItemText}>{optionName}</Text>
+        </View>
+        <ToggleSwitch initialState={initialState} onToggle={onToggle} />
+      </View>
+    );
+  };
+
   return (
     <ScrollView style={styles.container}>
       <View style={styles.sectionHeader}>
-        <Text style={styles.sectionHeaderText}>OPTIONS</Text>
+        <Text style={styles.sectionHeaderText}>Habit Notifications</Text>
       </View>
 
       {/* Settings Group */}
       <View style={styles.settingsGroup}>
+        {renderOptionToggleItem(
+          "top",
+          "alarm-outline",
+          "Enable Reminder Notifications",
+          (isEnabled) => {
+            console.log(isEnabled);
+            if (isEnabled) {
+              // logic to turn on
+            } else {
+              // logic to turn off
+            }
+          },
+          mmkvStorage.getBoolean("isNotificationOn") != undefined
+            ? mmkvStorage.getBoolean("isNotificationOn")!
+            : false
+        )}
         {renderOptionItem(
           "top",
-          "sparkles-outline",
+          "close-outline",
           "Cancel All Notifications",
           () => {
             Alert.alert(
@@ -81,8 +125,72 @@ export default function Settings() {
             );
           }
         )}
+
+        {/* Divider */}
+        <View style={styles.divider} />
+      </View>
+      <View style={styles.sectionHeader}>
+        <Text style={styles.sectionHeaderText}>AI Preferences</Text>
+      </View>
+
+      {/* Settings Group */}
+      <View style={styles.settingsGroup}>
+        {renderOptionItem("top", "mic-outline", "AI Tone", () => {
+          Alert.alert(
+            `Cancel all Notification?`,
+            "Are you sure?",
+            [
+              {
+                text: "Cancel",
+                onPress: () => console.log("Cancel Pressed"),
+                style: "cancel",
+              },
+              {
+                text: "Yes",
+                onPress: () => cancelAllScheduledNotifications(),
+              },
+            ],
+            { cancelable: false }
+          );
+        })}
         {renderOptionItem(
           "bottom",
+          "trash-outline",
+          "Erase All Data",
+          async () => {
+            Alert.alert(
+              `Erase all Habit Data?`,
+              "Are you sure?",
+              [
+                {
+                  text: "Cancel",
+                  onPress: () => console.log("Cancel Pressed"),
+                  style: "cancel",
+                },
+                {
+                  text: "Yes",
+                  onPress: async () => {
+                    router.replace("/(onboarding)");
+                    await eraseAllHabitData();
+                  },
+                },
+              ],
+              { cancelable: false }
+            );
+          }
+        )}
+
+        {/* Divider */}
+        <View style={styles.divider} />
+      </View>
+      <View style={styles.sectionHeader}>
+        <Text style={styles.sectionHeaderText}>Danger Zone</Text>
+      </View>
+
+      {/* Settings Group */}
+      <View style={styles.settingsGroup}>
+        {renderOptionItem(
+          "top",
           "trash-outline",
           "Erase All Data",
           async () => {

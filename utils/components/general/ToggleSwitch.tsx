@@ -1,21 +1,23 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { View, Animated, Pressable, StyleSheet } from "react-native";
 import { useTheme } from "@/utils/theme/ThemeContext";
 import * as Haptics from "expo-haptics";
 
 interface ToggleSwitchProps {
-  isEnabled: boolean;
-  onToggle: (value: boolean) => void;
+  initialState: boolean; // this enabled means the state of the toggle (off or on)
+  onToggle: (value: boolean) => void; // callback function passed that receives the state of the switch, and do actions based on that
+  // feeds the to-be state of the switch after the user clicks on the switch
   disabled?: boolean;
   size?: "small" | "medium" | "large";
 }
 
 const ToggleSwitch: React.FC<ToggleSwitchProps> = ({
-  isEnabled, // this enabled means the state of the toggle (off or on)
+  initialState,
   onToggle,
   disabled = false,
   size = "medium",
 }) => {
+  const [isEnabled, setIsEnabled] = useState(initialState);
   const theme = useTheme();
   const slideAnimation = useRef(new Animated.Value(0)).current;
 
@@ -42,7 +44,11 @@ const ToggleSwitch: React.FC<ToggleSwitchProps> = ({
 
   const handlePress = () => {
     if (!disabled) {
-      onToggle(!isEnabled);
+      setIsEnabled((oldIsEnabled) => {
+        onToggle(!oldIsEnabled);
+        return !oldIsEnabled;
+      });
+
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     }
   };
