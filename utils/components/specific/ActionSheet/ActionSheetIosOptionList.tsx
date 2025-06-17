@@ -1,4 +1,8 @@
-import { getRemainingSkips, skipHabitToday } from "@/utils/database/habits";
+import {
+  deleteHabit,
+  getRemainingSkips,
+  skipHabitToday,
+} from "@/utils/database/habits";
 import { getDate, getFormattedDate } from "@/utils/date";
 import { useTheme } from "@/utils/theme/ThemeContext";
 import { Theme } from "@/utils/theme/themes";
@@ -114,6 +118,27 @@ export default function ActionSheetIosOptionList({
             }
           )}
 
+        {renderOptionItem("bottom", "trash-outline", "Delete Habit", () => {
+          Alert.alert(
+            `Delete Habit?`,
+            `Are you sure you want to delete ${habitItem.habitName}?`,
+            [
+              {
+                text: "Cancel",
+                onPress: () => console.log("Cancel Pressed"),
+                style: "cancel",
+              },
+              {
+                text: "Yes",
+                onPress: () => {
+                  // habit deltion logic here
+                  deleteHabit(habitItem.id);
+                },
+              },
+            ],
+            { cancelable: false }
+          );
+        })}
         {/* {renderOptionItem(
           "bottom",
           "stats-chart-outline",

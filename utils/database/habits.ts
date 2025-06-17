@@ -94,15 +94,19 @@ export function getAllHabitsOnWeekday(weekdayNumber: number) {
 }
 
 export function getTotalHabitNumberOnDay(weekdayNumber: number) {
-  const allHabits = getAllHabits();
-  let totalNum = 0;
-  for (const habit of allHabits) {
-    if (habit.frequency[weekdayNumber]) {
-      totalNum++;
+  try {
+    const allHabits = getAllHabits();
+    let totalNum = 0;
+    for (const habit of allHabits) {
+      if (habit.frequency[weekdayNumber]) {
+        totalNum++;
+      }
     }
-  }
 
-  return totalNum;
+    return totalNum;
+  } catch (err) {
+    return 0; // this case would not hit, but doing because the old version didn't have this logic and people's app is crashing because of it.
+  }
 }
 
 export function skipHabitToday(habitId: string, date: Date) {
@@ -163,4 +167,20 @@ export async function eraseAllHabitData() {
   });
   // then uda-ing mmkv as a whole
   mmkvStorage.clearAll();
+}
+
+export function deleteHabit(habitId: string, keepData?: boolean) {
+  // TODO: implement the logic of keepData (the user is prompted to keep data orn ot, if not kept then delete the entries from the databases as wella)
+
+  // getting all habits from mmkv
+  const allHabits = getAllHabits();
+
+  const updatedHabits = allHabits.filter((habit, index) => {
+    return habit.id != habitId;
+  });
+
+  // place the habits in the deleted habits mmkv array (for rememberance purposes? idk)
+
+  // finally set the value of the updated habits
+  mmkvStorage.set("activeHabits", JSON.stringify(updatedHabits));
 }

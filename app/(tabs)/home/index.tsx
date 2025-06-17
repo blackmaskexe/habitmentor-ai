@@ -70,8 +70,7 @@ export default function Index() {
         return true;
       });
     } else {
-      // setShouldUserTour(false);
-      setShouldUserTour(true);
+      setShouldUserTour(false);
     }
   }, []);
 
