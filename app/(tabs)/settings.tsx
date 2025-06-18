@@ -14,6 +14,7 @@ import { eraseAllHabitData } from "@/utils/database/habits";
 import { useRouter } from "expo-router";
 import ToggleSwitch from "@/utils/components/general/ToggleSwitch";
 import mmkvStorage from "@/utils/mmkvStorage";
+import AIToneSelectionDropdownMenu from "@/utils/components/specific/zeego/AIToneSelectionDropdownMenu";
 
 export default function Settings() {
   const theme = useTheme();
@@ -78,6 +79,12 @@ export default function Settings() {
     );
   };
 
+  const AIToneOptionItem = renderOptionItem(
+    "top",
+    "mic-outline",
+    "AI Tone",
+    () => {}
+  );
   return (
     <ScrollView style={styles.container}>
       <View style={styles.sectionHeader}>
@@ -135,24 +142,8 @@ export default function Settings() {
 
       {/* Settings Group */}
       <View style={styles.settingsGroup}>
-        {renderOptionItem("top", "mic-outline", "AI Tone", () => {
-          Alert.alert(
-            `Cancel all Notification?`,
-            "Are you sure?",
-            [
-              {
-                text: "Cancel",
-                onPress: () => console.log("Cancel Pressed"),
-                style: "cancel",
-              },
-              {
-                text: "Yes",
-                onPress: () => cancelAllScheduledNotifications(),
-              },
-            ],
-            { cancelable: false }
-          );
-        })}
+        <AIToneSelectionDropdownMenu />
+
         {renderOptionItem(
           "bottom",
           "trash-outline",
