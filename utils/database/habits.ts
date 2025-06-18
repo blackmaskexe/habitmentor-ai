@@ -184,3 +184,29 @@ export function deleteHabit(habitId: string, keepData?: boolean) {
   // finally set the value of the updated habits
   mmkvStorage.set("activeHabits", JSON.stringify(updatedHabits));
 }
+
+export function resetHabitNotification(habitId: string) {
+  const allHabits = getAllHabits();
+
+  const updatedAllHabits = allHabits.map((habit, index) => {
+    if (habit.id == habitId) {
+      const { notificationIds, notificationTime, ...restOfHabit } = habit;
+      return restOfHabit;
+    } else {
+      return habit;
+    }
+  });
+
+  mmkvStorage.set("activeHabits", JSON.stringify(updatedAllHabits));
+}
+
+export function resetAllHabitNotifications() {
+  const allHabits = getAllHabits();
+
+  const updatedAllHabits = allHabits.map((habit, index) => {
+    const { notificationIds, notificationTime, ...restOfHabit } = habit;
+    return restOfHabit;
+  });
+
+  mmkvStorage.set("activeHabits", JSON.stringify(updatedAllHabits));
+}

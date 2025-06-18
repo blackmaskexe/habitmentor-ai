@@ -21,6 +21,7 @@ import {
   updateHabitNotificationTime,
 } from "@/utils/database/habits";
 import { getDate, getFormattedTime } from "@/utils/date";
+import mmkvStorage from "@/utils/mmkvStorage";
 
 // update state variable that holds habit when habit changes in the mmkvStorage
 // now the todo right now is what is the root component that houses the habit item so that
@@ -71,6 +72,9 @@ export default function ReminderView({
   }, [initialTime]);
 
   const handleSetReminder = async () => {
+    // first of all, set the mmkv to isNotificationEnabled to true:
+    mmkvStorage.set("isNotificationOn", true);
+    // then start the process of scheduling a notification thru expo notifications
     console.log(
       "Set Reminder CTA pressed for time:",
       time.toLocaleTimeString()

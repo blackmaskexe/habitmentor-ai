@@ -24,8 +24,8 @@ export default function AIToneSelectionDropdownMenu() {
         <TouchableOpacity
           style={[
             styles.settingItem,
-            position == "top" && styles.topSettingItem,
-            position == "bottom" && styles.bottomSettingItem,
+            styles.topSettingItem,
+            styles.bottomSettingItem,
           ]}
           onPress={() => {}}
           activeOpacity={0.7}
@@ -54,36 +54,63 @@ export default function AIToneSelectionDropdownMenu() {
           AI Tone Options
         </DropdownMenu.DropdownMenuLabel>
         <DropdownMenu.DropdownMenuLabel />
-        <DropdownMenu.DropdownMenuItem key="normal" onSelect={() => {}}>
+        <DropdownMenu.DropdownMenuCheckboxItem
+          key="normal"
+          value={true}
+          onValueChange={(next, prev) => {
+            console.log("Changed from", prev, "to", next);
+          }}
+        >
           <DropdownMenu.DropdownMenuItemTitle>
             Normal
           </DropdownMenu.DropdownMenuItemTitle>
-        </DropdownMenu.DropdownMenuItem>
-        <DropdownMenu.DropdownMenuItem key="gen-z" onSelect={() => {}}>
+          <DropdownMenu.DropdownMenuItemIndicator />
+        </DropdownMenu.DropdownMenuCheckboxItem>
+
+        <DropdownMenu.DropdownMenuCheckboxItem
+          key="gen-z"
+          value={false}
+          onValueChange={(next, prev) => {
+            console.log("Changed from", prev, "to", next);
+          }}
+        >
           <DropdownMenu.DropdownMenuItemTitle>
             Gen Z
           </DropdownMenu.DropdownMenuItemTitle>
-        </DropdownMenu.DropdownMenuItem>
-        <DropdownMenu.DropdownMenuItem key="motivational" onSelect={() => {}}>
+          <DropdownMenu.DropdownMenuItemIndicator />
+        </DropdownMenu.DropdownMenuCheckboxItem>
+
+        <DropdownMenu.DropdownMenuCheckboxItem
+          key="motivational"
+          value={false}
+          onValueChange={(next, prev) => {
+            console.log("Changed from", prev, "to", next);
+          }}
+        >
           <DropdownMenu.DropdownMenuItemTitle>
             Motivational
           </DropdownMenu.DropdownMenuItemTitle>
-        </DropdownMenu.DropdownMenuItem>
-        <DropdownMenu.DropdownMenuItem
+          <DropdownMenu.DropdownMenuItemIndicator />
+        </DropdownMenu.DropdownMenuCheckboxItem>
+
+        <DropdownMenu.DropdownMenuCheckboxItem
           key="ultra-motivational"
-          onSelect={() => {}}
+          value={false}
+          onValueChange={(next, prev) => {
+            console.log("Changed from", prev, "to", next);
+          }}
         >
           <DropdownMenu.DropdownMenuItemTitle>
             Ultra Motivational
           </DropdownMenu.DropdownMenuItemTitle>
-        </DropdownMenu.DropdownMenuItem>
+          <DropdownMenu.DropdownMenuItemIndicator />
+        </DropdownMenu.DropdownMenuCheckboxItem>
+
         {/* <DropdownMenu.Group>
           <DropdownMenu.DropdownMenuItem />
-        </DropdownMenu.Group>
-        <DropdownMenu.CheckboxItem>
-          <DropdownMenu.ItemIndicator />
-        </DropdownMenu.CheckboxItem>
-        <DropdownMenu.Sub>
+        </DropdownMenu.Group> */}
+
+        {/* <DropdownMenu.Sub>
           <DropdownMenu.SubTrigger />
           <DropdownMenu.SubContent />
         </DropdownMenu.Sub>

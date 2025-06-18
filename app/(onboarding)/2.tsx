@@ -20,6 +20,7 @@ import ToggleSwitch from "@/utils/components/general/ToggleSwitch";
 import CTAButton from "@/utils/components/general/CTAButton";
 import GenericList from "@/utils/components/general/GenericList";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import mmkvStorage from "@/utils/mmkvStorage";
 
 const UserSettingsPrompt = () => {
   const router = useRouter();
@@ -72,8 +73,13 @@ const UserSettingsPrompt = () => {
                 </Text>
               </View>
               <ToggleSwitch
-                isEnabled={notificationsEnabled}
-                onToggle={setNotificationsEnabled}
+                initialState={notificationsEnabled}
+                onToggle={(isNotificationOn) => {
+                  if (isNotificationOn) {
+                    mmkvStorage.set("isNotificationOn", true);
+                  }
+                  // don't do an else, we wont make the notification not turned on in the start
+                }}
                 size="medium"
               />
             </Pressable>
@@ -95,7 +101,7 @@ const UserSettingsPrompt = () => {
                 <Text style={styles.settingItemText}>Sync to Cloud</Text>
               </View>
               <ToggleSwitch
-                isEnabled={cloudSaveEnabled}
+                initialState={cloudSaveEnabled}
                 onToggle={(enabled) => {
                   setCloudSaveEnabled(enabled);
                   Alert.alert("Feature coming soon");

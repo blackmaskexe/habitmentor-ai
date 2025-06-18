@@ -10,17 +10,42 @@ import { useTheme } from "@/utils/theme/ThemeContext";
 import { Theme } from "@/utils/theme/themes";
 import { Ionicons } from "@expo/vector-icons";
 import { useNotifications } from "@/utils/useNotifications";
-import { eraseAllHabitData } from "@/utils/database/habits";
+import {
+  eraseAllHabitData,
+  resetAllHabitNotifications,
+} from "@/utils/database/habits";
 import { useRouter } from "expo-router";
 import ToggleSwitch from "@/utils/components/general/ToggleSwitch";
 import mmkvStorage from "@/utils/mmkvStorage";
 import AIToneSelectionDropdownMenu from "@/utils/components/specific/zeego/AIToneSelectionDropdownMenu";
+import { useEffect, useState } from "react";
 
 export default function Settings() {
   const theme = useTheme();
   const styles = createStyles(theme);
 
   const router = useRouter();
+  const [notificationsEnabled, setNotificationsEnabled] = useState(
+    mmkvStorage.getBoolean("isNotificationOn") == undefined
+      ? true
+      : mmkvStorage.getBoolean("isNotificationOn")!
+  );
+
+  useEffect(() => {
+    // add listener to look for changes to notification enabling from mmkv
+    const listener = mmkvStorage.addOnValueChangedListener((changedKey) => {
+      console.log("lammi lammi lammi hada hada", changedKey);
+      if (changedKey == "isNotificationOn") {
+        mmkvStorage.getBoolean("isNotificationOn") == undefined
+          ? true
+          : mmkvStorage.getBoolean("isNotificationOn")!;
+      }
+    });
+
+    return () => {
+      listener.remove();
+    };
+  }, []);
 
   const { cancelAllScheduledNotifications } = useNotifications();
 
@@ -34,8 +59,9 @@ export default function Settings() {
       <TouchableOpacity
         style={[
           styles.settingItem,
-          position == "top" && styles.topSettingItem,
-          position == "bottom" && styles.bottomSettingItem,
+          (position == "top" || position == "single") && styles.topSettingItem,
+          (position == "bottom" || position == "single") &&
+            styles.bottomSettingItem,
         ]}
         onPress={() => {
           onPress();
@@ -79,12 +105,6 @@ export default function Settings() {
     );
   };
 
-  const AIToneOptionItem = renderOptionItem(
-    "top",
-    "mic-outline",
-    "AI Tone",
-    () => {}
-  );
   return (
     <ScrollView style={styles.container}>
       <View style={styles.sectionHeader}>
@@ -98,19 +118,22 @@ export default function Settings() {
           "alarm-outline",
           "Enable Reminder Notifications",
           (isEnabled) => {
-            console.log(isEnabled);
             if (isEnabled) {
-              // logic to turn on
+              mmkvStorage.set("isNotificationOn", true);
+              setNotificationsEnabled(true);
             } else {
-              // logic to turn off
+              mmkvStorage.set("isNotificationOn", false);
+              setNotificationsEnabled(false);
+              // clearing out the notificationTime and notificationIds from mmkv of the habit:
+              resetAllHabitNotifications();
+              // clear all notifications (that's all it does, to renable the user will have to set the things manually)
+              cancelAllScheduledNotifications();
             }
           },
-          mmkvStorage.getBoolean("isNotificationOn") != undefined
-            ? mmkvStorage.getBoolean("isNotificationOn")!
-            : false
+          notificationsEnabled
         )}
         {renderOptionItem(
-          "top",
+          "bottom",
           "close-outline",
           "Cancel All Notifications",
           () => {
@@ -144,33 +167,6 @@ export default function Settings() {
       <View style={styles.settingsGroup}>
         <AIToneSelectionDropdownMenu />
 
-        {renderOptionItem(
-          "bottom",
-          "trash-outline",
-          "Erase All Data",
-          async () => {
-            Alert.alert(
-              `Erase all Habit Data?`,
-              "Are you sure?",
-              [
-                {
-                  text: "Cancel",
-                  onPress: () => console.log("Cancel Pressed"),
-                  style: "cancel",
-                },
-                {
-                  text: "Yes",
-                  onPress: async () => {
-                    router.replace("/(onboarding)");
-                    await eraseAllHabitData();
-                  },
-                },
-              ],
-              { cancelable: false }
-            );
-          }
-        )}
-
         {/* Divider */}
         <View style={styles.divider} />
       </View>
@@ -181,7 +177,7 @@ export default function Settings() {
       {/* Settings Group */}
       <View style={styles.settingsGroup}>
         {renderOptionItem(
-          "top",
+          "single",
           "trash-outline",
           "Erase All Data",
           async () => {
