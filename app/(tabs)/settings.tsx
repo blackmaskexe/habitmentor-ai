@@ -14,38 +14,41 @@ import {
   eraseAllHabitData,
   resetAllHabitNotifications,
 } from "@/utils/database/habits";
-import { useRouter } from "expo-router";
+import { useFocusEffect, useRouter } from "expo-router";
 import ToggleSwitch from "@/utils/components/general/ToggleSwitch";
 import mmkvStorage from "@/utils/mmkvStorage";
 import AIToneSelectionDropdownMenu from "@/utils/components/specific/zeego/AIToneSelectionDropdownMenu";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 export default function Settings() {
   const theme = useTheme();
   const styles = createStyles(theme);
 
   const router = useRouter();
-  const [notificationsEnabled, setNotificationsEnabled] = useState(
-    mmkvStorage.getBoolean("isNotificationOn") == undefined
-      ? true
-      : mmkvStorage.getBoolean("isNotificationOn")!
+  const [notificationsEnabled, setNotificationsEnabled] =
+    useState<boolean>(false);
+
+  useFocusEffect(
+    useCallback(() => {
+      // calculate the status of notification on each open of the settings tab
+      setNotificationsEnabled(() => {
+        console.log("I know that you like man go");
+        const isNotificationOn = mmkvStorage.getBoolean("isNotificationOn");
+        console.log("a pretty as you like mango", isNotificationOn);
+        // handling case when mmkv is undefined (unliekly, set to true during onboarding)
+        if (isNotificationOn == undefined) {
+          mmkvStorage.set("isNotificationOn", true);
+          return true;
+        }
+        // set the state mimicking mmkvstorage
+        if (isNotificationOn) {
+          return true;
+        } else {
+          return false;
+        }
+      });
+    }, [])
   );
-
-  useEffect(() => {
-    // add listener to look for changes to notification enabling from mmkv
-    const listener = mmkvStorage.addOnValueChangedListener((changedKey) => {
-      console.log("lammi lammi lammi hada hada", changedKey);
-      if (changedKey == "isNotificationOn") {
-        mmkvStorage.getBoolean("isNotificationOn") == undefined
-          ? true
-          : mmkvStorage.getBoolean("isNotificationOn")!;
-      }
-    });
-
-    return () => {
-      listener.remove();
-    };
-  }, []);
 
   const { cancelAllScheduledNotifications } = useNotifications();
 
@@ -84,7 +87,8 @@ export default function Settings() {
     iconName: any,
     optionName: string,
     onToggle: (isSwitchedOn: boolean) => void,
-    initialState: boolean
+    initialState: boolean,
+    currentState?: boolean
   ) {
     return (
       <View
@@ -100,7 +104,11 @@ export default function Settings() {
           </View>
           <Text style={styles.settingItemText}>{optionName}</Text>
         </View>
-        <ToggleSwitch initialState={initialState} onToggle={onToggle} />
+        <ToggleSwitch
+          initialState={initialState}
+          onToggle={onToggle}
+          currentState={currentState != undefined ? currentState : undefined}
+        />
       </View>
     );
   };
@@ -130,6 +138,7 @@ export default function Settings() {
               cancelAllScheduledNotifications();
             }
           },
+          notificationsEnabled,
           notificationsEnabled
         )}
         {renderOptionItem(

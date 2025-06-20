@@ -9,10 +9,12 @@ interface ToggleSwitchProps {
   // feeds the to-be state of the switch after the user clicks on the switch
   disabled?: boolean;
   size?: "small" | "medium" | "large";
+  currentState?: boolean;
 }
 
 const ToggleSwitch: React.FC<ToggleSwitchProps> = ({
   initialState,
+  currentState,
   onToggle,
   disabled = false,
   size = "medium",
@@ -20,6 +22,12 @@ const ToggleSwitch: React.FC<ToggleSwitchProps> = ({
   const [isEnabled, setIsEnabled] = useState(initialState);
   const theme = useTheme();
   const slideAnimation = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    if (currentState != undefined) {
+      setIsEnabled(currentState);
+    }
+  }, [currentState]);
 
   // Size configurations
   const sizes = {
