@@ -18,6 +18,7 @@ export function updateHabitNotificationId(
   for (const habit of activeHabits) {
     if (habit.id == habitId) {
       habit.notificationIds = notificationIdArray;
+      habit.isNotificationOn = true;
     }
   }
 
@@ -32,6 +33,7 @@ export function updateHabitNotificationTime(habitId: string, time: string) {
   for (const habit of activeHabits) {
     if (habit.id == habitId) {
       habit.notificationTime = time;
+      habit.isNotificationOn = true;
     }
   }
 
@@ -204,8 +206,10 @@ export function resetAllHabitNotifications() {
   const allHabits = getAllHabits();
 
   const updatedAllHabits = allHabits.map((habit, index) => {
-    const { notificationIds, notificationTime, ...restOfHabit } = habit;
-    return restOfHabit;
+    return {
+      ...habit,
+      isNotificationOn: false,
+    };
   });
 
   mmkvStorage.set("activeHabits", JSON.stringify(updatedAllHabits));

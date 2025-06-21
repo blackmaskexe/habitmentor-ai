@@ -15,4 +15,4 @@ export default mmkvStorage;
 // recentProActiveMessage: gives the last fetched pro active message from the server
 // didTourApp: true or false based on whether the rn-tourguide triggered for the user, as only want it to happen once
 // skipsLeft: stores how many skips does the user have remaining for the week, and is recalculated each week on sunday
-// isNotificationOn: stores if the user wants to have their notifications on or off
+// isNotificationOn: stores if the user wants to have their notifications on or off -> this is for the entire app; each habitObject has it's own isNotificationOn property too

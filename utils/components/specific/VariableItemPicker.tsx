@@ -33,8 +33,6 @@ type ItemPickerProps = {
   }>;
 };
 
-type FormValues = {};
-
 const fields = [
   {
     key: "habitName",
@@ -70,6 +68,8 @@ export default function VariableItemPicker({
 
   const [modalVisible, setModalVisible] = useState(false);
   const [moreHabitsArray, setMoreHabitsArray] = useState(Array(1).fill(null));
+
+  // not enforcing typing here. It's a complex functionality, and if it ain't broke don't fix it typeshi
 
   const handleNewHabitSubmission = function () {
     setModalVisible(false);
@@ -126,6 +126,9 @@ export default function VariableItemPicker({
         item.points = habitPoints[daysHabitIsActive];
         item.id = generateHabitId();
         item.startDate = getFormattedDate();
+
+        // setting the isNotificationOn for the habit to false by default:
+        item.isNotificationOn = false;
       }
     });
 

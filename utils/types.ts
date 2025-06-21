@@ -19,8 +19,9 @@ interface HabitObject {
   id: string;
   points: number;
   notificationIds?: string[];
-  notificationTime?: string;
-  startDate?: string; // formattedDate
+  notificationTime?: string; // formattedTime (see date.ts)
+  isNotificationOn: boolean;
+  startDate?: string; // formattedDate (see date.ts)
 }
 
 interface FormValuesType {

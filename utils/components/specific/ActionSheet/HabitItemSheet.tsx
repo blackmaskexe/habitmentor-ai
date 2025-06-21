@@ -5,12 +5,13 @@ import { useTheme } from "@/utils/theme/ThemeContext";
 import { StyleSheet, View, Text } from "react-native";
 import CardWithoutImage from "../../general/CardWithoutImage";
 import ReminderView from "../ReminderView";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Theme } from "@/utils/theme/themes";
 import { HabitObject } from "@/utils/types";
 import ActionSheetIosOptionList from "./ActionSheetIosOptionList";
 import mmkvStorage from "@/utils/mmkvStorage";
 import { getHabitNotificationTime } from "@/utils/database/habits";
+import { useFocusEffect } from "expo-router";
 
 // SheetManager.show("example-sheet", {
 //   payload: {
@@ -57,7 +58,7 @@ export default function HabitItemSheet({
           title={habitObject.habitName}
           description={habitObject.habitDescription || ""}
           metadata={
-            notificationTime
+            habitObject.isNotificationOn
               ? "Reminder for: " + notificationTime
               : "No Reminders Set"
           }

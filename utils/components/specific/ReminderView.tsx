@@ -128,7 +128,7 @@ export default function ReminderView({
       <View style={styles.buttonContainer}>
         <CTAButton
           title={`${
-            getHabitObjectFromId(habitId)?.notificationIds ? "Reset" : "Set"
+            getHabitObjectFromId(habitId)?.isNotificationOn ? "Reset" : "Set"
           } Reminder to ${time.toLocaleTimeString([], {
             hour: "2-digit",
             minute: "2-digit",

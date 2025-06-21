@@ -5,7 +5,7 @@
 
 import { getISOWeek } from "date-fns";
 
-const getDate = function () {
+export const getDate = function () {
   // this function is to be able to change date from this central location easily
   return new Date();
 
@@ -15,18 +15,18 @@ const getDate = function () {
   // return tomorrow;
 };
 
-const getWeekdayNumber = function (date?: Date) {
+export const getWeekdayNumber = function (date?: Date) {
   if (date) {
     return date.getDay();
   }
   return getDate().getDay(); // 0 is sunday, 1 is monday, so on
 };
 
-const getWeekNumber = function (date: Date) {
+export const getWeekNumber = function (date: Date) {
   return getISOWeek(date);
 };
 
-const getFormattedDate = function (customDate?: Date) {
+export const getFormattedDate = function (customDate?: Date) {
   let date = null;
   if (customDate) {
     date = customDate;
@@ -36,11 +36,11 @@ const getFormattedDate = function (customDate?: Date) {
   return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
 };
 
-const getPrettyDate = function (date: Date) {
+export const getPrettyDate = function (date: Date) {
   return `${date.getMonth() + 1}/${date.getDate()}`;
 };
 
-const getFormattedTime = function (date: Date) {
+export const getFormattedTime = function (date: Date) {
   let hours = date.getHours();
   let minutes: string | number = date.getMinutes();
   const ampm = hours >= 12 ? "PM" : "AM";
@@ -50,7 +50,29 @@ const getFormattedTime = function (date: Date) {
   const strTime = hours + ":" + minutes + " " + ampm;
   return strTime;
 };
-const getDateFromFormattedDate = function (formattedDate: string) {
+
+export const getDateFromFormattedTime = function (formattedTime: string) {
+  const date = new Date();
+  // this function will be used to only extract the hours and minutes in the useNotification's schedulePushNotification function, so no need to focus on which date
+
+  const timeParts = formattedTime.split(" ");
+  let hour = +timeParts[0].split(":")[0];
+  const minute = +timeParts[0].split(":")[1];
+  const ampm = timeParts[1];
+
+  if (ampm === "PM" && hour < 12) {
+    // For 1:00 PM to 11:59 PM, add 12
+    hour += 12;
+  } else if (ampm === "AM" && hour === 12) {
+    // For 12:00 AM to 12:59 AM (midnight), set hours to 0
+    hour = 0;
+  }
+
+  date.setHours(hour, minute);
+  return date;
+};
+
+export const getDateFromFormattedDate = function (formattedDate: string) {
   const splitDate = formattedDate.split("-");
   const fullYear = +splitDate[0];
   const month = +splitDate[1] - 1;
@@ -59,7 +81,7 @@ const getDateFromFormattedDate = function (formattedDate: string) {
   return new Date(fullYear, month, date);
 };
 
-const getTimeOfDay = function () {
+export const getTimeOfDay = function () {
   const date = getDate();
   const hourOfDay = date.getHours();
   if (hourOfDay < 10) return "morning";
@@ -67,7 +89,7 @@ const getTimeOfDay = function () {
   return "evening";
 };
 
-const getFormattedDatesThisWeek = function () {
+export const getFormattedDatesThisWeek = function () {
   const today = getDate(); // suppose today is wednesday
   const todayWeekdayNumber = today.getDay(); // returns 3
   // we have to loop in such a way that the first day is obtained by subtracting 3, and end at adding 7 - 3
@@ -82,7 +104,7 @@ const getFormattedDatesThisWeek = function () {
   return formattedDatesThisWeekArray;
 };
 
-const getDatesThisWeek = function () {
+export const getDatesThisWeek = function () {
   const today = getDate(); // suppose today is wednesday
   const todayWeekdayNumber = today.getDay(); // returns 3
   // we have to loop in such a way that the first day is obtained by subtracting 3, and end at adding 7 - 3
@@ -97,7 +119,7 @@ const getDatesThisWeek = function () {
   return formattedDatesThisWeekArray;
 };
 
-const relationBetweenTodayAndDate = function (date: Date) {
+export const relationBetweenTodayAndDate = function (date: Date) {
   const dateToday = getDate();
 
   // Helper function to calculate the difference in days
@@ -117,18 +139,4 @@ const relationBetweenTodayAndDate = function (date: Date) {
   } else {
     return "Future Date"; // Or handle future dates as you see fit
   }
-};
-
-export {
-  getDate,
-  getWeekdayNumber,
-  getFormattedDate,
-  getPrettyDate,
-  getFormattedTime,
-  getDateFromFormattedDate,
-  getWeekNumber,
-  getTimeOfDay,
-  getFormattedDatesThisWeek,
-  getDatesThisWeek,
-  relationBetweenTodayAndDate,
 };

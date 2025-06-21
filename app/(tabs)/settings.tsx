@@ -12,6 +12,8 @@ import { Ionicons } from "@expo/vector-icons";
 import { useNotifications } from "@/utils/useNotifications";
 import {
   eraseAllHabitData,
+  getAllHabits,
+  getHabitObjectFromId,
   resetAllHabitNotifications,
 } from "@/utils/database/habits";
 import { useFocusEffect, useRouter } from "expo-router";
@@ -19,6 +21,7 @@ import ToggleSwitch from "@/utils/components/general/ToggleSwitch";
 import mmkvStorage from "@/utils/mmkvStorage";
 import AIToneSelectionDropdownMenu from "@/utils/components/specific/zeego/AIToneSelectionDropdownMenu";
 import { useCallback, useEffect, useState } from "react";
+import { getDateFromFormattedTime } from "@/utils/date";
 
 export default function Settings() {
   const theme = useTheme();
@@ -27,6 +30,7 @@ export default function Settings() {
   const router = useRouter();
   const [notificationsEnabled, setNotificationsEnabled] =
     useState<boolean>(false);
+  const { schedulePushNotification } = useNotifications();
 
   useFocusEffect(
     useCallback(() => {
@@ -129,6 +133,16 @@ export default function Settings() {
             if (isEnabled) {
               mmkvStorage.set("isNotificationOn", true);
               setNotificationsEnabled(true);
+
+              // re-scheduling all the notifications that previously were scheduled (those with something in their notificationIds key)
+              for (const habit of getAllHabits()) {
+                if (habit.notificationIds && habit.notificationTime) {
+                  schedulePushNotification(
+                    getDateFromFormattedTime(habit.notificationTime),
+                    getHabitObjectFromId(habit.id)!
+                  );
+                }
+              }
             } else {
               mmkvStorage.set("isNotificationOn", false);
               setNotificationsEnabled(false);
@@ -157,7 +171,10 @@ export default function Settings() {
                 },
                 {
                   text: "Yes",
-                  onPress: () => cancelAllScheduledNotifications(),
+                  onPress: () => {
+                    cancelAllScheduledNotifications();
+                    resetAllHabitNotifications();
+                  },
                 },
               ],
               { cancelable: false }
