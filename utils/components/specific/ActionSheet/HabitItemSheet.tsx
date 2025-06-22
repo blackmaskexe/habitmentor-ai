@@ -12,6 +12,7 @@ import ActionSheetIosOptionList from "./ActionSheetIosOptionList";
 import mmkvStorage from "@/utils/mmkvStorage";
 import { getHabitNotificationTime } from "@/utils/database/habits";
 import { useFocusEffect } from "expo-router";
+import EditHabitView from "../EditHabitView";
 
 // SheetManager.show("example-sheet", {
 //   payload: {
@@ -33,7 +34,7 @@ export default function HabitItemSheet({
   const theme = useTheme();
   const styles = createStyles(theme);
 
-  const [displayScreen, setDisplayScreen] = useState("main");
+  const [displayScreen, setDisplayScreen] = useState<string>("main");
   const [notificationTime, setNotificationTime] = useState<string | undefined>(
     getHabitNotificationTime(habitObject.id)
   );
@@ -81,10 +82,20 @@ export default function HabitItemSheet({
     );
   };
 
+  const renderEditHabitView = function () {
+    return (
+      <EditHabitView
+        habitId={habitObject.id}
+        onChangeDisplayScreen={setDisplayScreen}
+      />
+    );
+  };
+
   return (
     <View style={styles.habitItemSheetContainer}>
       {displayScreen == "main" ? renderMainView() : null}
       {displayScreen == "reminder" ? renderReminderView() : null}
+      {displayScreen == "editHabit" ? renderEditHabitView() : null}
     </View>
   );
 }

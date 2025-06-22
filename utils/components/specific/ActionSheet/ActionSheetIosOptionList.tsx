@@ -118,7 +118,7 @@ export default function ActionSheetIosOptionList({
             }
           )}
 
-        {renderOptionItem("bottom", "trash-outline", "Delete Habit", () => {
+        {/* {renderOptionItem("bottom", "trash-outline", "Delete Habit", () => {
           Alert.alert(
             `Delete Habit?`,
             `Are you sure you want to delete ${habitItem.habitName}?`,
@@ -138,6 +138,10 @@ export default function ActionSheetIosOptionList({
             ],
             { cancelable: false }
           );
+        })} */}
+
+        {renderOptionItem("bottom", "create-outline", "Edit Habit", () => {
+          onChangeDisplayScreen("editHabit");
         })}
         {/* {renderOptionItem(
           "bottom",
