@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import {
   SafeAreaView,
+  ScrollView,
   Text,
   StyleSheet,
   View,
@@ -13,6 +14,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { Theme } from "@/utils/theme/themes";
 import CardWithoutImage from "../general/CardWithoutImage";
 import { getHabitObjectFromId } from "@/utils/database/habits";
+import EditHabitForm from "./EditHabitForm";
 
 type UpdatedHabitType = {
   habitName: string;
@@ -40,7 +42,7 @@ export default function EditHabitView({
 
   return (
     <>
-      <SafeAreaView style={styles.container}>
+      <ScrollView style={styles.container}>
         <View style={styles.headerBar}>
           <TouchableOpacity
             onPress={() => {
@@ -54,6 +56,8 @@ export default function EditHabitView({
               color={theme.colors.primary}
             />
           </TouchableOpacity>
+          <Text style={styles.headerText}>Edit Habit</Text>
+          <View style={styles.headerRightPlaceholder} />
         </View>
 
         <View style={styles.habitPreviewCardContainer}>
@@ -62,7 +66,8 @@ export default function EditHabitView({
             description={updatedHabit.habitDescription}
           />
         </View>
-      </SafeAreaView>
+        <EditHabitForm habitId={habitId} />
+      </ScrollView>
     </>
   );
 }
@@ -70,7 +75,7 @@ export default function EditHabitView({
 const createStyles = (theme: Theme) =>
   StyleSheet.create({
     container: {
-      height: "60%",
+      //   height: "60%",
       paddingTop: Platform.OS === "android" ? 15 : 5, // Reduced top padding
     },
     headerBar: {
@@ -83,7 +88,15 @@ const createStyles = (theme: Theme) =>
     backButton: {
       padding: 5,
     },
-    habitPreviewCardContainer: {
+    habitPreviewCardContainer: {},
+    headerText: {
+      fontSize: 18,
+      fontWeight: "600",
+      color: theme.colors.text,
+      textAlign: "center",
       flex: 1,
+    },
+    headerRightPlaceholder: {
+      width: 28 + 10,
     },
   });

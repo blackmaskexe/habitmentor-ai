@@ -77,6 +77,28 @@ export function addNewHabit(newHabitObject: HabitObject) {
   );
 }
 
+export function updateHabit(habitId: string, newHabitObject: HabitObject) {
+  const activeHabits: HabitObject[] = JSON.parse(
+    mmkvStorage.getString("activeHabits") || "[]"
+  );
+
+  activeHabits.map((habitItem) => {
+    if (habitItem.id != habitId) {
+      return {
+        ...habitItem,
+      };
+    }
+
+    // modify only the habit whose habit id matches, and then return the new one
+
+    return {
+      ...newHabitObject,
+    };
+  });
+
+  mmkvStorage.set("activeHabits", JSON.stringify(activeHabits));
+}
+
 export function getAllHabits() {
   const activeHabits: HabitObject[] = JSON.parse(
     mmkvStorage.getString("activeHabits") || "[]"
