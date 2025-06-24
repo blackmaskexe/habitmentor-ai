@@ -108,9 +108,8 @@ export default function ReminderView({
       </View>
 
       <Text style={styles.tooltipText}>
-        The time you set here will be used to send you notifications for this
-        habit. NOTE: app only currently supports daily reminders, and not custom
-        reminders
+        You will be reminded to check off your habit each day your habit is due
+        at this time
       </Text>
 
       <View style={styles.pickerContainer}>

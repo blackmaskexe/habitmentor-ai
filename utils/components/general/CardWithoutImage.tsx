@@ -118,6 +118,7 @@ function createStyles(theme: Theme) {
       color: theme.colors.textSecondary,
     },
     cardContent: {
+      flex: 1,
       flexDirection: "row",
       alignItems: "center",
     },

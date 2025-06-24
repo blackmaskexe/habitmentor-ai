@@ -15,6 +15,7 @@ import { Theme } from "@/utils/theme/themes";
 import CardWithoutImage from "../general/CardWithoutImage";
 import { getHabitObjectFromId } from "@/utils/database/habits";
 import EditHabitForm from "./EditHabitForm";
+import { FormValuesType } from "@/utils/types";
 
 type UpdatedHabitType = {
   habitName: string;
@@ -32,6 +33,8 @@ export default function EditHabitView({
   const theme = useTheme();
   const styles = createStyles(theme);
 
+  const [values, setValues] = useState<FormValuesType>({});
+
   const operatingHabit = getHabitObjectFromId(habitId)!;
 
   const [updatedHabit, setUpdatedHabit] = useState<UpdatedHabitType>({
@@ -39,6 +42,17 @@ export default function EditHabitView({
     habitDescription: operatingHabit.habitDescription || "",
     habitFrequency: operatingHabit.frequency,
   });
+
+  useEffect(() => {
+    // update card as soon as the value changes from the forms
+    if (values.habitName) {
+      setUpdatedHabit(() => {
+        return {
+          ...(values as any),
+        };
+      });
+    }
+  }, [values]);
 
   return (
     <>
@@ -66,7 +80,13 @@ export default function EditHabitView({
             description={updatedHabit.habitDescription}
           />
         </View>
-        <EditHabitForm habitId={habitId} />
+        <View style={styles.formContainer}>
+          <EditHabitForm
+            habitId={habitId}
+            values={values}
+            setValues={setValues}
+          />
+        </View>
       </ScrollView>
     </>
   );
@@ -76,19 +96,23 @@ const createStyles = (theme: Theme) =>
   StyleSheet.create({
     container: {
       //   height: "60%",
-      paddingTop: Platform.OS === "android" ? 15 : 5, // Reduced top padding
+      paddingTop: Platform.OS === "android" ? 15 : 5,
+      marginHorizontal: theme.spacing.s,
     },
+
     headerBar: {
       flexDirection: "row",
       alignItems: "center",
       justifyContent: "space-between",
       width: "100%",
-      marginBottom: 15, // Reduced margin below header
+      marginBottom: theme.spacing.s,
     },
     backButton: {
       padding: 5,
     },
-    habitPreviewCardContainer: {},
+    habitPreviewCardContainer: {
+      marginBottom: theme.spacing.m,
+    },
     headerText: {
       fontSize: 18,
       fontWeight: "600",
@@ -98,5 +122,8 @@ const createStyles = (theme: Theme) =>
     },
     headerRightPlaceholder: {
       width: 28 + 10,
+    },
+    formContainer: {
+      marginHorizontal: theme.spacing.s,
     },
   });

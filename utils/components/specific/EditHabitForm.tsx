@@ -9,18 +9,18 @@ import {
   StyleSheet,
   Dimensions,
 } from "react-native";
-import GenericForm from "../general/GenericForm";
-import TaskFrequencyDropdownMenu from "./zeego/TaskFrequencyDropdownMenu";
+
 import WeekdayFrequencyPicker from "./WeekdayFrequencyPicker";
 import CTAButton from "../general/CTAButton";
 import { useEffect, useState } from "react";
-import { FormValuesType } from "@/utils/types";
+import { FormValuesType, HabitObject } from "@/utils/types";
 import { Ionicons } from "@expo/vector-icons";
 import { Theme } from "@/utils/theme/themes";
 import { useTheme } from "@/utils/theme/ThemeContext";
 import { generateHabitId } from "@/utils/randomId";
 import { addNewHabit, getHabitObjectFromId } from "@/utils/database/habits";
 import { getFormattedDate } from "@/utils/date";
+import CustomEditHabitForm from "./CustomEditHabitForm";
 
 const { width } = Dimensions.get("window");
 const BOX_SIZE = Math.min(width * 0.18, 80); // Responsive but capped at 80px in length and width
@@ -40,20 +40,34 @@ const fields = [
   },
 ];
 
-export default function EditHabitForm({ habitId }: { habitId: string }) {
+export default function EditHabitForm({
+  habitId,
+  values,
+  setValues,
+}: {
+  habitId: string;
+  values: FormValuesType;
+  setValues: (value?: any) => any;
+}) {
   const theme = useTheme();
   const styles = createStyles(theme, BOX_SIZE);
-  const [values, setValues] = useState<FormValuesType>({});
-  const [habitFrequency, setHabitFrequency] = useState([]);
+  const [habitFrequency, setHabitFrequency] = useState<boolean[]>(
+    Array(7).fill(false)
+  );
 
   useEffect(() => {
-    setValues((oldValues) => {
-      const habitObject = getHabitObjectFromId(habitId);
+    const habitObject: HabitObject = getHabitObjectFromId(habitId)!;
+
+    setValues(() => {
       return {
         frequency: habitObject?.frequency,
         habitName: habitObject?.habitName,
         habitDescription: habitObject?.habitDescription,
       };
+    });
+
+    setHabitFrequency(() => {
+      return habitObject.frequency;
     });
   }, []);
 
@@ -71,16 +85,12 @@ export default function EditHabitForm({ habitId }: { habitId: string }) {
             keyboardShouldPersistTaps="handled"
             showsVerticalScrollIndicator={false}
           >
-            <GenericForm
+            <CustomEditHabitForm
               fields={fields}
               onValueChange={(key, value) => {
                 setValues((prev: any) => ({ ...prev, [key]: value }));
               }}
               values={values}
-            />
-            <TaskFrequencyDropdownMenu
-              index={0}
-              onSetHabitFrequency={setHabitFrequency} // sets the frequency property inside the values state
             />
 
             <View style={styles.spaceSmall} />
@@ -102,44 +112,6 @@ export default function EditHabitForm({ habitId }: { habitId: string }) {
 
             <Text style={styles.formLabel}></Text>
             {/* <WeekdayFrequencyPicker /> */}
-            <CTAButton
-              title={"Submit"}
-              disabled={values.habitName ? false : true}
-              onPress={() => {
-                // adding points + id to the habit
-                const newHabit = { ...values };
-
-                if (newHabit && newHabit.frequency) {
-                  // if the frequency property exists within that habit item:
-                  // seeing how many days the user is doing that particular habit:
-                  const daysHabitIsActive = newHabit.frequency.reduce(
-                    (count: number, value: boolean) => {
-                      return value ? count + 1 : count;
-                    },
-                    0
-                  );
-
-                  // points are calculated in the following manner:
-                  // daily habits give 20 points each (daysHabitIsActive == 7)
-                  // 5-6 habit days give 15 points
-                  // 1-4 habit days give 10 points
-
-                  const habitPoints = [0, 10, 10, 10, 10, 15, 15, 20];
-                  // adding a  0 in the start to make this array 1 indexable, and also work with 0 frequency days
-                  // the 0 frequency days is implemented to prevent any crashes
-
-                  newHabit.points = habitPoints[daysHabitIsActive];
-
-                  // as well as assign the unique ID:
-                  newHabit.id = generateHabitId();
-
-                  // and associate a startDate with it:
-                  newHabit.startDate = getFormattedDate();
-                  addNewHabit(newHabit as any);
-                }
-              }}
-              iconName="checkmark-circle-outline"
-            />
           </ScrollView>
         </KeyboardAvoidingView>
       </View>
