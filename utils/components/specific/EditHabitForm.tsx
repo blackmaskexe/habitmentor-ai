@@ -25,6 +25,8 @@ import CustomEditHabitForm from "./CustomEditHabitForm";
 const { width } = Dimensions.get("window");
 const BOX_SIZE = Math.min(width * 0.18, 80); // Responsive but capped at 80px in length and width
 
+const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
 const fields = [
   {
     key: "habitName",
@@ -97,15 +99,11 @@ export default function EditHabitForm({
             <WeekdayFrequencyPicker
               currentFrequency={
                 // sets the frequency property inside the values state
-                habitFrequency[0] || [
-                  "Sun",
-                  "Mon",
-                  "Tue",
-                  "We",
-                  "Thu",
-                  "Fri",
-                  "Sat",
-                ]
+                daysOfWeek.filter((weekday, index) => {
+                  if (habitFrequency[index]) return true; // filters such that only those days which are true in the habitFrequency make it in this array
+                  // so [t,f,t,f,t,t,f] becomes ["Sun", "Tue", "Thu", "Fri"]
+                  // I might fix this behavior of the WeekdayFrequencyPicker in the future, but letting it remain this way now
+                }) || daysOfWeek
               }
               onChangeValues={setValues}
             />

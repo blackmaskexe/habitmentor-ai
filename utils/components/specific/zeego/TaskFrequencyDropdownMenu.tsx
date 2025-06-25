@@ -6,7 +6,7 @@ import mmkvStorage from "@/utils/mmkvStorage";
 import { useRouter } from "expo-router";
 import FrequencyPickerOptionList from "../FrequencyPickerOptionList";
 
-const weekdays = ["Sun", "Mon", "Tue", "We", "Thu", "Fri", "Sat"];
+const weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 export default function TaskFrequencyDropdownMenu({
   index,

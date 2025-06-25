@@ -1,10 +1,21 @@
 // this file is based off the activeHabits key found in the mmkvStorage
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { getDate, getDateFromFormattedDate, getFormattedDate } from "../date";
+import {
+  getDate,
+  getDateFromFormattedDate,
+  getDateFromFormattedTime,
+  getFormattedDate,
+} from "../date";
 import mmkvStorage from "../mmkvStorage";
 import { HabitObject } from "../types";
 import { onMarkAsComplete } from "./habitHistoryManager";
 import database from "./watermelon";
+import { Q } from "@nozbe/watermelondb";
+import HabitCompletion from "./watermelon/model/HabitCompletion";
+import { useNotifications } from "../useNotifications";
+
+const { cancelAllScheduledNotifications, schedulePushNotification } =
+  useNotifications();
 
 export function updateHabitNotificationId(
   habitId: string,
@@ -113,6 +124,10 @@ export function getAllHabitsOnWeekday(weekdayNumber: number) {
   );
 
   return activeHabits.filter((habit, index) => {
+    console.log(
+      "disama i give you all da ga, gimme all for dis, i need confidence in msyelf",
+      habit
+    );
     return habit.frequency[weekdayNumber]; // only those habits will be returned that are active on that weekday
   });
 }
@@ -235,4 +250,80 @@ export function resetAllHabitNotifications() {
   });
 
   mmkvStorage.set("activeHabits", JSON.stringify(updatedAllHabits));
+}
+
+export async function updateEditedHabit(
+  habitId: string,
+  updatedName: string,
+  updatedDescription: string,
+  updatedFrequency: boolean[]
+) {
+  // looking up which actual things were changed:
+  const unchangedHabit = getHabitObjectFromId(habitId)!; // this is the unchanged version of the edited habit
+
+  // seeing which all fields were changed (prevent unnecessary operations from tigrelini watermelini db)
+  const didNameChange = unchangedHabit.habitName != updatedName;
+  const didDescriptionChange =
+    unchangedHabit.habitDescription != updatedDescription;
+  const didFrequencyChange = updatedFrequency != undefined;
+
+  // updating the mmkvStorage with the new updated habit information
+  const updatedHabits = getAllHabits().map((habit) => {
+    if (habit.id == habitId) {
+      return {
+        // not checking for changes between the two versions, mmkv is fast enough to not care
+        ...habit,
+        habitName: updatedName,
+        habitDescription: updatedDescription,
+        frequency: didFrequencyChange ? updatedFrequency : habit.frequency,
+      };
+    }
+
+    return habit;
+  });
+
+  console.log(updatedHabits);
+  console.log("no more dance again, oooh yaeh....");
+  mmkvStorage.set("activeHabits", JSON.stringify(updatedHabits));
+
+  // updating the tables in tigrelini watermelini db:
+  if (didNameChange) {
+    // if name changed, update associated watermelondb record in habit completions table
+    await database.write(async () => {
+      const habitCompletionCollection =
+        database.get<HabitCompletion>("habit_completions");
+      const habitRecord = await habitCompletionCollection
+        .query(Q.where("habit_id", habitId))
+        .fetch();
+
+      if (habitRecord.length > 0) {
+        // if this record exists (safety check)
+        await habitRecord[0].update((habit) => {
+          habit.habitName = updatedName;
+        });
+      }
+    });
+  }
+
+  if (didFrequencyChange) {
+    // we will turn off and on notifications
+    // turning off internall cancel all notifications
+    // turning back on will pick up the latest frequency to schedule the notifications on
+
+    // this is the same functionality as in the "Enable Reminder Notificaitons" switch in the settings
+
+    // first resetting
+    resetAllHabitNotifications();
+    await cancelAllScheduledNotifications();
+
+    // then enabling back for all
+    for (const habit of getAllHabits()) {
+      if (habit.notificationIds && habit.notificationTime) {
+        schedulePushNotification(
+          getDateFromFormattedTime(habit.notificationTime),
+          getHabitObjectFromId(habit.id)!
+        );
+      }
+    }
+  }
 }

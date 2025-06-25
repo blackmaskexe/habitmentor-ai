@@ -2,7 +2,7 @@ import { useTheme } from "@/utils/theme/ThemeContext";
 import { useEffect, useState } from "react";
 import { StyleSheet, TouchableOpacity, View, Text } from "react-native";
 
-const weekdays = ["Sun", "Mon", "Tue", "We", "Thu", "Fri", "Sat"];
+const weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 import * as Haptics from "expo-haptics";
 import { Theme } from "@/utils/theme/themes";
 

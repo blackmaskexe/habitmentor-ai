@@ -43,10 +43,7 @@ export default function AllHabitsOverview({
     <View style={styles.allHabitsContainer}>
       {allHabitsArray.map((habitItem, index) => {
         return (
-          <View
-            style={styles.habitCard}
-            key={`habitcard-${habitItem.habitName}`}
-          >
+          <View style={styles.habitCard} key={`habitcard-${habitItem.id}`}>
             <Ionicons name="today" style={styles.habitIcon} size={24} />
             <View style={styles.habitCardText}>
               <Text style={styles.habitName}>{habitItem.habitName}</Text>

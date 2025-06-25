@@ -7,15 +7,20 @@ import {
   View,
   Platform,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 
 import { useTheme } from "@/utils/theme/ThemeContext";
 import { Ionicons } from "@expo/vector-icons";
 import { Theme } from "@/utils/theme/themes";
 import CardWithoutImage from "../general/CardWithoutImage";
-import { getHabitObjectFromId } from "@/utils/database/habits";
+import {
+  getHabitObjectFromId,
+  updateEditedHabit,
+} from "@/utils/database/habits";
 import EditHabitForm from "./EditHabitForm";
 import { FormValuesType } from "@/utils/types";
+import CTAButton from "../general/CTAButton";
 
 type UpdatedHabitType = {
   habitName: string;
@@ -33,11 +38,12 @@ export default function EditHabitView({
   const theme = useTheme();
   const styles = createStyles(theme);
 
-  const [values, setValues] = useState<FormValuesType>({});
+  const [values, setValues] = useState<FormValuesType>({}); // values from the form
 
   const operatingHabit = getHabitObjectFromId(habitId)!;
 
   const [updatedHabit, setUpdatedHabit] = useState<UpdatedHabitType>({
+    // usable edited habit information
     habitName: operatingHabit.habitName,
     habitDescription: operatingHabit.habitDescription || "",
     habitFrequency: operatingHabit.frequency,
@@ -60,6 +66,29 @@ export default function EditHabitView({
         <View style={styles.headerBar}>
           <TouchableOpacity
             onPress={() => {
+              Alert.alert(
+                `Update Habit`,
+                "Are you sure?",
+                [
+                  {
+                    text: "Cancel",
+                    onPress: () => console.log("Cancel Pressed"),
+                    style: "cancel",
+                  },
+                  {
+                    text: "Yes",
+                    onPress: async () => {
+                      await updateEditedHabit(
+                        habitId,
+                        updatedHabit.habitName,
+                        updatedHabit.habitDescription,
+                        updatedHabit.habitFrequency
+                      );
+                    },
+                  },
+                ],
+                { cancelable: false }
+              );
               onChangeDisplayScreen("main");
             }}
             style={styles.backButton}
@@ -73,6 +102,9 @@ export default function EditHabitView({
           <Text style={styles.headerText}>Edit Habit</Text>
           <View style={styles.headerRightPlaceholder} />
         </View>
+        <Text style={styles.saveHintText}>
+          Press back button to save changes
+        </Text>
 
         <View style={styles.habitPreviewCardContainer}>
           <CardWithoutImage
@@ -105,10 +137,17 @@ const createStyles = (theme: Theme) =>
       alignItems: "center",
       justifyContent: "space-between",
       width: "100%",
-      marginBottom: theme.spacing.s,
+      // marginBottom: theme.spacing.s,
     },
     backButton: {
       padding: 5,
+    },
+    saveHintText: {
+      color: theme.colors.textSecondary,
+      fontSize: 13,
+      textAlign: "center",
+      marginBottom: theme.spacing.s,
+      opacity: 0.7,
     },
     habitPreviewCardContainer: {
       marginBottom: theme.spacing.m,
