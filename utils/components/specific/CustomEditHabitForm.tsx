@@ -138,7 +138,7 @@ function createStyles(theme: Theme) {
     },
     placeholderText: {
       ...theme.text.body,
-      color: theme.colors.placeholder,
+      color: theme.colors.text,
       flex: 1,
       marginRight: theme.spacing.s,
     },

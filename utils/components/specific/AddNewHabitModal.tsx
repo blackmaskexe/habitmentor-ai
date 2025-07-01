@@ -119,7 +119,7 @@ export default function AddNewHabitModal({
                       "Sun",
                       "Mon",
                       "Tue",
-                      "We",
+                      "Wed",
                       "Thu",
                       "Fri",
                       "Sat",

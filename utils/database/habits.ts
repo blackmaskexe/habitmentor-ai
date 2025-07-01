@@ -265,11 +265,20 @@ export async function updateEditedHabit(
   const didNameChange = unchangedHabit.habitName != updatedName;
   const didDescriptionChange =
     unchangedHabit.habitDescription != updatedDescription;
-  const didFrequencyChange = updatedFrequency != undefined;
+  const didFrequencyChange =
+    JSON.stringify(updatedFrequency) !=
+    JSON.stringify(unchangedHabit.frequency);
 
+  console.log(
+    didNameChange,
+    didDescriptionChange,
+    didFrequencyChange,
+    "I know the way this ends, I'll get played in the end"
+  );
   // updating the mmkvStorage with the new updated habit information
   const updatedHabits = getAllHabits().map((habit) => {
     if (habit.id == habitId) {
+      console.log("I don't want to see you on monday", habit.frequency);
       return {
         // not checking for changes between the two versions, mmkv is fast enough to not care
         ...habit,
@@ -282,7 +291,11 @@ export async function updateEditedHabit(
     return habit;
   });
 
-  console.log(updatedHabits);
+  console.log(
+    updatedHabits,
+    "MONDAY WEDNESDAY FRIDAY SATURDAY SUNDAY BUT ON THURSDAY, ONLY ON THURSTDAY",
+    didFrequencyChange
+  );
   console.log("no more dance again, oooh yaeh....");
   mmkvStorage.set("activeHabits", JSON.stringify(updatedHabits));
 
@@ -306,6 +319,7 @@ export async function updateEditedHabit(
   }
 
   if (didFrequencyChange) {
+    console.log("BUT ON THURSDAYYYYY");
     // we will turn off and on notifications
     // turning off internall cancel all notifications
     // turning back on will pick up the latest frequency to schedule the notifications on

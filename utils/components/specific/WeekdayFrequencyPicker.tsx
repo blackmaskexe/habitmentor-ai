@@ -32,8 +32,10 @@ export default function WeekdayFrequencyPicker({
 
   const updateValueState = function (newActiveDays: any) {
     onChangeValues((oldValue: any) => {
+      console.log("you knowwww", oldValue);
       const newValue = oldValue;
-      newValue.frequency = activeDays;
+      newValue.frequency = newActiveDays;
+      console.log("girl I'm so glad we're acquainted", newValue);
 
       return newValue;
     });

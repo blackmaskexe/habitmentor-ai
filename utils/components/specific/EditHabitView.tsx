@@ -21,11 +21,12 @@ import {
 import EditHabitForm from "./EditHabitForm";
 import { FormValuesType } from "@/utils/types";
 import CTAButton from "../general/CTAButton";
+import EdithabitDropdownMenu from "./zeego/EditHabitDropdownMenu";
 
 type UpdatedHabitType = {
   habitName: string;
   habitDescription: string;
-  habitFrequency: boolean[];
+  frequency: boolean[];
 };
 
 export default function EditHabitView({
@@ -46,13 +47,14 @@ export default function EditHabitView({
     // usable edited habit information
     habitName: operatingHabit.habitName,
     habitDescription: operatingHabit.habitDescription || "",
-    habitFrequency: operatingHabit.frequency,
+    frequency: operatingHabit.frequency,
   });
 
   useEffect(() => {
     // update card as soon as the value changes from the forms
     if (values.habitName) {
       setUpdatedHabit(() => {
+        console.log("I got something to say but idk how imma say it", values);
         return {
           ...(values as any),
         };
@@ -66,29 +68,45 @@ export default function EditHabitView({
         <View style={styles.headerBar}>
           <TouchableOpacity
             onPress={() => {
-              Alert.alert(
-                `Update Habit`,
-                "Are you sure?",
-                [
-                  {
-                    text: "Cancel",
-                    onPress: () => console.log("Cancel Pressed"),
-                    style: "cancel",
-                  },
-                  {
-                    text: "Yes",
-                    onPress: async () => {
-                      await updateEditedHabit(
-                        habitId,
-                        updatedHabit.habitName,
-                        updatedHabit.habitDescription,
-                        updatedHabit.habitFrequency
-                      );
+              const oldHabit = getHabitObjectFromId(habitId)!;
+              // checking if there are even changes in the habit in the menu:
+              let didUserEditHabit = null;
+              if (
+                oldHabit.habitName == updatedHabit.habitName &&
+                JSON.stringify(updatedHabit.frequency) ==
+                  JSON.stringify(oldHabit.frequency) &&
+                oldHabit.habitDescription == updatedHabit.habitDescription
+              ) {
+                didUserEditHabit = false;
+              } else {
+                didUserEditHabit = true;
+              }
+
+              if (didUserEditHabit) {
+                Alert.alert(
+                  `Update Habit`,
+                  "Are you sure?",
+                  [
+                    {
+                      text: "Cancel",
+                      onPress: () => console.log("Cancel Pressed"),
+                      style: "cancel",
                     },
-                  },
-                ],
-                { cancelable: false }
-              );
+                    {
+                      text: "Yes",
+                      onPress: async () => {
+                        await updateEditedHabit(
+                          habitId,
+                          updatedHabit.habitName,
+                          updatedHabit.habitDescription,
+                          updatedHabit.frequency
+                        );
+                      },
+                    },
+                  ],
+                  { cancelable: false }
+                );
+              }
               onChangeDisplayScreen("main");
             }}
             style={styles.backButton}
@@ -100,7 +118,9 @@ export default function EditHabitView({
             />
           </TouchableOpacity>
           <Text style={styles.headerText}>Edit Habit</Text>
-          <View style={styles.headerRightPlaceholder} />
+          <View style={styles.headerRightPlaceholder}>
+            <EdithabitDropdownMenu habitId={habitId} />
+          </View>
         </View>
         <Text style={styles.saveHintText}>
           Press back button to save changes
@@ -116,7 +136,7 @@ export default function EditHabitView({
           <EditHabitForm
             habitId={habitId}
             values={values}
-            setValues={setValues}
+            setValues={setUpdatedHabit}
           />
         </View>
       </ScrollView>

@@ -31,13 +31,13 @@ const fields = [
   {
     key: "habitName",
     label: "Habit Name",
-    placeholder: "Example Habit",
+    placeholder: "Habit Name",
     required: true,
   },
   {
     key: "habitDescription",
     label: "Habit Description",
-    placeholder: "Example Description",
+    placeholder: "Habit Description",
     required: false,
   },
 ];
