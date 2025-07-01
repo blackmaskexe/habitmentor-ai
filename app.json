@@ -2,7 +2,7 @@
   "expo": {
     "name": "HabitMentor AI",
     "slug": "habitmentor-ai",
-    "version": "1.2.0",
+    "version": "1.3.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "habitmentorai",
@@ -23,11 +23,6 @@
       "edgeToEdgeEnabled": true,
       "package": "com.blackmaskexe.habittracker"
     },
-    // "web": {©
-    //   "bundler": "metro",
-    //   "output": "static",
-    //   "favicon": "./assets/images/favicon.png"
-    // },
     "plugins": [
       "expo-router",
       "expo-notifications",
@@ -48,7 +43,10 @@
             "extraPods": [
               {
                 "name": "simdjson",
-                "configurations": ["Debug", "Release"],
+                "configurations": [
+                  "Debug",
+                  "Release"
+                ],
                 "path": "../node_modules/@nozbe/simdjson",
                 "modular_headers": true
               }
@@ -56,7 +54,9 @@
           }
         }
       ],
-      "expo-sqlite"
+      "expo-sqlite",
+      "expo-font",
+      "expo-web-browser"
     ],
     "experiments": {
       "typedRoutes": true
