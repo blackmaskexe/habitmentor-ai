@@ -20,7 +20,7 @@ import { useFocusEffect, useRouter } from "expo-router";
 import ToggleSwitch from "@/utils/components/general/ToggleSwitch";
 import mmkvStorage from "@/utils/mmkvStorage";
 import AIToneSelectionDropdownMenu from "@/utils/components/specific/zeego/AIToneSelectionDropdownMenu";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { getDateFromFormattedTime } from "@/utils/date";
 
 export default function Settings() {

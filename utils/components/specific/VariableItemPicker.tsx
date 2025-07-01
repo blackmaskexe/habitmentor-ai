@@ -242,7 +242,7 @@ export default function VariableItemPicker({
                         "Sun",
                         "Mon",
                         "Tue",
-                        "We",
+                        "Wed",
                         "Thu",
                         "Fri",
                         "Sat",
