@@ -32,7 +32,7 @@ function ExampleSheet(props: SheetProps<"example-sheet">) {
       <NavigationPill />
 
       <SheetContentComponent
-        habitObject={payloadData.habit}
+        habitId={payloadData.habit.id}
         habitDate={payloadData.habitDate}
       />
     </ActionSheet>

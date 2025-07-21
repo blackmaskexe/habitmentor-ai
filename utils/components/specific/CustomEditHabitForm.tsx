@@ -23,14 +23,12 @@ type CustomEditHabitFormProps = {
   fields: FormField[];
   onValueChange: (key: string, value: string) => void;
   values?: FormValuesType;
-  errors?: Record<string, string>;
 };
 
 export default function CustomEditHabitForm({
   fields,
   onValueChange,
-  values = {},
-  errors = {},
+  values,
 }: CustomEditHabitFormProps) {
   const theme = useTheme();
   const styles = createStyles(theme);
@@ -39,6 +37,7 @@ export default function CustomEditHabitForm({
   return (
     <View style={styles.container}>
       {fields.map((field) => {
+        console.log("jatt taan", field);
         const isEditing = editingFieldKey === field.key;
         const value = (values as any)[field.key] || "";
 
@@ -53,7 +52,7 @@ export default function CustomEditHabitForm({
 
             {isEditing ? (
               <TextInput
-                style={[styles.input, errors[field.key] && styles.inputError]}
+                style={styles.input}
                 placeholder={field.placeholder}
                 placeholderTextColor={theme.colors.placeholder}
                 value={value}
@@ -82,10 +81,6 @@ export default function CustomEditHabitForm({
                   color={theme.colors.textSecondary}
                 />
               </TouchableOpacity>
-            )}
-
-            {errors[field.key] && !isEditing && (
-              <Text style={styles.errorText}>{errors[field.key]}</Text>
             )}
           </View>
         );

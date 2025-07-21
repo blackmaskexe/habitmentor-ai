@@ -10,7 +10,10 @@ import { Theme } from "@/utils/theme/themes";
 import { HabitObject } from "@/utils/types";
 import ActionSheetIosOptionList from "./ActionSheetIosOptionList";
 import mmkvStorage from "@/utils/mmkvStorage";
-import { getHabitNotificationTime } from "@/utils/database/habits";
+import {
+  getHabitNotificationTime,
+  getHabitObjectFromId,
+} from "@/utils/database/habits";
 import { useFocusEffect } from "expo-router";
 import EditHabitView from "../EditHabitView";
 
@@ -25,12 +28,15 @@ import EditHabitView from "../EditHabitView";
 // });
 
 export default function HabitItemSheet({
-  habitObject,
+  habitId,
   habitDate,
 }: {
-  habitObject: HabitObject;
+  habitId: string;
   habitDate: Date;
 }) {
+  const [habitObject, setHabitObject] = useState(
+    getHabitObjectFromId(habitId)!
+  );
   const theme = useTheme();
   const styles = createStyles(theme);
 
@@ -43,7 +49,13 @@ export default function HabitItemSheet({
     // run on mount, detect changes to activeHabits (if reminder changed, should populate again)
     const listener = mmkvStorage.addOnValueChangedListener((changedKey) => {
       if (changedKey == "activeHabits") {
+        // the reason of key changing could be due to notificaiton setting changing:
         setNotificationTime(getHabitNotificationTime(habitObject.id));
+
+        // or due to the name / description / other settings of the habit changing
+        setHabitObject(() => {
+          return getHabitObjectFromId(habitId)!;
+        });
       }
     });
 
@@ -52,50 +64,40 @@ export default function HabitItemSheet({
     };
   }, []);
 
-  const renderMainView = function () {
-    return (
-      <>
-        <CardWithoutImage
-          title={habitObject.habitName}
-          description={habitObject.habitDescription || ""}
-          metadata={
-            habitObject.isNotificationOn
-              ? "Reminder for: " + notificationTime
-              : "No Reminders Set"
-          }
-        />
-        <ActionSheetIosOptionList
-          habitItem={habitObject}
-          onChangeDisplayScreen={setDisplayScreen}
-          habitDate={habitDate}
-        />
-      </>
-    );
-  };
-
-  const renderReminderView = function () {
-    return (
-      <ReminderView
-        onChangeDisplayScreen={setDisplayScreen}
-        habitId={habitObject.id}
-      />
-    );
-  };
-
-  const renderEditHabitView = function () {
-    return (
-      <EditHabitView
-        habitId={habitObject.id}
-        onChangeDisplayScreen={setDisplayScreen}
-      />
-    );
-  };
-
   return (
     <View style={styles.habitItemSheetContainer}>
-      {displayScreen == "main" ? renderMainView() : null}
-      {displayScreen == "reminder" ? renderReminderView() : null}
-      {displayScreen == "editHabit" ? renderEditHabitView() : null}
+      {displayScreen == "main" ? (
+        <>
+          <CardWithoutImage
+            title={habitObject.habitName}
+            description={habitObject.habitDescription || ""}
+            metadata={
+              habitObject.isNotificationOn
+                ? "Reminder for: " + notificationTime
+                : "No Reminders Set"
+            }
+          />
+          <ActionSheetIosOptionList
+            habitItem={habitObject}
+            onChangeDisplayScreen={setDisplayScreen}
+            habitDate={habitDate}
+          />
+        </>
+      ) : null}
+
+      {displayScreen == "reminder" ? (
+        <ReminderView
+          onChangeDisplayScreen={setDisplayScreen}
+          habitId={habitObject.id}
+        />
+      ) : null}
+
+      {displayScreen == "editHabit" ? (
+        <EditHabitView
+          habitId={habitObject.id}
+          onChangeDisplayScreen={setDisplayScreen}
+        />
+      ) : null}
     </View>
   );
 }

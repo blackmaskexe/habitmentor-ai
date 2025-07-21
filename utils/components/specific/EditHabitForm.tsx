@@ -58,13 +58,17 @@ export default function EditHabitForm({
   );
 
   useEffect(() => {
+    console.log(values, "dilon ka shooter hai mera scooter");
+  }, [values]);
+  useEffect(() => {
     const habitObject: HabitObject = getHabitObjectFromId(habitId)!;
+    console.log(habitObject, "khare check ni, rakhe check ni. Billo sardarrey");
 
     setValues(() => {
       return {
-        frequency: habitObject?.frequency,
-        habitName: habitObject?.habitName,
-        habitDescription: habitObject?.habitDescription,
+        frequency: habitObject.frequency,
+        habitName: habitObject.habitName,
+        habitDescription: habitObject.habitDescription,
       };
     });
 
@@ -73,7 +77,9 @@ export default function EditHabitForm({
     });
   }, []);
 
-  console.log(values);
+  useEffect(() => {
+    console.log("I ain't washin my sins, ", values);
+  }, [values]);
 
   return (
     <View style={styles.container}>

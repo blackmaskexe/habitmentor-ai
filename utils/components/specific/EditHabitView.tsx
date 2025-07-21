@@ -136,7 +136,7 @@ export default function EditHabitView({
           <EditHabitForm
             habitId={habitId}
             values={values}
-            setValues={setUpdatedHabit}
+            setValues={setValues}
           />
         </View>
       </ScrollView>
