@@ -6,6 +6,7 @@ import mmkvStorage from "@/utils/mmkvStorage";
 import { useRouter } from "expo-router";
 import { deleteHabit, getHabitObjectFromId } from "@/utils/database/habits";
 import { HabitObject } from "@/utils/types";
+import { SheetManager } from "react-native-actions-sheet";
 
 export default function EdithabitDropdownMenu({
   habitId,
@@ -54,6 +55,7 @@ export default function EdithabitDropdownMenu({
                   text: "Yes",
                   onPress: () => {
                     // habit deltion logic here
+                    SheetManager.hide("example-sheet");
                     deleteHabit(habitId);
                   },
                 },
