@@ -1,5 +1,5 @@
 {
-  "name": "life-ai",
+  "name": "habitmentor-ai",
   "main": "expo-router/entry",
   "version": "1.0.0",
   "scripts": {
@@ -8,7 +8,8 @@
     "android": "expo run:android",
     "ios": "expo run:ios",
     "web": "expo start --web",
-    "lint": "expo lint"
+    "lint": "expo lint",
+    "dev": "npx expo start"
   },
   "dependencies": {
     "@expo/vector-icons": "^14.1.0",
@@ -24,12 +25,13 @@
     "@shopify/flash-list": "1.7.6",
     "axios": "^1.9.0",
     "date-fns": "^4.1.0",
-    "expo": "^53.0.15",
+    "expo": "^53.0.19",
     "expo-blur": "~14.1.5",
     "expo-build-properties": "~0.14.8",
     "expo-constants": "~17.1.4",
     "expo-dev-client": "~5.2.2",
     "expo-device": "~7.1.4",
+    "expo-doctor": "^1.13.5",
     "expo-drizzle-studio-plugin": "^0.1.2",
     "expo-font": "~13.3.2",
     "expo-haptics": "~14.1.4",
@@ -48,13 +50,13 @@
     "react": "19.0.0",
     "react-content-loader": "^7.0.2",
     "react-dom": "19.0.0",
-    "react-native": "0.79.4",
+    "react-native": "0.79.5",
     "react-native-actions-sheet": "^0.9.7",
     "react-native-bouncy-checkbox": "^4.1.2",
     "react-native-context-menu-view": "^1.19.0",
     "react-native-gesture-handler": "~2.24.0",
-    "react-native-ios-context-menu": "3.1.0",
-    "react-native-ios-utilities": "5.1.2",
+    "react-native-ios-context-menu": "github:itsramiel/react-native-ios-context-menu#fix/fix-ios-codegen-config",
+    "react-native-ios-utilities": "^5.1.7",
     "react-native-mmkv": "^3.2.0",
     "react-native-modal-datetime-picker": "^18.0.0",
     "react-native-pager-view": "6.7.1",
