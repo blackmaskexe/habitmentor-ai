@@ -258,32 +258,39 @@ export async function updateEditedHabit(
   updatedDescription: string,
   updatedFrequency: boolean[]
 ) {
-  // looking up which actual things were changed:
+  console.log(
+    "anywhere door se bitches pe jaa",
+    updatedName,
+    updatedDescription,
+    updatedFrequency
+  );
+  // looking up which actual things were changed, therefore need unchanged habit to compare with:
   const unchangedHabit = getHabitObjectFromId(habitId)!; // this is the unchanged version of the edited habit
 
   // seeing which all fields were changed (prevent unnecessary operations from tigrelini watermelini db)
-  const didNameChange = unchangedHabit.habitName != updatedName;
+  let didNameChange = unchangedHabit.habitName != updatedName;
+
+  // catching falsy name values under the didNameChange variable: (mmkv goes hay if habitname is something falsy)
+  if (!updatedName) {
+    didNameChange = false;
+  }
+
   const didDescriptionChange =
     unchangedHabit.habitDescription != updatedDescription;
   const didFrequencyChange =
     JSON.stringify(updatedFrequency) !=
     JSON.stringify(unchangedHabit.frequency);
 
-  console.log(
-    didNameChange,
-    didDescriptionChange,
-    didFrequencyChange,
-    "I know the way this ends, I'll get played in the end"
-  );
   // updating the mmkvStorage with the new updated habit information
   const updatedHabits = getAllHabits().map((habit) => {
     if (habit.id == habitId) {
-      console.log("I don't want to see you on monday", habit.frequency);
       return {
         // not checking for changes between the two versions, mmkv is fast enough to not care
         ...habit,
-        habitName: updatedName,
-        habitDescription: updatedDescription,
+        habitName: didNameChange ? updatedName : habit.habitName,
+        habitDescription: didDescriptionChange
+          ? updatedDescription
+          : habit.habitDescription,
         frequency: didFrequencyChange ? updatedFrequency : habit.frequency,
       };
     }
@@ -291,12 +298,6 @@ export async function updateEditedHabit(
     return habit;
   });
 
-  console.log(
-    updatedHabits,
-    "MONDAY WEDNESDAY FRIDAY SATURDAY SUNDAY BUT ON THURSDAY, ONLY ON THURSTDAY",
-    didFrequencyChange
-  );
-  console.log("no more dance again, oooh yaeh....");
   mmkvStorage.set("activeHabits", JSON.stringify(updatedHabits));
 
   // updating the tables in tigrelini watermelini db:

@@ -68,6 +68,9 @@ export default function EditHabitView({
         <View style={styles.headerBar}>
           <TouchableOpacity
             onPress={() => {
+              console.log(
+                "brake ki jagah accelerator dabau, agle din tv par aau"
+              );
               const oldHabit = getHabitObjectFromId(habitId)!;
               // checking if there are even changes in the habit in the menu:
               let didUserEditHabit = null;
@@ -83,6 +86,7 @@ export default function EditHabitView({
               }
 
               if (didUserEditHabit) {
+                console.log("ziggy liggi");
                 Alert.alert(
                   `Update Habit`,
                   "Are you sure?",
@@ -95,6 +99,9 @@ export default function EditHabitView({
                     {
                       text: "Yes",
                       onPress: async () => {
+                        console.log(
+                          "gaadi meri 2 seater. usme laga hai 1 heater. chalata hai usko peter. pete ka tut gaya meter"
+                        );
                         await updateEditedHabit(
                           habitId,
                           updatedHabit.habitName,
