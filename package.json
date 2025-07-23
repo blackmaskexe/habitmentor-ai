@@ -14,7 +14,7 @@
   "dependencies": {
     "@expo/vector-icons": "^14.1.0",
     "@gorhom/bottom-sheet": "^5",
-    "@legendapp/list": "^1.0.7",
+    "@legendapp/list": "1.0.10",
     "@nozbe/watermelondb": "^0.28.0",
     "@react-native-async-storage/async-storage": "2.1.2",
     "@react-native-community/datetimepicker": "8.4.1",
@@ -32,7 +32,6 @@
     "expo-dev-client": "~5.2.2",
     "expo-device": "~7.1.4",
     "expo-doctor": "^1.13.5",
-    "expo-drizzle-studio-plugin": "^0.1.2",
     "expo-font": "~13.3.2",
     "expo-haptics": "~14.1.4",
     "expo-image": "~2.4.0",
