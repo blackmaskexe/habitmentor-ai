@@ -22,6 +22,7 @@ import EditHabitForm from "./EditHabitForm";
 import { FormValuesType } from "@/utils/types";
 import CTAButton from "../general/CTAButton";
 import EdithabitDropdownMenu from "./zeego/EditHabitDropdownMenu";
+import { useNotifications } from "@/utils/useNotifications";
 
 type UpdatedHabitType = {
   habitName: string;
@@ -36,6 +37,9 @@ export default function EditHabitView({
   onChangeDisplayScreen: (screen: string) => void;
   habitId: string;
 }) {
+  const { cancelAllScheduledNotifications, schedulePushNotification } =
+    useNotifications();
+
   const theme = useTheme();
   const styles = createStyles(theme);
 
@@ -106,7 +110,9 @@ export default function EditHabitView({
                           habitId,
                           updatedHabit.habitName,
                           updatedHabit.habitDescription,
-                          updatedHabit.frequency
+                          updatedHabit.frequency,
+                          cancelAllScheduledNotifications,
+                          schedulePushNotification
                         );
                       },
                     },

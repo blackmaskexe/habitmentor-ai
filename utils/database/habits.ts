@@ -1,21 +1,12 @@
 // this file is based off the activeHabits key found in the mmkvStorage
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import {
-  getDate,
-  getDateFromFormattedDate,
-  getDateFromFormattedTime,
-  getFormattedDate,
-} from "../date";
+import { getDate, getDateFromFormattedTime, getFormattedDate } from "../date";
 import mmkvStorage from "../mmkvStorage";
 import { HabitObject } from "../types";
 import { onMarkAsComplete } from "./habitHistoryManager";
 import database from "./watermelon";
 import { Q } from "@nozbe/watermelondb";
 import HabitCompletion from "./watermelon/model/HabitCompletion";
-import { useNotifications } from "../useNotifications";
-
-const { cancelAllScheduledNotifications, schedulePushNotification } =
-  useNotifications();
 
 export function updateHabitNotificationId(
   habitId: string,
@@ -256,7 +247,9 @@ export async function updateEditedHabit(
   habitId: string,
   updatedName: string,
   updatedDescription: string,
-  updatedFrequency: boolean[]
+  updatedFrequency: boolean[],
+  cancelAllScheduledNotifications: () => Promise<void>,
+  schedulePushNotification: (time: Date, habit: HabitObject) => Promise<void>
 ) {
   console.log(
     "anywhere door se bitches pe jaa",

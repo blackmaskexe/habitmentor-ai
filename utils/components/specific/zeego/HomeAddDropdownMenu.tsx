@@ -2,9 +2,7 @@ import { TouchableOpacity } from "react-native";
 import * as DropdownMenu from "./dropdown-menu";
 import { Ionicons } from "@expo/vector-icons";
 import { useTheme } from "@/utils/theme/ThemeContext";
-import mmkvStorage from "@/utils/mmkvStorage";
 import { useRouter } from "expo-router";
-import { useNotifications } from "@/utils/useNotifications";
 import AddNewHabitModal from "../AddNewHabitModal";
 import { useState } from "react";
 
