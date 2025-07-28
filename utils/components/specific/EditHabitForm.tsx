@@ -53,16 +53,15 @@ export default function EditHabitForm({
 }) {
   const theme = useTheme();
   const styles = createStyles(theme, BOX_SIZE);
-  const [habitFrequency, setHabitFrequency] = useState<boolean[]>(
-    Array(7).fill(false)
-  );
+  const [habitFrequency, setHabitFrequency] = useState<boolean[] | null>(null);
 
   useEffect(() => {
-    console.log(values, "dilon ka shooter hai mera scooter");
+    console.log(values, "Pick up your phone. I... all alone.");
   }, [values]);
+
   useEffect(() => {
+    // setting the initial value of the habitFrequency
     const habitObject: HabitObject = getHabitObjectFromId(habitId)!;
-    console.log(habitObject, "khare check ni, rakhe check ni. Billo sardarrey");
 
     setValues(() => {
       return {
@@ -76,10 +75,6 @@ export default function EditHabitForm({
       return habitObject.frequency;
     });
   }, []);
-
-  useEffect(() => {
-    console.log("I ain't washin my sins, ", values);
-  }, [values]);
 
   return (
     <View style={styles.container}>
@@ -103,14 +98,7 @@ export default function EditHabitForm({
 
             <View style={styles.spaceSmall} />
             <WeekdayFrequencyPicker
-              currentFrequency={
-                // sets the frequency property inside the values state
-                daysOfWeek.filter((weekday, index) => {
-                  if (habitFrequency[index]) return true; // filters such that only those days which are true in the habitFrequency make it in this array
-                  // so [t,f,t,f,t,t,f] becomes ["Sun", "Tue", "Thu", "Fri"]
-                  // I might fix this behavior of the WeekdayFrequencyPicker in the future, but letting it remain this way now
-                }) || daysOfWeek
-              }
+              initialFrequency={habitFrequency}
               onChangeValues={setValues}
             />
 

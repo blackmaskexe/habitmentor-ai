@@ -61,10 +61,19 @@ export default function VariableItemPicker({
 
   const [activeHabitItemIndex, setActiveHabitItemIndex] = useState(0); // tracks which habit item is being pressed
 
-  const [habitsFrequency, setHabitFrequency] = useState(
+  const [habitFrequency, setHabitFrequency] = useState(
     // this array contains array of days (In the format of Mon, Tue, Wed) that the user wants to do these habits on
-    Array(1).fill(null)
+    Array(7).fill(true)
   );
+
+  useEffect(() => {
+    // set freqency in the form values variable (which will be later assigned to the HabitObject's property)
+    // whenever frequency changes
+    setValues((oldValues) => {
+      const newValues = { ...oldValues, frequency: habitFrequency };
+      return newValues;
+    });
+  }, [habitFrequency]);
 
   const [modalVisible, setModalVisible] = useState(false);
   const [moreHabitsArray, setMoreHabitsArray] = useState(Array(1).fill(null));
@@ -237,17 +246,7 @@ export default function VariableItemPicker({
 
                   <View style={styles.spaceSmall} />
                   <WeekdayFrequencyPicker
-                    currentFrequency={
-                      habitsFrequency[activeHabitItemIndex] || [
-                        "Sun",
-                        "Mon",
-                        "Tue",
-                        "Wed",
-                        "Thu",
-                        "Fri",
-                        "Sat",
-                      ]
-                    }
+                    initialFrequency={habitFrequency}
                     onChangeValues={setValues}
                   />
 

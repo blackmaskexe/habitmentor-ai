@@ -13,7 +13,7 @@ import GenericForm from "../general/GenericForm";
 import TaskFrequencyDropdownMenu from "./zeego/TaskFrequencyDropdownMenu";
 import WeekdayFrequencyPicker from "./WeekdayFrequencyPicker";
 import CTAButton from "../general/CTAButton";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FormValuesType } from "@/utils/types";
 import { Ionicons } from "@expo/vector-icons";
 import { Theme } from "@/utils/theme/themes";
@@ -50,7 +50,16 @@ export default function AddNewHabitModal({
   const theme = useTheme();
   const styles = createStyles(theme, BOX_SIZE);
   const [values, setValues] = useState<FormValuesType>({});
-  const [habitFrequency, setHabitFrequency] = useState([]);
+  const [habitFrequency, setHabitFrequency] = useState<boolean[]>(
+    Array(7).fill(true)
+  );
+
+  useEffect(() => {
+    setValues((oldValues) => {
+      const newValues = { ...oldValues, frequency: habitFrequency };
+      return newValues;
+    });
+  }, [habitFrequency]);
 
   return (
     <Modal
@@ -108,22 +117,14 @@ export default function AddNewHabitModal({
                 />
                 <TaskFrequencyDropdownMenu
                   index={0}
-                  onSetHabitFrequency={setHabitFrequency} // sets the frequency property inside the values state
+                  onSetHabitFrequency={setHabitFrequency} // sets the frequency property inside the frequency state
                 />
 
                 <View style={styles.spaceSmall} />
                 <WeekdayFrequencyPicker
-                  currentFrequency={
+                  initialFrequency={
                     // sets the frequency property inside the values state
-                    habitFrequency[0] || [
-                      "Sun",
-                      "Mon",
-                      "Tue",
-                      "Wed",
-                      "Thu",
-                      "Fri",
-                      "Sat",
-                    ]
+                    habitFrequency
                   }
                   onChangeValues={setValues}
                 />

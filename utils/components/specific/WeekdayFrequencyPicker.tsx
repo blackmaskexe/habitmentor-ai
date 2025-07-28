@@ -7,49 +7,24 @@ import * as Haptics from "expo-haptics";
 import { Theme } from "@/utils/theme/themes";
 
 export default function WeekdayFrequencyPicker({
-  currentFrequency,
-  onChangeValues,
+  initialFrequency,
+  onChangeValues, // values of the object that will be set as the habitObject's properties
 }: {
-  currentFrequency: string[];
+  initialFrequency: boolean[] | null;
   onChangeValues: (updater: (oldValue: any) => any) => void;
 }) {
-  useEffect(() => {
-    // When currentFrequency changes, then change how the
-    // boxes for weekdays are displayed
-
-    onHabitFrequencyChange();
-  }, [currentFrequency]);
-
   const theme = useTheme();
   const styles = createStyles(theme);
 
   const [activeDays, setActiveDays] = useState(Array(7).fill(true));
 
   useEffect(() => {
-    // write to the GenericForm's value the frequency data about the habit
-    updateValueState(activeDays);
-  }, [activeDays]);
-
-  const updateValueState = function (newActiveDays: any) {
-    onChangeValues((oldValue: any) => {
-      console.log("you knowwww", oldValue);
-      const newValue = oldValue;
-      newValue.frequency = newActiveDays;
-      console.log("girl I'm so glad we're acquainted", newValue);
-
-      return newValue;
-    });
-  };
-
-  const onHabitFrequencyChange = function () {
-    const newActiveDays = Array(7).fill(false);
-    weekdays.forEach((item, index) => {
-      if (currentFrequency.includes(item)) {
-        newActiveDays[index] = true;
-      }
-    });
-    setActiveDays(newActiveDays);
-  };
+    // since initialFrequency is loaded in the parent component inside a useEffect, it will be updated from
+    // a null value to the actual initial frequency
+    if (initialFrequency) {
+      setActiveDays(initialFrequency);
+    }
+  }, [initialFrequency]);
 
   const handleDayPress = function (index: number) {
     setActiveDays((oldActiveDays) => {
@@ -57,6 +32,12 @@ export default function WeekdayFrequencyPicker({
 
       const newActiveDays = [...oldActiveDays];
       newActiveDays[index] = !newActiveDays[index];
+
+      onChangeValues((oldValues) => {
+        const newValues = { ...oldValues, frequency: newActiveDays };
+        return newValues;
+      });
+
       return newActiveDays;
     });
   };
