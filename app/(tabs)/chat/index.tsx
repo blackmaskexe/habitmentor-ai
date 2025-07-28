@@ -47,7 +47,21 @@ const Chat = () => {
   ).current;
 
   return (
-    <View style={{ flex: 1 }} {...panResponder.panHandlers}>
+    <View style={{ flex: 1 }}>
+      {/* Edge swipe area */}
+      <View
+        {...panResponder.panHandlers}
+        style={{
+          position: "absolute",
+          left: 0,
+          top: 0,
+          bottom: 0,
+          width: 30, // Only left 30px is swipeable
+          zIndex: 10,
+        }}
+        pointerEvents="auto"
+      />
+      {/* Main content */}
       <ChatMessages
         tooltips={[
           "Help improve habit",
