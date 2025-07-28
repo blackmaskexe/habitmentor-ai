@@ -8,7 +8,9 @@ import {
   TouchableOpacity,
   Alert,
 } from "react-native";
+
 import DatePicker from "react-native-date-picker";
+
 import { useTheme } from "@/utils/theme/ThemeContext";
 import { Ionicons } from "@expo/vector-icons";
 import CTAButton from "../general/CTAButton"; // Assuming this is your custom button
@@ -109,13 +111,14 @@ export default function ReminderView({
 
       <View style={styles.pickerContainer}>
         {/* <DateTimePicker
-          testID="timePicker"
+          // testID="timePicker"
           value={time}
           mode="time"
-          is24Hour={Platform.OS === "ios" ? undefined : true}
-          display="spinner"
-          onChange={handleTimeChange}
-          style={styles.dateTimePicker}
+          // is24Hour={Platform.OS === "ios" ? undefined : true}
+          // display="spinner"
+          // onChange={handleTimeChange}
+          // style={styles.dateTimePicker}
+          display="calendar"
         /> */}
 
         <DatePicker date={time} onDateChange={handleTimeChange} mode="time" />
