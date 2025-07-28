@@ -115,10 +115,6 @@ export function getAllHabitsOnWeekday(weekdayNumber: number) {
   );
 
   return activeHabits.filter((habit, index) => {
-    console.log(
-      "disama i give you all da ga, gimme all for dis, i need confidence in msyelf",
-      habit
-    );
     return habit.frequency[weekdayNumber]; // only those habits will be returned that are active on that weekday
   });
 }

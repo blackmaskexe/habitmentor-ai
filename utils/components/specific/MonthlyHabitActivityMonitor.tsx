@@ -13,6 +13,7 @@ import {
   getAllHabitsOnWeekday,
   getTotalHabitNumberOnDay,
 } from "@/utils/database/habits";
+import mmkvStorage from "@/utils/mmkvStorage";
 
 interface DayActivity {
   date: Date;
@@ -20,23 +21,31 @@ interface DayActivity {
 }
 
 export const MonthlyHabitActivityMonitor: React.FC = () => {
+  const daysInMonth = new Date(
+    new Date().getFullYear(),
+    new Date().getMonth() + 1,
+    0
+  ).getDate();
   const [activities, setActivities] = useState<DayActivity[]>(
-    Array.from({ length: 30 }, () => ({
+    Array.from({ length: daysInMonth }, () => ({
       // Use Array.from
-      date: new Date(Math.random() * 1000000), // Create a new Date object each time
+      date: new Date(Math.random() * 212121), // Create a new Date object each time
       completionPercentage: 0,
     }))
   );
 
   function calculatePercentageForDay(date: Date) {
     let habitsCompleted = 0;
-    let futureHabits = 0; // habits that have not yet been started, their start date is later than habitDate input
+    let futureHabits = 0; // habits that have not yet been created, their start date is later than habitDate input
     for (const habitHistoryEntry of getHabitHistoryEntries()) {
       if (habitHistoryEntry.completionDate == getFormattedDate(date)) {
         habitsCompleted++;
       }
     }
 
+    // finding the number of habits on that date which have not yet been created
+    // doing this so we can grab ALL habits that are active on that weekday, and subtract this number
+    // to get effective number of habits to be completed
     for (const habit of getAllHabitsOnWeekday(getWeekdayNumber(date))) {
       if (getDate() < getDateFromFormattedDate(habit.startDate!)) {
         futureHabits++;
@@ -53,15 +62,28 @@ export const MonthlyHabitActivityMonitor: React.FC = () => {
     // calculate completion percentages (content of activities state) on mount
     const today = getDate();
     const dayToday = today.getDate();
+    let appStartDate = null;
+
+    if (mmkvStorage.getString("appStartDate")) {
+      appStartDate = getDateFromFormattedDate(
+        mmkvStorage.getString("appStartDate")!
+      );
+    } else {
+      appStartDate = today;
+      mmkvStorage.set("appStartDate", getFormattedDate());
+    }
 
     setActivities((oldActivities) => {
       const newActivities = [...oldActivities];
       for (let i = 1; i < dayToday + 1; i++) {
+        console.log("kansol log", today, appStartDate, today > appStartDate);
+
         // looping for days of month until today
         const dateThisDay = new Date(today.getFullYear(), today.getMonth(), i);
         newActivities[i - 1] = {
           date: dateThisDay, // ith day of the month
-          completionPercentage: calculatePercentageForDay(dateThisDay),
+          completionPercentage:
+            today > appStartDate ? calculatePercentageForDay(dateThisDay) : 0, // making sure doesn't mark days in which you didn't even download the app
         };
       }
 

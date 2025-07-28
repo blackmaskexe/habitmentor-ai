@@ -210,7 +210,22 @@ const DailyHabitsView = ({ date }: { date: Date }) => {
 
       return (
         <View key={index}>
-          <View style={styles.habitCard}>
+          <TouchableOpacity
+            style={styles.habitCard}
+            onPress={() => {
+              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+              SheetManager.show("example-sheet", {
+                payload: {
+                  sheetType: "habitItem",
+                  habit: habit,
+                  habitDate: date,
+                },
+              }).then((res) => {
+                // on closing of the ActionSheet (is when the promise is fullfilled, refresh habits)
+                loadHabits();
+              });
+            }}
+          >
             {renderHabitItem(habit, index)}
 
             <TouchableOpacity
@@ -253,7 +268,7 @@ const DailyHabitsView = ({ date }: { date: Date }) => {
                 />
               )}
             </TouchableOpacity>
-          </View>
+          </TouchableOpacity>
         </View>
       );
     }

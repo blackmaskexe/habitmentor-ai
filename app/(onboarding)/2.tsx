@@ -21,6 +21,7 @@ import CTAButton from "@/utils/components/general/CTAButton";
 import GenericList from "@/utils/components/general/GenericList";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import mmkvStorage from "@/utils/mmkvStorage";
+import { getFormattedDate } from "@/utils/date";
 
 const UserSettingsPrompt = () => {
   const router = useRouter();
@@ -147,6 +148,7 @@ const UserSettingsPrompt = () => {
           <CTAButton
             title="Begin Your Journey"
             onPress={() => {
+              mmkvStorage.set("appStartDate", getFormattedDate());
               AsyncStorage.setItem("hasOnboarded", "true")
                 .then((result) => {
                   router.replace("/(tabs)/home"); // send the user to home (i just wanan drive to homeeeeeeeeeeeeeee)
