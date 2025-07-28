@@ -100,7 +100,13 @@ const WeekAtAGlance: React.FC<WeekAtAGlanceProps> = () => {
             appStartDate = getDate();
           }
 
-          if (getDateFromFormattedDate(weekdayFormattedDate) < appStartDate) {
+          if (getTotalHabitNumberOnDay(weekdayIndex) == 0) {
+            // if there are no habits that are to be done on this day, then
+            // return 0 opacity
+            return 0;
+          } else if (
+            getDateFromFormattedDate(weekdayFormattedDate) < appStartDate
+          ) {
             return 0;
           } else {
             // if it was downloaded before this day, set a legit day percentage
