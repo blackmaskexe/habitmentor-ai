@@ -62,8 +62,8 @@ export const MonthlyHabitActivityMonitor: React.FC = () => {
     // calculate completion percentages (content of activities state) on mount
     const today = getDate();
     const dayToday = today.getDate();
-    let appStartDate = null;
 
+    let appStartDate = null;
     if (mmkvStorage.getString("appStartDate")) {
       appStartDate = getDateFromFormattedDate(
         mmkvStorage.getString("appStartDate")!
@@ -75,15 +75,22 @@ export const MonthlyHabitActivityMonitor: React.FC = () => {
 
     setActivities((oldActivities) => {
       const newActivities = [...oldActivities];
-      for (let i = 1; i < dayToday + 1; i++) {
+
+      // if you started the app before the 1st of this month, then calculations will be done from the 1st of the month
+      // otherwise, calclations will be done from the day of the month you started
+      const initialDayOfMonth =
+        new Date(today.getFullYear(), today.getMonth(), 1) > appStartDate
+          ? 1
+          : appStartDate.getDate();
+
+      for (let i = initialDayOfMonth; i < dayToday + 1; i++) {
         console.log("kansol log", today, appStartDate, today > appStartDate);
 
         // looping for days of month until today
         const dateThisDay = new Date(today.getFullYear(), today.getMonth(), i);
         newActivities[i - 1] = {
           date: dateThisDay, // ith day of the month
-          completionPercentage:
-            today > appStartDate ? calculatePercentageForDay(dateThisDay) : 0, // making sure doesn't mark days in which you didn't even download the app
+          completionPercentage: calculatePercentageForDay(dateThisDay),
         };
       }
 

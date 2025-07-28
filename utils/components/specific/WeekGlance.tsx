@@ -7,6 +7,7 @@ import {
   getDate,
   getDateFromFormattedDate,
   getDatesThisWeek,
+  getFormattedDate,
   getFormattedDatesThisWeek,
   getWeekdayNumber,
 } from "@/utils/date";
@@ -70,12 +71,12 @@ const WeekAtAGlance: React.FC<WeekAtAGlanceProps> = () => {
     function calculateAndSetDayPercentages() {
       const formattedWeekDayArray = getFormattedDatesThisWeek();
       const newDayPercentages = formattedWeekDayArray.map(
-        (item, weekdayIndex) => {
+        (weekdayFormattedDate, weekdayIndex) => {
           let habitsCompleted = 0;
-          let futureHabits = 0; // habits that have not yet been started, their start date is later than habitDate input
+          let futureHabits = 0; // habits that have not yet been created, their start date is later than habitDate input
 
           for (const habitHistoryEntry of getHabitHistoryEntries()) {
-            if (habitHistoryEntry.completionDate == item) {
+            if (habitHistoryEntry.completionDate == weekdayFormattedDate) {
               habitsCompleted++;
             }
           }
@@ -88,11 +89,27 @@ const WeekAtAGlance: React.FC<WeekAtAGlanceProps> = () => {
 
           const effectiveHabitsCompleted = habitsCompleted + futureHabits;
 
-          return (
-            (effectiveHabitsCompleted /
-              getTotalHabitNumberOnDay(weekdayIndex)) *
-            100
-          );
+          // if the app wasn't downloaded on this day, just return a 0 percentage:
+          let appStartDate = null;
+          if (mmkvStorage.getString("appStartDate")) {
+            appStartDate = getDateFromFormattedDate(
+              mmkvStorage.getString("appStartDate")!
+            );
+          } else {
+            mmkvStorage.set("appStartDate", getFormattedDate());
+            appStartDate = getDate();
+          }
+
+          if (getDateFromFormattedDate(weekdayFormattedDate) < appStartDate) {
+            return 0;
+          } else {
+            // if it was downloaded before this day, set a legit day percentage
+            return (
+              (effectiveHabitsCompleted /
+                getTotalHabitNumberOnDay(weekdayIndex)) *
+              100
+            );
+          }
         }
       );
 
