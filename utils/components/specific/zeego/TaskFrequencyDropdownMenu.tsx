@@ -5,6 +5,7 @@ import { useTheme } from "@/utils/theme/ThemeContext";
 import mmkvStorage from "@/utils/mmkvStorage";
 import { useRouter } from "expo-router";
 import FrequencyPickerOptionList from "../FrequencyPickerOptionList";
+import { HabitObject } from "@/utils/types";
 
 const weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
@@ -17,10 +18,11 @@ export default function TaskFrequencyDropdownMenu({
 }) {
   const setHabitFrequency = function (frequency: boolean[]) {
     // set the habit frequency array to have an array of days that the habit is to be done on
-    onSetHabitFrequency((oldHabitFrequencies: any) => {
-      const newHabitFrequencies = [...oldHabitFrequencies];
-      newHabitFrequencies[index] = frequency;
-      return newHabitFrequencies;
+
+    // this will directly change the properties of the HabitObject's value
+    onSetHabitFrequency((oldHabitFrequency: HabitObject) => {
+      const newHabitFrequency = { ...oldHabitFrequency, frequency: frequency };
+      return newHabitFrequency;
     });
   };
   const router = useRouter();
@@ -35,7 +37,7 @@ export default function TaskFrequencyDropdownMenu({
         <DropdownMenu.DropdownMenuItem
           key="everyday"
           onSelect={() => {
-            onSetHabitFrequency(Array(7).fill(true));
+            setHabitFrequency(Array(7).fill(true));
           }}
         >
           <DropdownMenu.DropdownMenuItemTitle>
@@ -45,7 +47,7 @@ export default function TaskFrequencyDropdownMenu({
         <DropdownMenu.DropdownMenuItem
           key="weekday"
           onSelect={() => {
-            onSetHabitFrequency([false, true, true, true, true, true, false]);
+            setHabitFrequency([false, true, true, true, true, true, false]);
           }}
         >
           <DropdownMenu.DropdownMenuItemTitle>
@@ -55,15 +57,7 @@ export default function TaskFrequencyDropdownMenu({
         <DropdownMenu.DropdownMenuItem
           key="weekend"
           onSelect={() => {
-            onSetHabitFrequency([
-              true,
-              false,
-              false,
-              false,
-              false,
-              false,
-              true,
-            ]);
+            setHabitFrequency([true, false, false, false, false, false, true]);
           }}
         >
           <DropdownMenu.DropdownMenuItemTitle>
@@ -73,7 +67,7 @@ export default function TaskFrequencyDropdownMenu({
         <DropdownMenu.DropdownMenuItem
           key="custom"
           onSelect={() => {
-            onSetHabitFrequency(Array(7).fill(false));
+            setHabitFrequency(Array(7).fill(false));
           }}
         >
           <DropdownMenu.DropdownMenuItemTitle>

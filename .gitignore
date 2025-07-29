@@ -90,3 +90,4 @@ yarn-error.*
 # build files
 ios
 android
+*.ipa

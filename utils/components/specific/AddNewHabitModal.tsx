@@ -50,16 +50,6 @@ export default function AddNewHabitModal({
   const theme = useTheme();
   const styles = createStyles(theme, BOX_SIZE);
   const [values, setValues] = useState<FormValuesType>({});
-  const [habitFrequency, setHabitFrequency] = useState<boolean[]>(
-    Array(7).fill(true)
-  );
-
-  useEffect(() => {
-    setValues((oldValues) => {
-      const newValues = { ...oldValues, frequency: habitFrequency };
-      return newValues;
-    });
-  }, [habitFrequency]);
 
   return (
     <Modal
@@ -117,16 +107,13 @@ export default function AddNewHabitModal({
                 />
                 <TaskFrequencyDropdownMenu
                   index={0}
-                  onSetHabitFrequency={setHabitFrequency} // sets the frequency property inside the frequency state
+                  onSetHabitFrequency={setValues} // sets the frequency property inside the frequency state
                 />
 
                 <View style={styles.spaceSmall} />
                 <WeekdayFrequencyPicker
-                  initialFrequency={
-                    // sets the frequency property inside the values state
-                    habitFrequency
-                  }
                   onChangeValues={setValues}
+                  values={values}
                 />
 
                 <Text style={styles.formLabel}></Text>

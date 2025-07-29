@@ -78,11 +78,21 @@ export default function VariableItemPicker({
   const [modalVisible, setModalVisible] = useState(false);
   const [moreHabitsArray, setMoreHabitsArray] = useState(Array(1).fill(null));
 
+  console.log(
+    values,
+    "I just gotta see it through, I just gotta see it through.. "
+  );
+
   // not enforcing typing here. It's a complex functionality, and if it ain't broke don't fix it typeshi
 
   const handleNewHabitSubmission = function () {
     setModalVisible(false);
     const habitData = values;
+
+    // safety net for when the user doesn't change their frequency options (leaves it at all true)
+    if (!habitData.frequency) {
+      habitData.frequency = Array(7).fill(true);
+    }
     habitData.iconName = getHabitIcon(habitData.habitName);
 
     setValues({}); // clear the form upon submission
@@ -150,12 +160,17 @@ export default function VariableItemPicker({
     // because it's always gonna be null
   }, [moreHabitsArray]);
 
-  const renderEmptyBoxes = () => {
+  const renderHabitBoxes = () => {
     return moreHabitsArray.map((_, index) => (
       <Pressable
         key={index}
         style={styles.row}
         onPress={() => {
+          // pre-filling the frequency so that the frequency pickers start using it
+          setValues((oldValues) => {
+            return { ...oldValues, frequency: Array(7).fill(true) };
+          });
+
           setModalVisible(true);
           setActiveHabitItemIndex(index);
         }}
@@ -188,7 +203,7 @@ export default function VariableItemPicker({
 
   return (
     <View style={styles.container}>
-      {renderEmptyBoxes()}
+      {renderHabitBoxes()}
       <Modal
         animationType="slide"
         transparent={true}
@@ -241,13 +256,13 @@ export default function VariableItemPicker({
                   />
                   <TaskFrequencyDropdownMenu
                     index={activeHabitItemIndex}
-                    onSetHabitFrequency={setHabitFrequency}
+                    onSetHabitFrequency={setValues}
                   />
 
                   <View style={styles.spaceSmall} />
                   <WeekdayFrequencyPicker
-                    initialFrequency={habitFrequency}
                     onChangeValues={setValues}
+                    values={values}
                   />
 
                   <Text style={styles.formLabel}></Text>

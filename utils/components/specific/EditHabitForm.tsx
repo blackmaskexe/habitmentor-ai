@@ -53,7 +53,6 @@ export default function EditHabitForm({
 }) {
   const theme = useTheme();
   const styles = createStyles(theme, BOX_SIZE);
-  const [habitFrequency, setHabitFrequency] = useState<boolean[] | null>(null);
 
   useEffect(() => {
     console.log(values, "Pick up your phone. I... all alone.");
@@ -69,10 +68,6 @@ export default function EditHabitForm({
         habitName: habitObject.habitName,
         habitDescription: habitObject.habitDescription,
       };
-    });
-
-    setHabitFrequency(() => {
-      return habitObject.frequency;
     });
   }, []);
 
@@ -98,8 +93,9 @@ export default function EditHabitForm({
 
             <View style={styles.spaceSmall} />
             <WeekdayFrequencyPicker
-              initialFrequency={habitFrequency}
+              initialFrequency={values.frequency}
               onChangeValues={setValues}
+              values={values}
             />
 
             <Text style={styles.formLabel}></Text>

@@ -9,22 +9,31 @@ import { Theme } from "@/utils/theme/themes";
 export default function WeekdayFrequencyPicker({
   initialFrequency,
   onChangeValues, // values of the object that will be set as the habitObject's properties
+  values,
 }: {
-  initialFrequency: boolean[] | null;
+  initialFrequency?: boolean[];
   onChangeValues: (updater: (oldValue: any) => any) => void;
+  values: any;
 }) {
   const theme = useTheme();
   const styles = createStyles(theme);
 
-  const [activeDays, setActiveDays] = useState(Array(7).fill(true));
+  const [activeDays, setActiveDays] = useState(
+    initialFrequency || Array(7).fill(true)
+  );
 
   useEffect(() => {
-    // since initialFrequency is loaded in the parent component inside a useEffect, it will be updated from
-    // a null value to the actual initial frequency
-    if (initialFrequency) {
-      setActiveDays(initialFrequency);
+    // change the frequency if it is changed by any other means
+    // mainly, the frequency changing dropdown
+    console.log("VALUE BADLA", values);
+    if (values.frequency) {
+      console.log(
+        "Bring your best friend, then pull up to the west end",
+        values
+      );
+      setActiveDays(values.frequency);
     }
-  }, [initialFrequency]);
+  }, [values]);
 
   const handleDayPress = function (index: number) {
     setActiveDays((oldActiveDays) => {
