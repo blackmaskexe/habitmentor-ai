@@ -2009,6 +2009,13 @@
     prompts "^2.4.2"
     semver "^7.5.2"
 
+"@react-native-community/datetimepicker@8.4.1":
+  version "8.4.1"
+  resolved "https://registry.yarnpkg.com/@react-native-community/datetimepicker/-/datetimepicker-8.4.1.tgz#a798c237f01ae96658d5c93292fc2955dad04a83"
+  integrity sha512-DrK+CUS5fZnz8dhzBezirkzQTcNDdaXer3oDLh0z4nc2tbdIdnzwvXCvi8IEOIvleoc9L95xS5tKUl0/Xv71Mg==
+  dependencies:
+    invariant "^2.2.4"
+
 "@react-native-menu/menu@^1.2.3":
   version "1.2.3"
   resolved "https://registry.yarnpkg.com/@react-native-menu/menu/-/menu-1.2.3.tgz#7a6a6748d610ab0d14aa65e1414520a5254aeff6"
@@ -6829,6 +6836,11 @@ postcss@~8.4.32:
     picocolors "^1.1.1"
     source-map-js "^1.2.1"
 
+postinstall-postinstall@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/postinstall-postinstall/-/postinstall-postinstall-2.1.0.tgz#4f7f77441ef539d1512c40bd04c71b06a4704ca3"
+  integrity sha512-7hQX6ZlZXIoRiWNrbMQaLzUUfH+sSx39u8EJ9HYuDc1kLo9IXKWjM5RSquZN1ad5GnH8CGFM78fsAAQi3OKEEQ==
+
 prelude-ls@^1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/prelude-ls/-/prelude-ls-1.2.1.tgz#debc6489d7a6e6b0e7611888cec880337d316396"
@@ -7045,10 +7057,9 @@ react-native-context-menu-view@^1.19.0:
   resolved "https://registry.yarnpkg.com/react-native-context-menu-view/-/react-native-context-menu-view-1.19.0.tgz#6752f619afa327d51a470882fd574282a97fad0f"
   integrity sha512-RKkDUQuY9cVIb3rJl0ch8+FLH/WnjN6febtOuSif/6F3q7vuMZ8Ie+jmYGtnIbvSxl6lMknAZU61O192ysW3zg==
 
-react-native-date-picker@^5.0.13:
+"react-native-date-picker@github:blackmaskexe/react-native-date-picker":
   version "5.0.13"
-  resolved "https://registry.yarnpkg.com/react-native-date-picker/-/react-native-date-picker-5.0.13.tgz#fe05f58652aaeee9e67f73cf7436c32a623ff3a4"
-  integrity sha512-qCLUODZVsJetO5zuoXjw1D39K527XWqBG8sOfhWdHyPzf13h8RXR1/RSKd1N0fdRDi5GdyizYmB0lPAK12/hbw==
+  resolved "https://codeload.github.com/blackmaskexe/react-native-date-picker/tar.gz/504e0369ed4889abada4ef038d5ed5700dd1ae35"
 
 react-native-edge-to-edge@1.6.0:
   version "1.6.0"
