@@ -16,6 +16,9 @@
       "android": {
         "buildType": "app-bundle"
       },
+      "ios": {
+        "autoSubmit": true
+      },
       "autoIncrement": true
     },
     "development": {
@@ -38,6 +41,10 @@
     }
   },
   "submit": {
-    "production": {}
+    "production": {
+      "ios": {
+        "ascAppId": "6745747475"
+      }
+    }
   }
 }
