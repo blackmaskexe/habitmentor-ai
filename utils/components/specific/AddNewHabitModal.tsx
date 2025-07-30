@@ -125,7 +125,10 @@ export default function AddNewHabitModal({
                     // adding points + id to the habit
                     const newHabit = { ...values };
 
-                    if (newHabit && newHabit.frequency) {
+                    if (newHabit) {
+                      if (!newHabit.frequency) {
+                        newHabit.frequency = Array(7).fill(true); // default value when the user doesn't touch the frequency at all
+                      }
                       // if the frequency property exists within that habit item:
                       // seeing how many days the user is doing that particular habit:
                       const daysHabitIsActive = newHabit.frequency.reduce(
