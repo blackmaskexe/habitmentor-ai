@@ -28,6 +28,8 @@ import api from "@/utils/api";
 import AISuggestionSkeleton from "@/utils/components/specific/AISuggestionSkeleton";
 import {
   getDate,
+  getDateFromFormattedDate,
+  getDateMinusNDays,
   getFormattedDate,
   getFormattedDatesThisWeek,
   relationBetweenTodayAndDate,
@@ -38,6 +40,9 @@ import React from "react";
 import { Ionicons } from "@expo/vector-icons";
 
 export default function Index() {
+  // mmkvStorage.set("appStartDate", "2025-7-25");
+  console.log("Stay up bada eyyooooo", mmkvStorage.getString("appStartDate"));
+
   const [proActiveMessage, setProActiveMessage] = useState<string | null>(null); // will eventually fetch it's last value from a key-value store so that the user doesn't have to stare at the "loading" for 1-3 seconds
   const [proActiveMessageHeight, setProActiveMessageHeight] =
     useState<number>(76); // 76 because it is the height of the skeleton (60 height + 16 margin)
@@ -195,8 +200,31 @@ export default function Index() {
             </Text>
             <View style={styles.jumpToDayContainer}>
               <TouchableOpacity
-                style={styles.jumpToDayButton}
                 onPress={handleDateBack}
+                // makes the button disabled if the user just started their app
+                // so that they cannot view days that are before when they started
+                disabled={
+                  getDateMinusNDays(
+                    -1,
+                    getDateFromFormattedDate(
+                      mmkvStorage.getString("appStartDate")!
+                    )
+                  ) > habitsDate
+                }
+                style={[
+                  styles.jumpToDayButton,
+                  {
+                    opacity:
+                      getDateMinusNDays(
+                        -1,
+                        getDateFromFormattedDate(
+                          mmkvStorage.getString("appStartDate")!
+                        )
+                      ) > habitsDate
+                        ? 0.5
+                        : 1,
+                  },
+                ]}
               >
                 <Ionicons
                   name="chevron-back-outline"
