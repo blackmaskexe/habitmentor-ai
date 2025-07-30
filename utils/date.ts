@@ -15,6 +15,12 @@ export const getDate = function () {
   // return tomorrow;
 };
 
+export const getDateMinusNDays = (daysOffset: number, date?: Date) => {
+  const baseDate = date ? new Date(date) : getDate();
+  baseDate.setDate(baseDate.getDate() - daysOffset);
+  return baseDate;
+};
+
 export const getWeekdayNumber = function (date?: Date) {
   if (date) {
     return date.getDay();
