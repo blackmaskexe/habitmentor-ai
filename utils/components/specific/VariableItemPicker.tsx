@@ -8,6 +8,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  Alert,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useTheme } from "@/utils/theme/ThemeContext";
@@ -271,6 +272,16 @@ export default function VariableItemPicker({
                   <CTAButton
                     title={"Submit"}
                     onPress={() => {
+                      // checking if the user is having a habit with no frequency
+                      if (
+                        JSON.stringify(values.frequency) ==
+                        JSON.stringify(Array(7).fill(false))
+                      ) {
+                        Alert.alert(
+                          "Select at least one day to be the task frequency"
+                        );
+                        return;
+                      }
                       handleNewHabitSubmission();
                     }}
                     disabled={values.habitName ? false : true}

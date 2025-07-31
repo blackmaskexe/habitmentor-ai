@@ -55,30 +55,15 @@ export default function OverviewHabitdropdownMenu({
           </DropdownMenu.DropdownMenuItemTitle>
         </DropdownMenu.DropdownMenuItem>
 
-        <DropdownMenu.DropdownMenuItem
-          key="consistency-graph"
-          onSelect={() => {}}
-        >
+        <DropdownMenu.DropdownMenuItem key="edit-habit" onSelect={() => {}}>
           <DropdownMenu.DropdownMenuItemIcon
             ios={{
-              name: "chart.bar",
-              pointSize: 18,
+              name: "square.and.pencil",
+              pointSize: 22,
             }}
           />
           <DropdownMenu.DropdownMenuItemTitle>
-            View Consistency Graph
-          </DropdownMenu.DropdownMenuItemTitle>
-        </DropdownMenu.DropdownMenuItem>
-
-        <DropdownMenu.DropdownMenuItem key="skip-today" onSelect={() => {}}>
-          <DropdownMenu.DropdownMenuItemIcon
-            ios={{
-              name: "forward.end",
-              pointSize: 24,
-            }}
-          />
-          <DropdownMenu.DropdownMenuItemTitle>
-            Skip Habit for Today
+            Edit Habit
           </DropdownMenu.DropdownMenuItemTitle>
         </DropdownMenu.DropdownMenuItem>
 

@@ -8,6 +8,7 @@ import {
   Platform,
   StyleSheet,
   Dimensions,
+  Alert,
 } from "react-native";
 import GenericForm from "../general/GenericForm";
 import TaskFrequencyDropdownMenu from "./zeego/TaskFrequencyDropdownMenu";
@@ -126,6 +127,17 @@ export default function AddNewHabitModal({
                     const newHabit = { ...values };
 
                     if (newHabit) {
+                      // checking if the user is having a habit with no frequency
+                      if (
+                        JSON.stringify(newHabit.frequency) ==
+                        JSON.stringify(Array(7).fill(false))
+                      ) {
+                        Alert.alert(
+                          "Select at least one day to be the task frequency"
+                        );
+
+                        return;
+                      }
                       if (!newHabit.frequency) {
                         newHabit.frequency = Array(7).fill(true); // default value when the user doesn't touch the frequency at all
                       }

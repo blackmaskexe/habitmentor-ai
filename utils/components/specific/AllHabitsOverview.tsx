@@ -2,7 +2,6 @@ import { useTheme } from "@/utils/theme/ThemeContext";
 import { Ionicons } from "@expo/vector-icons";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SheetManager } from "react-native-actions-sheet";
-import HabitItemContextMenu from "./zeego/HabitItemContextMenu";
 import OverviewHabitdropdownMenu from "./zeego/OverviewHabitDropdownMenu";
 import { useEffect, useState } from "react";
 import { getHabitCompletionCollection } from "@/utils/database/dataCollectionHelper";
