@@ -62,6 +62,9 @@ export default function OverviewHabitdropdownMenu({
           onSelect={() => {
             router.replace("/(tabs)/home");
             setTimeout(() => {
+              // TODO OR NOT: Setting a 500ms delay so that it navigates to home
+              // because we cannot open an action sheet on an open modal window,
+              // which overview is one of them
               SheetManager.show("habit-sheet", {
                 payload: {
                   habit: habitItem,
@@ -80,6 +83,33 @@ export default function OverviewHabitdropdownMenu({
           />
           <DropdownMenu.DropdownMenuItemTitle>
             Edit Habit
+          </DropdownMenu.DropdownMenuItemTitle>
+        </DropdownMenu.DropdownMenuItem>
+
+        <DropdownMenu.DropdownMenuItem
+          key="view-habit-options"
+          onSelect={() => {
+            router.replace("/(tabs)/home");
+            // TODO OR NOT: same as above todo
+            setTimeout(() => {
+              SheetManager.show("habit-sheet", {
+                payload: {
+                  habit: habitItem,
+                  habitDate: getDate(),
+                  initialDisplayScreen: "main",
+                },
+              });
+            }, 500);
+          }}
+        >
+          <DropdownMenu.DropdownMenuItemIcon
+            ios={{
+              name: "doc.text.magnifyingglass",
+              pointSize: 18,
+            }}
+          />
+          <DropdownMenu.DropdownMenuItemTitle>
+            View Habit Options
           </DropdownMenu.DropdownMenuItemTitle>
         </DropdownMenu.DropdownMenuItem>
 

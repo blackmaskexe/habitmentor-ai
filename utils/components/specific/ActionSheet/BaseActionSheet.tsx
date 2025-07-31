@@ -11,13 +11,15 @@ function HabitSheet(props: SheetProps<"habit-sheet">) {
   const styles = createStyles(theme);
 
   const payloadData = props.payload;
-  const sheetContentType = (payloadData.sheetType as any) || "default";
 
   return (
     <ActionSheet
       id={props.sheetId}
       // snapPoints={[200]}
       // initialSnapIndex={0}
+      containerStyle={{
+        backgroundColor: theme.colors.background,
+      }}
     >
       <NavigationPill />
 
