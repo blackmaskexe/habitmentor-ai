@@ -40,7 +40,7 @@ export default function HabitItemContextMenu({
           <TouchableOpacity
             style={styles.habitOptions}
             onPress={() => {
-              SheetManager.show("example-sheet", {
+              SheetManager.show("habit-sheet", {
                 payload: {
                   sheetType: "habitItem",
                   habitItem: {

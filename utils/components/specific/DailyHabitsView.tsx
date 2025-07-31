@@ -214,7 +214,7 @@ const DailyHabitsView = ({ date }: { date: Date }) => {
             style={styles.habitCard}
             onPress={() => {
               Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-              SheetManager.show("example-sheet", {
+              SheetManager.show("habit-sheet", {
                 payload: {
                   sheetType: "habitItem",
                   habit: habit,
@@ -232,7 +232,7 @@ const DailyHabitsView = ({ date }: { date: Date }) => {
               style={styles.habitOptions}
               onPress={() => {
                 Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-                SheetManager.show("example-sheet", {
+                SheetManager.show("habit-sheet", {
                   payload: {
                     sheetType: "habitItem",
                     habit: habit,

@@ -4,6 +4,8 @@ import { Ionicons } from "@expo/vector-icons";
 import { useTheme } from "@/utils/theme/ThemeContext";
 import { useRouter } from "expo-router";
 import * as Haptics from "expo-haptics";
+import { SheetManager } from "react-native-actions-sheet";
+import { getDate } from "@/utils/date";
 
 export default function OverviewHabitdropdownMenu({
   habitItem,
@@ -55,7 +57,21 @@ export default function OverviewHabitdropdownMenu({
           </DropdownMenu.DropdownMenuItemTitle>
         </DropdownMenu.DropdownMenuItem>
 
-        <DropdownMenu.DropdownMenuItem key="edit-habit" onSelect={() => {}}>
+        <DropdownMenu.DropdownMenuItem
+          key="edit-habit"
+          onSelect={() => {
+            router.replace("/(tabs)/home");
+            setTimeout(() => {
+              SheetManager.show("habit-sheet", {
+                payload: {
+                  habit: habitItem,
+                  habitDate: getDate(),
+                  initialDisplayScreen: "editHabit",
+                },
+              });
+            }, 500);
+          }}
+        >
           <DropdownMenu.DropdownMenuItemIcon
             ios={{
               name: "square.and.pencil",

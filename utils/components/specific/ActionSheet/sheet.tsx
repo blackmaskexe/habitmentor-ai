@@ -2,7 +2,7 @@ import { ThemeProvider } from "@/utils/theme/ThemeContext";
 import { registerSheet, SheetDefinition } from "react-native-actions-sheet";
 import ExampleSheet from "./BaseActionSheet";
 
-registerSheet("example-sheet", (props) => {
+registerSheet("habit-sheet", (props) => {
   return (
     <ThemeProvider>
       <ExampleSheet {...props} />
@@ -14,7 +14,7 @@ registerSheet("example-sheet", (props) => {
 // across the app for all registered sheets.
 declare module "react-native-actions-sheet" {
   interface Sheets {
-    "example-sheet": SheetDefinition;
+    "habit-sheet": SheetDefinition;
     payload: {
       value: string;
     };

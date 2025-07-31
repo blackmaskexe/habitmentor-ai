@@ -54,7 +54,7 @@ export default function EdithabitDropdownMenu({
                 {
                   text: "Yes",
                   onPress: () => {
-                    SheetManager.hide("example-sheet").then(() => {
+                    SheetManager.hide("habit-sheet").then(() => {
                       deleteHabit(habitId);
                     });
                   },
