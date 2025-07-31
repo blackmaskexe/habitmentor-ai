@@ -6,7 +6,7 @@ import ActionSheet, { SheetProps } from "react-native-actions-sheet";
 import NavigationPill from "../../general/NavigationPill";
 import HabitItemSheet from "./HabitItemSheet";
 
-function ExampleSheet(props: SheetProps<"example-sheet">) {
+function ExampleSheet(props: SheetProps<"habit-sheet">) {
   const theme = useTheme();
   const styles = createStyles(theme);
 

@@ -75,7 +75,7 @@ export default function ActionSheetIosOptionList({
           "Improve Habit using AI",
           () => {
             // router.replace("/(tabs)/home");
-            SheetManager.hide("example-sheet");
+            SheetManager.hide("habit-sheet");
             router.navigate({
               pathname: "/(tabs)/chat",
               params: {

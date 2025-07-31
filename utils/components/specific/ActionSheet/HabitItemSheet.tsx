@@ -17,7 +17,7 @@ import {
 import { useFocusEffect } from "expo-router";
 import EditHabitView from "../EditHabitView";
 
-// SheetManager.show("example-sheet", {
+// SheetManager.show("habit-sheet", {
 //   payload: {
 //     sheetType: "habitItem",
 //     habitItem: {
