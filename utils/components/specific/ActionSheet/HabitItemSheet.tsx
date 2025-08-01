@@ -30,9 +30,11 @@ import EditHabitView from "../EditHabitView";
 export default function HabitItemSheet({
   habitId,
   habitDate,
+  initialDisplayScreen,
 }: {
   habitId: string;
   habitDate: Date;
+  initialDisplayScreen?: "main" | "reminder" | "editHabit";
 }) {
   const [habitObject, setHabitObject] = useState(
     getHabitObjectFromId(habitId)!
@@ -40,7 +42,9 @@ export default function HabitItemSheet({
   const theme = useTheme();
   const styles = createStyles(theme);
 
-  const [displayScreen, setDisplayScreen] = useState<string>("main");
+  const [displayScreen, setDisplayScreen] = useState<string>(
+    initialDisplayScreen ? initialDisplayScreen : "main"
+  );
   const [notificationTime, setNotificationTime] = useState<string | undefined>(
     getHabitNotificationTime(habitObject.id)
   );
@@ -108,6 +112,7 @@ function createStyles(theme: Theme) {
       marginVertical: theme.spacing.s,
       // padding: theme.spacing.m,
       borderRadius: theme.radius.m,
+      backgroundColor: theme.colors.background,
     },
   });
 }

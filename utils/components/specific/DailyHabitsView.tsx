@@ -152,53 +152,53 @@ const DailyHabitsView = ({ date }: { date: Date }) => {
   const renderHabitItem = (habit: HabitObject, index: number) => {
     // rendering logic for each of the habit tasks for today
     return (
-      <BouncyCheckbox
-        isChecked={taskCompletion[index]}
-        size={28}
-        fillColor={theme.colors.primary}
-        // unFillColor="#FFFFFF"
-        text={habit.habitName}
-        // iconStyle={{ borderColor: "red" }}
-        // innerIconStyle={{ borderWidth: 2 }}
-        textStyle={{
-          fontFamily: "JosefinSans-Regular",
-          color: theme.colors.text,
-        }}
-        onPress={(isChecked: boolean) => {
-          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-          handleToggleTaskCompletion(index);
-          // the isChecked is updated, then all of this is triggered, so isChecked = true means we gotta do the action when button will be checked
-          if (isChecked) {
-            // if the task is not completed (just clicked completed), then mark as complete + add points
-            onMarkAsComplete(habit.id, date, false); // skip is false
-            addPoints(habit.points);
-          } else {
-            // if the task is already checked, then mark as incomplete + subtract points
-            onMarkAsIncomplete(habit.id, date);
-            subtractPoints(habit.points);
+      <View style={styles.habitItemContainer}>
+        <BouncyCheckbox
+          isChecked={taskCompletion[index]}
+          size={28}
+          fillColor={theme.colors.primary}
+          // unFillColor="#FFFFFF"
+          // iconStyle={{ borderColor: "red" }}
+          // innerIconStyle={{ borderWidth: 2 }}
+          textStyle={{
+            fontFamily: "JosefinSans-Regular",
+            color: theme.colors.text,
+          }}
+          onPress={(isChecked: boolean) => {
+            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+            handleToggleTaskCompletion(index);
+            // the isChecked is updated, then all of this is triggered, so isChecked = true means we gotta do the action when button will be checked
+            if (isChecked) {
+              // if the task is not completed (just clicked completed), then mark as complete + add points
+              onMarkAsComplete(habit.id, date, false); // skip is false
+              addPoints(habit.points);
+            } else {
+              // if the task is already checked, then mark as incomplete + subtract points
+              onMarkAsIncomplete(habit.id, date);
+              subtractPoints(habit.points);
+            }
+          }}
+          // onLongPress={() => {}}
+          textComponent={
+            <View style={styles.habitTextContainer}>
+              <Text
+                style={[
+                  styles.habitName,
+                  taskCompletion[index] && {
+                    textDecorationLine: "line-through",
+                    color: theme.colors.textSecondary,
+                  },
+                ]}
+                numberOfLines={1}
+                ellipsizeMode="tail" // displays ... when habit name is too long
+              >
+                {habit.habitName}
+              </Text>
+              <Text style={styles.habitInfo}>{`+${habit.points} Points`}</Text>
+            </View>
           }
-        }}
-        // onLongPress={() => {}}
-        textComponent={
-          <View style={styles.habitTextContainer}>
-            <Text
-              style={[
-                styles.habitName,
-                taskCompletion[index] && {
-                  textDecorationLine: "line-through",
-                  color: theme.colors.textSecondary,
-                },
-              ]}
-              numberOfLines={1}
-              ellipsizeMode="tail" // displays ... when habit name is too long
-            >
-              {habit.habitName.slice(0, 30)}
-              {habit.habitName.length > 29 ? "..." : null}
-            </Text>
-            <Text style={styles.habitInfo}>{`+${habit.points} Points`}</Text>
-          </View>
-        }
-      />
+        />
+      </View>
     );
   };
 
@@ -228,46 +228,64 @@ const DailyHabitsView = ({ date }: { date: Date }) => {
           >
             {renderHabitItem(habit, index)}
 
-            <TouchableOpacity
-              style={styles.habitOptions}
-              onPress={() => {
-                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-                SheetManager.show("habit-sheet", {
-                  payload: {
-                    sheetType: "habitItem",
-                    habit: habit,
-                    habitDate: date,
-                  },
-                }).then((res) => {
-                  // on closing of the ActionSheet (is when the promise is fullfilled, refresh habits)
-                  loadHabits();
-                });
-              }}
-            >
-              {index == 0 ? (
-                <TourGuideZone
-                  key={index}
-                  zone={4}
-                  text={
-                    "Click to set reminders 🔔, get AI tools 🤖, and much more!"
-                  }
-                  borderRadius={8}
-                  shape="circle"
+            {index == 0 ? (
+              <TourGuideZone
+                key={index}
+                zone={4}
+                text={
+                  "Click to set reminders 🔔, get AI tools 🤖, and much more!"
+                }
+                borderRadius={8}
+                shape="circle"
+              >
+                <TouchableOpacity
+                  style={styles.habitOptions}
+                  onPress={() => {
+                    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                    SheetManager.show("habit-sheet", {
+                      payload: {
+                        sheetType: "habitItem",
+                        habit: habit,
+                        habitDate: date,
+                      },
+                    }).then((res) => {
+                      // on closing of the ActionSheet (is when the promise is fullfilled, refresh habits)
+                      loadHabits();
+                    });
+                  }}
+
                 >
                   <Ionicons
                     name="ellipsis-vertical-outline"
                     size={20}
                     color={theme.colors.textSecondary}
                   />
-                </TourGuideZone>
-              ) : (
+                </TouchableOpacity>
+              </TourGuideZone>
+            ) : (
+              <TouchableOpacity
+                style={styles.habitOptions}
+                onPress={() => {
+                  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                  SheetManager.show("habit-sheet", {
+                    payload: {
+                      sheetType: "habitItem",
+                      habit: habit,
+                      habitDate: date,
+                    },
+                  }).then((res) => {
+                    // on closing of the ActionSheet (is when the promise is fullfilled, refresh habits)
+                    loadHabits();
+                  });
+                }}
+              >
                 <Ionicons
                   name="ellipsis-vertical-outline"
                   size={20}
                   color={theme.colors.textSecondary}
                 />
-              )}
-            </TouchableOpacity>
+              </TouchableOpacity>
+            )}
           </TouchableOpacity>
         </View>
       );
@@ -290,13 +308,16 @@ const createStyles = (theme: Theme) =>
     },
     habitCard: {
       flexDirection: "row",
-      justifyContent: "space-between",
       alignItems: "center",
       backgroundColor: theme.colors.surface,
       //   marginHorizontal: theme.spacing.m,
       marginVertical: theme.spacing.s,
       padding: theme.spacing.m,
       borderRadius: theme.radius.m,
+    },
+    habitItemContainer: {
+      flex: 1,
+      marginRight: 12,
     },
     habitInfo: {
       flex: 1,
@@ -310,6 +331,13 @@ const createStyles = (theme: Theme) =>
     },
     habitOptions: {
       alignSelf: "center",
+      paddingHorizontal: 8,
+      paddingVertical: 8,
+      justifyContent: "center",
+      alignItems: "center",
+      minWidth: 36,
+      minHeight: 36,
+      flexShrink: 0,
     },
     habitDeadline: {
       ...theme.text.small,
@@ -317,6 +345,7 @@ const createStyles = (theme: Theme) =>
     },
     habitTextContainer: {
       marginLeft: 16,
+      flex: 1,
     },
     checkmarksRow: {
       flexDirection: "row",

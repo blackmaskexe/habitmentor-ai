@@ -1,255 +1,182 @@
+// Dependencies:
 import {
   View,
-  ScrollView,
   Text,
   StyleSheet,
-  Pressable,
-  Animated,
+  ScrollView,
   SafeAreaView,
-  Dimensions,
-  Alert,
+  Image,
+  Platform,
 } from "react-native";
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useTheme } from "@/utils/theme/ThemeContext";
-import { useEffect, useState, useRef } from "react";
 import { useRouter } from "expo-router";
-import { Ionicons } from "@expo/vector-icons";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 // Components:
-import ToggleSwitch from "@/utils/components/general/ToggleSwitch";
 import CTAButton from "@/utils/components/general/CTAButton";
-import GenericList from "@/utils/components/general/GenericList";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import VariableItemPicker from "@/utils/components/specific/VariableItemPicker";
+import { TypeAnimation } from "react-native-type-animation";
 import mmkvStorage from "@/utils/mmkvStorage";
-import { getFormattedDate } from "@/utils/date";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const UserSettingsPrompt = () => {
-  const router = useRouter();
+const AddMoreHabitsPrompt = () => {
+  const insets = useSafeAreaInsets();
+  const topSafeAreaHeight = insets.top; // Height of the top unsafe area
+
   const theme = useTheme();
-  const { width } = Dimensions.get("window");
-  const styles = createStyles(theme, width);
+  const styles = createStyles(theme, topSafeAreaHeight);
 
-  const [disabled, setDisabled] = useState(true);
-  const buttonOpacity = useRef(new Animated.Value(0.5)).current;
-  const [notificationsEnabled, setNotificationsEnabled] = useState(false);
-  const [cloudSaveEnabled, setCloudSaveEnabled] = useState(false);
+  const router = useRouter();
+  const scrollViewRef = useRef<any>(null);
+
+  const [buttonDisabled, setButtonDisabled] = useState(true);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setDisabled(false);
-      Animated.timing(buttonOpacity, {
-        toValue: 1,
-        duration: 800,
-        useNativeDriver: true,
-      }).start();
-    }, 1000);
+    // detect user adding habits so that they can proceed (make button enabled)
+    const listener = mmkvStorage.addOnValueChangedListener((changedKey) => {
+      if (changedKey == "activeHabits") {
+        setButtonDisabled(
+          mmkvStorage.getString("activeHabits") != undefined ? false : true
+        );
+      }
+    });
 
-    return () => clearTimeout(timer);
+    return () => {
+      listener.remove();
+    };
   }, []);
 
   return (
-    <View style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scrollContent}>
-        <Text style={styles.heading}>Configure Your Experience</Text>
+    <SafeAreaView style={styles.container}>
+      <View style={styles.innerContainer}>
+        <Text style={styles.title}>Add Your Habits</Text>
         <Text style={styles.subtitle}>
-          Customize how you want to use the app
+          Tip: Don't add too many habits. It is better to do one habit than to
+          set many and do none!
         </Text>
-
-        <View style={styles.contentContainer}>
-          <View style={styles.settingsGroup}>
-            <Pressable
-              style={[styles.settingItem, styles.topSettingItem]}
-              onPress={() => setNotificationsEnabled(!notificationsEnabled)}
-            >
-              <View style={styles.settingItemContent}>
-                <View style={styles.iconContainer}>
-                  <Ionicons
-                    name="notifications-outline"
-                    size={22}
-                    color={theme.colors.primary}
-                  />
-                </View>
-                <Text style={styles.settingItemText}>
-                  Reminder Notifications
-                </Text>
-              </View>
-              <ToggleSwitch
-                initialState={notificationsEnabled}
-                onToggle={(isNotificationOn) => {
-                  if (isNotificationOn) {
-                    mmkvStorage.set("isNotificationOn", true);
-                  }
-                  // don't do an else, we wont make the notification not turned on in the start
-                }}
-                size="medium"
-              />
-            </Pressable>
-
-            <View style={styles.divider} />
-
-            <Pressable
-              style={[styles.settingItem, styles.bottomSettingItem]}
-              onPress={() => setCloudSaveEnabled(!cloudSaveEnabled)}
-            >
-              <View style={styles.settingItemContent}>
-                <View style={styles.iconContainer}>
-                  <Ionicons
-                    name="cloud-outline"
-                    size={22}
-                    color={theme.colors.primary}
-                  />
-                </View>
-                <Text style={styles.settingItemText}>Sync to Cloud</Text>
-              </View>
-              <ToggleSwitch
-                initialState={cloudSaveEnabled}
-                onToggle={(enabled) => {
-                  setCloudSaveEnabled(enabled);
-                  Alert.alert("Feature coming soon");
-                }}
-                size="medium"
-              />
-            </Pressable>
-          </View>
-
-          <GenericList
-            items={[
+        <View style={styles.quoteContainer}>
+          {/* <Image
+            source={require("@/assets/placeholder.png")}
+            style={styles.image}
+          /> */}
+          <TypeAnimation
+            sequence={[
               {
-                listText:
-                  "‎ ‎ Get notified when it's time to complete your habits",
-                bullet: {
-                  type: "text",
-                  bulletText: "🔔",
-                },
+                text: `“Small steps every day lead to big change.” — Anonymous`,
               },
               {
-                listText:
-                  "‎ ‎ Save your progress to the cloud and sync across devices",
-                bullet: {
-                  type: "text",
-                  bulletText: "☁️",
-                },
+                text: `“You do not rise to the level of your goals. You fall to the level of your systems.” — James Clear`,
               },
               {
-                listText:
-                  "‎ ‎ You can change these settings anytime from the settings menu",
-                bullet: {
-                  type: "text",
-                  bulletText: "⚙️",
-                },
+                text: `“Consistency is more important than intensity.” — A consistent person (probably)`,
+              },
+              {
+                text: `“Motivation gets you going, habit keeps you growing.”  — John C. Maxwell`,
+              },
+              {
+                text: `“Success is the sum of small efforts repeated day in and day out.” — Robert Collier`,
               },
             ]}
+            typeSpeed={25}
+            delayBetweenSequence={3000}
+            deletionSpeed={25}
+            loop
+            style={{
+              color: "white",
+              // backgroundColor: "green",
+              ...theme.text.h3,
+
+              textAlign: "center",
+              fontStyle: "italic",
+            }}
           />
         </View>
-      </ScrollView>
+        <ScrollView
+          contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={true}
+          ref={scrollViewRef}
+          keyboardShouldPersistTaps="handled"
+        >
+          <View style={styles.habitAddPicker}>
+            <VariableItemPicker
+              onModalSubmit={() => {
+                // to make the scrolling of incrementing habits smoother
+                scrollViewRef.current?.scrollToEnd({ animated: true });
+              }}
+            />
+          </View>
+        </ScrollView>
 
-      <View style={styles.buttonContainer}>
-        <Animated.View style={{ opacity: buttonOpacity }}>
+        <View style={styles.buttonWrapper}>
           <CTAButton
-            title="Begin Your Journey"
+            title="Proceed"
             onPress={() => {
-              mmkvStorage.set("appStartDate", getFormattedDate());
               AsyncStorage.setItem("hasOnboarded", "true")
                 .then((result) => {
                   router.replace("/(tabs)/home"); // send the user to home (i just wanan drive to homeeeeeeeeeeeeeee)
                 })
                 .catch((err) => console.log(err));
             }}
-            disabled={disabled}
+            disabled={buttonDisabled}
           />
-        </Animated.View>
+        </View>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
-function createStyles(theme: any, width: number) {
+function createStyles(theme: any, topMargin: number) {
   return StyleSheet.create({
     container: {
       flex: 1,
       backgroundColor: theme.colors.background,
+      marginTop: Platform.OS == "android" ? topMargin : 0,
+    },
+    innerContainer: {
+      flex: 1,
+      width: "100%",
+      paddingHorizontal: theme.spacing.m, // Move padding here from scrollContent
+    },
+    title: {
+      ...theme.text.h1,
+      color: theme.colors.text,
+      marginBottom: theme.spacing.m,
+      textAlign: "center",
+      marginTop: theme.spacing.l, // Add top margin
+    },
+    subtitle: {
+      ...theme.text.body,
+      textAlign: "center",
+      color: theme.colors.textSecondary,
+      marginBottom: theme.spacing.xl, // Add bottom margin
+      paddingHorizontal: theme.spacing.l, // Add horizontal padding for better text width
+    },
+    quoteContainer: {
+      // New style for image wrapper
+      // flex: 1,
+      alignItems: "center",
+      marginBottom: theme.spacing.l * 2,
+      marginTop: theme.spacing.l,
+      height: 100,
+      paddingHorizontal: theme.spacing.l, // Add horizontal padding for better text width
+    },
+    image: {
+      height: 200,
+      width: 300,
+      alignSelf: "center",
     },
     scrollContent: {
       flexGrow: 1,
-      alignItems: "center",
-      paddingVertical: theme.spacing.xl,
-      paddingHorizontal: theme.spacing.m,
     },
-    heading: {
-      ...theme.text.h1,
-      color: theme.colors.text,
-      textAlign: "center",
-      marginTop: theme.spacing.xl * 2,
-      marginBottom: theme.spacing.l,
-    },
-    subtitle: {
-      ...theme.text.h3,
-      color: theme.colors.textSecondary,
-      textAlign: "center",
-      marginBottom: theme.spacing.xl,
-      paddingHorizontal: theme.spacing.l,
-    },
-    contentContainer: {
-      flex: 1,
-      justifyContent: "flex-start",
+    buttonWrapper: {
       width: "100%",
-      paddingVertical: theme.spacing.l,
-      gap: theme.spacing.xl * 2,
+      paddingBottom: theme.spacing.m,
     },
-    settingsGroup: {
-      backgroundColor: theme.colors.altBackground,
-      borderRadius: 10,
+    habitAddPicker: {
       width: "100%",
-      shadowColor: "#000",
-      shadowOffset: { width: 0, height: 1 },
-      shadowOpacity: 0.04,
-      shadowRadius: 1,
-      elevation: 1,
-    },
-    settingItem: {
-      flexDirection: "row",
-      alignItems: "center",
-      justifyContent: "space-between",
-      paddingVertical: 12,
-      paddingHorizontal: 16,
-      backgroundColor: theme.colors.altBackground,
-    },
-    topSettingItem: {
-      borderTopLeftRadius: 10,
-      borderTopRightRadius: 10,
-    },
-    bottomSettingItem: {
-      borderBottomLeftRadius: 10,
-      borderBottomRightRadius: 10,
-    },
-    settingItemContent: {
-      flexDirection: "row",
-      alignItems: "center",
-    },
-    iconContainer: {
-      width: 28,
-      height: 28,
-      justifyContent: "center",
-      alignItems: "center",
-      marginRight: 12,
-    },
-    settingItemText: {
-      fontSize: 17,
-      color: theme.colors.text,
-    },
-    divider: {
-      height: 0.5,
-      backgroundColor: "#C7C7CC",
-      marginLeft: 56,
-      opacity: 0.5,
-    },
-    buttonContainer: {
-      width: width,
-      paddingHorizontal: theme.spacing.m,
-      marginTop: theme.spacing.l,
-      marginBottom: theme.spacing.l * 2,
     },
   });
 }
 
-export default UserSettingsPrompt;
+export default AddMoreHabitsPrompt;

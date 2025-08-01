@@ -4,6 +4,8 @@ import { Ionicons } from "@expo/vector-icons";
 import { useTheme } from "@/utils/theme/ThemeContext";
 import { useRouter } from "expo-router";
 import * as Haptics from "expo-haptics";
+import { SheetManager } from "react-native-actions-sheet";
+import { getDate } from "@/utils/date";
 
 export default function OverviewHabitdropdownMenu({
   habitItem,
@@ -56,29 +58,58 @@ export default function OverviewHabitdropdownMenu({
         </DropdownMenu.DropdownMenuItem>
 
         <DropdownMenu.DropdownMenuItem
-          key="consistency-graph"
-          onSelect={() => {}}
+          key="edit-habit"
+          onSelect={() => {
+            router.replace("/(tabs)/home");
+            setTimeout(() => {
+              // TODO OR NOT: Setting a 500ms delay so that it navigates to home
+              // because we cannot open an action sheet on an open modal window,
+              // which overview is one of them
+              SheetManager.show("habit-sheet", {
+                payload: {
+                  habit: habitItem,
+                  habitDate: getDate(),
+                  initialDisplayScreen: "editHabit",
+                },
+              });
+            }, 500);
+          }}
         >
           <DropdownMenu.DropdownMenuItemIcon
             ios={{
-              name: "chart.bar",
+              name: "square.and.pencil",
+              pointSize: 22,
+            }}
+          />
+          <DropdownMenu.DropdownMenuItemTitle>
+            Edit Habit
+          </DropdownMenu.DropdownMenuItemTitle>
+        </DropdownMenu.DropdownMenuItem>
+
+        <DropdownMenu.DropdownMenuItem
+          key="view-habit-options"
+          onSelect={() => {
+            router.replace("/(tabs)/home");
+            // TODO OR NOT: same as above todo
+            setTimeout(() => {
+              SheetManager.show("habit-sheet", {
+                payload: {
+                  habit: habitItem,
+                  habitDate: getDate(),
+                  initialDisplayScreen: "main",
+                },
+              });
+            }, 500);
+          }}
+        >
+          <DropdownMenu.DropdownMenuItemIcon
+            ios={{
+              name: "doc.text.magnifyingglass",
               pointSize: 18,
             }}
           />
           <DropdownMenu.DropdownMenuItemTitle>
-            View Consistency Graph
-          </DropdownMenu.DropdownMenuItemTitle>
-        </DropdownMenu.DropdownMenuItem>
-
-        <DropdownMenu.DropdownMenuItem key="skip-today" onSelect={() => {}}>
-          <DropdownMenu.DropdownMenuItemIcon
-            ios={{
-              name: "forward.end",
-              pointSize: 24,
-            }}
-          />
-          <DropdownMenu.DropdownMenuItemTitle>
-            Skip Habit for Today
+            View Habit Options
           </DropdownMenu.DropdownMenuItemTitle>
         </DropdownMenu.DropdownMenuItem>
 

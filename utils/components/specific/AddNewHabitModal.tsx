@@ -8,6 +8,7 @@ import {
   Platform,
   StyleSheet,
   Dimensions,
+  Alert,
 } from "react-native";
 import GenericForm from "../general/GenericForm";
 import TaskFrequencyDropdownMenu from "./zeego/TaskFrequencyDropdownMenu";
@@ -126,8 +127,20 @@ export default function AddNewHabitModal({
                     const newHabit = { ...values };
 
                     if (newHabit) {
+                      // checking if the user is having a habit with no frequency
+                      if (
+                        JSON.stringify(newHabit.frequency) ==
+                        JSON.stringify(Array(7).fill(false))
+                      ) {
+                        Alert.alert(
+                          "Select at least one day to be the task frequency"
+                        );
+
+                        return;
+                      }
                       if (!newHabit.frequency) {
                         newHabit.frequency = Array(7).fill(true); // default value when the user doesn't touch the frequency at all
+                        // (user no select frequency, frequency property not attach to the newHabit)
                       }
                       // if the frequency property exists within that habit item:
                       // seeing how many days the user is doing that particular habit:
@@ -157,6 +170,11 @@ export default function AddNewHabitModal({
                       addNewHabit(newHabit as any);
 
                       setIsModalVisible(false);
+                      setTimeout(() => {
+                        // doing this because the modal actually takes some time to fr close
+                        // the time is taken by the modal close animation
+                        setValues({});
+                      }, 500);
                     }
                   }}
                   iconName="checkmark-circle-outline"

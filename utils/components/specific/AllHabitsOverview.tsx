@@ -2,7 +2,6 @@ import { useTheme } from "@/utils/theme/ThemeContext";
 import { Ionicons } from "@expo/vector-icons";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SheetManager } from "react-native-actions-sheet";
-import HabitItemContextMenu from "./zeego/HabitItemContextMenu";
 import OverviewHabitdropdownMenu from "./zeego/OverviewHabitDropdownMenu";
 import { useEffect, useState } from "react";
 import { getHabitCompletionCollection } from "@/utils/database/dataCollectionHelper";
@@ -46,7 +45,13 @@ export default function AllHabitsOverview({
           <View style={styles.habitCard} key={`habitcard-${habitItem.id}`}>
             <Ionicons name="today" style={styles.habitIcon} size={24} />
             <View style={styles.habitCardText}>
-              <Text style={styles.habitName}>{habitItem.habitName}</Text>
+              <Text
+                style={styles.habitName}
+                numberOfLines={1}
+                ellipsizeMode="tail"
+              >
+                {habitItem.habitName}
+              </Text>
               <Text style={styles.habitDetails}>
                 Streak: {habitRecords[habitItem.id]?.streak || 0} | Completed:{" "}
                 {habitRecords[habitItem.id]?.completed || 0}

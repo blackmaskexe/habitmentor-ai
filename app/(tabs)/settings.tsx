@@ -185,17 +185,7 @@ export default function Settings() {
         {/* Divider */}
         <View style={styles.divider} />
       </View>
-      <View style={styles.sectionHeader}>
-        <Text style={styles.sectionHeaderText}>AI Preferences</Text>
-      </View>
 
-      {/* Settings Group */}
-      <View style={styles.settingsGroup}>
-        <AIToneSelectionDropdownMenu />
-
-        {/* Divider */}
-        <View style={styles.divider} />
-      </View>
       <View style={styles.sectionHeader}>
         <Text style={styles.sectionHeaderText}>Danger Zone</Text>
       </View>

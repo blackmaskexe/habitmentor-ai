@@ -10,8 +10,10 @@ import LoadingScreen from "@/utils/components/general/LoadingScreen";
 import mmkvStorage from "@/utils/mmkvStorage";
 
 export default function Index() {
+  // HARD RESET APP INCASE OF BROKEN FUNCTIONALITY:
   // AsyncStorage.setItem("hasOnboarded", "false");
   // mmkvStorage.delete("activeHabits");
+
   const [isLoading, setIsLoading] = useState(true); // set a loading state to manage initial loading
   const [hasOnboarded, setHasOnboarded] = useState(false);
 
