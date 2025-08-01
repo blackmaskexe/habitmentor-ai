@@ -32,14 +32,13 @@ const ToggleSwitch: React.FC<ToggleSwitchProps> = ({
   // Size configurations
   const sizes = {
     small: { track: { width: 36, height: 20 }, knob: 16 },
-    medium: { track: { width: 44, height: 24 }, knob: 20 },
+    medium: { track: { width: 44, height: 24 }, knob: 22 },
     large: { track: { width: 52, height: 28 }, knob: 24 },
   };
 
   const currentSize = sizes[size];
   const padding = (currentSize.track.height - currentSize.knob) / 2;
-  const toggleDistance =
-    currentSize.track.width - currentSize.knob - padding * 2;
+  const toggleDistance = currentSize.track.width - currentSize.knob - padding;
 
   useEffect(() => {
     Animated.spring(slideAnimation, {
@@ -95,7 +94,10 @@ const ToggleSwitch: React.FC<ToggleSwitchProps> = ({
           style={[
             styles.knob,
             {
-              transform: [{ translateX: slideAnimation }],
+              transform: [
+                { translateX: slideAnimation },
+                { translateY: isEnabled ? 2 : 0 },
+              ],
             },
           ]}
         />
