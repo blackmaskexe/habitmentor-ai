@@ -35,6 +35,15 @@ export const MonthlyHabitActivityMonitor: React.FC = () => {
   );
 
   function calculatePercentageForDay(date: Date) {
+    // calculate percentage to fill in each box for day of the month
+
+    const rawActiveHabits = mmkvStorage.getString("activeHabits")!;
+    if (JSON.parse(rawActiveHabits).length == 0) {
+      // This is an early return in case of when the user doesn't have any habits
+      // (deleted all their habits)
+      return 0;
+    }
+
     let habitsCompleted = 0;
     let futureHabits = 0; // habits that have not yet been created, their start date is later than habitDate input
     for (const habitHistoryEntry of getHabitHistoryEntries()) {

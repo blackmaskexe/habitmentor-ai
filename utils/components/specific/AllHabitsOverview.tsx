@@ -45,7 +45,13 @@ export default function AllHabitsOverview({
           <View style={styles.habitCard} key={`habitcard-${habitItem.id}`}>
             <Ionicons name="today" style={styles.habitIcon} size={24} />
             <View style={styles.habitCardText}>
-              <Text style={styles.habitName}>{habitItem.habitName}</Text>
+              <Text
+                style={styles.habitName}
+                numberOfLines={1}
+                ellipsizeMode="tail"
+              >
+                {habitItem.habitName}
+              </Text>
               <Text style={styles.habitDetails}>
                 Streak: {habitRecords[habitItem.id]?.streak || 0} | Completed:{" "}
                 {habitRecords[habitItem.id]?.completed || 0}
