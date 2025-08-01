@@ -253,6 +253,7 @@ const DailyHabitsView = ({ date }: { date: Date }) => {
                       loadHabits();
                     });
                   }}
+
                 >
                   <Ionicons
                     name="ellipsis-vertical-outline"

@@ -7,6 +7,7 @@ import NavigationPill from "../../general/NavigationPill";
 import HabitItemSheet from "./HabitItemSheet";
 
 function HabitSheet(props: SheetProps<"habit-sheet">) {
+
   const theme = useTheme();
   const styles = createStyles(theme);
 
