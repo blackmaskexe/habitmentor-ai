@@ -21,8 +21,9 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import ChatMessagesSkeleton from "../general/ChatMessagesSkeleton";
 import { generateMessageId } from "@/utils/randomId";
-import { getDate, getTimeOfDay } from "@/utils/date";
+import { getDate, getFormattedDate, getTimeOfDay } from "@/utils/date";
 import CTAButton from "../general/CTAButton";
+import { useRouter } from "expo-router";
 
 // Prop Instructions:
 // Send a message prop as follows:
@@ -56,11 +57,13 @@ type AIResponseType = {
 export default function OnboardingChatMessage() {
   const theme = useTheme();
   const styles = createStyles(theme);
-  const textInputRef = React.useRef<TextInput>(null);
+  const router = useRouter();
+
   const listRef = useRef<LegendListRef>(null); // Ref for LegendList
   const headerHeight = Platform.OS === "ios" ? useHeaderHeight() : 0;
 
   const [messages, setMessages] = useState<MessageType[]>([]); // initialize a null messages state
+  const [isProceedDisabled, setIsProceedDisabled] = useState(true);
 
   // load messages on mount
   //   useEffect(() => {
@@ -132,28 +135,44 @@ export default function OnboardingChatMessage() {
     }
 
     async function sendOnboardingMessages() {
+      // NOTE: the delay inside the sendAIMessage should be less than the sleep time
+      // for smooth message sending
+
+      // 1
       sendAiMessage("Hello there, wonderful person!", 1000);
       await sleep(2000);
 
+      // 2
       sendAiMessage("I am going to be your Personal Habit Coach", 2000);
-      await sleep(2000);
+      await sleep(3500);
 
+      // 3
       sendAiMessage(
         "Whatever habits you want to build, I will help you build them!",
-        2500
+        2000
       );
-      await sleep(2000);
+      await sleep(4000);
+
+      // 4
 
       sendAiMessage(
         "I will give you personalized recommendations everyday, which will help you identify what you're doing right and what you're doing wrong",
-        4000
+        3000
       );
-      await sleep(2000);
+      await sleep(6000);
 
       sendAiMessage(
         "I can also give you notifications to remind you to complete these habits!",
         2000
       );
+      await sleep(4000);
+
+      sendAiMessage(
+        "Let's now add some habits that you would like to do consistently",
+        2000
+      );
+      await sleep(3000);
+      setIsProceedDisabled(false);
     }
     sendOnboardingMessages();
   }, []);
@@ -237,7 +256,14 @@ export default function OnboardingChatMessage() {
               marginHorizontal: 14,
             }}
           >
-            <CTAButton title={"Baby oooo"} onPress={() => {}} disabled={true} />
+            <CTAButton
+              title={"Proceed"}
+              onPress={() => {
+                mmkvStorage.set("appStartDate", getFormattedDate());
+                router.push("/(onboarding)/2");
+              }}
+              disabled={isProceedDisabled}
+            />
           </View>
         </KeyboardAvoidingView>
       </SafeAreaView>

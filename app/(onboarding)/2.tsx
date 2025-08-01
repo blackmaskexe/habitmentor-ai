@@ -18,6 +18,7 @@ import CTAButton from "@/utils/components/general/CTAButton";
 import VariableItemPicker from "@/utils/components/specific/VariableItemPicker";
 import { TypeAnimation } from "react-native-type-animation";
 import mmkvStorage from "@/utils/mmkvStorage";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const AddMoreHabitsPrompt = () => {
   const insets = useSafeAreaInsets();
@@ -111,7 +112,11 @@ const AddMoreHabitsPrompt = () => {
           <CTAButton
             title="Proceed"
             onPress={() => {
-              router.push("/(onboarding)/2");
+              AsyncStorage.setItem("hasOnboarded", "true")
+                .then((result) => {
+                  router.replace("/(tabs)/home"); // send the user to home (i just wanan drive to homeeeeeeeeeeeeeee)
+                })
+                .catch((err) => console.log(err));
             }}
             disabled={buttonDisabled}
           />

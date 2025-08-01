@@ -3,6 +3,7 @@
 // AND TELLING YOU THE MAIN GIST OF THE APP
 
 import OnboardingChatMessage from "@/utils/components/specific/OnboardingChatMessage";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 // THE STRING OF MESSAGES WILL GO SOMETHING LIKE THIS:
 // AI: Hello there, wonderful person
@@ -13,5 +14,9 @@ import OnboardingChatMessage from "@/utils/components/specific/OnboardingChatMes
 // Let's now add some habits that you want to do
 
 export default function UserOnboardingChat() {
-  return <OnboardingChatMessage />;
+  return (
+    <SafeAreaView style={{ flex: 1 }}>
+      <OnboardingChatMessage />
+    </SafeAreaView>
+  );
 }
