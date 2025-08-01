@@ -71,6 +71,11 @@ export default function Index() {
       // the user hasn't toured in this case, and should be the only time the tour should show
       setShouldUserTour(() => {
         mmkvStorage.set("didTourApp", true);
+
+        if (Platform.OS == "android") {
+          return false; // the rn-tourguide is glitched on android
+          // so disabling it completely, as not a necessary feature
+        }
         return true;
       });
     } else {

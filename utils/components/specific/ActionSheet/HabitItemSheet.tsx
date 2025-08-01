@@ -2,7 +2,7 @@
 // bunch of options
 
 import { useTheme } from "@/utils/theme/ThemeContext";
-import { StyleSheet, View, Text } from "react-native";
+import { StyleSheet, View, Text, Platform } from "react-native";
 import CardWithoutImage from "../../general/CardWithoutImage";
 import ReminderView from "../ReminderView";
 import { useCallback, useEffect, useState } from "react";
@@ -109,7 +109,7 @@ export default function HabitItemSheet({
 function createStyles(theme: Theme) {
   return StyleSheet.create({
     habitItemSheetContainer: {
-      marginVertical: theme.spacing.s,
+      marginVertical: Platform.OS == "ios" ? theme.spacing.s : theme.spacing.xl, // more spacing for android because why not (otherwise it's touching bottom)
       // padding: theme.spacing.m,
       borderRadius: theme.radius.m,
       backgroundColor: theme.colors.background,
