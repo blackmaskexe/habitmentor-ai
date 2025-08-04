@@ -95,55 +95,53 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="chat"
+        name="suggestions"
         options={{
-          animation: "none",
-          title: "AI Chat",
+          // animation: "none",
+          title: "AI Suggestions",
+          headerShown: false,
           tabBarIcon: ({ color, size }) => (
             <TourGuideZone
               zone={3}
               text={
-                "Chat with the AI 🤖! Ask about ways to improve, be more consistent, and more!"
+                "Look at suggestions by the AI, updated every week! Plus, Chat with your Personal Habit Assistant any time"
               }
               borderRadius={8}
             >
               <Ionicons name="chatbubbles" size={size} color={color} />
             </TourGuideZone>
           ),
-          tabBarStyle: {
-            display: "none",
-          },
 
-          headerLeft: () => (
-            <TouchableOpacity
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                marginLeft: theme.spacing.m,
-              }}
-              onPress={() => {
-                router.back();
-              }}
-            >
-              <Ionicons
-                name="chevron-back"
-                size={24}
-                color={theme.colors.primary}
-              />
-              <Text
-                style={{
-                  color: theme.colors.primary,
-                  ...theme.text.body,
-                  marginLeft: 4,
-                }}
-              >
-                Back
-              </Text>
-            </TouchableOpacity>
-          ),
-          headerRight: () => {
-            return <ChatDropDownMenu />;
-          },
+          // headerLeft: () => (
+          //   <TouchableOpacity
+          //     style={{
+          //       flexDirection: "row",
+          //       alignItems: "center",
+          //       marginLeft: theme.spacing.m,
+          //     }}
+          //     onPress={() => {
+          //       router.back();
+          //     }}
+          //   >
+          //     <Ionicons
+          //       name="chevron-back"
+          //       size={24}
+          //       color={theme.colors.primary}
+          //     />
+          //     <Text
+          //       style={{
+          //         color: theme.colors.primary,
+          //         ...theme.text.body,
+          //         marginLeft: 4,
+          //       }}
+          //     >
+          //       Back
+          //     </Text>
+          //   </TouchableOpacity>
+          // ),
+          // headerRight: () => {
+          //   return <ChatDropDownMenu />;
+          // },
         }}
       />
       <Tabs.Screen

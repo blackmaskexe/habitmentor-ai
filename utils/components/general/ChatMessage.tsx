@@ -323,7 +323,7 @@ export default function ChatMessages({
               flexDirection: "row",
               alignItems: "center",
               borderRadius: 20,
-              // marginBottom: 6,
+              marginBottom: 6,
               marginHorizontal: 10,
             }}
           >
