@@ -22,6 +22,7 @@ interface HabitObject {
   notificationTime?: string; // formattedTime (see date.ts)
   isNotificationOn: boolean;
   startDate?: string; // formattedDate (see date.ts)
+  tags?: string[];
 }
 
 interface FormValuesType {

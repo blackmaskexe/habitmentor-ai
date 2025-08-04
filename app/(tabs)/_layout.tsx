@@ -108,7 +108,7 @@ export default function TabLayout() {
               }
               borderRadius={8}
             >
-              <Ionicons name="chatbubbles" size={size} color={color} />
+              <Ionicons name="sparkles" size={size} color={color} />
             </TourGuideZone>
           ),
 

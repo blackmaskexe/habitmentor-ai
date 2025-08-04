@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const apiUrl = "https://api-tp7jjwrliq-uc.a.run.app/habit-mentor";
+const apiUrl = "https://api-tp7jjwrliq-uc.a.run.app/";
 
 const api = axios.create({
   baseURL: apiUrl,
