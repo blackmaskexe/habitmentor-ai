@@ -5,6 +5,7 @@ import CardWithoutImage from "@/utils/components/general/CardWithoutImage";
 import { Theme } from "@/utils/theme/themes";
 import { useRouter } from "expo-router";
 import CompletionRecommendationCard from "@/utils/components/specific/CompletionRecommendationCard";
+import MoodRaterCard from "@/utils/components/specific/MoodRaterCard";
 
 export default function AiSuggestions() {
   const router = useRouter();
@@ -27,6 +28,7 @@ export default function AiSuggestions() {
       />
       <View style={styles.horizontalRoller} />
       {/* Lowest being done habit (full width card) */}
+      <MoodRaterCard />
       <CompletionRecommendationCard
         habitName="Dance"
         completionPercentage={25}

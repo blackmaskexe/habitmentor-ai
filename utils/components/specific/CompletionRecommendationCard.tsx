@@ -120,11 +120,11 @@ function createStyles(theme: Theme) {
     suggestionText: {
       fontSize: 14,
       color: theme.colors.textSecondary,
-      marginBottom: 16,
+      // marginBottom: 16,
       lineHeight: 20,
     },
     ctaButtonStyle: {
-      marginTop: 0,
+      marginTop: 16,
     },
     iconContainer: {
       position: "absolute",
@@ -135,7 +135,7 @@ function createStyles(theme: Theme) {
       zIndex: 1,
       justifyContent: "center",
       alignItems: "center",
-      backgroundColor: "rgba(0,0,0, 0.05)",
+      backgroundColor: "rgba(0,0,0, 0.1)",
     },
   });
 }
