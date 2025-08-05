@@ -22,6 +22,7 @@ import { useTheme } from "@/utils/theme/ThemeContext";
 import { generateHabitId } from "@/utils/randomId";
 import { addNewHabit } from "@/utils/database/habits";
 import { getFormattedDate } from "@/utils/date";
+import { tagOneHabit } from "@/utils/tagManager";
 
 const { width } = Dimensions.get("window");
 const BOX_SIZE = Math.min(width * 0.18, 80); // Responsive but capped at 80px in length and width
@@ -135,8 +136,7 @@ export default function AddNewHabitModal({
                         Alert.alert(
                           "Select at least one day to be the task frequency"
                         );
-
-                        return;
+                        return; // early return to prevent user from submitting
                       }
                       if (!newHabit.frequency) {
                         newHabit.frequency = Array(7).fill(true); // default value when the user doesn't touch the frequency at all
@@ -174,6 +174,11 @@ export default function AddNewHabitModal({
                         // doing this because the modal actually takes some time to fr close
                         // the time is taken by the modal close animation
                         setValues({});
+                        if (newHabit.id) {
+                          console.log("Starting individual tagging yeh");
+                          // for ts type safety, but it would have been created by now
+                          tagOneHabit(newHabit.id);
+                        }
                       }, 500);
                     }
                   }}

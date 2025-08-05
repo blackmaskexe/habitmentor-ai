@@ -1,5 +1,7 @@
 import ChatDropDownMenu from "@/utils/components/specific/zeego/ChatDropDownMenu";
 import HomeAddDropdownMenu from "@/utils/components/specific/zeego/HomeAddDropdownMenu";
+import mmkvStorage from "@/utils/mmkvStorage";
+import { areHabitsTagged, tagHabits } from "@/utils/tagManager";
 import { useTheme } from "@/utils/theme/ThemeContext";
 import { Ionicons } from "@expo/vector-icons";
 import { Tabs, usePathname, useRouter } from "expo-router";
@@ -14,7 +16,12 @@ export default function TabLayout() {
 
   const { width } = Dimensions.get("window");
 
-  // used by the header back arrow
+  // APP INITIALIZATION (After it has loaded):
+  if (!areHabitsTagged()) {
+    tagHabits();
+  }
+
+  console.log(mmkvStorage.getString("activeHabits"), "I give you all ad me");
 
   return (
     <Tabs

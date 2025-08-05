@@ -1,4 +1,5 @@
 import api from "./api";
+import { getHabitObjectFromId, updateHabit } from "./database/habits";
 import mmkvStorage from "./mmkvStorage";
 import { HabitObject } from "./types";
 
@@ -8,7 +9,8 @@ type TaggedHabit = {
 };
 
 export async function tagHabits() {
-  const taggedHabits = await getTaggedHabits();
+  const habits = JSON.parse(mmkvStorage.getString("activeHabits") || "[]");
+  const taggedHabits = await getTaggedHabits(habits);
   const mappedHabitTags = getTaggedHabitsObject(taggedHabits);
 
   // now, looping through all the habits in mmkvStorage, and assigning a tags property to each of them:
@@ -20,10 +22,30 @@ export async function tagHabits() {
   );
 }
 
-async function getTaggedHabits() {
+export async function tagOneHabit(habitId: string) {
+  try {
+    const untaggedHabit: HabitObject = getHabitObjectFromId(habitId)!;
+    const taggedHabitArray = await getTaggedHabits([untaggedHabit]); // this is because the function returns an array (in this case
+    // the array will be of length 1)
+    const taggedHabit: TaggedHabit = taggedHabitArray[0]; // this only contains habitId and tags only, not the entire rest of object, so we create that:
+    console.log("Chhapri youtuber, ye le teri new tagged habit typeshi", {
+      ...untaggedHabit,
+      tags: taggedHabit.tags,
+    });
+    if (taggedHabit.tags && taggedHabit.tags.length > 0) {
+      const updatedHabit = { ...untaggedHabit, tags: taggedHabit.tags };
+
+      updateHabit(habitId, updatedHabit);
+    }
+  } catch (err) {
+    console.log(err, "you wanna be high for this");
+  }
+}
+
+async function getTaggedHabits(habits: HabitObject[]) {
   try {
     const response = await api.post("/tag-habits", {
-      habitData: JSON.parse(mmkvStorage.getString("activeHabits")!),
+      habitData: habits,
     });
 
     const taggedHabits = response.data;
@@ -59,4 +81,17 @@ function assignTagToHabits(mappedHabitTags: Record<string, string[]>) {
   });
 
   mmkvStorage.set("activeHabits", JSON.stringify(taggedActiveHabits));
+}
+
+export function areHabitsTagged() {
+  const activeHabits: HabitObject[] = JSON.parse(
+    mmkvStorage.getString("activeHabits") || "[]"
+  );
+
+  for (const habit of activeHabits) {
+    if (!habit.tags || habit.tags.length == 0) {
+      return false;
+    }
+  }
+  return true;
 }
