@@ -2,7 +2,14 @@ import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { useTheme } from "@/utils/theme/ThemeContext";
 import { Theme } from "@/utils/theme/themes";
-import { Ionicons } from "@expo/vector-icons";
+import {
+  Canvas,
+  Group,
+  Skottie,
+  Skia,
+  useClock,
+} from "@shopify/react-native-skia";
+import { useDerivedValue, runOnJS } from "react-native-reanimated";
 
 type MoodLevel = 1 | 2 | 3 | 4;
 
@@ -20,14 +27,131 @@ const MOOD_EMOJIS: { [key in MoodLevel]: string } = {
   4: "😄",
 };
 
+// Minimal Skottie-compatible animation (a simple circle morph)
+const minimalSkottieJSON = {
+  v: "5.5.7",
+  fr: 30,
+  ip: 0,
+  op: 60,
+  w: 100,
+  h: 100,
+  nm: "Minimal Circle",
+  ddd: 0,
+  assets: [],
+  layers: [
+    {
+      ddd: 0,
+      ind: 1,
+      ty: 4,
+      nm: "Shape Layer 1",
+      sr: 1,
+      ks: {
+        o: { a: 0, k: 100 },
+        r: { a: 0, k: 0 },
+        p: { a: 0, k: [50, 50, 0] },
+        a: { a: 0, k: [0, 0, 0] },
+        s: { a: 0, k: [100, 100, 100] },
+      },
+      ao: 0,
+      shapes: [
+        {
+          ty: "el",
+          p: { a: 0, k: [0, 0] },
+          s: {
+            a: 1,
+            k: [
+              {
+                i: { x: [0.667, 0.667], y: [1, 1] },
+                o: { x: [0.333, 0.333], y: [0, 0] },
+                t: 0,
+                s: [60, 60],
+              },
+              { t: 60, s: [30, 30] },
+            ],
+          },
+          nm: "Ellipse Path 1",
+        },
+        {
+          ty: "fl",
+          c: { a: 0, k: [0.2, 0.6, 0.9, 1] },
+          o: { a: 0, k: 100 },
+          r: 1,
+          bm: 0,
+          nm: "Fill 1",
+        },
+      ],
+      ip: 0,
+      op: 60,
+      st: 0,
+      bm: 0,
+    },
+  ],
+  markers: [],
+};
+
+const MOOD_ANIMATIONS: { [key in MoodLevel]: any } = {
+  1: minimalSkottieJSON,
+  2: minimalSkottieJSON,
+  3: minimalSkottieJSON,
+  4: minimalSkottieJSON,
+};
+
 const MoodRaterCard: React.FC<MoodRaterCardProps> = ({
   value,
   onChange,
   borderRadius = 16,
   padding = 16,
 }) => {
+  const moodSkottie = React.useMemo(
+    () => ({
+      1: Skia.Skottie.Make(JSON.stringify(MOOD_ANIMATIONS[1])),
+      2: Skia.Skottie.Make(JSON.stringify(MOOD_ANIMATIONS[2])),
+      3: Skia.Skottie.Make(JSON.stringify(MOOD_ANIMATIONS[3])),
+      4: Skia.Skottie.Make(JSON.stringify(MOOD_ANIMATIONS[4])),
+    }),
+    []
+  );
+
+  // Debug: log if Skottie animations are valid
+  React.useEffect(() => {
+    console.log("Skottie valid?", {
+      1: moodSkottie[1] !== null,
+      2: moodSkottie[2] !== null,
+      3: moodSkottie[3] !== null,
+      4: moodSkottie[4] !== null,
+    });
+  }, [moodSkottie]);
+
   const theme = useTheme();
   const styles = createStyles(theme);
+
+  const [currentlyAnimating, setCurrentlyAnimating] = React.useState<MoodLevel | null>(null);
+  const [animationStart, setAnimationStart] = React.useState<number>(0);
+  const clock = useClock();
+
+  // When an emoji is pressed, start animation from frame 0
+  const startAnimation = (level: MoodLevel) => {
+    setCurrentlyAnimating(level);
+    setAnimationStart(Date.now());
+  };
+
+  // Calculate frame for Skottie using Reanimated, following Skia docs
+  const frame = useDerivedValue(() => {
+    if (!currentlyAnimating || !moodSkottie[currentlyAnimating]) return 0;
+    const animation = moodSkottie[currentlyAnimating];
+    const fps = animation.fps();
+    const duration = animation.duration();
+    const maxFrame = duration * fps;
+    // Calculate elapsed time since animation started
+    const elapsed = (clock.value - animationStart) / 1000;
+    let currentFrame = Math.floor(elapsed * fps);
+    if (currentFrame >= maxFrame) {
+      // Animation finished, reset
+      runOnJS(setCurrentlyAnimating)(null);
+      return maxFrame - 1;
+    }
+    return currentFrame;
+  }, [currentlyAnimating, moodSkottie, clock, animationStart]);
 
   return (
     <View style={[styles.card, { borderRadius, padding }]}>
@@ -44,14 +168,25 @@ const MoodRaterCard: React.FC<MoodRaterCardProps> = ({
               { width: "23%" },
               value === level && styles.selectedEmojiButton,
             ]}
-            onPress={() => onChange?.(level)}
+            onPress={() => {
+              startAnimation(level);
+              onChange?.(level);
+            }}
             activeOpacity={0.8}
           >
-            <Text
-              style={[styles.emoji, value === level && styles.selectedEmoji]}
-            >
-              {MOOD_EMOJIS[level]}
-            </Text>
+            {currentlyAnimating === level && moodSkottie[level] !== null ? (
+              <Canvas style={{ width: 60, height: 60 }}>
+                <Group>
+                  <Skottie animation={moodSkottie[level]} frame={frame} />
+                </Group>
+              </Canvas>
+            ) : (
+              <Text
+                style={[styles.emoji, value === level && styles.selectedEmoji]}
+              >
+                {MOOD_EMOJIS[level]}
+              </Text>
+            )}
           </TouchableOpacity>
         ))}
       </View>
