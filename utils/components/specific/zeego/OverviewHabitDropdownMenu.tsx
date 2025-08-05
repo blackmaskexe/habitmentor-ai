@@ -39,7 +39,7 @@ export default function OverviewHabitdropdownMenu({
           onSelect={() => {
             router.replace("/(tabs)/home");
             router.navigate({
-              pathname: "/(tabs)/chat",
+              pathname: "/chat",
               params: {
                 prefilledText: `Can you help me improve and be more consistent in the habit of ${habitItem.habitName}`,
               },

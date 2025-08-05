@@ -77,7 +77,7 @@ export default function ActionSheetIosOptionList({
             // router.replace("/(tabs)/home");
             SheetManager.hide("habit-sheet");
             router.navigate({
-              pathname: "/(tabs)/chat",
+              pathname: "/chat",
               params: {
                 prefilledText: `Can you help me improve and be more consistent in the habit of ${habitItem.habitName}`,
               },
