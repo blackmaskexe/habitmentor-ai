@@ -36,7 +36,7 @@ const MOOD_STATIC_IMAGES: { [key in MoodLevel]: any } = {
   4: require("@/assets/animations/mood-rater/happy_static.png"),
 };
 
-const GIF_DURATION = 2000; // 2 seconds
+const GIF_DURATION = 4000; // 2 seconds
 
 const MoodRaterCard: React.FC<MoodRaterCardProps> = ({
   value,
