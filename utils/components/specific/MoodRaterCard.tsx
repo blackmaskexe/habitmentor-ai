@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import { useTheme } from "@/utils/theme/ThemeContext";
 import { Theme } from "@/utils/theme/themes";
+import { setMoodToday } from "@/utils/database/dailyRecords";
 
 type MoodLevel = 1 | 2 | 3 | 4;
 
@@ -10,6 +11,7 @@ type MoodRaterCardProps = {
   onChange?: (level: MoodLevel) => void;
   borderRadius?: number;
   padding?: number;
+  closeMoodCheckCard: () => any;
 };
 
 // Static emojis for the default display
@@ -43,6 +45,7 @@ const MoodRaterCard: React.FC<MoodRaterCardProps> = ({
   onChange,
   borderRadius = 16,
   padding = 16,
+  closeMoodCheckCard,
 }) => {
   const theme = useTheme();
   const styles = createStyles(theme);
@@ -78,6 +81,9 @@ const MoodRaterCard: React.FC<MoodRaterCardProps> = ({
       setPlayingGif(null);
       animationTimeout.current = null;
     }, GIF_DURATION);
+
+    setMoodToday(level);
+    closeMoodCheckCard();
   };
 
   return (
@@ -193,8 +199,8 @@ function createStyles(theme: Theme) {
       opacity: 1,
     },
     gif: {
-      width: 60,
-      height: 60,
+      width: 70,
+      height: 70,
     },
   });
 }

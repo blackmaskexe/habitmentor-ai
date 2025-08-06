@@ -43,4 +43,21 @@ interface UserChatRequestType {
   proActive: boolean;
 }
 
-export type { MessageType, HabitObject, FormValuesType, UserChatRequestType };
+interface DailyRecordEntry {
+  moodRating?: number;
+  habitCompletionRate?: number;
+  missedHabits?: string[]; // array of habitId
+}
+
+type DailyRecords = {
+  [date: string]: DailyRecordEntry;
+};
+
+export type {
+  MessageType,
+  HabitObject,
+  FormValuesType,
+  UserChatRequestType,
+  DailyRecords,
+  DailyRecordEntry,
+};

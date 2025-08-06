@@ -17,3 +17,4 @@ export default mmkvStorage;
 // skipsLeft: stores how many skips does the user have remaining for the week, and is recalculated each week on sunday
 // isNotificationOn: stores if the user wants to have their notifications on or off -> this is for the entire app; each habitObject has it's own isNotificationOn property too
 // appStartDate: formatted date on which the user started the habit tracker app
+// dailyRecord: Array of daily records for users habits and actions. this will store stuff like moodRating, habitCompletionRate (you felt on average happy last week, and you completed 55% of the tasks. Let's improve on that, typeshi), tagsOfHabitsMIssed (or missedHabits[] ?).

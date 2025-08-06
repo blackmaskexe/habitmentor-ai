@@ -94,7 +94,7 @@ function createStyles(theme: Theme) {
       margin: 10,
       width: "95%",
       alignSelf: "center",
-      marginTop: theme.spacing.m,
+      // marginTop: theme.spacing.m,
     },
     header: {
       flexDirection: "row",
