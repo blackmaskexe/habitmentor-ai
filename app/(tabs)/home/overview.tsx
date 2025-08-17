@@ -19,7 +19,7 @@ import AllHabitsOverview from "@/utils/components/specific/AllHabitsOverview";
 import MonthlyHabitActivityMonitor from "@/utils/components/specific/MonthlyHabitActivityMonitor";
 import mmkvStorage from "@/utils/mmkvStorage";
 import { Theme } from "@/utils/theme/themes";
-import { getHabitCompletionCollection } from "@/utils/database/dataCollectionHelper";
+import { getHabitCompletionCollection } from "@/utils/habits/habitDataCollectionHelper";
 
 async function calculateLongestStreak() {
   const habitCompletionRecords = await getHabitCompletionCollection();

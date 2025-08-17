@@ -18,7 +18,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { Theme } from "@/utils/theme/themes";
 import { useTheme } from "@/utils/theme/ThemeContext";
 import { generateHabitId } from "@/utils/randomId";
-import { addNewHabit, getHabitObjectFromId } from "@/utils/database/habits";
+import { addNewHabit, getHabitObjectFromId } from "@/utils/habits";
 import { getFormattedDate } from "@/utils/date";
 import CustomEditHabitForm from "./CustomEditHabitForm";
 

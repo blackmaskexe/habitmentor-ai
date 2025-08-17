@@ -19,7 +19,7 @@ import { useNotifications } from "@/utils/useNotifications";
 import {
   getHabitObjectFromId,
   updateHabitNotificationTime,
-} from "@/utils/database/habits";
+} from "@/utils/habits";
 import { getDate, getFormattedTime } from "@/utils/date";
 import mmkvStorage from "@/utils/mmkvStorage";
 

@@ -1,8 +1,4 @@
-import {
-  deleteHabit,
-  getRemainingSkips,
-  skipHabitToday,
-} from "@/utils/database/habits";
+import { deleteHabit, getRemainingSkips, skipHabitToday } from "@/utils/habits";
 import { getDate, getFormattedDate } from "@/utils/date";
 import { useTheme } from "@/utils/theme/ThemeContext";
 import { Theme } from "@/utils/theme/themes";

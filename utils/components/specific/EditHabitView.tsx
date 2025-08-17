@@ -14,10 +14,7 @@ import { useTheme } from "@/utils/theme/ThemeContext";
 import { Ionicons } from "@expo/vector-icons";
 import { Theme } from "@/utils/theme/themes";
 import CardWithoutImage from "../general/CardWithoutImage";
-import {
-  getHabitObjectFromId,
-  updateEditedHabit,
-} from "@/utils/database/habits";
+import { getHabitObjectFromId, updateEditedHabit } from "@/utils/habits";
 import EditHabitForm from "./EditHabitForm";
 import { FormValuesType } from "@/utils/types";
 import CTAButton from "../general/CTAButton";

@@ -20,7 +20,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { Theme } from "@/utils/theme/themes";
 import { useTheme } from "@/utils/theme/ThemeContext";
 import { generateHabitId } from "@/utils/randomId";
-import { addNewHabit } from "@/utils/database/habits";
+import { addNewHabit } from "@/utils/habits";
 import { getFormattedDate } from "@/utils/date";
 import { tagOneHabit } from "@/utils/tagManager";
 

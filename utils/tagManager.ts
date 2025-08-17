@@ -1,5 +1,5 @@
 import api from "./api";
-import { getHabitObjectFromId, updateHabit } from "./database/habits";
+import { getHabitObjectFromId, updateHabit } from "./habits";
 import mmkvStorage from "./mmkvStorage";
 import { HabitObject } from "./types";
 

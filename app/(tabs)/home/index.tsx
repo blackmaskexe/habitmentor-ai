@@ -23,7 +23,7 @@ import { TypeAnimation } from "react-native-type-animation";
 import {
   getHabitCompletionCollection,
   getImportantMessages,
-} from "@/utils/database/dataCollectionHelper";
+} from "@/utils/habits/habitDataCollectionHelper";
 import api from "@/utils/api";
 import AISuggestionSkeleton from "@/utils/components/specific/AISuggestionSkeleton";
 import {

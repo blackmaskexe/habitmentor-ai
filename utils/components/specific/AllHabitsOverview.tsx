@@ -4,7 +4,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SheetManager } from "react-native-actions-sheet";
 import OverviewHabitdropdownMenu from "./zeego/OverviewHabitDropdownMenu";
 import { useEffect, useState } from "react";
-import { getHabitCompletionCollection } from "@/utils/database/dataCollectionHelper";
+import { getHabitCompletionCollection } from "@/utils/habits/habitDataCollectionHelper";
 import { HabitObject } from "@/utils/types";
 
 export default function AllHabitsOverview({

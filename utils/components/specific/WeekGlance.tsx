@@ -11,11 +11,11 @@ import {
   getFormattedDatesThisWeek,
   getWeekdayNumber,
 } from "@/utils/date";
-import { getHabitHistoryEntries } from "@/utils/database/habitHistoryManager";
+import { getHabitHistoryEntries } from "@/utils/habits/habitHistoryManager";
 import {
   getAllHabitsOnWeekday,
   getTotalHabitNumberOnDay,
-} from "@/utils/database/habits";
+} from "@/utils/habits";
 import mmkvStorage from "@/utils/mmkvStorage";
 
 interface WeekAtAGlanceProps {

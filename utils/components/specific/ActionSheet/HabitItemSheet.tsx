@@ -10,10 +10,7 @@ import { Theme } from "@/utils/theme/themes";
 import { HabitObject } from "@/utils/types";
 import ActionSheetIosOptionList from "./ActionSheetIosOptionList";
 import mmkvStorage from "@/utils/mmkvStorage";
-import {
-  getHabitNotificationTime,
-  getHabitObjectFromId,
-} from "@/utils/database/habits";
+import { getHabitNotificationTime, getHabitObjectFromId } from "@/utils/habits";
 import { useFocusEffect } from "expo-router";
 import EditHabitView from "../EditHabitView";
 

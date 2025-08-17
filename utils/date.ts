@@ -125,6 +125,32 @@ export const getDatesThisWeek = function () {
   return formattedDatesThisWeekArray;
 };
 
+export const getDatesLastWeek = function () {
+  const today = new Date();
+
+  // getting date of previous sunday:
+  const prevSunday = new Date(today);
+  prevSunday.setDate(today.getDate() - today.getDay() - 7);
+
+  const datesLastWeek: Date[] = [];
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(prevSunday);
+    d.setDate(prevSunday.getDate() + i);
+    datesLastWeek.push(d);
+  }
+
+  return datesLastWeek;
+};
+
+export const getFormattedDatesLastWeek = function () {
+  const formattedDatesLastWeek: string[] = [];
+  for (const date of getDatesLastWeek()) {
+    formattedDatesLastWeek.push(getFormattedDate(date));
+  }
+
+  return formattedDatesLastWeek;
+};
+
 export const relationBetweenTodayAndDate = function (date: Date) {
   const dateToday = getDate();
 

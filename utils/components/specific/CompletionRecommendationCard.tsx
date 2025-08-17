@@ -91,7 +91,7 @@ function createStyles(theme: Theme) {
       shadowOpacity: 0.1,
       shadowRadius: 4,
       elevation: 4,
-      margin: 10,
+      margin: theme.spacing.s,
       width: "95%",
       alignSelf: "center",
       // marginTop: theme.spacing.m,

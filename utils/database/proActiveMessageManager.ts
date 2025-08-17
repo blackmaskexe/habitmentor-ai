@@ -1,10 +1,5 @@
-import api from "../api";
 import { getDateFromFormattedDate, getFormattedDate } from "../date";
 import mmkvStorage from "../mmkvStorage";
-import {
-  getHabitCompletionCollection,
-  getImportantMessages,
-} from "./dataCollectionHelper";
 
 export function shouldRequestProActiveMessage() {
   // return true; // for debugging purposes, YOU'LL RUN WHEN RUNEN TO

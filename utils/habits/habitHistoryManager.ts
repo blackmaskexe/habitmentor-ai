@@ -1,9 +1,9 @@
-import { getFormattedDate } from "../date";
+import { getDatesLastWeek, getFormattedDate } from "../date";
 import mmkvStorage from "../mmkvStorage";
-import database from "./watermelon";
+import database from "../database/watermelon";
 import { Q } from "@nozbe/watermelondb";
-import HabitCompletion from "./watermelon/model/HabitCompletion";
-import { getAllHabits, getHabitObjectFromId } from "./habits";
+import HabitCompletion from "../database/watermelon/model/HabitCompletion";
+import { getAllHabits, getHabitObjectFromId } from ".";
 
 // Define an interface for the structure of a habit history entry in the mmkvStorage
 interface HabitHistoryEntry {
@@ -91,6 +91,8 @@ export async function getOrCreateHabitCompletionRecord(habitId: string) {
   } else {
     const allRecords = await habitCompletionCollection.query().fetch();
 
+    // if the record for that particular habit doesn't exist, then create it
+    // this is done for new habits
     return await database.write(async () => {
       const newRecord = await habitCompletionCollection.create((record) => {
         record.habitId = habitId;
@@ -148,10 +150,10 @@ export function getAllHabitHistoryToday(): HabitHistoryEntry[] {
   return todayEntries;
 }
 
-export function getAllHabitHistoryOnDate(date: Date) {
+export function getAllHabitHistoryEntriesOnDate(date: Date) {
   const entries = getHabitHistoryEntries();
 
-  const entriesOnDate = entries.filter(
+  const entriesOnDate: HabitHistoryEntry[] = entries.filter(
     (entry) => entry.completionDate === getFormattedDate(date)
   );
   console.log(
@@ -168,4 +170,52 @@ export function getAllHabitHistory(): HabitHistoryEntry[] {
   const entries = getHabitHistoryEntries();
   console.log("MMKV Storage: Fetched all habit history.", entries);
   return entries;
+}
+
+// will be used for giving info like "You only completed xyz habit this many times last week"
+export function getTimesCompletedHabitLastWeek(habitId: string) {
+  let timesCompletedLastWeek: number = 0;
+  const datesLastWeek = getDatesLastWeek();
+
+  for (const date of datesLastWeek) {
+    for (const habitHistoryEntry of getAllHabitHistoryEntriesOnDate(date)) {
+      // if it finds a habit that was completed on a day, it increments times completed
+      if (habitHistoryEntry.habitId == habitId) {
+        timesCompletedLastWeek++;
+        break;
+      }
+    }
+  }
+
+  return timesCompletedLastWeek;
+}
+
+export function getTimesHabitDueOnWeek(habitId: string) {
+  // since the frequency changes for the habits, and there is no track
+  // of different versions of the same habit yet, we just use this week
+  // to see how many times the habit is supposed to be done
+  // as this will be used to display info for the last 2 weeks ish (this week will display info for last week's completion rate)
+
+  let timesDue: number = 0;
+  for (const habitFrequencyBoolean of getHabitObjectFromId(habitId)!
+    .frequency) {
+    if (habitFrequencyBoolean) {
+      timesDue++;
+    }
+  }
+
+  return timesDue;
+}
+
+export function getHabitCompletionRatePreviousWeek(habitId: string) {
+  const completed = getTimesCompletedHabitLastWeek(habitId);
+  const due = getTimesHabitDueOnWeek(habitId);
+
+  if (due != 0) {
+    return Math.trunc((completed * 100) / due);
+  } else {
+    return 0;
+  }
+
+  // looping through all the dates, calculating number of times that habit was done last week:
 }

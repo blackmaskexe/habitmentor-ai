@@ -6,7 +6,7 @@ import { Theme } from "@/utils/theme/themes";
 import { useRouter } from "expo-router";
 import CompletionRecommendationCard from "@/utils/components/specific/CompletionRecommendationCard";
 import MoodRaterCard from "@/utils/components/specific/MoodRaterCard";
-import { didGetMoodCheckedToday } from "@/utils/database/dailyRecords";
+import { didGetMoodCheckedToday } from "@/utils/database/dailyMetadataRecords";
 import CardGrid from "@/utils/components/general/CardGrid";
 import Card from "@/utils/components/general/Card";
 import CardGrid2x1 from "@/utils/components/general/CardGrid2x1";
@@ -85,7 +85,7 @@ export default function AiSuggestions() {
         habitName="Dance"
         completionPercentage={25}
         suggestion="do sum shi idk"
-        iconName="airplane"
+        iconName="accessibility"
         iconColor={theme.colors.primary}
       />
 
@@ -106,7 +106,7 @@ export default function AiSuggestions() {
         habitName="Emotion-Aware Suggestion"
         completionPercentage={25}
         suggestion="do sum shi idk"
-        iconName="mail"
+        iconName="heart"
         iconColor={theme.colors.primary}
       />
     </ScrollView>

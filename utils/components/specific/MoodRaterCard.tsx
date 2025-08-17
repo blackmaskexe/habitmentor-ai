@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import { useTheme } from "@/utils/theme/ThemeContext";
 import { Theme } from "@/utils/theme/themes";
-import { setMoodToday } from "@/utils/database/dailyRecords";
+import { setMoodToday } from "@/utils/database/dailyMetadataRecords";
 
 type MoodLevel = 1 | 2 | 3 | 4;
 

@@ -4,10 +4,9 @@ import { getDate, getDateFromFormattedTime, getFormattedDate } from "../date";
 import mmkvStorage from "../mmkvStorage";
 import { HabitObject } from "../types";
 import { onMarkAsComplete } from "./habitHistoryManager";
-import database from "./watermelon";
+import database from "../database/watermelon";
 import { Q } from "@nozbe/watermelondb";
-import HabitCompletion from "./watermelon/model/HabitCompletion";
-
+import HabitCompletion from "../database/watermelon/model/HabitCompletion";
 export function updateHabitNotificationId(
   habitId: string,
   notificationIdArray: string[]

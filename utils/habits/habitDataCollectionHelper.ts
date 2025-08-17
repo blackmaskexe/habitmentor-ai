@@ -9,14 +9,20 @@ import {
   getAllHabitHistory,
   getOrCreateHabitCompletionRecord,
 } from "./habitHistoryManager";
-import { getAllHabits, getHabitObjectFromId } from "./habits";
+import { getAllHabits, getHabitObjectFromId } from ".";
 import mmkvStorage from "../mmkvStorage";
-import database from "./watermelon";
-import ImportantMessage from "./watermelon/model/ImportantMessage";
+import database from "../database/watermelon";
+import ImportantMessage from "../database/watermelon/model/ImportantMessage";
 import { Q } from "@nozbe/watermelondb";
-import HabitCompletion from "./watermelon/model/HabitCompletion";
+import HabitCompletion from "../database/watermelon/model/HabitCompletion";
 
 export async function runHabitDataCollection() {
+  // collects data for:
+  // times habits missed
+  // streak of the habit
+  // days since the last habit was done
+  // basically stuff for the habit_completions table for tigrelini watermelini db
+
   if (shouldCollectData()) {
     for (const habit of getAllHabits()) {
       if (!shouldCollectDataForHabit(habit.id)) {
@@ -109,7 +115,7 @@ function daysUserMissedHabitSinceLastCompletion(habitId: string) {
   const entries = getAllHabitHistory(); // objects that contain date of completion in them
 
   for (let i = entries.length - 1; i >= 0; i++) {
-    // looping in reverse, finding the last time the user completed that habit:
+    // looping in reverse (new records are later in array), finding the last time the user completed that habit:
     if (entries[i].habitId == habitId) {
       // found a habit being done
 
