@@ -1,10 +1,12 @@
 import React from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, TouchableOpacity } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 import ChatMessages from "@/utils/components/general/ChatMessage";
 import { useLocalSearchParams } from "expo-router";
 import { useTheme } from "@/utils/theme/ThemeContext";
 import { Theme } from "@/utils/theme/themes";
 import { Stack } from "expo-router";
+import ChatDropDownMenu from "@/utils/components/specific/zeego/ChatDropDownMenu";
 
 export default function Chat() {
   const { prefilledText }: { prefilledText: string } = useLocalSearchParams();
@@ -23,6 +25,7 @@ export default function Chat() {
           headerTitleStyle: {
             color: theme.colors.text,
           },
+          headerRight: () => <ChatDropDownMenu />,
         }}
       />
       <View style={{ flex: 1 }}>
