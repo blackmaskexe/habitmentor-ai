@@ -14,7 +14,7 @@ import CTAButton from "@/utils/components/general/CTAButton";
 const screenWidth = Dimensions.get("window").width;
 
 type CompletionRecommendationCardProps = {
-  habitName: string;
+  cardTitle: string;
   completionPercentage: number;
   suggestion: string;
   onViewTips?: () => void;
@@ -28,7 +28,7 @@ type CompletionRecommendationCardProps = {
 const CompletionRecommendationCard: React.FC<
   CompletionRecommendationCardProps
 > = ({
-  habitName,
+  cardTitle,
   completionPercentage,
   suggestion,
   onViewTips,
@@ -60,7 +60,7 @@ const CompletionRecommendationCard: React.FC<
       </View>
       {/* Header with habit name and close button */}
       <View style={styles.header}>
-        <Text style={styles.habitName}>{habitName}</Text>
+        <Text style={styles.cardTitle}>{cardTitle}</Text>
         {onClose && (
           <TouchableOpacity onPress={onClose} style={styles.closeButton}>
             <Ionicons name="close" size={20} color={theme.colors.text} />
@@ -102,7 +102,7 @@ function createStyles(theme: Theme) {
       alignItems: "center",
       marginBottom: 8,
     },
-    habitName: {
+    cardTitle: {
       fontSize: 16,
       fontWeight: "600",
       color: theme.colors.primary,

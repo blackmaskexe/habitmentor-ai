@@ -10,6 +10,7 @@ import { didGetMoodCheckedToday } from "@/utils/database/dailyMetadataRecords";
 import CardGrid from "@/utils/components/general/CardGrid";
 import Card from "@/utils/components/general/Card";
 import CardGrid2x1 from "@/utils/components/general/CardGrid2x1";
+import { getLeastCompletedHabitMetadataThisWeek } from "@/utils/habits/habitSuggestionsManager";
 
 export default function AiSuggestions() {
   const fadeAnim = useRef(new Animated.Value(1)).current;
@@ -41,6 +42,8 @@ export default function AiSuggestions() {
 
   const theme = useTheme();
   const styles = createStyles(theme);
+
+  const lowestCompletedHabitThisWeek = getLeastCompletedHabitMetadataThisWeek();
 
   return (
     <ScrollView
@@ -82,8 +85,10 @@ export default function AiSuggestions() {
       ></Animated.View>
 
       <CompletionRecommendationCard
-        habitName="Dance"
-        completionPercentage={25}
+        cardTitle={lowestCompletedHabitThisWeek.habitName}
+        completionPercentage={
+          lowestCompletedHabitThisWeek.completionPercentageLastWeek
+        }
         suggestion="do sum shi idk"
         iconName="accessibility"
         iconColor={theme.colors.primary}
@@ -103,7 +108,7 @@ export default function AiSuggestions() {
       </CardGrid2x1>
 
       <CompletionRecommendationCard
-        habitName="Emotion-Aware Suggestion"
+        cardTitle="Emotion-Aware Suggestion"
         completionPercentage={25}
         suggestion="do sum shi idk"
         iconName="heart"
