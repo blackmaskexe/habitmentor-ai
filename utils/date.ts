@@ -11,7 +11,7 @@ export const getDate = function () {
 
   const today = new Date();
   const tomorrow = new Date(today);
-  tomorrow.setDate(today.getDate() + 7);
+  tomorrow.setDate(today.getDate() + 8);
   return tomorrow;
 };
 

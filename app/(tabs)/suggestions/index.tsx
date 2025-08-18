@@ -85,13 +85,14 @@ export default function AiSuggestions() {
       ></Animated.View>
 
       <CompletionRecommendationCard
-        cardTitle={lowestCompletedHabitThisWeek.habitName}
+        habitName={lowestCompletedHabitThisWeek.habitName}
         completionPercentage={
           lowestCompletedHabitThisWeek.completionPercentageLastWeek
         }
         suggestion="do sum shi idk"
         iconName="accessibility"
         iconColor={theme.colors.primary}
+        displayLastWeek={false}
       />
 
       <CardGrid2x1>
@@ -108,11 +109,12 @@ export default function AiSuggestions() {
       </CardGrid2x1>
 
       <CompletionRecommendationCard
-        cardTitle="Emotion-Aware Suggestion"
+        habitName="Emotion-Aware Suggestion"
         completionPercentage={25}
         suggestion="do sum shi idk"
         iconName="heart"
         iconColor={theme.colors.primary}
+        displayLastWeek
       />
     </ScrollView>
   );

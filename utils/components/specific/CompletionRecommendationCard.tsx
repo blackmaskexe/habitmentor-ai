@@ -14,29 +14,29 @@ import CTAButton from "@/utils/components/general/CTAButton";
 const screenWidth = Dimensions.get("window").width;
 
 type CompletionRecommendationCardProps = {
-  cardTitle: string;
+  habitName: string;
   completionPercentage: number;
-  suggestion: string;
   onViewTips?: () => void;
   onClose?: () => void;
   borderRadius?: number;
   padding?: number;
   iconName?: keyof typeof Ionicons.glyphMap;
   iconColor?: string;
+  displayLastWeek: boolean;
 };
 
 const CompletionRecommendationCard: React.FC<
   CompletionRecommendationCardProps
 > = ({
-  cardTitle,
+  habitName,
   completionPercentage,
-  suggestion,
   onViewTips,
   onClose,
   borderRadius = 16,
   padding = 16,
   iconName,
   iconColor,
+  displayLastWeek,
 }) => {
   const theme = useTheme();
   const styles = createStyles(theme);
@@ -59,8 +59,9 @@ const CompletionRecommendationCard: React.FC<
         />
       </View>
       {/* Header with habit name and close button */}
+
       <View style={styles.header}>
-        <Text style={styles.cardTitle}>{cardTitle}</Text>
+        <Text style={styles.cardTitle}>Least Completed Habit</Text>
         {onClose && (
           <TouchableOpacity onPress={onClose} style={styles.closeButton}>
             <Ionicons name="close" size={20} color={theme.colors.text} />
@@ -68,13 +69,20 @@ const CompletionRecommendationCard: React.FC<
         )}
       </View>
 
-      {/* Completion percentage */}
-      <Text style={styles.completionText}>
-        Only {completionPercentage}% completion last week
+      {/* Habit name only, limited to 1 line with ellipsis */}
+      <Text
+        style={styles.completionText}
+        numberOfLines={1}
+        ellipsizeMode="tail"
+      >
+        {habitName}
       </Text>
 
-      {/* Suggestion text */}
-      <Text style={styles.suggestionText}>{suggestion}</Text>
+      {/* Completion percentage info */}
+      <Text style={styles.suggestionText}>
+        {completionPercentage < 50 ? "Only" : null} {completionPercentage}%
+        completed {displayLastWeek ? "last week" : "so far this week"}
+      </Text>
 
       {/* View Tips button using CTAButton */}
       {onViewTips && <CTAButton title="View Tips" onPress={onViewTips} />}
@@ -116,6 +124,7 @@ function createStyles(theme: Theme) {
       fontWeight: "bold",
       color: theme.colors.text,
       marginBottom: 8,
+      paddingRight: theme.spacing.l,
     },
     suggestionText: {
       fontSize: 14,
