@@ -89,8 +89,7 @@ export default function AiSuggestions() {
         completionPercentage={
           lowestCompletedHabitThisWeek.completionPercentageLastWeek
         }
-        suggestion="do sum shi idk"
-        iconName="accessibility"
+        iconName={lowestCompletedHabitThisWeek.ioniconName}
         iconColor={theme.colors.primary}
         displayLastWeek={false}
       />
@@ -111,7 +110,6 @@ export default function AiSuggestions() {
       <CompletionRecommendationCard
         habitName="Emotion-Aware Suggestion"
         completionPercentage={25}
-        suggestion="do sum shi idk"
         iconName="heart"
         iconColor={theme.colors.primary}
         displayLastWeek

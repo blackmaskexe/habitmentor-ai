@@ -1,3 +1,4 @@
+import { Ionicons } from "@expo/vector-icons";
 import { getFormattedDatesThisWeek } from "../date";
 import mmkvStorage from "../mmkvStorage";
 import {
@@ -10,7 +11,7 @@ import lodash from "lodash";
 type LeastCompletedHabitMetadata = {
   habitId: string;
   habitName: string;
-  ioniconName: string;
+  ioniconName: keyof typeof Ionicons.glyphMap;
   completionPercentageLastWeek: number;
 };
 

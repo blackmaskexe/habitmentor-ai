@@ -15,7 +15,7 @@ interface HabitObject {
   frequency: boolean[];
   habitDescription: string;
   habitName: string;
-  iconName: keyof typeof Ionicons.glyphMap | string; // Type for Ionicons, complicated but that's what is used
+  iconName: keyof typeof Ionicons.glyphMap; // Type for Ionicons, complicated but that's what is used
   id: string;
   points: number;
   notificationIds?: string[];
@@ -29,7 +29,7 @@ interface FormValuesType {
   habitName?: string;
   habitDescription?: string;
   frequency?: boolean[];
-  iconName?: keyof typeof Ionicons.glyphMap | string;
+  iconName?: keyof typeof Ionicons.glyphMap;
   id?: string;
   points?: number;
   startDate?: string; // formattedDate
