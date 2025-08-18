@@ -4,7 +4,7 @@ import { useTheme } from "@/utils/theme/ThemeContext";
 import CardWithoutImage from "@/utils/components/general/CardWithoutImage";
 import { Theme } from "@/utils/theme/themes";
 import { useRouter } from "expo-router";
-import CompletionRecommendationCard from "@/utils/components/specific/CompletionRecommendationCard";
+import CompletionRecommendationCard from "@/utils/components/specific/AiSuggestions/CompletionRecommendationCard";
 import MoodRaterCard from "@/utils/components/specific/MoodRaterCard";
 import { didGetMoodCheckedToday } from "@/utils/database/dailyMetadataRecords";
 import CardGrid from "@/utils/components/general/CardGrid";
@@ -36,7 +36,7 @@ export default function AiSuggestions() {
     }, 1500);
   };
 
-  const [showMoodCard, setShowMoodCard] = useState(didGetMoodCheckedToday());
+  const [showMoodCard, setShowMoodCard] = useState(!didGetMoodCheckedToday());
   const [showNextCard, setShowNextCard] = useState(false);
   const router = useRouter();
 
