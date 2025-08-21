@@ -18,7 +18,7 @@ type LeastCompletedHabitMetadata = {
 
 type CompletionsData = {
   x: string;
-  y: number;
+  y: number | null;
 };
 
 export function getLeastCompletedHabitMetadataLastWeek() {
@@ -116,21 +116,21 @@ export function getLeastCompletedHabitMetadataThisWeek() {
 
 // returns an array of number of completions so far this week (each element is a weekday)
 export function getWeeklyHabitCompletionsCountData() {
-  const datesSoFarThisWeek = getDatesThisWeek();
-  datesSoFarThisWeek.length = getDate().getDay() + 1; // shrinks the array of only contains days uptil today
+  const datesThisWeek = getDatesThisWeek();
+  // datesThisWeek.length = getDate().getDay() + 1; // shrinks the array of only contains days uptil today
 
   const weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
   const completionsSoFar: CompletionsData[] = [];
-  for (let i = 0; i < datesSoFarThisWeek.length; i++) {
+  for (let i = 0; i < datesThisWeek.length; i++) {
     // habits completed for this particular day:
-    const completionsArray = getAllHabitHistoryEntriesOnDate(
-      datesSoFarThisWeek[i]
-    );
+    const completionsArray = getAllHabitHistoryEntriesOnDate(datesThisWeek[i]);
 
     const completionsData: CompletionsData = {
       x: weekdays[i],
-      y: completionsArray.length,
+      y: datesThisWeek[i] <= getDate() ? completionsArray.length : null, // basically makes it so that
+      // all the bars are rendred for react-native-chart-kit, but days that are in future are
+      // noted by null so no number shows next to them (if it is 0, it will show 0. If it is null, it wont show)
     };
     completionsSoFar.push(completionsData);
   }

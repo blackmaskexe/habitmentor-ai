@@ -20,7 +20,6 @@ const ChartCompletionsThisWeek = ({
 }: any) => {
   const theme = useTheme();
   const styles = createStyles(theme);
-  const [containerWidth, setContainerWidth] = useState<number | null>(null);
 
   return (
     <View
@@ -31,10 +30,6 @@ const ChartCompletionsThisWeek = ({
           padding,
         },
       ]}
-      onLayout={(e) => {
-        const w = e.nativeEvent.layout.width;
-        if (w && w !== containerWidth) setContainerWidth(w);
-      }}
     >
       <View style={styles.iconContainer}>
         <Ionicons
@@ -60,10 +55,7 @@ const ChartCompletionsThisWeek = ({
         };
 
         const screenWidth = Dimensions.get("window").width;
-        const fallback = Math.min(screenWidth - 40, 520);
-        const chartWidth = containerWidth
-          ? Math.max(200, containerWidth - 8)
-          : fallback;
+        const chartWidth = screenWidth * 0.9 - padding * 2; // 0.9 because the width of the card is 90% of screen width
 
         const chartConfig = {
           backgroundColor: theme.colors.surface,
@@ -96,8 +88,8 @@ const ChartCompletionsThisWeek = ({
             style={{
               marginVertical: 8,
               alignSelf: "center",
-              paddingRight: theme.spacing.m,
-              paddingLeft: theme.spacing.m,
+              paddingRight: 0,
+              marginLeft: -16,
             }}
           />
         );

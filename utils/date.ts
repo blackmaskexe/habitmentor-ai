@@ -7,12 +7,12 @@ import { getISOWeek } from "date-fns";
 
 export const getDate = function () {
   // this function is to be able to change date from this central location easily
-  return new Date();
+  // return new Date();
 
-  // const today = new Date();
-  // const tomorrow = new Date(today);
-  // tomorrow.setDate(today.getDate() + 1);
-  // return tomorrow;
+  const today = new Date();
+  const tomorrow = new Date(today);
+  tomorrow.setDate(today.getDate() + 3);
+  return tomorrow;
 };
 
 export const getDateMinusNDays = (daysOffset: number, date?: Date) => {
