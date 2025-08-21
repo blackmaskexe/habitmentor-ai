@@ -91,12 +91,13 @@ const ChartCompletionsThisWeek = ({
             chartConfig={chartConfig}
             verticalLabelRotation={0}
             withInnerLines={false}
-            // withHorizontalLabels={false}
+            withHorizontalLabels={false}
             showValuesOnTopOfBars
             style={{
               marginVertical: 8,
-              borderRadius: 8,
               alignSelf: "center",
+              paddingRight: theme.spacing.m,
+              paddingLeft: theme.spacing.m,
             }}
           />
         );

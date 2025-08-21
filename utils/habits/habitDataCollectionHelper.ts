@@ -1,15 +1,21 @@
 import {
   getDate,
   getDateFromFormattedDate,
+  getDatesThisWeek,
   getFormattedDate,
   getWeekdayNumber,
   getWeekNumber,
 } from "../date";
 import {
   getAllHabitHistory,
+  getAllHabitHistoryEntriesOnDate,
   getOrCreateHabitCompletionRecord,
 } from "./habitHistoryManager";
-import { getAllHabits, getHabitObjectFromId } from ".";
+import {
+  getAllHabits,
+  getHabitObjectFromId,
+  getIdsOfHabitsDueOnWeekday,
+} from ".";
 import mmkvStorage from "../mmkvStorage";
 import database from "../database/watermelon";
 import ImportantMessage from "../database/watermelon/model/ImportantMessage";
@@ -109,6 +115,46 @@ export async function getHabitCompletionCollection() {
   }
 
   return habitCompletionsArray;
+}
+
+export function getMissedHabitIdsSoFarThisWeek() {
+  // this function will return an array of arrays containing habitId,
+  // where the outer array will be at most of 7 length (today is saturday), and at minimum
+  // of 1 length (today is sunday)
+  const datesSoFarThisWeek = getDatesThisWeek();
+  datesSoFarThisWeek.length = getDate().getDay() + 1; // addimg 1 because
+  // "so far" also includes today's day
+
+  const allHabits = getAllHabits();
+
+  const idsOfHabitsMissedSoFar = [];
+
+  const habitFrequencies: Record<string, boolean[]> = {}; // a map, with
+  // keys being habitId, and value being frequency (boolean[])
+  for (const habit of allHabits) {
+    habitFrequencies[habit.id] = habit.frequency;
+  }
+
+  for (const date of datesSoFarThisWeek) {
+    // getting all habits due on this day, but leaving only those which
+    // weren't done:
+    let idsOfHabitsMissedOnDate = getIdsOfHabitsDueOnWeekday(date);
+    const entriesOnDate = getAllHabitHistoryEntriesOnDate(date);
+
+    for (const entry of entriesOnDate) {
+      // keep removing elements from idsOfHabitsToBeDoneOnDate when find it
+      // in an entry here:
+      idsOfHabitsMissedOnDate = idsOfHabitsMissedOnDate.filter((habitId) => {
+        return habitId != entry.habitId;
+      });
+    }
+
+    // now, the array only contains habitIds that weren't done on that day,
+    // so we append it ot the habitsMissedSoFar array:
+    idsOfHabitsMissedSoFar.push(idsOfHabitsMissedOnDate);
+  }
+
+  return idsOfHabitsMissedSoFar;
 }
 
 function daysUserMissedHabitSinceLastCompletion(habitId: string) {

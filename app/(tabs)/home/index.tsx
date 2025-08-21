@@ -23,6 +23,7 @@ import { TypeAnimation } from "react-native-type-animation";
 import {
   getHabitCompletionCollection,
   getImportantMessages,
+  getMissedHabitIdsSoFarThisWeek,
 } from "@/utils/habits/habitDataCollectionHelper";
 import api from "@/utils/api";
 import AISuggestionSkeleton from "@/utils/components/specific/AISuggestionSkeleton";
@@ -43,6 +44,7 @@ import { tagHabits } from "@/utils/tagManager";
 export default function Index() {
   // mmkvStorage.set("appStartDate", "2025-7-25");
 
+  console.log("cuz ano everything", getMissedHabitIdsSoFarThisWeek());
   console.log(mmkvStorage.getString("habitHistory"));
 
   const [proActiveMessage, setProActiveMessage] = useState<string | null>(null); // will eventually fetch it's last value from a key-value store so that the user doesn't have to stare at the "loading" for 1-3 seconds

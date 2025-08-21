@@ -91,7 +91,7 @@ export function getHabitCompletionRatePreviousWeek(habitId: string) {
 }
 
 // THIS WEEK RELATED HELPERS:
-export function getTimesCompletedHabitThisWeek(habitId: string) {
+export function getTimesCompletedHabitThisWeek(habitId: string): number {
   let timesCompletedThisWeek = 0;
   const today = getDate();
 
@@ -112,7 +112,7 @@ export function getTimesCompletedHabitThisWeek(habitId: string) {
   return timesCompletedThisWeek;
 }
 
-export function getTimesHabitDueSoFarThisWeek(habitId: string) {
+export function getTimesHabitDueSoFarThisWeek(habitId: string): number {
   const habitObject = getHabitObjectFromId(habitId)!;
   const today = getDate();
 
@@ -130,7 +130,7 @@ export function getTimesHabitDueSoFarThisWeek(habitId: string) {
   return timesDueSoFar;
 }
 
-export function getHabitCompletionRateThisWeek(habitId: string) {
+export function getHabitCompletionRateThisWeek(habitId: string): number {
   const completed = getTimesCompletedHabitThisWeek(habitId);
   const due = getTimesHabitDueSoFarThisWeek(habitId);
 
@@ -139,4 +139,17 @@ export function getHabitCompletionRateThisWeek(habitId: string) {
   } else {
     return 0;
   }
+}
+
+export function getIdsOfHabitsDueOnWeekday(date: Date): string[] {
+  const weekdayNumber = date.getDay(); // 0 index, 0 is sunday
+  const idsOfHabitsDueOnWeekday: string[] = [];
+
+  for (const habit of getAllHabits()) {
+    if (Array.isArray(habit.frequency) && habit.frequency[weekdayNumber]) {
+      idsOfHabitsDueOnWeekday.push(habit.id);
+    }
+  }
+
+  return idsOfHabitsDueOnWeekday;
 }
