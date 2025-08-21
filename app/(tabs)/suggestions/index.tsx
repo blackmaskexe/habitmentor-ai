@@ -7,10 +7,11 @@ import { useRouter } from "expo-router";
 import CompletionRecommendationCard from "@/utils/components/specific/AiSuggestions/CompletionRecommendationCard";
 import MoodRaterCard from "@/utils/components/specific/MoodRaterCard";
 import { didGetMoodCheckedToday } from "@/utils/database/dailyMetadataRecords";
-import CardGrid from "@/utils/components/general/CardGrid";
 import Card from "@/utils/components/general/Card";
 import CardGrid2x1 from "@/utils/components/general/CardGrid2x1";
 import { getLeastCompletedHabitMetadataThisWeek } from "@/utils/habits/habitSuggestionsManager";
+import ChartCompletionsThisWeek from "@/utils/components/specific/AiSuggestions/ChartCompletionsThisWeek";
+import EmotionAwareSuggestionCard from "@/utils/components/specific/AiSuggestions/EmotionAwareSuggestionCard";
 
 export default function AiSuggestions() {
   const fadeAnim = useRef(new Animated.Value(1)).current;
@@ -94,26 +95,15 @@ export default function AiSuggestions() {
         displayLastWeek={false}
       />
 
-      <CardGrid2x1>
-        <Card
-          title="Journaling"
-          description="You seem to be improving!"
-          imageSource={require("@/assets/images/Gemini_Generated_Image_vp8i4xvp8i4xvp8i.png")}
-        />
-        <Card
-          title="Reading Book"
-          description="Oh no! You seem to miss this habite :("
-          imageSource={require("@/assets/images/Gemini_Generated_Image_vp8i4xvp8i4xvp8i.png")}
-        />
-      </CardGrid2x1>
-
-      <CompletionRecommendationCard
+      <EmotionAwareSuggestionCard
         habitName="Emotion-Aware Suggestion"
         completionPercentage={25}
         iconName="heart"
         iconColor={theme.colors.primary}
         displayLastWeek
       />
+
+      <ChartCompletionsThisWeek />
     </ScrollView>
   );
 }

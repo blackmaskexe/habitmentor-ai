@@ -1,5 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
-import { getFormattedDatesThisWeek } from "../date";
+import { getDate, getDatesThisWeek, getFormattedDatesThisWeek } from "../date";
 import mmkvStorage from "../mmkvStorage";
 import {
   getHabitCompletionRatePreviousWeek,
@@ -7,12 +7,18 @@ import {
 } from "./habitFrequencyUtils";
 import { getAllHabits, getHabitObjectFromId } from "./habitService";
 import lodash from "lodash";
+import { getAllHabitHistoryEntriesOnDate } from "./habitHistoryManager";
 
 type LeastCompletedHabitMetadata = {
   habitId: string;
   habitName: string;
   ioniconName: keyof typeof Ionicons.glyphMap;
   completionPercentageLastWeek: number;
+};
+
+type CompletionsData = {
+  x: string;
+  y: number;
 };
 
 export function getLeastCompletedHabitMetadataLastWeek() {
@@ -106,4 +112,28 @@ export function getLeastCompletedHabitMetadataThisWeek() {
 
     return leastCompletedHabitMetadata;
   }
+}
+
+// returns an array of number of completions so far this week (each element is a weekday)
+export function getWeeklyHabitCompletionsCountData() {
+  const datesSoFarThisWeek = getDatesThisWeek();
+  datesSoFarThisWeek.length = getDate().getDay() + 1; // shrinks the array of only contains days uptil today
+
+  const weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+  const completionsSoFar: CompletionsData[] = [];
+  for (let i = 0; i < datesSoFarThisWeek.length; i++) {
+    // habits completed for this particular day:
+    const completionsArray = getAllHabitHistoryEntriesOnDate(
+      datesSoFarThisWeek[i]
+    );
+
+    const completionsData: CompletionsData = {
+      x: weekdays[i],
+      y: completionsArray.length,
+    };
+    completionsSoFar.push(completionsData);
+  }
+
+  return completionsSoFar;
 }
