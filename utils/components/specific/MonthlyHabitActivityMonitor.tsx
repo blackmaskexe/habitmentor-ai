@@ -156,8 +156,8 @@ const createStyles = (theme: any) =>
       justifyContent: "flex-start",
     },
     activityBox: {
-      width: 32,
-      height: 32,
+      width: 30,
+      height: 30,
       borderRadius: theme.radius.s,
       backgroundColor: theme.colors.primary,
     },

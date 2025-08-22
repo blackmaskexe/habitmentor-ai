@@ -40,12 +40,12 @@ const FirstRoute = () => {
         displayLastWeek={false}
       />
 
+      <ChartCompletionsThisWeek />
+
       <EmotionAwareSuggestionCard
         iconName="heart"
         iconColor={theme.colors.primary}
       />
-
-      <ChartCompletionsThisWeek />
     </ScrollView>
   );
 };
