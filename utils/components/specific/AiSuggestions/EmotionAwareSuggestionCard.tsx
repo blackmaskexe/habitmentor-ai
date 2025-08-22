@@ -18,27 +18,19 @@ import { TypeAnimation } from "react-native-type-animation";
 const screenWidth = Dimensions.get("window").width;
 
 type EmotionAwareSuggestionCard = {
-  habitName: string;
-  completionPercentage: number;
-  onViewTips?: () => void;
   onClose?: () => void;
   borderRadius?: number;
   padding?: number;
   iconName?: keyof typeof Ionicons.glyphMap;
   iconColor?: string;
-  displayLastWeek: boolean;
 };
 
 const EmotionAwareSuggestionCard: React.FC<EmotionAwareSuggestionCard> = ({
-  habitName,
-  completionPercentage,
-  onViewTips,
   onClose,
   borderRadius = 16,
   padding = 16,
   iconName,
   iconColor,
-  displayLastWeek,
 }) => {
   const theme = useTheme();
   const styles = createStyles(theme);
@@ -54,7 +46,7 @@ const EmotionAwareSuggestionCard: React.FC<EmotionAwareSuggestionCard> = ({
   useEffect(() => {
     setTimeout(() => {
       setEmotionAwareMessage(
-        "When getting too long of a message, make this say that to click more in order to view full suggestion, then open up an actionsheet. Things I should have known..."
+        "When getting too long of a message, make this say that to click more in order to view full suggestion, then open up an actionsheet. Things I should have known... I wanna embrance you, domesticate you, but you belong to the world...."
       );
     }, 5000);
   }, []);
@@ -100,13 +92,6 @@ const EmotionAwareSuggestionCard: React.FC<EmotionAwareSuggestionCard> = ({
       </View>
 
       {/* Habit name only, limited to 1 line with ellipsis */}
-      <Text
-        style={styles.completionText}
-        numberOfLines={1}
-        ellipsizeMode="tail"
-      >
-        {habitName}
-      </Text>
 
       <Animated.View style={[styles.suggestionContainer]}>
         {emotionAwareMessage ? (
@@ -142,17 +127,22 @@ const EmotionAwareSuggestionCard: React.FC<EmotionAwareSuggestionCard> = ({
                 height: animatedHeight,
               }}
             >
-              <TypeAnimation
-                sequence={[{ text: emotionAwareMessage }]}
-                style={{
-                  ...styles.suggestionText,
-                }}
-                typeSpeed={1}
-                cursor={Platform.OS == "ios"}
-              />
+              <Text>
+                {" "}
+                <TypeAnimation
+                  sequence={[{ text: emotionAwareMessage }]}
+                  style={{
+                    ...styles.suggestionText,
+                  }}
+                  typeSpeed={1}
+                  cursor={Platform.OS == "ios"}
+                />
+              </Text>
             </Animated.View>
-            {emotionAwareMessageNumLines > 3 ? (
-              <Text>Click to view entire message</Text>
+            {emotionAwareMessageNumLines > 2 ? (
+              <Text style={styles.viewMoreText}>
+                Click to view entire message
+              </Text>
             ) : null}
           </>
         ) : (
@@ -207,6 +197,9 @@ function createStyles(theme: Theme) {
     },
     ctaButtonStyle: {
       marginTop: 16,
+    },
+    viewMoreText: {
+      color: theme.colors.text,
     },
     iconContainer: {
       position: "absolute",

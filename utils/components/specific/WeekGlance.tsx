@@ -174,7 +174,7 @@ const WeekAtAGlance: React.FC<WeekAtAGlanceProps> = () => {
           <View key={index} style={styles.dayWrapper}>
             <View
               style={[
-                styles.daySquare,
+                styles.dayCircle,
                 {
                   opacity: calculateOpacity(dayPercentages[index]),
                 },
@@ -213,10 +213,10 @@ function createStyles(theme: Theme) {
       margin: 4,
       position: "relative",
     },
-    daySquare: {
+    dayCircle: {
       width: "100%",
       height: "100%",
-      borderRadius: 4, // explicit small value instead of theme.radius.xs
+      borderRadius: "50%", // explicit small value instead of theme.radius.xs
       position: "absolute",
       backgroundColor: theme.colors.primary,
     },
