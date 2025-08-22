@@ -40,9 +40,12 @@ jobs:
 
       - name: Create tag
         if: env.exists == 'false'
+        env:
+          GH_PAT: ${{ secrets.GH_PAT }}
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
+          git remote set-url origin https://x-access-token:${GH_PAT}@github.com/${{ github.repository }}
           git tag "v${VERSION}"
           git push origin "v${VERSION}"
 
