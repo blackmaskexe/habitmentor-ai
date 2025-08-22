@@ -117,7 +117,7 @@ export async function getHabitCompletionCollection() {
   return habitCompletionsArray;
 }
 
-export function getMissedHabitIdsSoFarThisWeek() {
+export function getMissedHabitIdsSoFarThisWeek(): string[][] {
   // this function will return an array of arrays containing habitId,
   // where the outer array will be at most of 7 length (today is saturday), and at minimum
   // of 1 length (today is sunday)
@@ -155,6 +155,29 @@ export function getMissedHabitIdsSoFarThisWeek() {
   }
 
   return idsOfHabitsMissedSoFar;
+}
+
+export function getMissedHabitIdsOnDate(date: Date): string[] {
+  const allHabits = getAllHabits();
+
+  const habitFrequencies: Record<string, boolean[]> = {}; // a map, with
+  // keys being habitId, and value being frequency (boolean[])
+  for (const habit of allHabits) {
+    habitFrequencies[habit.id] = habit.frequency;
+  }
+
+  let idsOfHabitsMissedOnDate = getIdsOfHabitsDueOnWeekday(date);
+  const entriesOnDate = getAllHabitHistoryEntriesOnDate(date);
+
+  for (const entry of entriesOnDate) {
+    // keep removing elements from idsOfHabitsToBeDoneOnDate when find it
+    // in an entry here:
+    idsOfHabitsMissedOnDate = idsOfHabitsMissedOnDate.filter((habitId) => {
+      return habitId != entry.habitId;
+    });
+  }
+
+  return idsOfHabitsMissedOnDate;
 }
 
 function daysUserMissedHabitSinceLastCompletion(habitId: string) {

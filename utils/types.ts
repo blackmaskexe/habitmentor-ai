@@ -50,7 +50,7 @@ interface DailyRecordEntry {
 }
 
 type DailyRecords = {
-  [date: string]: DailyRecordEntry;
+  [date: string]: DailyRecordEntry; // date is formattedDate btw
 };
 
 export type {

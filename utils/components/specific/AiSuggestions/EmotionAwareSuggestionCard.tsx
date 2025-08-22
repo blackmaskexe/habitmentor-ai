@@ -48,7 +48,7 @@ const EmotionAwareSuggestionCard: React.FC<EmotionAwareSuggestionCard> = ({
       setEmotionAwareMessage(
         "When getting too long of a message, make this say that to click more in order to view full suggestion, then open up an actionsheet. Things I should have known... I wanna embrance you, domesticate you, but you belong to the world...."
       );
-    }, 5000);
+    }, 1000);
   }, []);
 
   const [emotionAwareMessageheight, setEmotionAwareMessageHeight] =
@@ -65,6 +65,7 @@ const EmotionAwareSuggestionCard: React.FC<EmotionAwareSuggestionCard> = ({
 
   return (
     <TouchableOpacity
+      activeOpacity={0.5}
       style={[
         styles.card,
         {
@@ -127,8 +128,7 @@ const EmotionAwareSuggestionCard: React.FC<EmotionAwareSuggestionCard> = ({
                 height: animatedHeight,
               }}
             >
-              <Text>
-                {" "}
+              <Text numberOfLines={3} ellipsizeMode="tail">
                 <TypeAnimation
                   sequence={[{ text: emotionAwareMessage }]}
                   style={{
@@ -200,6 +200,7 @@ function createStyles(theme: Theme) {
     },
     viewMoreText: {
       color: theme.colors.text,
+      marginTop: theme.spacing.s,
     },
     iconContainer: {
       position: "absolute",

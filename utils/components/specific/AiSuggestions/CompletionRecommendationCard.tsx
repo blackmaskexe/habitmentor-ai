@@ -42,7 +42,8 @@ const CompletionRecommendationCard: React.FC<
   const styles = createStyles(theme);
 
   return (
-    <View
+    <TouchableOpacity
+      activeOpacity={0.5}
       style={[
         styles.card,
         {
@@ -81,12 +82,15 @@ const CompletionRecommendationCard: React.FC<
       {/* Completion percentage info */}
       <Text style={styles.suggestionText}>
         {completionPercentage < 50 ? "Only" : null} {completionPercentage}%
-        completed {displayLastWeek ? "last week" : "so far this week"}
+        completed {displayLastWeek ? "last week" : "so far this week"}.{" "}
+        {completionPercentage > 80
+          ? "You're doing fantasitc, keep it going!"
+          : "Let's get those numbers up!"}
       </Text>
 
       {/* View Tips button using CTAButton */}
       {onViewTips && <CTAButton title="View Tips" onPress={onViewTips} />}
-    </View>
+    </TouchableOpacity>
   );
 };
 

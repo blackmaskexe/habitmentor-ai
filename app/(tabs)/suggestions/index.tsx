@@ -12,6 +12,7 @@ import CardGrid2x1 from "@/utils/components/general/CardGrid2x1";
 import { getLeastCompletedHabitMetadataThisWeek } from "@/utils/habits/habitSuggestionsManager";
 import ChartCompletionsThisWeek from "@/utils/components/specific/AiSuggestions/ChartCompletionsThisWeek";
 import EmotionAwareSuggestionCard from "@/utils/components/specific/AiSuggestions/EmotionAwareSuggestionCard";
+import AiSuggestionsTabView from "@/utils/components/specific/AiSuggestions/AiSuggestionsTabView";
 
 export default function AiSuggestions() {
   const fadeAnim = useRef(new Animated.Value(1)).current;
@@ -37,7 +38,7 @@ export default function AiSuggestions() {
     }, 1500);
   };
 
-  const [showMoodCard, setShowMoodCard] = useState(!didGetMoodCheckedToday());
+  const [showMoodCard, setShowMoodCard] = useState(didGetMoodCheckedToday());
   const [showNextCard, setShowNextCard] = useState(false);
   const router = useRouter();
 
@@ -47,10 +48,10 @@ export default function AiSuggestions() {
   const lowestCompletedHabitThisWeek = getLeastCompletedHabitMetadataThisWeek();
 
   return (
-    <ScrollView
+    <View
       style={styles.container}
-      contentContainerStyle={styles.scrollContent}
-      showsVerticalScrollIndicator={false}
+      // contentContainerStyle={styles.scrollContent}
+      // showsVerticalScrollIndicator={false}
     >
       <CardWithoutImage
         title="AI Assistant"
@@ -61,8 +62,9 @@ export default function AiSuggestions() {
         iconLetters="AI"
       />
       <View style={styles.horizontalRoller} />
+
       {/* Lowest being done habit (full width card) */}
-      {showMoodCard ? (
+      {/* {showMoodCard ? (
         <Animated.View
           style={{
             opacity: fadeAnim,
@@ -83,9 +85,9 @@ export default function AiSuggestions() {
           ],
           opacity: showMoodCard ? 0 : 1, // hide until MoodRaterCard is gone
         }}
-      ></Animated.View>
+      ></Animated.View> */}
 
-      <CompletionRecommendationCard
+      {/* <CompletionRecommendationCard
         habitName={lowestCompletedHabitThisWeek.habitName}
         completionPercentage={
           lowestCompletedHabitThisWeek.completionPercentageLastWeek
@@ -96,15 +98,13 @@ export default function AiSuggestions() {
       />
 
       <EmotionAwareSuggestionCard
-        habitName="Emotion-Aware Suggestion"
-        completionPercentage={25}
         iconName="heart"
         iconColor={theme.colors.primary}
-        displayLastWeek
       />
 
-      <ChartCompletionsThisWeek />
-    </ScrollView>
+      <ChartCompletionsThisWeek /> */}
+      <AiSuggestionsTabView />
+    </View>
   );
 }
 

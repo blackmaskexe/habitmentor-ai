@@ -1,4 +1,5 @@
-import { getFormattedDate } from "../date";
+import { getDate, getDatesThisWeek, getFormattedDate } from "../date";
+import { getHabitObjectFromId, getMissedHabitIdsOnDate } from "../habits";
 import mmkvStorage from "../mmkvStorage";
 import { DailyRecordEntry, DailyRecords } from "../types";
 
@@ -58,3 +59,25 @@ export function didGetMoodCheckedToday() {
   }
 }
 
+export function addMissedHabitsThisWeekToMetadata() {
+  const existingDailyRecords: DailyRecords = JSON.parse(
+    mmkvStorage.getString("dailyRecords") || "{}"
+  );
+
+  const datesSoFar = getDatesThisWeek();
+  datesSoFar.length = getDate().getDay() + 1; // limiting the dates to just today
+
+  const todayRecord: DailyRecordEntry = {
+    ...existingDailyRecords[getFormattedDate()],
+  };
+
+  const missedHabits = getMissedHabitIdsOnDate(getDate()).map((habitId) => {
+    return getHabitObjectFromId(habitId)!.habitName;
+  });
+
+  todayRecord.missedHabits = missedHabits;
+
+  existingDailyRecords[getFormattedDate()] = todayRecord;
+
+  mmkvStorage.set("dailyRecords", JSON.stringify(existingDailyRecords));
+}
