@@ -23,7 +23,7 @@ import { TypeAnimation } from "react-native-type-animation";
 import {
   getHabitCompletionCollection,
   getImportantMessages,
-} from "@/utils/database/dataCollectionHelper";
+} from "@/utils/habits/habitDataCollectionHelper";
 import api from "@/utils/api";
 import AISuggestionSkeleton from "@/utils/components/specific/AISuggestionSkeleton";
 import {
@@ -31,13 +31,13 @@ import {
   getDateFromFormattedDate,
   getDateMinusNDays,
   getFormattedDate,
-  getFormattedDatesThisWeek,
   relationBetweenTodayAndDate,
 } from "@/utils/date";
 import mmkvStorage from "@/utils/mmkvStorage";
 import { TourGuideZone, useTourGuideController } from "rn-tourguide";
 import React from "react";
 import { Ionicons } from "@expo/vector-icons";
+import { tagHabits } from "@/utils/tagManager";
 
 export default function Index() {
   // mmkvStorage.set("appStartDate", "2025-7-25");
@@ -73,6 +73,9 @@ export default function Index() {
         mmkvStorage.set("didTourApp", true);
         return true;
       });
+
+      // run the tagging endpoint:
+      tagHabits();
     } else {
       setShouldUserTour(false);
     }

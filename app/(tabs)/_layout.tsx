@@ -1,5 +1,7 @@
 import ChatDropDownMenu from "@/utils/components/specific/zeego/ChatDropDownMenu";
 import HomeAddDropdownMenu from "@/utils/components/specific/zeego/HomeAddDropdownMenu";
+import mmkvStorage from "@/utils/mmkvStorage";
+import { areHabitsTagged, tagHabits } from "@/utils/tagManager";
 import { useTheme } from "@/utils/theme/ThemeContext";
 import { Ionicons } from "@expo/vector-icons";
 import { Tabs, usePathname, useRouter } from "expo-router";
@@ -14,7 +16,12 @@ export default function TabLayout() {
 
   const { width } = Dimensions.get("window");
 
-  // used by the header back arrow
+  // APP INITIALIZATION (After it has loaded):
+  if (!areHabitsTagged()) {
+    tagHabits();
+  }
+
+  console.log(mmkvStorage.getString("activeHabits"), "I give you all ad me");
 
   return (
     <Tabs
@@ -95,55 +102,53 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="chat"
+        name="suggestions"
         options={{
-          animation: "none",
-          title: "AI Chat",
+          // animation: "none",
+          title: "AI Suggestions",
+          headerShown: false,
           tabBarIcon: ({ color, size }) => (
             <TourGuideZone
               zone={3}
               text={
-                "Chat with the AI 🤖! Ask about ways to improve, be more consistent, and more!"
+                "Look at suggestions by the AI, updated every week! Plus, Chat with your Personal Habit Assistant any time"
               }
               borderRadius={8}
             >
-              <Ionicons name="chatbubbles" size={size} color={color} />
+              <Ionicons name="sparkles" size={size} color={color} />
             </TourGuideZone>
           ),
-          tabBarStyle: {
-            display: "none",
-          },
 
-          headerLeft: () => (
-            <TouchableOpacity
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                marginLeft: theme.spacing.m,
-              }}
-              onPress={() => {
-                router.back();
-              }}
-            >
-              <Ionicons
-                name="chevron-back"
-                size={24}
-                color={theme.colors.primary}
-              />
-              <Text
-                style={{
-                  color: theme.colors.primary,
-                  ...theme.text.body,
-                  marginLeft: 4,
-                }}
-              >
-                Back
-              </Text>
-            </TouchableOpacity>
-          ),
-          headerRight: () => {
-            return <ChatDropDownMenu />;
-          },
+          // headerLeft: () => (
+          //   <TouchableOpacity
+          //     style={{
+          //       flexDirection: "row",
+          //       alignItems: "center",
+          //       marginLeft: theme.spacing.m,
+          //     }}
+          //     onPress={() => {
+          //       router.back();
+          //     }}
+          //   >
+          //     <Ionicons
+          //       name="chevron-back"
+          //       size={24}
+          //       color={theme.colors.primary}
+          //     />
+          //     <Text
+          //       style={{
+          //         color: theme.colors.primary,
+          //         ...theme.text.body,
+          //         marginLeft: 4,
+          //       }}
+          //     >
+          //       Back
+          //     </Text>
+          //   </TouchableOpacity>
+          // ),
+          // headerRight: () => {
+          //   return <ChatDropDownMenu />;
+          // },
         }}
       />
       <Tabs.Screen

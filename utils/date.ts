@@ -8,10 +8,9 @@ import { getISOWeek } from "date-fns";
 export const getDate = function () {
   // this function is to be able to change date from this central location easily
   return new Date();
-
   // const today = new Date();
   // const tomorrow = new Date(today);
-  // tomorrow.setDate(today.getDate() + 1);
+  // tomorrow.setDate(today.getDate() + 3);
   // return tomorrow;
 };
 
@@ -115,14 +114,40 @@ export const getDatesThisWeek = function () {
   const todayWeekdayNumber = today.getDay(); // returns 3
   // we have to loop in such a way that the first day is obtained by subtracting 3, and end at adding 7 - 3
 
-  const formattedDatesThisWeekArray = [];
+  const datesThisWeekArray = [];
   for (let i = -1 * todayWeekdayNumber; i < 7 - todayWeekdayNumber; i++) {
     let dateOnThisDay = getDate();
     dateOnThisDay.setDate(today.getDate() + i);
-    formattedDatesThisWeekArray.push(dateOnThisDay);
+    datesThisWeekArray.push(dateOnThisDay);
   }
 
-  return formattedDatesThisWeekArray;
+  return datesThisWeekArray;
+};
+
+export const getDatesLastWeek = function () {
+  const today = new Date();
+
+  // getting date of previous sunday:
+  const prevSunday = new Date(today);
+  prevSunday.setDate(today.getDate() - today.getDay() - 7);
+
+  const datesLastWeek: Date[] = [];
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(prevSunday);
+    d.setDate(prevSunday.getDate() + i);
+    datesLastWeek.push(d);
+  }
+
+  return datesLastWeek;
+};
+
+export const getFormattedDatesLastWeek = function () {
+  const formattedDatesLastWeek: string[] = [];
+  for (const date of getDatesLastWeek()) {
+    formattedDatesLastWeek.push(getFormattedDate(date));
+  }
+
+  return formattedDatesLastWeek;
 };
 
 export const relationBetweenTodayAndDate = function (date: Date) {

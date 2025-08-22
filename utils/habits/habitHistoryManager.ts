@@ -1,9 +1,9 @@
-import { getFormattedDate } from "../date";
+import { getDatesLastWeek, getFormattedDate } from "../date";
 import mmkvStorage from "../mmkvStorage";
-import database from "./watermelon";
+import database from "../database/watermelon";
 import { Q } from "@nozbe/watermelondb";
-import HabitCompletion from "./watermelon/model/HabitCompletion";
-import { getAllHabits, getHabitObjectFromId } from "./habits";
+import HabitCompletion from "../database/watermelon/model/HabitCompletion";
+import { getAllHabits, getHabitObjectFromId } from ".";
 
 // Define an interface for the structure of a habit history entry in the mmkvStorage
 interface HabitHistoryEntry {
@@ -91,6 +91,8 @@ export async function getOrCreateHabitCompletionRecord(habitId: string) {
   } else {
     const allRecords = await habitCompletionCollection.query().fetch();
 
+    // if the record for that particular habit doesn't exist, then create it
+    // this is done for new habits
     return await database.write(async () => {
       const newRecord = await habitCompletionCollection.create((record) => {
         record.habitId = habitId;
@@ -148,10 +150,10 @@ export function getAllHabitHistoryToday(): HabitHistoryEntry[] {
   return todayEntries;
 }
 
-export function getAllHabitHistoryOnDate(date: Date) {
+export function getAllHabitHistoryEntriesOnDate(date: Date) {
   const entries = getHabitHistoryEntries();
 
-  const entriesOnDate = entries.filter(
+  const entriesOnDate: HabitHistoryEntry[] = entries.filter(
     (entry) => entry.completionDate === getFormattedDate(date)
   );
   console.log(

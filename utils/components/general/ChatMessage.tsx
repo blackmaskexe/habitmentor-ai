@@ -27,10 +27,10 @@ import {
   addImportantMessage,
   getHabitCompletionCollection,
   getImportantMessages,
-} from "@/utils/database/dataCollectionHelper";
+} from "@/utils/habits/habitDataCollectionHelper";
 import { getDate, getTimeOfDay } from "@/utils/date";
-import { getAllHabits } from "@/utils/database/habits";
-import { getAllHabitCompletionRecords } from "@/utils/database/habitHistoryManager";
+import { getAllHabits } from "@/utils/habits";
+import { getAllHabitCompletionRecords } from "@/utils/habits/habitHistoryManager";
 
 // Prop Instructions:
 // Send a message prop as follows:
@@ -323,7 +323,7 @@ export default function ChatMessages({
               flexDirection: "row",
               alignItems: "center",
               borderRadius: 20,
-              // marginBottom: 6,
+              marginBottom: 6,
               marginHorizontal: 10,
             }}
           >

@@ -4,7 +4,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useTheme } from "@/utils/theme/ThemeContext";
 import mmkvStorage from "@/utils/mmkvStorage";
 import { useRouter } from "expo-router";
-import { deleteHabit, getHabitObjectFromId } from "@/utils/database/habits";
+import { deleteHabit, getHabitObjectFromId } from "@/utils/habits";
 import { HabitObject } from "@/utils/types";
 import { SheetManager } from "react-native-actions-sheet";
 

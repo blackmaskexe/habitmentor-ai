@@ -7,7 +7,7 @@ import { HabitObject } from "./types";
 import {
   updateHabitNotificationId,
   updateHabitNotificationTime,
-} from "./database/habits";
+} from "./habits";
 import { getFormattedTime } from "./date";
 
 Notifications.setNotificationHandler({

@@ -28,11 +28,11 @@ import { Theme } from "@/utils/theme/themes";
 import * as Haptics from "expo-haptics";
 import { addPoints, subtractPoints } from "@/utils/database/points";
 import {
-  getAllHabitHistoryOnDate,
+  getAllHabitHistoryEntriesOnDate,
   getAllHabitHistoryToday,
   onMarkAsComplete,
   onMarkAsIncomplete,
-} from "@/utils/database/habitHistoryManager";
+} from "@/utils/habits/habitHistoryManager";
 import { TourGuideZone } from "rn-tourguide";
 
 const DailyHabitsView = ({ date }: { date: Date }) => {
@@ -129,7 +129,7 @@ const DailyHabitsView = ({ date }: { date: Date }) => {
       // fill the above with falses, and switch those to true which have been completed
 
       // looping throgu all the habitItem completions for today's date to see if
-      const completedHabitsOnDate = getAllHabitHistoryOnDate(date);
+      const completedHabitsOnDate = getAllHabitHistoryEntriesOnDate(date);
       for (const habitEntry of completedHabitsOnDate) {
         habitItems.forEach((item, index) => {
           if (item.id == habitEntry.habitId) {
@@ -253,7 +253,6 @@ const DailyHabitsView = ({ date }: { date: Date }) => {
                       loadHabits();
                     });
                   }}
-
                 >
                   <Ionicons
                     name="ellipsis-vertical-outline"

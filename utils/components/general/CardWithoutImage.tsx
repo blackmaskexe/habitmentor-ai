@@ -19,6 +19,7 @@ type CardProps = {
   padding?: number;
   onPress?: any;
   children?: any;
+  iconLetters?: string;
 };
 
 const CardWithoutImage: React.FC<CardProps> = ({
@@ -29,6 +30,7 @@ const CardWithoutImage: React.FC<CardProps> = ({
   onPress,
   children,
   metadata,
+  iconLetters, // overriding the icon letter automatically from title
 }) => {
   const theme = useTheme();
   const styles = createStyles(theme);
@@ -56,7 +58,9 @@ const CardWithoutImage: React.FC<CardProps> = ({
     >
       <View style={styles.cardContent}>
         <View style={styles.iconContainer}>
-          <Text style={styles.iconText}>{title[0].toUpperCase()}</Text>
+          <Text style={styles.iconText}>
+            {iconLetters ? iconLetters : title[0].toUpperCase()}
+          </Text>
         </View>
 
         <View style={styles.textContainer}>

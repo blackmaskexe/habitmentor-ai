@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { View, StyleSheet } from "react-native";
 import { useTheme } from "@/utils/theme/ThemeContext";
-import { getHabitHistoryEntries } from "@/utils/database/habitHistoryManager";
+import { getHabitHistoryEntries } from "@/utils/habits/habitHistoryManager";
 import {
   getDate,
   getDateFromFormattedDate,
@@ -12,7 +12,8 @@ import {
   getAllHabits,
   getAllHabitsOnWeekday,
   getTotalHabitNumberOnDay,
-} from "@/utils/database/habits";
+} from "@/utils/habits";
+
 import mmkvStorage from "@/utils/mmkvStorage";
 
 interface DayActivity {
@@ -155,8 +156,8 @@ const createStyles = (theme: any) =>
       justifyContent: "flex-start",
     },
     activityBox: {
-      width: 32,
-      height: 32,
+      width: 30,
+      height: 30,
       borderRadius: theme.radius.s,
       backgroundColor: theme.colors.primary,
     },

@@ -24,20 +24,20 @@ const SecondRoute = () => {
   );
 };
 
-const ThirdRoute = () => {
-  const theme = useTheme();
-  const styles = createStyles(theme);
-  return (
-    <View style={styles.scene}>
-      <Text style={styles.placeholderText}>Coming Soon</Text>
-    </View>
-  );
-};
+// const ThirdRoute = () => {
+//   const theme = useTheme();
+//   const styles = createStyles(theme);
+//   return (
+//     <View style={styles.scene}>
+//       <Text style={styles.placeholderText}>Coming Soon</Text>
+//     </View>
+//   );
+// };
 
 const renderScene = SceneMap({
   first: FirstRoute,
   second: SecondRoute,
-  third: ThirdRoute,
+  // third: ThirdRoute,
 });
 
 export default function TabViewExample() {
@@ -46,9 +46,9 @@ export default function TabViewExample() {
   const [index, setIndex] = React.useState(0);
 
   const routes = [
-    { key: "first", title: "Weekly" },
-    { key: "second", title: "Monthly" },
-    { key: "third", title: "All-Time" },
+    { key: "first", title: "Friends" },
+    { key: "second", title: "Global" },
+    // { key: "third", title: "All-Time" },
   ];
 
   const renderTabBar = (props: any) => (

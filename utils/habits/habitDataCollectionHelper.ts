@@ -1,22 +1,34 @@
 import {
   getDate,
   getDateFromFormattedDate,
+  getDatesThisWeek,
   getFormattedDate,
   getWeekdayNumber,
   getWeekNumber,
 } from "../date";
 import {
   getAllHabitHistory,
+  getAllHabitHistoryEntriesOnDate,
   getOrCreateHabitCompletionRecord,
 } from "./habitHistoryManager";
-import { getAllHabits, getHabitObjectFromId } from "./habits";
+import {
+  getAllHabits,
+  getHabitObjectFromId,
+  getIdsOfHabitsDueOnWeekday,
+} from ".";
 import mmkvStorage from "../mmkvStorage";
-import database from "./watermelon";
-import ImportantMessage from "./watermelon/model/ImportantMessage";
+import database from "../database/watermelon";
+import ImportantMessage from "../database/watermelon/model/ImportantMessage";
 import { Q } from "@nozbe/watermelondb";
-import HabitCompletion from "./watermelon/model/HabitCompletion";
+import HabitCompletion from "../database/watermelon/model/HabitCompletion";
 
 export async function runHabitDataCollection() {
+  // collects data for:
+  // times habits missed
+  // streak of the habit
+  // days since the last habit was done
+  // basically stuff for the habit_completions table for tigrelini watermelini db
+
   if (shouldCollectData()) {
     for (const habit of getAllHabits()) {
       if (!shouldCollectDataForHabit(habit.id)) {
@@ -105,11 +117,74 @@ export async function getHabitCompletionCollection() {
   return habitCompletionsArray;
 }
 
+export function getMissedHabitIdsSoFarThisWeek(): string[][] {
+  // this function will return an array of arrays containing habitId,
+  // where the outer array will be at most of 7 length (today is saturday), and at minimum
+  // of 1 length (today is sunday)
+  const datesSoFarThisWeek = getDatesThisWeek();
+  datesSoFarThisWeek.length = getDate().getDay() + 1; // addimg 1 because
+  // "so far" also includes today's day
+
+  const allHabits = getAllHabits();
+
+  const idsOfHabitsMissedSoFar = [];
+
+  const habitFrequencies: Record<string, boolean[]> = {}; // a map, with
+  // keys being habitId, and value being frequency (boolean[])
+  for (const habit of allHabits) {
+    habitFrequencies[habit.id] = habit.frequency;
+  }
+
+  for (const date of datesSoFarThisWeek) {
+    // getting all habits due on this day, but leaving only those which
+    // weren't done:
+    let idsOfHabitsMissedOnDate = getIdsOfHabitsDueOnWeekday(date);
+    const entriesOnDate = getAllHabitHistoryEntriesOnDate(date);
+
+    for (const entry of entriesOnDate) {
+      // keep removing elements from idsOfHabitsToBeDoneOnDate when find it
+      // in an entry here:
+      idsOfHabitsMissedOnDate = idsOfHabitsMissedOnDate.filter((habitId) => {
+        return habitId != entry.habitId;
+      });
+    }
+
+    // now, the array only contains habitIds that weren't done on that day,
+    // so we append it ot the habitsMissedSoFar array:
+    idsOfHabitsMissedSoFar.push(idsOfHabitsMissedOnDate);
+  }
+
+  return idsOfHabitsMissedSoFar;
+}
+
+export function getMissedHabitIdsOnDate(date: Date): string[] {
+  const allHabits = getAllHabits();
+
+  const habitFrequencies: Record<string, boolean[]> = {}; // a map, with
+  // keys being habitId, and value being frequency (boolean[])
+  for (const habit of allHabits) {
+    habitFrequencies[habit.id] = habit.frequency;
+  }
+
+  let idsOfHabitsMissedOnDate = getIdsOfHabitsDueOnWeekday(date);
+  const entriesOnDate = getAllHabitHistoryEntriesOnDate(date);
+
+  for (const entry of entriesOnDate) {
+    // keep removing elements from idsOfHabitsToBeDoneOnDate when find it
+    // in an entry here:
+    idsOfHabitsMissedOnDate = idsOfHabitsMissedOnDate.filter((habitId) => {
+      return habitId != entry.habitId;
+    });
+  }
+
+  return idsOfHabitsMissedOnDate;
+}
+
 function daysUserMissedHabitSinceLastCompletion(habitId: string) {
   const entries = getAllHabitHistory(); // objects that contain date of completion in them
 
   for (let i = entries.length - 1; i >= 0; i++) {
-    // looping in reverse, finding the last time the user completed that habit:
+    // looping in reverse (new records are later in array), finding the last time the user completed that habit:
     if (entries[i].habitId == habitId) {
       // found a habit being done
 

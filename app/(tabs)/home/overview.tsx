@@ -19,7 +19,7 @@ import AllHabitsOverview from "@/utils/components/specific/AllHabitsOverview";
 import MonthlyHabitActivityMonitor from "@/utils/components/specific/MonthlyHabitActivityMonitor";
 import mmkvStorage from "@/utils/mmkvStorage";
 import { Theme } from "@/utils/theme/themes";
-import { getHabitCompletionCollection } from "@/utils/database/dataCollectionHelper";
+import { getHabitCompletionCollection } from "@/utils/habits/habitDataCollectionHelper";
 
 async function calculateLongestStreak() {
   const habitCompletionRecords = await getHabitCompletionCollection();
@@ -60,13 +60,15 @@ const OverviewScreen = () => {
     <View style={styles.container}>
       {Platform.OS == "ios" ? (
         <>
-          <NavigationPill />
-          <View style={styles.closeButtonContainer}>
-            <CrossButton
-              onPress={() => router.replace("/(tabs)/home")}
-              size={20}
-              outline={false}
-            />
+          <View style={styles.modalHeader}>
+            <NavigationPill />
+            <View style={styles.crossButtonContainer}>
+              <CrossButton
+                onPress={() => router.replace("/(tabs)/home")}
+                size={24}
+                outline={false}
+              />
+            </View>
           </View>
         </>
       ) : null}
@@ -163,13 +165,22 @@ function createStyles(theme: Theme) {
       marginTop: 30, // Keep existing margin or adjust as needed
       paddingHorizontal: theme.spacing.m, // Add horizontal padding to scroll content
     },
-    closeButtonContainer: {
-      position: "absolute",
-      top: theme.spacing.l, // Adjust positioning if needed
-      right: theme.spacing.m,
-      zIndex: 1, // Ensure it's above other elements
+    modalHeader: {
+      // height: 56,
+      // justifyContent: "center",
+      alignItems: "center",
+      position: "relative",
+      // keep a little horizontal padding so the absolute button doesn't touch the edge
+      paddingHorizontal: theme.spacing.m,
     },
-
+    crossButtonContainer: {
+      position: "absolute",
+      right: theme.spacing.m,
+      top: 0,
+      bottom: 0,
+      justifyContent: "center",
+      alignItems: "center",
+    },
     weeklyHabitsConatiner: {
       // This container wraps WeeklyHabitsView.
       // Add styles here if you need specific layout or spacing for this wrapper

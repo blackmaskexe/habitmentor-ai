@@ -94,7 +94,7 @@ export default function VariableItemPicker({
     if (!habitData.frequency) {
       habitData.frequency = Array(7).fill(true);
     }
-    habitData.iconName = getHabitIcon(habitData.habitName);
+    habitData.iconName = getHabitIcon(habitData.habitName!);
 
     setValues({}); // clear the form upon submission
 

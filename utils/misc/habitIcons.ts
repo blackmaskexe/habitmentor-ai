@@ -1,4 +1,13 @@
-export const habitIconKeywords = [
+import { Ionicons } from "@expo/vector-icons";
+
+type IoniconName = keyof typeof Ionicons.glyphMap;
+
+type HabitIconType = {
+  keywords: string[];
+  icon: IoniconName;
+};
+
+export const habitIconKeywords: HabitIconType[] = [
   // Exercise & Physical Activity
   { keywords: ["run", "jog", "sprint", "marathon", "running"], icon: "walk" },
   {
@@ -28,7 +37,7 @@ export const habitIconKeywords = [
   },
   {
     keywords: ["journal", "diary", "write", "reflect", "thoughts"],
-    icon: "journal",
+    icon: "book",
   },
   { keywords: ["therapy", "counseling", "mental health"], icon: "happy" },
 
@@ -38,10 +47,7 @@ export const habitIconKeywords = [
     icon: "book",
   },
   { keywords: ["study", "learn", "education", "course"], icon: "school" },
-  {
-    keywords: ["code", "program", "develop", "software"],
-    icon: "code-working",
-  },
+  { keywords: ["code", "program", "develop", "software"], icon: "code-slash" },
   { keywords: ["language", "spanish", "french", "duolingo"], icon: "language" },
   { keywords: ["art", "draw", "paint", "sketch", "creative"], icon: "brush" },
   {
@@ -58,7 +64,7 @@ export const habitIconKeywords = [
   { keywords: ["drink", "water", "hydrate", "glasses"], icon: "water" },
   {
     keywords: ["vitamins", "supplements", "medicine", "pills"],
-    icon: "medical",
+    icon: "medkit",
   },
   { keywords: ["fruits", "vegetables", "healthy food"], icon: "leaf" },
   { keywords: ["no smoke", "quit smoking", "cigarette"], icon: "ban" },
@@ -68,7 +74,7 @@ export const habitIconKeywords = [
   { keywords: ["clean", "tidy", "organize", "declutter"], icon: "home" },
   { keywords: ["plan", "schedule", "calendar", "agenda"], icon: "calendar" },
   { keywords: ["email", "inbox", "zero", "mail"], icon: "mail" },
-  { keywords: ["focus", "pomodoro", "concentrate"], icon: "timer" },
+  { keywords: ["focus", "pomodoro", "concentrate"], icon: "alarm" },
 
   // Social & Relationships
   { keywords: ["call", "phone", "contact", "family"], icon: "call" },
@@ -82,30 +88,44 @@ export const habitIconKeywords = [
 
   // Hobbies & Leisure
   { keywords: ["hobby", "craft", "create", "make"], icon: "construct" },
-  { keywords: ["game", "play", "chess", "sports"], icon: "game-controller" },
+  {
+    keywords: ["game", "play", "chess", "sports", "gaming"],
+    icon: "game-controller",
+  },
   { keywords: ["garden", "plant", "nature", "outdoor"], icon: "flower" },
   { keywords: ["cook", "bake", "recipe", "kitchen"], icon: "restaurant" },
 
   // Digital Wellbeing
-  { keywords: ["screen", "phone", "digital", "less"], icon: "phone-portrait" },
-  { keywords: ["social media", "instagram", "facebook"], icon: "apps" },
+  {
+    keywords: ["screen", "phone", "digital", "less", "unplug"],
+    icon: "phone-portrait",
+  },
+  {
+    keywords: ["social media", "instagram", "facebook", "x", "twitter"],
+    icon: "apps",
+  },
 
   // Spiritual & Personal
-  { keywords: ["pray", "worship", "spiritual", "religious"], icon: "prism" },
+  { keywords: ["pray", "worship", "spiritual", "religious"], icon: "leaf" },
   { keywords: ["affirmation", "mantra", "positive"], icon: "sunny" },
-  { keywords: ["test"], icon: "walk-outline" },
 
   // Additional Exercise & Sports
-  { keywords: ["tennis", "racket", "court", "serve"], icon: "tennis" },
+  { keywords: ["tennis", "racket", "court", "serve"], icon: "ellipse" },
   { keywords: ["golf", "putting", "driving range", "clubs"], icon: "golf" },
-  { keywords: ["dance", "choreography", "ballet", "hiphop"], icon: "body" },
-  { keywords: ["martial arts", "karate", "judo", "taekwondo"], icon: "body" },
   {
-    keywords: ["climbing", "bouldering", "rock climbing"],
-    icon: "trending-up",
+    keywords: ["dance", "choreography", "ballet", "hiphop"],
+    icon: "musical-notes",
   },
-  { keywords: ["boxing", "kickboxing", "sparring", "punch"], icon: "fist" },
-  { keywords: ["crossfit", "hiit", "interval", "intense"], icon: "fitness" },
+  {
+    keywords: ["martial arts", "karate", "judo", "taekwondo"],
+    icon: "hand-left",
+  },
+  { keywords: ["climbing", "bouldering", "rock climbing"], icon: "flag" },
+  {
+    keywords: ["boxing", "kickboxing", "sparring", "punch"],
+    icon: "hand-left",
+  },
+  { keywords: ["crossfit", "hiit", "interval", "intense"], icon: "barbell" },
   { keywords: ["stretch", "flexibility", "mobility", "range"], icon: "body" },
 
   // Advanced Mindfulness & Mental Health
@@ -120,9 +140,12 @@ export const habitIconKeywords = [
 
   // Detailed Learning & Skills
   { keywords: ["online course", "udemy", "coursera", "mooc"], icon: "school" },
-  { keywords: ["podcast", "audiobook", "learning audio"], icon: "headset" },
-  { keywords: ["ted talk", "educational video", "lecture"], icon: "tv" },
-  { keywords: ["flash cards", "memorization", "study"], icon: "documents" },
+  {
+    keywords: ["podcast", "audiobook", "learning audio"],
+    icon: "musical-notes",
+  },
+  { keywords: ["ted talk", "educational video", "lecture"], icon: "videocam" },
+  { keywords: ["flash cards", "memorization", "study"], icon: "document-text" },
   { keywords: ["speed reading", "comprehension", "reading"], icon: "book" },
   { keywords: ["note taking", "cornell method", "notes"], icon: "create" },
   { keywords: ["mind mapping", "brainstorming", "ideas"], icon: "git-branch" },
@@ -147,8 +170,8 @@ export const habitIconKeywords = [
     keywords: ["calorie tracking", "macro counting", "diet"],
     icon: "analytics",
   },
-  { keywords: ["intermittent fasting", "fasting window"], icon: "time" },
-  { keywords: ["protein intake", "supplements", "bcaa"], icon: "fitness" },
+  { keywords: ["intermittent fasting", "fasting window"], icon: "hourglass" },
+  { keywords: ["protein intake", "supplements", "bcaa"], icon: "barbell" },
   { keywords: ["vegetarian meal", "vegan food", "plant"], icon: "leaf" },
   { keywords: ["smoothie", "juice", "blend", "shake"], icon: "water" },
   { keywords: ["vitamin d", "supplements", "omega"], icon: "sunny" },
@@ -187,7 +210,7 @@ export const habitIconKeywords = [
   { keywords: ["laundry", "washing", "clothes clean"], icon: "water" },
   { keywords: ["dishes", "dishwasher", "kitchen clean"], icon: "home" },
   { keywords: ["vacuum", "sweep", "mop", "floor clean"], icon: "home" },
-  { keywords: ["gardening", "plant care", "watering"], icon: "flower" },
+  { keywords: ["gardening", "plant care", "watering"], icon: "leaf" },
   { keywords: ["declutter", "minimalism", "organize"], icon: "trash" },
   { keywords: ["home repair", "maintenance", "fix"], icon: "hammer" },
   { keywords: ["bed making", "room tidy", "bedroom"], icon: "bed" },
@@ -204,13 +227,16 @@ export const habitIconKeywords = [
   { keywords: ["pet care", "dog walk", "animal"], icon: "paw" },
 
   // Digital Wellbeing & Technology
-  { keywords: ["digital detox", "screen break", "unplug"], icon: "phone-off" },
+  {
+    keywords: ["digital detox", "screen break", "unplug"],
+    icon: "phone-portrait",
+  },
   { keywords: ["password update", "security check"], icon: "lock-closed" },
   { keywords: ["backup", "data sync", "cloud save"], icon: "cloud-upload" },
-  { keywords: ["device clean", "phone clean", "laptop"], icon: "hardware" },
+  { keywords: ["device clean", "phone clean", "laptop"], icon: "laptop" },
   { keywords: ["news reading", "current events", "news"], icon: "newspaper" },
   { keywords: ["social media audit", "platform check"], icon: "apps" },
-  { keywords: ["email cleanup", "inbox manage"], icon: "mail-unread" },
+  { keywords: ["email cleanup", "inbox manage"], icon: "mail" },
   { keywords: ["app organization", "phone tidy"], icon: "phone-portrait" },
 
   // Personal Growth
@@ -222,16 +248,76 @@ export const habitIconKeywords = [
   { keywords: ["weekly review", "plan review"], icon: "calendar" },
   { keywords: ["monthly goals", "month review"], icon: "trophy" },
   { keywords: ["skill practice", "deliberate practice"], icon: "build" },
+  // Extra categories to broaden keyword coverage (common habits)
+  {
+    keywords: ["commute", "drive", "car", "taxi", "uber", "ride"],
+    icon: "car",
+  },
+  { keywords: ["coffee", "cafe", "espresso", "latte"], icon: "cafe" },
+  {
+    keywords: ["snack", "dessert", "treat", "icecream", "ice cream"],
+    icon: "ice-cream",
+  },
+  {
+    keywords: ["movie", "film", "watch", "cinema", "tv", "netflix"],
+    icon: "film",
+  },
+  {
+    keywords: ["game", "video game", "gaming", "xbox", "play"],
+    icon: "game-controller",
+  },
+  { keywords: ["gift", "present", "surprise"], icon: "gift" },
+  { keywords: ["pizza", "takeout", "order food", "deliver"], icon: "pizza" },
+  {
+    keywords: ["music", "song", "listen", "practice music"],
+    icon: "musical-notes",
+  },
+  {
+    keywords: ["photo", "photo shoot", "camera", "photography"],
+    icon: "camera",
+  },
+  { keywords: ["relax", "rest", "chill", "spa", "self care"], icon: "happy" },
+  { keywords: ["shop", "shopping", "groceries", "buy"], icon: "cart" },
+  {
+    keywords: ["clean", "cleaning", "laundry", "dishes", "tidy"],
+    icon: "home",
+  },
+  {
+    keywords: ["plan", "planing", "planning", "schedule", "todo", "tasks"],
+    icon: "list",
+  },
+  { keywords: ["steps", "step", "walking", "walk", "stroll"], icon: "walk" },
+  { keywords: ["water", "hydrate", "drink", "glasses"], icon: "water" },
+  { keywords: ["stretch", "mobility", "yoga", "flexibility"], icon: "body" },
+  { keywords: ["read", "reading", "book", "pages", "novel"], icon: "book" },
+  { keywords: ["study", "learn", "course", "lesson"], icon: "school" },
+  { keywords: ["meditate", "mindful", "breath", "breathing"], icon: "leaf" },
+  { keywords: ["weight", "lift", "barbell", "strength"], icon: "barbell" },
+  { keywords: ["sleep", "nap", "bedtime", "bed"], icon: "bed" },
+  {
+    keywords: ["health", "doctor", "meds", "medicine", "supplement"],
+    icon: "medkit",
+  },
+  { keywords: ["money", "save", "budget", "finance", "pay"], icon: "cash" },
+  {
+    keywords: ["invest", "stocks", "portfolio", "crypto"],
+    icon: "trending-up",
+  },
+  { keywords: ["email", "inbox", "mail", "newsletter"], icon: "mail" },
+  { keywords: ["call", "phone", "ring", "call a friend"], icon: "call" },
+  { keywords: ["volunteer", "donate", "help", "community"], icon: "heart" },
+  { keywords: ["pomodoro", "focus", "timer", "deep work"], icon: "alarm" },
 ];
 
-export function getHabitIcon(userHabitString) {
+export function getHabitIcon(userHabitString: string) {
   const searchParameter = userHabitString.toLowerCase();
   for (const habitItem of habitIconKeywords) {
     // loop through the habitIconKeywords array,
     // if find a match, return immediately
     for (const habitKeyword of habitItem.keywords) {
       if (searchParameter.includes(habitKeyword)) {
-        return habitItem.icon;
+        const habitIcon: IoniconName = habitItem.icon;
+        return habitIcon;
       }
     }
   }

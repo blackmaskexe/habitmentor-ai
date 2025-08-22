@@ -1,4 +1,4 @@
-import { runHabitDataCollection } from "@/utils/database/dataCollectionHelper";
+import { runHabitDataCollection } from "@/utils/habits/habitDataCollectionHelper";
 import { getFormattedDatesThisWeek } from "@/utils/date";
 import { Stack } from "expo-router";
 import { useEffect } from "react";

@@ -1,8 +1,4 @@
-import {
-  deleteHabit,
-  getRemainingSkips,
-  skipHabitToday,
-} from "@/utils/database/habits";
+import { deleteHabit, getRemainingSkips, skipHabitToday } from "@/utils/habits";
 import { getDate, getFormattedDate } from "@/utils/date";
 import { useTheme } from "@/utils/theme/ThemeContext";
 import { Theme } from "@/utils/theme/themes";
@@ -77,7 +73,7 @@ export default function ActionSheetIosOptionList({
             // router.replace("/(tabs)/home");
             SheetManager.hide("habit-sheet");
             router.navigate({
-              pathname: "/(tabs)/chat",
+              pathname: "/chat",
               params: {
                 prefilledText: `Can you help me improve and be more consistent in the habit of ${habitItem.habitName}`,
               },

@@ -37,6 +37,7 @@ function createStyles(theme: Theme) {
     container: {
       flex: 1,
       marginTop: theme.spacing.m,
+      borderRadius: 16,
       // justifyContent: "center",
     },
     padded: {

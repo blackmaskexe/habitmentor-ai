@@ -15,20 +15,21 @@ interface HabitObject {
   frequency: boolean[];
   habitDescription: string;
   habitName: string;
-  iconName: keyof typeof Ionicons.glyphMap | string; // Type for Ionicons, complicated but that's what is used
+  iconName: keyof typeof Ionicons.glyphMap; // Type for Ionicons, complicated but that's what is used
   id: string;
   points: number;
   notificationIds?: string[];
   notificationTime?: string; // formattedTime (see date.ts)
   isNotificationOn: boolean;
   startDate?: string; // formattedDate (see date.ts)
+  tags?: string[];
 }
 
 interface FormValuesType {
   habitName?: string;
   habitDescription?: string;
   frequency?: boolean[];
-  iconName?: keyof typeof Ionicons.glyphMap | string;
+  iconName?: keyof typeof Ionicons.glyphMap;
   id?: string;
   points?: number;
   startDate?: string; // formattedDate
@@ -42,4 +43,21 @@ interface UserChatRequestType {
   proActive: boolean;
 }
 
-export type { MessageType, HabitObject, FormValuesType, UserChatRequestType };
+interface DailyRecordEntry {
+  moodRating?: number;
+  habitCompletionRate?: number;
+  missedHabits?: string[]; // array of habitId
+}
+
+type DailyRecords = {
+  [date: string]: DailyRecordEntry; // date is formattedDate btw
+};
+
+export type {
+  MessageType,
+  HabitObject,
+  FormValuesType,
+  UserChatRequestType,
+  DailyRecords,
+  DailyRecordEntry,
+};

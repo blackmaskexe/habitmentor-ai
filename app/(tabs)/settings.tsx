@@ -15,7 +15,7 @@ import {
   getAllHabits,
   getHabitObjectFromId,
   resetAllHabitNotifications,
-} from "@/utils/database/habits";
+} from "@/utils/habits";
 import { useFocusEffect, useRouter } from "expo-router";
 import ToggleSwitch from "@/utils/components/general/ToggleSwitch";
 import mmkvStorage from "@/utils/mmkvStorage";
