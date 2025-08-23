@@ -1,11 +1,5 @@
-import React, { useState } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  Dimensions,
-} from "react-native";
+import React from "react";
+import { View, Text, StyleSheet, Dimensions } from "react-native";
 import { useTheme } from "@/utils/theme/ThemeContext";
 import { Theme } from "@/utils/theme/themes";
 import { Ionicons } from "@expo/vector-icons";
@@ -15,7 +9,7 @@ import { getWeeklyHabitCompletionsCountData } from "@/utils/habits/habitSuggesti
 const ChartCompletionsThisWeek = ({
   borderRadius = 16,
   padding = 16,
-  iconName = "airplane",
+  iconName = "cellular",
   iconColor,
 }: any) => {
   const theme = useTheme();

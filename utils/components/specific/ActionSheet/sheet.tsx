@@ -1,11 +1,20 @@
 import { ThemeProvider } from "@/utils/theme/ThemeContext";
 import { registerSheet, SheetDefinition } from "react-native-actions-sheet";
-import ExampleSheet from "./BaseActionSheet";
+import HabitSHeet from "./habit-sheet/HabitActionSheet";
+import SuggestionsSheet from "./suggestions-sheet/SuggestionsActionSheet";
 
 registerSheet("habit-sheet", (props) => {
   return (
     <ThemeProvider>
-      <ExampleSheet {...props} />
+      <HabitSHeet {...props} />
+    </ThemeProvider>
+  );
+});
+
+registerSheet("suggestions-sheet", (props) => {
+  return (
+    <ThemeProvider>
+      <SuggestionsSheet {...props} />
     </ThemeProvider>
   );
 });
@@ -15,6 +24,7 @@ registerSheet("habit-sheet", (props) => {
 declare module "react-native-actions-sheet" {
   interface Sheets {
     "habit-sheet": SheetDefinition;
+    "suggestions-sheet": SheetDefinition;
     payload: {
       value: string;
     };

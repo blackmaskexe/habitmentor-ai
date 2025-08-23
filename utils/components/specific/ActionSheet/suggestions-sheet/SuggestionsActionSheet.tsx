@@ -3,15 +3,18 @@ import { Dimensions, StyleSheet } from "react-native";
 import ActionSheet, { SheetProps } from "react-native-actions-sheet";
 
 // Component imports:
-import NavigationPill from "../../general/NavigationPill";
-import HabitItemSheet from "./HabitItemSheet";
+import NavigationPill from "../../../general/NavigationPill";
 
-function HabitSheet(props: SheetProps<"habit-sheet">) {
+export type SuggestionsSheetPayloadData = {
+  CustomComponent: React.ComponentType<any>;
+  customProps?: Record<string, any>;
+};
 
+function SuggestionsSheet(props: SheetProps<"suggestions-sheet">) {
   const theme = useTheme();
   const styles = createStyles(theme);
 
-  const payloadData = props.payload;
+  const payloadData: SuggestionsSheetPayloadData = props.payload;
 
   return (
     <ActionSheet
@@ -24,15 +27,7 @@ function HabitSheet(props: SheetProps<"habit-sheet">) {
     >
       <NavigationPill />
 
-      <HabitItemSheet
-        habitId={payloadData.habit.id}
-        habitDate={payloadData.habitDate}
-        initialDisplayScreen={
-          payloadData.initialDisplayScreen
-            ? payloadData.initialDisplayScreen
-            : "main"
-        }
-      />
+      <payloadData.CustomComponent {...(payloadData.customProps || {})} />
     </ActionSheet>
   );
 }
@@ -45,4 +40,4 @@ function createStyles(theme: any) {
   });
 }
 
-export default HabitSheet;
+export default SuggestionsSheet;

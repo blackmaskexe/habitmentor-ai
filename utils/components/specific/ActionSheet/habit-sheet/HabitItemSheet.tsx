@@ -3,8 +3,8 @@
 
 import { useTheme } from "@/utils/theme/ThemeContext";
 import { StyleSheet, View, Text } from "react-native";
-import CardWithoutImage from "../../general/CardWithoutImage";
-import ReminderView from "../ReminderView";
+import CardWithoutImage from "../../../general/CardWithoutImage";
+import ReminderView from "../../ReminderView";
 import { useCallback, useEffect, useState } from "react";
 import { Theme } from "@/utils/theme/themes";
 import { HabitObject } from "@/utils/types";
@@ -12,7 +12,7 @@ import ActionSheetIosOptionList from "./ActionSheetIosOptionList";
 import mmkvStorage from "@/utils/mmkvStorage";
 import { getHabitNotificationTime, getHabitObjectFromId } from "@/utils/habits";
 import { useFocusEffect } from "expo-router";
-import EditHabitView from "../EditHabitView";
+import EditHabitView from "../../EditHabitView";
 
 // SheetManager.show("habit-sheet", {
 //   payload: {
