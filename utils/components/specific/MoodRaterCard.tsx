@@ -131,7 +131,7 @@ function createStyles(theme: Theme) {
       marginTop: theme.spacing.m,
       justifyContent: "center",
       alignItems: "flex-start",
-      minHeight: 120,
+      // minHeight: 120,
     },
     headerRow: {
       flexDirection: "row",

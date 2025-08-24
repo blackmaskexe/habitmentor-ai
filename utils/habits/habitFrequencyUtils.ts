@@ -153,6 +153,7 @@ export function getHabitCompletionRateThisWeek(habitId: string): number {
 }
 
 export function getAverageHabitsCompletionRateThisWeek() {
+  // this calucluates the so-far average habits completion rate
   const allHabits = getAllHabits();
 
   const totalCompletionRate = allHabits.reduce((sum, habitObject) => {
@@ -174,4 +175,23 @@ export function getIdsOfHabitsDueOnWeekday(date: Date): string[] {
   }
 
   return idsOfHabitsDueOnWeekday;
+}
+
+export function getAllHabitsCompletionRateOnDate(date: Date) {
+  const habitEntriesOnDate = getAllHabitHistoryEntriesOnDate(date);
+  const habitsToBeDoneOnDate = getAllHabits().filter((habit) => {
+    return habit.frequency[date.getDay()] ? true : false;
+  });
+
+  if (habitsToBeDoneOnDate.length == 0) {
+    // early return incase no habits to be done, to avoid dividing by 0
+    return 0;
+  }
+
+  return Math.floor(
+    (habitEntriesOnDate.length * 100) / habitsToBeDoneOnDate.length
+    // since an entry only corresponds to one habit
+    // and no habit can have more than one entry,
+    // we can just use it for calculating how many habits the user did
+  );
 }

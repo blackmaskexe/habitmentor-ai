@@ -21,6 +21,12 @@ import database from "../database/watermelon";
 import ImportantMessage from "../database/watermelon/model/ImportantMessage";
 import { Q } from "@nozbe/watermelondb";
 import HabitCompletion from "../database/watermelon/model/HabitCompletion";
+import {
+  addHabitsCompletionRateLastWeekToMetadata,
+  addHabitsCompletionRateThisWeekToMetadata,
+  addMissedHabitsLastWeekToMetadata,
+  addMissedHabitsThisWeekToMetadata,
+} from "../database/dailyMetadataRecords";
 
 export async function runHabitDataCollection() {
   // collects data for:
@@ -30,6 +36,7 @@ export async function runHabitDataCollection() {
   // basically stuff for the habit_completions table for tigrelini watermelini db
 
   if (shouldCollectData()) {
+    // STREAK COLLECITON, DAYS MISSED CALCULATION, ETC:
     for (const habit of getAllHabits()) {
       if (!shouldCollectDataForHabit(habit.id)) {
         return; // early return if the habit is not to be done today
@@ -56,6 +63,13 @@ export async function runHabitDataCollection() {
         });
       }
     }
+
+    // add names of habits missed in the past 2 weeks in the daily metadata records (not normal daily habit history record)
+    addMissedHabitsThisWeekToMetadata();
+    addMissedHabitsLastWeekToMetadata();
+    // as well as the habit completion information:
+    addHabitsCompletionRateThisWeekToMetadata();
+    addHabitsCompletionRateLastWeekToMetadata();
 
     // finally, set the last date the data was collected to today
     mmkvStorage.set("lastDataCollectionDate", getFormattedDate());

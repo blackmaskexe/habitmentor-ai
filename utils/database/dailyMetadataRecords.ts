@@ -1,5 +1,14 @@
-import { getDate, getDatesThisWeek, getFormattedDate } from "../date";
-import { getHabitObjectFromId, getMissedHabitIdsOnDate } from "../habits";
+import {
+  getDate,
+  getDatesLastWeek,
+  getDatesThisWeek,
+  getFormattedDate,
+} from "../date";
+import {
+  getAllHabitsCompletionRateOnDate,
+  getHabitObjectFromId,
+  getMissedHabitIdsOnDate,
+} from "../habits";
 import mmkvStorage from "../mmkvStorage";
 import { DailyRecordEntry, DailyRecords } from "../types";
 
@@ -67,17 +76,80 @@ export function addMissedHabitsThisWeekToMetadata() {
   const datesSoFar = getDatesThisWeek();
   datesSoFar.length = getDate().getDay() + 1; // limiting the dates to just today
 
-  const todayRecord: DailyRecordEntry = {
-    ...existingDailyRecords[getFormattedDate()],
-  };
+  for (const date of datesSoFar) {
+    const dateRecord: DailyRecordEntry = {
+      ...existingDailyRecords[getFormattedDate(date)],
+    };
 
-  const missedHabits = getMissedHabitIdsOnDate(getDate()).map((habitId) => {
-    return getHabitObjectFromId(habitId)!.habitName;
-  });
+    const missedHabits = getMissedHabitIdsOnDate(date).map((habitId) => {
+      return getHabitObjectFromId(habitId)!.habitName;
+    });
+    dateRecord.missedHabits = missedHabits;
+    existingDailyRecords[getFormattedDate(date)] = dateRecord;
+  }
 
-  todayRecord.missedHabits = missedHabits;
+  mmkvStorage.set("dailyRecords", JSON.stringify(existingDailyRecords));
+}
 
-  existingDailyRecords[getFormattedDate()] = todayRecord;
+export function addMissedHabitsLastWeekToMetadata() {
+  const existingDailyRecords: DailyRecords = JSON.parse(
+    mmkvStorage.getString("dailyRecords") || "{}"
+  );
+
+  const datesLastWeek = getDatesLastWeek();
+
+  for (const date of datesLastWeek) {
+    const dateRecord: DailyRecordEntry = {
+      ...existingDailyRecords[getFormattedDate(date)],
+    };
+
+    const missedHabits = getMissedHabitIdsOnDate(date).map((habitId) => {
+      return getHabitObjectFromId(habitId)!.habitName;
+    });
+    dateRecord.missedHabits = missedHabits;
+    existingDailyRecords[getFormattedDate(date)] = dateRecord;
+  }
+
+  mmkvStorage.set("dailyRecords", JSON.stringify(existingDailyRecords));
+}
+
+export function addHabitsCompletionRateThisWeekToMetadata() {
+  const existingDailyRecords: DailyRecords = JSON.parse(
+    mmkvStorage.getString("dailyRecords") || "{}"
+  );
+
+  const datesSoFar = getDatesThisWeek();
+  datesSoFar.length = getDate().getDay() + 1; // limiting the dates to just today
+
+  for (const date of datesSoFar) {
+    const dateRecord: DailyRecordEntry = {
+      ...existingDailyRecords[getFormattedDate(date)],
+    };
+
+    const completionRate = getAllHabitsCompletionRateOnDate(date);
+    dateRecord.habitCompletionRate = completionRate;
+    existingDailyRecords[getFormattedDate(date)] = dateRecord;
+  }
+
+  mmkvStorage.set("dailyRecords", JSON.stringify(existingDailyRecords));
+}
+
+export function addHabitsCompletionRateLastWeekToMetadata() {
+  const existingDailyRecords: DailyRecords = JSON.parse(
+    mmkvStorage.getString("dailyRecords") || "{}"
+  );
+
+  const datesLastWeek = getDatesLastWeek();
+
+  for (const date of datesLastWeek) {
+    const dateRecord: DailyRecordEntry = {
+      ...existingDailyRecords[getFormattedDate(date)],
+    };
+
+    const completionRate = getAllHabitsCompletionRateOnDate(date);
+    dateRecord.habitCompletionRate = completionRate;
+    existingDailyRecords[getFormattedDate(date)] = dateRecord;
+  }
 
   mmkvStorage.set("dailyRecords", JSON.stringify(existingDailyRecords));
 }

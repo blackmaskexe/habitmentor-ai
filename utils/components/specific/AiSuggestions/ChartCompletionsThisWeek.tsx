@@ -5,12 +5,12 @@ import { Theme } from "@/utils/theme/themes";
 import { Ionicons } from "@expo/vector-icons";
 import { BarChart } from "react-native-chart-kit";
 import { getWeeklyHabitCompletionsCountData } from "@/utils/habits/habitSuggestionsManager";
+import { isAppStartWeek } from "@/utils/date";
 import {
-  getAppStartDate,
-  getFormattedAppStartDate,
-  getFormattedDatesThisWeek,
-  isAppStartWeek,
-} from "@/utils/date";
+  getAverageHabitsCompletionRatePreviousWeek,
+  getAverageHabitsCompletionRateThisWeek,
+} from "@/utils/habits";
+import lodash from "lodash";
 
 function getChartProgressText() {
   let progressText: string;
@@ -21,8 +21,30 @@ function getChartProgressText() {
     progressText =
       "Let's try to ease into the routine of doing these habits your first week!";
   } else {
-    const habitCompletionLastWeek = habitcompletion;
+    const avgCompletionRateLastWeek =
+      getAverageHabitsCompletionRatePreviousWeek();
+    const avgCompletionRateThisWeek = getAverageHabitsCompletionRateThisWeek(); // this is the "so far" completion rate
+
+    if (avgCompletionRateLastWeek > avgCompletionRateThisWeek) {
+      progressText = `${lodash.sample([
+        "Oh no!",
+        "Oh",
+        "Look at the graph!",
+      ])} You have completed ${
+        avgCompletionRateLastWeek - avgCompletionRateThisWeek
+      }% less habits than last week.`;
+    } else {
+      progressText = `${lodash.sample([
+        "Good Going!",
+        "Bravo!",
+        "I'm amazed!",
+      ])} You have completed ${
+        avgCompletionRateThisWeek - avgCompletionRateLastWeek
+      }% more habits than last week.`;
+    }
   }
+
+  return progressText;
 }
 
 const ChartCompletionsThisWeek = ({
@@ -108,9 +130,7 @@ const ChartCompletionsThisWeek = ({
         );
       })()}
 
-      <Text style={styles.suggestionText}>
-        Oh no! You completed 23% less habits than last time
-      </Text>
+      <Text style={styles.suggestionText}>{getChartProgressText()}</Text>
     </View>
   );
 };
