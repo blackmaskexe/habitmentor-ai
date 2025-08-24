@@ -5,6 +5,25 @@ import { Theme } from "@/utils/theme/themes";
 import { Ionicons } from "@expo/vector-icons";
 import { BarChart } from "react-native-chart-kit";
 import { getWeeklyHabitCompletionsCountData } from "@/utils/habits/habitSuggestionsManager";
+import {
+  getAppStartDate,
+  getFormattedAppStartDate,
+  getFormattedDatesThisWeek,
+  isAppStartWeek,
+} from "@/utils/date";
+
+function getChartProgressText() {
+  let progressText: string;
+
+  // seeing if the user started the app this week or not:
+  if (isAppStartWeek()) {
+    // if they did, give them an "introductory" message for the week
+    progressText =
+      "Let's try to ease into the routine of doing these habits your first week!";
+  } else {
+    const habitCompletionLastWeek = habitcompletion;
+  }
+}
 
 const ChartCompletionsThisWeek = ({
   borderRadius = 16,

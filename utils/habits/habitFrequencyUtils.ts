@@ -90,6 +90,17 @@ export function getHabitCompletionRatePreviousWeek(habitId: string) {
   // looping through all the dates, calculating number of times that habit was done last week:
 }
 
+export function getAverageHabitsCompletionRatePreviousWeek() {
+  const allHabits = getAllHabits();
+
+  const totalCompletionRate = allHabits.reduce((sum, habitObject) => {
+    const completionRate = getHabitCompletionRatePreviousWeek(habitObject.id);
+    return sum + completionRate;
+  }, 0);
+
+  return allHabits.length ? totalCompletionRate / allHabits.length : 0;
+}
+
 // THIS WEEK RELATED HELPERS:
 export function getTimesCompletedHabitThisWeek(habitId: string): number {
   let timesCompletedThisWeek = 0;
@@ -139,6 +150,17 @@ export function getHabitCompletionRateThisWeek(habitId: string): number {
   } else {
     return 0;
   }
+}
+
+export function getAverageHabitsCompletionRateThisWeek() {
+  const allHabits = getAllHabits();
+
+  const totalCompletionRate = allHabits.reduce((sum, habitObject) => {
+    const completionRate = getHabitCompletionRateThisWeek(habitObject.id);
+    return sum + completionRate;
+  }, 0);
+
+  return allHabits.length ? totalCompletionRate / allHabits.length : 0;
 }
 
 export function getIdsOfHabitsDueOnWeekday(date: Date): string[] {

@@ -4,6 +4,7 @@
 // for many days at a time, it won't mess up date calculation
 
 import { getISOWeek } from "date-fns";
+import mmkvStorage from "./mmkvStorage";
 
 export const getDate = function () {
   // this function is to be able to change date from this central location easily
@@ -171,3 +172,21 @@ export const relationBetweenTodayAndDate = function (date: Date) {
     return "Future Date"; // Or handle future dates as you see fit
   }
 };
+
+export function getAppStartDate() {
+  const mmkvStartDate = mmkvStorage.getString("appStartDate");
+  return getDateFromFormattedDate(mmkvStartDate || "1920-6-15");
+}
+
+export function getFormattedAppStartDate() {
+  const mmkvStartDate = mmkvStorage.getString("appStartDate");
+  return mmkvStartDate || "1920-6-15";
+}
+
+export function isAppStartWeek() {
+  const formattedDatesThisWeek = getFormattedDatesThisWeek();
+  if (formattedDatesThisWeek.includes(getFormattedAppStartDate())) {
+    return true;
+  }
+  return false;
+}
