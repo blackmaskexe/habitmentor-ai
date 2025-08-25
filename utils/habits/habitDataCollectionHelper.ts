@@ -5,6 +5,7 @@ import {
   getFormattedDate,
   getWeekdayNumber,
   getWeekNumber,
+  isAppStartWeek,
 } from "../date";
 import {
   getAllHabitHistory,
@@ -37,6 +38,7 @@ export async function runHabitDataCollection() {
 
   if (shouldCollectData()) {
     // STREAK COLLECITON, DAYS MISSED CALCULATION, ETC:
+    console.log("we both know we can't go without it");
     for (const habit of getAllHabits()) {
       if (!shouldCollectDataForHabit(habit.id)) {
         return; // early return if the habit is not to be done today
@@ -66,10 +68,15 @@ export async function runHabitDataCollection() {
 
     // add names of habits missed in the past 2 weeks in the daily metadata records (not normal daily habit history record)
     addMissedHabitsThisWeekToMetadata();
-    addMissedHabitsLastWeekToMetadata();
+    if (!isAppStartWeek()) {
+      // only run this if it isn't the user's first week of using the app
+      addMissedHabitsLastWeekToMetadata();
+    }
     // as well as the habit completion information:
     addHabitsCompletionRateThisWeekToMetadata();
-    addHabitsCompletionRateLastWeekToMetadata();
+    if (!isAppStartWeek()) {
+      addHabitsCompletionRateLastWeekToMetadata();
+    }
 
     // finally, set the last date the data was collected to today
     mmkvStorage.set("lastDataCollectionDate", getFormattedDate());

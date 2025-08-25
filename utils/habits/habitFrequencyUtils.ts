@@ -8,15 +8,11 @@ import { getAllHabits, getHabitObjectFromId } from "./habitService";
 
 // return all the habits that are due on the particular weekday
 export function getAllHabitsOnWeekday(weekdayNumber: number) {
-  console.log("Wouldn't do nothing", weekdayNumber);
   const activeHabits: HabitObject[] = JSON.parse(
     mmkvStorage.getString("activeHabits") || "[]"
   );
 
-  console.log("KANSOL LOG", activeHabits);
-
-  return activeHabits.filter((habit, index) => {
-    console.log("HAHAHHA", habit);
+  return activeHabits.filter((habit) => {
     return habit.frequency[weekdayNumber]; // only those habits will be returned that are active on that weekday
   });
 }
@@ -27,7 +23,6 @@ export function getTotalHabitNumberOnDay(weekdayNumber: number) {
     const allHabits = getAllHabits();
     let totalNum = 0;
     for (const habit of allHabits) {
-      console.log("I guess amarestode ", habit);
       if (habit.frequency[weekdayNumber]) {
         totalNum++;
       }

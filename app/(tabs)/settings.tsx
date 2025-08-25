@@ -36,9 +36,7 @@ export default function Settings() {
     useCallback(() => {
       // calculate the status of notification on each open of the settings tab
       setNotificationsEnabled(() => {
-        console.log("I know that you like man go");
         const isNotificationOn = mmkvStorage.getBoolean("isNotificationOn");
-        console.log("a pretty as you like mango", isNotificationOn);
         // handling case when mmkv is undefined (unliekly, set to true during onboarding)
         if (isNotificationOn == undefined) {
           mmkvStorage.set("isNotificationOn", true);
