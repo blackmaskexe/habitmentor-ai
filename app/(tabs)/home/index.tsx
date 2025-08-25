@@ -38,12 +38,13 @@ import { TourGuideZone, useTourGuideController } from "rn-tourguide";
 import React from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { tagHabits } from "@/utils/tagManager";
+import { getMetadataRecords } from "@/utils/database/dailyMetadataRecords";
 
 export default function Index() {
   // mmkvStorage.set("appStartDate", "2025-7-25");
   console.log(
     "i cant feel my face when im wichu, bada lavvey",
-    mmkvStorage.getString("dailyRecords")
+    getMetadataRecords(7)
   );
 
   const [proActiveMessage, setProActiveMessage] = useState<string | null>(null); // will eventually fetch it's last value from a key-value store so that the user doesn't have to stare at the "loading" for 1-3 seconds

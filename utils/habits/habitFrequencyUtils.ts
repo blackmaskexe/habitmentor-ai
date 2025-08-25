@@ -3,7 +3,7 @@
 import { getDate, getDatesLastWeek, getDatesThisWeek } from "../date";
 import mmkvStorage from "../mmkvStorage";
 import { HabitObject } from "../types";
-import { getAllHabitHistoryEntriesOnDate } from "./habitHistoryManager";
+import { getAllHabitHistoryEntriesEntriesOnDate } from "./habitHistoryManager";
 import { getAllHabits, getHabitObjectFromId } from "./habitService";
 
 // return all the habits that are due on the particular weekday
@@ -60,7 +60,9 @@ export function getTimesCompletedHabitLastWeek(habitId: string) {
   const datesLastWeek = getDatesLastWeek();
 
   for (const date of datesLastWeek) {
-    for (const habitHistoryEntry of getAllHabitHistoryEntriesOnDate(date)) {
+    for (const habitHistoryEntry of getAllHabitHistoryEntriesEntriesOnDate(
+      date
+    )) {
       // if it finds a habit that was completed on a day, it increments times completed
       if (habitHistoryEntry.habitId == habitId) {
         timesCompletedLastWeek++;
@@ -107,7 +109,7 @@ export function getTimesCompletedHabitThisWeek(habitId: string): number {
 
   // looping through each date's habit history entries, finding if any match the habitId input
   for (const date of datesSoFarThisWeek) {
-    for (const entry of getAllHabitHistoryEntriesOnDate(date)) {
+    for (const entry of getAllHabitHistoryEntriesEntriesOnDate(date)) {
       if (entry.habitId == habitId) {
         timesCompletedThisWeek++;
         break;
@@ -173,7 +175,7 @@ export function getIdsOfHabitsDueOnWeekday(date: Date): string[] {
 }
 
 export function getAllHabitsCompletionRateOnDate(date: Date) {
-  const habitEntriesOnDate = getAllHabitHistoryEntriesOnDate(date);
+  const habitEntriesOnDate = getAllHabitHistoryEntriesEntriesOnDate(date);
   const habitsToBeDoneOnDate = getAllHabits().filter((habit) => {
     return habit.frequency[date.getDay()] ? true : false;
   });

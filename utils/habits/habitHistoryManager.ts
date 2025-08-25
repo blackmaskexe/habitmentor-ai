@@ -137,7 +137,7 @@ export function getHabitHistoryEntries(): HabitHistoryEntry[] {
 }
 
 // Retrieves all records from the habitHistory for today's date.
-export function getAllHabitHistoryToday(): HabitHistoryEntry[] {
+export function getAllHabitHistoryEntriesToday(): HabitHistoryEntry[] {
   const entries = getHabitHistoryEntries();
 
   const todayEntries = entries.filter(
@@ -150,7 +150,7 @@ export function getAllHabitHistoryToday(): HabitHistoryEntry[] {
   return todayEntries;
 }
 
-export function getAllHabitHistoryEntriesOnDate(date: Date) {
+export function getAllHabitHistoryEntriesEntriesOnDate(date: Date) {
   const entries = getHabitHistoryEntries();
 
   const entriesOnDate: HabitHistoryEntry[] = entries.filter(
@@ -166,7 +166,7 @@ export function getAllHabitHistoryEntriesOnDate(date: Date) {
 }
 
 // Retrieves all records from the habitHistory.
-export function getAllHabitHistory(): HabitHistoryEntry[] {
+export function getAllHabitHistoryEntriesEntries(): HabitHistoryEntry[] {
   const entries = getHabitHistoryEntries();
   console.log("MMKV Storage: Fetched all habit history.", entries);
   return entries;

@@ -7,7 +7,7 @@ import {
 } from "./habitFrequencyUtils";
 import { getAllHabits, getHabitObjectFromId } from "./habitService";
 import lodash from "lodash";
-import { getAllHabitHistoryEntriesOnDate } from "./habitHistoryManager";
+import { getAllHabitHistoryEntriesEntriesOnDate } from "./habitHistoryManager";
 
 type LeastCompletedHabitMetadata = {
   habitId: string;
@@ -124,7 +124,9 @@ export function getWeeklyHabitCompletionsCountData() {
   const completionsSoFar: CompletionsData[] = [];
   for (let i = 0; i < datesThisWeek.length; i++) {
     // habits completed for this particular day:
-    const completionsArray = getAllHabitHistoryEntriesOnDate(datesThisWeek[i]);
+    const completionsArray = getAllHabitHistoryEntriesEntriesOnDate(
+      datesThisWeek[i]
+    );
 
     const completionsData: CompletionsData = {
       x: weekdays[i],

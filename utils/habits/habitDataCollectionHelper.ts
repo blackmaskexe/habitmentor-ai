@@ -8,8 +8,8 @@ import {
   isAppStartWeek,
 } from "../date";
 import {
-  getAllHabitHistory,
-  getAllHabitHistoryEntriesOnDate,
+  getHabitHistoryEntries,
+  getAllHabitHistoryEntriesEntriesOnDate,
   getOrCreateHabitCompletionRecord,
 } from "./habitHistoryManager";
 import {
@@ -38,20 +38,33 @@ export async function runHabitDataCollection() {
 
   if (shouldCollectData()) {
     // STREAK COLLECITON, DAYS MISSED CALCULATION, ETC:
-    console.log("we both know we can't go without it");
+
+    // add names of habits missed in the past 2 weeks in the daily metadata records (not normal daily habit history record)
+    addMissedHabitsThisWeekToMetadata();
+    if (!isAppStartWeek()) {
+      // only run this if it isn't the user's first week of using the app
+      addMissedHabitsLastWeekToMetadata();
+    }
+    // as well as the habit completion information:
+    addHabitsCompletionRateThisWeekToMetadata();
+    if (!isAppStartWeek()) {
+      addHabitsCompletionRateLastWeekToMetadata();
+    }
+
     for (const habit of getAllHabits()) {
       if (!shouldCollectDataForHabit(habit.id)) {
         return; // early return if the habit is not to be done today
         // this makes sure streak is not increased everyday for tasks
         // that are scheduled not everyday
       }
+
       // running data collection on each of them:
       const habitCompletion = await getOrCreateHabitCompletionRecord(habit.id); // this is the record of datacollection for that habit
       const daysMissedSinceLast = daysUserMissedHabitSinceLastCompletion(
         habit.id
       );
       if (daysMissedSinceLast > 0) {
-        const prevDaysMissedSinceLast = await habitCompletion.prevDaysSinceLast;
+        const prevDaysMissedSinceLast = habitCompletion.prevDaysSinceLast;
 
         // finding the updated missed days to add to increment
         const actualMissedDays =
@@ -66,17 +79,7 @@ export async function runHabitDataCollection() {
       }
     }
 
-    // add names of habits missed in the past 2 weeks in the daily metadata records (not normal daily habit history record)
-    addMissedHabitsThisWeekToMetadata();
-    if (!isAppStartWeek()) {
-      // only run this if it isn't the user's first week of using the app
-      addMissedHabitsLastWeekToMetadata();
-    }
-    // as well as the habit completion information:
-    addHabitsCompletionRateThisWeekToMetadata();
-    if (!isAppStartWeek()) {
-      addHabitsCompletionRateLastWeekToMetadata();
-    }
+    console.log("Youre my best friend now");
 
     // finally, set the last date the data was collected to today
     mmkvStorage.set("lastDataCollectionDate", getFormattedDate());
@@ -160,7 +163,7 @@ export function getMissedHabitIdsSoFarThisWeek(): string[][] {
     // getting all habits due on this day, but leaving only those which
     // weren't done:
     let idsOfHabitsMissedOnDate = getIdsOfHabitsDueOnWeekday(date);
-    const entriesOnDate = getAllHabitHistoryEntriesOnDate(date);
+    const entriesOnDate = getAllHabitHistoryEntriesEntriesOnDate(date);
 
     for (const entry of entriesOnDate) {
       // keep removing elements from idsOfHabitsToBeDoneOnDate when find it
@@ -188,7 +191,7 @@ export function getMissedHabitIdsOnDate(date: Date): string[] {
   }
 
   let idsOfHabitsMissedOnDate = getIdsOfHabitsDueOnWeekday(date);
-  const entriesOnDate = getAllHabitHistoryEntriesOnDate(date);
+  const entriesOnDate = getAllHabitHistoryEntriesEntriesOnDate(date);
 
   for (const entry of entriesOnDate) {
     // keep removing elements from idsOfHabitsToBeDoneOnDate when find it
@@ -202,16 +205,23 @@ export function getMissedHabitIdsOnDate(date: Date): string[] {
 }
 
 function daysUserMissedHabitSinceLastCompletion(habitId: string) {
-  const entries = getAllHabitHistory(); // objects that contain date of completion in them
+  console.log("Every angel is terrifying", habitId);
+  const entries = getHabitHistoryEntries(); // objects that contain date of completion in them
+  console.log("We're annihilated");
 
-  for (let i = entries.length - 1; i >= 0; i++) {
+  console.log("I CAN'T KEEP MY EYES OFF THE SCREEN", habitId, entries);
+
+  for (let i = entries.length - 1; i >= 0; i--) {
     // looping in reverse (new records are later in array), finding the last time the user completed that habit:
     if (entries[i].habitId == habitId) {
+      console.log("I only imagined in my dreams before");
+
       // found a habit being done
 
       const lastHabitCompletionDate = getDateFromFormattedDate(
         entries[i].completionDate
       ); // returns a Date object
+
       const habitFrequency = getHabitObjectFromId(habitId)!.frequency; // array of true and falses, 0 is sunday, 6 is saturday
 
       // the plan is to recreate our own habitFrequency (the practical/experimental one),
@@ -227,6 +237,7 @@ function daysUserMissedHabitSinceLastCompletion(habitId: string) {
 
       const observedFrequency = []; // what the user actually did
       const experimentalFrequency = []; // what the user was supposed to do
+
       for (let i = 0; i < weeksToCompare; i++) {
         observedFrequency.push(new Array(7).fill(false));
         experimentalFrequency.push([...habitFrequency]);
@@ -242,6 +253,7 @@ function daysUserMissedHabitSinceLastCompletion(habitId: string) {
         // therefore splicing all the frequency items to keep the last part (except the latest week, we keep the first part cuz the last part hasn't come yet)
 
         // BUG: DOESN'T DEAL WITH IF THE WEEKS TO COMPARE IS 1 ONLY (need to do both operations below in that case)
+
         if (weeksToCompare == 1) {
           // if there's only one week to compare, have to cut items from both start and end
           observedFrequency[i].length = getWeekdayNumber(getDate());
@@ -317,6 +329,7 @@ function shouldCollectData() {
   const lastDataCollectionDate = mmkvStorage.getString(
     "lastDataCollectionDate"
   );
+
   if (lastDataCollectionDate) {
     if (
       // doing this so that I get consistent dates while comparing the same day

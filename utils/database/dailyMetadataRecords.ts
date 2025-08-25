@@ -69,6 +69,8 @@ export function didGetMoodCheckedToday() {
 }
 
 export function addMissedHabitsThisWeekToMetadata() {
+  console.log("aisetugu mai run kar rela hu");
+
   const existingDailyRecords: DailyRecords = JSON.parse(
     mmkvStorage.getString("dailyRecords") || "{}"
   );
@@ -77,6 +79,7 @@ export function addMissedHabitsThisWeekToMetadata() {
   datesSoFar.length = getDate().getDay() + 1; // limiting the dates to just today
 
   for (const date of datesSoFar) {
+    console.log("apun run kar raha hu taipshi taipshi");
     const dateRecord: DailyRecordEntry = {
       ...existingDailyRecords[getFormattedDate(date)],
     };
@@ -152,4 +155,31 @@ export function addHabitsCompletionRateLastWeekToMetadata() {
   }
 
   mmkvStorage.set("dailyRecords", JSON.stringify(existingDailyRecords));
+}
+
+export function getMetadataRecords(numDays: number) {
+  // fetches the metadata records for the last n days
+  // n DOES include today
+  const entireMetadataRecord = JSON.parse(
+    mmkvStorage.getString("dailyRecords") || "{}"
+  );
+
+  const fetchedMetadata: DailyRecords = {};
+
+  const today = getDate();
+  // looping backwards in the date, and adding the required metadata to the new
+  // fetchedMetadata object
+  for (let i = 0; i < numDays; i++) {
+    const date = new Date(today);
+    date.setDate(today.getDate() - i);
+
+    const recordInMetadataForDate =
+      entireMetadataRecord[getFormattedDate(date)];
+
+    if (recordInMetadataForDate) {
+      fetchedMetadata[getFormattedDate(date)] = recordInMetadataForDate;
+    }
+  }
+
+  return fetchedMetadata;
 }
