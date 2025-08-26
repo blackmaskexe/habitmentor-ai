@@ -36,53 +36,64 @@ export async function runHabitDataCollection() {
   // days since the last habit was done
   // basically stuff for the habit_completions table for tigrelini watermelini db
 
-  if (shouldCollectData()) {
-    // STREAK COLLECITON, DAYS MISSED CALCULATION, ETC:
+  try {
+    if (shouldCollectData()) {
+      console.log("I heard you're married girl");
+      // STREAK COLLECITON, DAYS MISSED CALCULATION, ETC:
 
-    // add names of habits missed in the past 2 weeks in the daily metadata records (not normal daily habit history record)
-    addMissedHabitsThisWeekToMetadata();
-    if (!isAppStartWeek()) {
-      // only run this if it isn't the user's first week of using the app
-      addMissedHabitsLastWeekToMetadata();
-    }
-    // as well as the habit completion information:
-    addHabitsCompletionRateThisWeekToMetadata();
-    if (!isAppStartWeek()) {
-      addHabitsCompletionRateLastWeekToMetadata();
-    }
-
-    for (const habit of getAllHabits()) {
-      if (!shouldCollectDataForHabit(habit.id)) {
-        return; // early return if the habit is not to be done today
-        // this makes sure streak is not increased everyday for tasks
-        // that are scheduled not everyday
+      // add names of habits missed in the past 2 weeks in the daily metadata records (not normal daily habit history record)
+      addMissedHabitsThisWeekToMetadata();
+      if (!isAppStartWeek()) {
+        // only run this if it isn't the user's first week of using the app
+        addMissedHabitsLastWeekToMetadata();
+      }
+      // as well as the habit completion information:
+      addHabitsCompletionRateThisWeekToMetadata();
+      if (!isAppStartWeek()) {
+        addHabitsCompletionRateLastWeekToMetadata();
       }
 
-      // running data collection on each of them:
-      const habitCompletion = await getOrCreateHabitCompletionRecord(habit.id); // this is the record of datacollection for that habit
-      const daysMissedSinceLast = daysUserMissedHabitSinceLastCompletion(
-        habit.id
-      );
-      if (daysMissedSinceLast > 0) {
-        const prevDaysMissedSinceLast = habitCompletion.prevDaysSinceLast;
+      for (const habit of getAllHabits()) {
+        if (!shouldCollectDataForHabit(habit.id)) {
+          return; // early return if the habit is not to be done today
+          // this makes sure streak is not increased everyday for tasks
+          // that are scheduled not everyday
+        }
 
-        // finding the updated missed days to add to increment
-        const actualMissedDays =
-          daysMissedSinceLast - prevDaysMissedSinceLast > 0
-            ? daysMissedSinceLast - prevDaysMissedSinceLast
-            : daysMissedSinceLast;
+        // running data collection on each of them:
+        const habitCompletion = await getOrCreateHabitCompletionRecord(
+          habit.id
+        ); // this is the record of datacollection for that habit
+        const daysMissedSinceLast = daysUserMissedHabitSinceLastCompletion(
+          habit.id
+        );
+        if (daysMissedSinceLast > 0) {
+          const prevDaysMissedSinceLast = habitCompletion.prevDaysSinceLast;
 
-        await habitCompletion.incrementTimesMissed(actualMissedDays);
-        await habitCompletion.update((record) => {
-          record.prevDaysSinceLast = daysMissedSinceLast; // update the function with the latest days since
-        });
+          // finding the updated missed days to add to increment
+          const actualMissedDays =
+            daysMissedSinceLast - prevDaysMissedSinceLast > 0
+              ? daysMissedSinceLast - prevDaysMissedSinceLast
+              : daysMissedSinceLast;
+
+          await habitCompletion.incrementTimesMissed(actualMissedDays);
+          console.log("not silently crashing", console.log(habitCompletion));
+
+          await database.write(async () => {
+            await habitCompletion.update((record) => {
+              record.prevDaysSinceLast = daysMissedSinceLast; // update the function with the latest days since
+            });
+          });
+
+          console.log("sliently crashing");
+        }
       }
+
+      // finally, set the last date the data was collected to today
+      mmkvStorage.set("lastDataCollectionDate", getFormattedDate());
     }
-
-    console.log("Youre my best friend now");
-
-    // finally, set the last date the data was collected to today
-    mmkvStorage.set("lastDataCollectionDate", getFormattedDate());
+  } catch (err) {
+    console.log("ERROR: UNABLE TO GET USER'S HABIT DATA");
   }
 }
 
