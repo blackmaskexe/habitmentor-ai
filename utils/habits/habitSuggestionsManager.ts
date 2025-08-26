@@ -189,8 +189,12 @@ export function setRecentEmotionAwareSuggestion(message: string) {
 
 export async function getNewEmotionAwareMessage() {
   try {
+    console.log(
+      "THIS IS WHAT IM TRYNA POST TO EMOTION AWARE BOT",
+      getMetadataRecords(7)
+    );
     const response = await api.post("/emotion-aware-suggestion", {
-      dailyMetadataRecords: getMetadataRecords(7), // sending metadata records for the last 7 days
+      dailyMetadataRecords: JSON.stringify(getMetadataRecords(7)), // sending metadata records for the last 7 days
     });
 
     console.log("hoo hoo huhhu", response);

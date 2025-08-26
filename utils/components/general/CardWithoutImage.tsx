@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import { useTheme } from "@/utils/theme/ThemeContext";
 import { Theme } from "@/utils/theme/themes";
+import { Ionicons } from "@expo/vector-icons";
 
 const screenWidth = Dimensions.get("window").width;
 
@@ -20,6 +21,8 @@ type CardProps = {
   onPress?: any;
   children?: any;
   iconLetters?: string;
+  ioniconName?: string;
+  allowMultilineDescription?: boolean;
 };
 
 const CardWithoutImage: React.FC<CardProps> = ({
@@ -31,6 +34,8 @@ const CardWithoutImage: React.FC<CardProps> = ({
   children,
   metadata,
   iconLetters, // overriding the icon letter automatically from title
+  ioniconName,
+  allowMultilineDescription,
 }) => {
   const theme = useTheme();
   const styles = createStyles(theme);
@@ -58,9 +63,17 @@ const CardWithoutImage: React.FC<CardProps> = ({
     >
       <View style={styles.cardContent}>
         <View style={styles.iconContainer}>
-          <Text style={styles.iconText}>
-            {iconLetters ? iconLetters : title[0].toUpperCase()}
-          </Text>
+          {ioniconName ? (
+            <Ionicons
+              name={ioniconName as any}
+              size={24}
+              color={theme.colors.altBackground}
+            />
+          ) : (
+            <Text style={styles.iconText}>
+              {iconLetters ? iconLetters : title[0].toUpperCase()}
+            </Text>
+          )}
         </View>
 
         <View style={styles.textContainer}>
@@ -70,7 +83,7 @@ const CardWithoutImage: React.FC<CardProps> = ({
           {description && description.trim().length > 0 ? (
             <Text
               style={styles.description}
-              numberOfLines={1}
+              numberOfLines={allowMultilineDescription ? 3 : 1}
               ellipsizeMode="tail" // ... when the length of the text is too long
             >
               {description}

@@ -25,7 +25,10 @@ function getChartProgressText() {
       getAverageHabitsCompletionRatePreviousWeek();
     const avgCompletionRateThisWeek = getAverageHabitsCompletionRateThisWeek(); // this is the "so far" completion rate
 
-    if (avgCompletionRateLastWeek > avgCompletionRateThisWeek) {
+    if (avgCompletionRateThisWeek == 0) {
+      progressText =
+        "You're at no habits completed this week. Let's get that number up!";
+    } else if (avgCompletionRateLastWeek > avgCompletionRateThisWeek) {
       progressText = `${lodash.sample([
         "Oh no!",
         "Oh",

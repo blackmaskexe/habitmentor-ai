@@ -19,6 +19,8 @@ import {
   getRecentEmotionAwareSuggestion,
   shouldGetNewEmotionAwareSuggestion,
 } from "@/utils/habits/habitSuggestionsManager";
+import { SheetManager } from "react-native-actions-sheet";
+import EmotionAwareTextMessage from "./EmotionAwareSuggestionSheet";
 
 const screenWidth = Dimensions.get("window").width;
 
@@ -50,6 +52,7 @@ const EmotionAwareSuggestionCard: React.FC<EmotionAwareSuggestionCard> = ({
 
   useEffect(() => {
     async function getOrSetEmotionAwareSuggestion() {
+      console.log("Im a little camera shy");
       if (shouldGetNewEmotionAwareSuggestion()) {
         const emotionAwareMessage = await getNewEmotionAwareMessage();
         setEmotionAwareMessage(emotionAwareMessage);
@@ -83,6 +86,19 @@ const EmotionAwareSuggestionCard: React.FC<EmotionAwareSuggestionCard> = ({
           padding,
         },
       ]}
+      onPress={() => {
+        SheetManager.show("suggestions-sheet", {
+          payload: {
+            CustomComponent: () => {
+              return (
+                <EmotionAwareTextMessage
+                  message={emotionAwareMessage as string}
+                />
+              );
+            },
+          },
+        });
+      }}
     >
       <View style={styles.iconContainer}>
         <Ionicons

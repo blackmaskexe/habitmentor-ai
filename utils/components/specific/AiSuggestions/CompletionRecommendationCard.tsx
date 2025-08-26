@@ -10,6 +10,7 @@ import { useTheme } from "@/utils/theme/ThemeContext";
 import { Theme } from "@/utils/theme/themes";
 import { Ionicons } from "@expo/vector-icons";
 import CTAButton from "@/utils/components/general/CTAButton";
+import { SheetManager } from "react-native-actions-sheet";
 
 const screenWidth = Dimensions.get("window").width;
 
@@ -51,6 +52,11 @@ const CompletionRecommendationCard: React.FC<
           padding,
         },
       ]}
+      onPress={() => {
+        SheetManager.show("suggestions-sheet", {
+          CustomComponent: () => {},
+        });
+      }}
     >
       <View style={styles.iconContainer}>
         <Ionicons

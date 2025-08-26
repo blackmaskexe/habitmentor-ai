@@ -1,12 +1,12 @@
 import { ThemeProvider } from "@/utils/theme/ThemeContext";
 import { registerSheet, SheetDefinition } from "react-native-actions-sheet";
-import HabitSHeet from "./habit-sheet/HabitActionSheet";
+import HabitSheet from "./habit-sheet/HabitActionSheet";
 import SuggestionsSheet from "./suggestions-sheet/SuggestionsActionSheet";
 
 registerSheet("habit-sheet", (props) => {
   return (
     <ThemeProvider>
-      <HabitSHeet {...props} />
+      <HabitSheet {...props} />
     </ThemeProvider>
   );
 });

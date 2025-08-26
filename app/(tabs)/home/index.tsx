@@ -43,8 +43,8 @@ import { getMetadataRecords } from "@/utils/database/dailyMetadataRecords";
 export default function Index() {
   // mmkvStorage.set("appStartDate", "2025-7-25");
   console.log(
-    "i cant feel my face when im wichu, bada lavvey",
-    getMetadataRecords(7)
+    "only taking pictures you gon have to take your azom",
+    JSON.stringify(getMetadataRecords(7))
   );
 
   const [proActiveMessage, setProActiveMessage] = useState<string | null>(null); // will eventually fetch it's last value from a key-value store so that the user doesn't have to stare at the "loading" for 1-3 seconds
