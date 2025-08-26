@@ -1,8 +1,11 @@
 import {
+  getAppStartDate,
   getDate,
+  getDateFromFormattedDate,
   getDatesLastWeek,
   getDatesThisWeek,
   getFormattedDate,
+  isAppStartWeek,
 } from "../date";
 import {
   getAllHabitsCompletionRateOnDate,
@@ -69,14 +72,19 @@ export function didGetMoodCheckedToday() {
 }
 
 export function addMissedHabitsThisWeekToMetadata() {
-  console.log("aisetugu mai run kar rela hu");
-
   const existingDailyRecords: DailyRecords = JSON.parse(
     mmkvStorage.getString("dailyRecords") || "{}"
   );
 
   const datesSoFar = getDatesThisWeek();
   datesSoFar.length = getDate().getDay() + 1; // limiting the dates to just today
+
+  // remove empty entries that will be caused when the user didn't download the app in the same week before appStartDate
+  if (isAppStartWeek()) {
+    // we will trim out the days before the user started the app:
+    const startDate = getAppStartDate();
+    datesSoFar.splice(0, startDate.getDay());
+  }
 
   for (const date of datesSoFar) {
     console.log("apun run kar raha hu taipshi taipshi");
@@ -123,6 +131,13 @@ export function addHabitsCompletionRateThisWeekToMetadata() {
 
   const datesSoFar = getDatesThisWeek();
   datesSoFar.length = getDate().getDay() + 1; // limiting the dates to just today
+
+  // remove empty entries that will be caused when the user didn't download the app in the same week before appStartDate
+  if (isAppStartWeek()) {
+    // we will trim out the days before the user started the app:
+    const startDate = getAppStartDate();
+    datesSoFar.splice(0, startDate.getDay());
+  }
 
   for (const date of datesSoFar) {
     const dateRecord: DailyRecordEntry = {
