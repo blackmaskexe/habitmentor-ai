@@ -14,6 +14,11 @@ import { Ionicons } from "@expo/vector-icons";
 import CTAButton from "@/utils/components/general/CTAButton";
 import AISuggestionSkeleton from "../AISuggestionSkeleton";
 import { TypeAnimation } from "react-native-type-animation";
+import {
+  getNewEmotionAwareMessage,
+  getRecentEmotionAwareSuggestion,
+  shouldGetNewEmotionAwareSuggestion,
+} from "@/utils/habits/habitSuggestionsManager";
 
 const screenWidth = Dimensions.get("window").width;
 
@@ -44,11 +49,16 @@ const EmotionAwareSuggestionCard: React.FC<EmotionAwareSuggestionCard> = ({
     useState<number>(0);
 
   useEffect(() => {
-    setTimeout(() => {
-      setEmotionAwareMessage(
-        "When getting too long of a message, make this say that to click more in order to view full suggestion, then open up an actionsheet. Things I should have known... I wanna embrance you, domesticate you, but you belong to the world...."
-      );
-    }, 1000);
+    async function getOrSetEmotionAwareSuggestion() {
+      if (shouldGetNewEmotionAwareSuggestion()) {
+        const emotionAwareMessage = await getNewEmotionAwareMessage();
+        setEmotionAwareMessage(emotionAwareMessage);
+      } else {
+        setEmotionAwareMessage(getRecentEmotionAwareSuggestion());
+      }
+    }
+
+    getOrSetEmotionAwareSuggestion();
   }, []);
 
   const [emotionAwareMessageheight, setEmotionAwareMessageHeight] =

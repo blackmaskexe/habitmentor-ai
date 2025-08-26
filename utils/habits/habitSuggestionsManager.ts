@@ -1,5 +1,11 @@
 import { Ionicons } from "@expo/vector-icons";
-import { getDate, getDatesThisWeek, getFormattedDatesThisWeek } from "../date";
+import {
+  getDate,
+  getDateFromFormattedDate,
+  getDatesThisWeek,
+  getFormattedDate,
+  getFormattedDatesThisWeek,
+} from "../date";
 import mmkvStorage from "../mmkvStorage";
 import {
   getHabitCompletionRatePreviousWeek,
@@ -8,6 +14,8 @@ import {
 import { getAllHabits, getHabitObjectFromId } from "./habitService";
 import lodash from "lodash";
 import { getAllHabitHistoryEntriesEntriesOnDate } from "./habitHistoryManager";
+import api from "../api";
+import { getMetadataRecords } from "../database/dailyMetadataRecords";
 
 type LeastCompletedHabitMetadata = {
   habitId: string;
@@ -138,4 +146,62 @@ export function getWeeklyHabitCompletionsCountData() {
   }
 
   return completionsSoFar;
+}
+
+export function shouldGetNewEmotionAwareSuggestion() {
+  const lastEmotionAwareSuggestionFormattedDate = mmkvStorage.getString(
+    "lastEmotionAwareSuggestionDate"
+  );
+
+  if (lastEmotionAwareSuggestionFormattedDate) {
+    // since we want to refresh this suggestion everyday:
+    const lastSuggesstionDate = getDateFromFormattedDate(
+      lastEmotionAwareSuggestionFormattedDate
+    );
+    const dateToday = getDateFromFormattedDate(getFormattedDate()); // doing this so that I can get a date without timings attached for comparison purposses
+
+    if (dateToday > lastSuggesstionDate) {
+      mmkvStorage.set("lastEmotionAwareSuggestionDate", getFormattedDate());
+      return true;
+    } else {
+      // if it is the same day that the user got the emotion aware suggestion, don't run
+      return false;
+    }
+  } else {
+    // this is the case where the user didn't get any emotion aware suggestion till yet
+    mmkvStorage.set("lastEmotionAwareSuggestionDate", getFormattedDate());
+    return true;
+  }
+}
+export function getRecentEmotionAwareSuggestion() {
+  const emotionAwareSuggestion = mmkvStorage.getString(
+    "recentEmotionAwareSuggestion"
+  );
+
+  return emotionAwareSuggestion
+    ? emotionAwareSuggestion
+    : "Keep using the app, and you will get tailored emotion-aware suggestions";
+}
+
+export function setRecentEmotionAwareSuggestion(message: string) {
+  mmkvStorage.set("recentEmotionAwareSuggestion", message);
+}
+
+export async function getNewEmotionAwareMessage() {
+  try {
+    const response = await api.post("/emotion-aware-suggestion", {
+      dailyMetadataRecords: getMetadataRecords(7), // sending metadata records for the last 7 days
+    });
+
+    console.log("hoo hoo huhhu", response);
+    if (response && response.data.response) {
+      setRecentEmotionAwareSuggestion(response.data.response);
+      return response.data.response;
+    }
+    // catch statement for emotion aware message:
+    return "Could not fetch emotion-aware message at this time, please try again later?";
+  } catch (err) {
+    console.log("ERROR: COULD NOT GET EMOTION AWARE SUGGESTION");
+    return "Could not fetch emotion-aware message at this time, please try again later?";
+  }
 }
