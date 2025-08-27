@@ -44,7 +44,7 @@ interface UserChatRequestType {
 }
 
 interface DailyRecordEntry {
-  moodRating?: number;
+  moodRating?: number; // a number from 0 to 1
   habitCompletionRate?: number;
   missedHabits?: string[]; // array of habitId
 }

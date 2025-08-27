@@ -23,8 +23,8 @@ interface DayActivity {
 
 export const MonthlyHabitActivityMonitor: React.FC = () => {
   const daysInMonth = new Date(
-    new Date().getFullYear(),
-    new Date().getMonth() + 1,
+    getDate().getFullYear(),
+    getDate().getMonth() + 1,
     0
   ).getDate();
   const [activities, setActivities] = useState<DayActivity[]>(
@@ -94,8 +94,6 @@ export const MonthlyHabitActivityMonitor: React.FC = () => {
           : appStartDate.getDate();
 
       for (let i = initialDayOfMonth; i < dayToday + 1; i++) {
-        console.log("kansol log", today, appStartDate, today > appStartDate);
-
         // looping for days of month until today
         const dateThisDay = new Date(today.getFullYear(), today.getMonth(), i);
         newActivities[i - 1] = {

@@ -1,21 +1,59 @@
-import React, { useState } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  Dimensions,
-} from "react-native";
+import React from "react";
+import { View, Text, StyleSheet, Dimensions } from "react-native";
 import { useTheme } from "@/utils/theme/ThemeContext";
 import { Theme } from "@/utils/theme/themes";
 import { Ionicons } from "@expo/vector-icons";
 import { BarChart } from "react-native-chart-kit";
 import { getWeeklyHabitCompletionsCountData } from "@/utils/habits/habitSuggestionsManager";
+import { isAppStartWeek } from "@/utils/date";
+import {
+  getAverageHabitsCompletionRatePreviousWeek,
+  getAverageHabitsCompletionRateThisWeek,
+} from "@/utils/habits";
+import lodash from "lodash";
+
+function getChartProgressText() {
+  let progressText: string;
+
+  // seeing if the user started the app this week or not:
+  if (isAppStartWeek()) {
+    // if they did, give them an "introductory" message for the week
+    progressText =
+      "Let's try to ease into the routine of doing these habits your first week!";
+  } else {
+    const avgCompletionRateLastWeek =
+      getAverageHabitsCompletionRatePreviousWeek();
+    const avgCompletionRateThisWeek = getAverageHabitsCompletionRateThisWeek(); // this is the "so far" completion rate
+
+    if (avgCompletionRateThisWeek == 0) {
+      progressText =
+        "You're at no habits completed this week. Let's get that number up!";
+    } else if (avgCompletionRateLastWeek > avgCompletionRateThisWeek) {
+      progressText = `${lodash.sample([
+        "Oh no!",
+        "Oh",
+        "Look at the graph!",
+      ])} You have completed ${
+        avgCompletionRateLastWeek - avgCompletionRateThisWeek
+      }% less habits than last week.`;
+    } else {
+      progressText = `${lodash.sample([
+        "Good Going!",
+        "Bravo!",
+        "I'm amazed!",
+      ])} You have completed ${
+        avgCompletionRateThisWeek - avgCompletionRateLastWeek
+      }% more habits than last week.`;
+    }
+  }
+
+  return progressText;
+}
 
 const ChartCompletionsThisWeek = ({
   borderRadius = 16,
   padding = 16,
-  iconName = "airplane",
+  iconName = "cellular",
   iconColor,
 }: any) => {
   const theme = useTheme();
@@ -95,9 +133,7 @@ const ChartCompletionsThisWeek = ({
         );
       })()}
 
-      <Text style={styles.suggestionText}>
-        Oh no! You completed 23% less habits than last time
-      </Text>
+      <Text style={styles.suggestionText}>{getChartProgressText()}</Text>
     </View>
   );
 };
@@ -156,7 +192,7 @@ function createStyles(theme: Theme) {
       zIndex: 1,
       justifyContent: "center",
       alignItems: "center",
-      backgroundColor: "rgba(0,0,0, 0.1)",
+      backgroundColor: "rgba(0,0,0, 0.05)",
     },
   });
 }

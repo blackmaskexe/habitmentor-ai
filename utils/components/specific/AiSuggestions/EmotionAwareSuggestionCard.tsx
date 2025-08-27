@@ -14,6 +14,13 @@ import { Ionicons } from "@expo/vector-icons";
 import CTAButton from "@/utils/components/general/CTAButton";
 import AISuggestionSkeleton from "../AISuggestionSkeleton";
 import { TypeAnimation } from "react-native-type-animation";
+import {
+  getNewEmotionAwareMessage,
+  getRecentEmotionAwareSuggestion,
+  shouldGetNewEmotionAwareSuggestion,
+} from "@/utils/habits/habitSuggestionsManager";
+import { SheetManager } from "react-native-actions-sheet";
+import EmotionAwareTextMessage from "./EmotionAwareSuggestionSheet";
 
 const screenWidth = Dimensions.get("window").width;
 
@@ -44,11 +51,17 @@ const EmotionAwareSuggestionCard: React.FC<EmotionAwareSuggestionCard> = ({
     useState<number>(0);
 
   useEffect(() => {
-    setTimeout(() => {
-      setEmotionAwareMessage(
-        "When getting too long of a message, make this say that to click more in order to view full suggestion, then open up an actionsheet. Things I should have known... I wanna embrance you, domesticate you, but you belong to the world...."
-      );
-    }, 1000);
+    async function getOrSetEmotionAwareSuggestion() {
+      console.log("Im a little camera shy");
+      if (shouldGetNewEmotionAwareSuggestion()) {
+        const emotionAwareMessage = await getNewEmotionAwareMessage();
+        setEmotionAwareMessage(emotionAwareMessage);
+      } else {
+        setEmotionAwareMessage(getRecentEmotionAwareSuggestion());
+      }
+    }
+
+    getOrSetEmotionAwareSuggestion();
   }, []);
 
   const [emotionAwareMessageheight, setEmotionAwareMessageHeight] =
@@ -73,6 +86,19 @@ const EmotionAwareSuggestionCard: React.FC<EmotionAwareSuggestionCard> = ({
           padding,
         },
       ]}
+      onPress={() => {
+        SheetManager.show("suggestions-sheet", {
+          payload: {
+            CustomComponent: () => {
+              return (
+                <EmotionAwareTextMessage
+                  message={emotionAwareMessage as string}
+                />
+              );
+            },
+          },
+        });
+      }}
     >
       <View style={styles.iconContainer}>
         <Ionicons
@@ -211,7 +237,7 @@ function createStyles(theme: Theme) {
       zIndex: 1,
       justifyContent: "center",
       alignItems: "center",
-      backgroundColor: "rgba(0,0,0, 0.1)",
+      backgroundColor: "rgba(0,0,0, 0.05)",
     },
     suggestionContainer: {},
   });

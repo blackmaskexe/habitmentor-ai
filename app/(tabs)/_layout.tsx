@@ -21,8 +21,6 @@ export default function TabLayout() {
     tagHabits();
   }
 
-  console.log(mmkvStorage.getString("activeHabits"), "I give you all ad me");
-
   return (
     <Tabs
       screenOptions={{

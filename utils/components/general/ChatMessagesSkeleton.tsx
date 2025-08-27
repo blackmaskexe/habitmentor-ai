@@ -15,7 +15,7 @@ export default function ChatMessagesSkeleton() {
       style={[styles.container, styles.padded]}
       animate={{ backgroundColor: theme.colors.background }}
     >
-      <Skeleton width={250} backgroundColor={theme.colors.altBackground} />
+      <Skeleton width={250} colorMode={theme.theme as "light" | "dark"} />
       {/* <Spacer height={8} />
         <Skeleton colorMode={colorMode} width={"100%"} />
         <Spacer height={8} />

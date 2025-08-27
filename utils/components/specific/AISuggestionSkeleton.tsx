@@ -20,9 +20,9 @@ export default function AISuggestionSkeleton() {
       >
         <Skeleton
           width={"100%"}
-          backgroundColor={theme.colors.altBackground}
+          // backgroundColor={theme.colors.altBackground}
           height={60}
-          colorMode={theme.theme as any}
+          colorMode={theme.theme as "light" | "dark"}
         />
         {/* <Skeleton width={"100%"} /> */}
         {/* <Spacer height={8} />

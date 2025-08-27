@@ -38,14 +38,12 @@ export default function AiSuggestions() {
     }, 1500);
   };
 
-  const [showMoodCard, setShowMoodCard] = useState(didGetMoodCheckedToday());
+  const [showMoodCard, setShowMoodCard] = useState(!didGetMoodCheckedToday());
   const [showNextCard, setShowNextCard] = useState(false);
   const router = useRouter();
 
   const theme = useTheme();
   const styles = createStyles(theme);
-
-  const lowestCompletedHabitThisWeek = getLeastCompletedHabitMetadataThisWeek();
 
   return (
     <View
@@ -53,18 +51,25 @@ export default function AiSuggestions() {
       // contentContainerStyle={styles.scrollContent}
       // showsVerticalScrollIndicator={false}
     >
-      <CardWithoutImage
-        title="AI Assistant"
-        onPress={() => {
-          router.push("/chat");
+      <View
+        style={{
+          marginHorizontal: theme.spacing.s,
         }}
-        description="Click to chat with your AI Assistant"
-        iconLetters="AI"
-      />
+      >
+        <CardWithoutImage
+          title="AI Assistant"
+          onPress={() => {
+            router.push("/chat");
+          }}
+          description="Click to chat with your AI Assistant"
+          iconLetters="AI"
+        />
+      </View>
+
       <View style={styles.horizontalRoller} />
 
       {/* Lowest being done habit (full width card) */}
-      {/* {showMoodCard ? (
+      {showMoodCard ? (
         <Animated.View
           style={{
             opacity: fadeAnim,
@@ -85,7 +90,7 @@ export default function AiSuggestions() {
           ],
           opacity: showMoodCard ? 0 : 1, // hide until MoodRaterCard is gone
         }}
-      ></Animated.View> */}
+      ></Animated.View>
 
       {/* <CompletionRecommendationCard
         habitName={lowestCompletedHabitThisWeek.habitName}
