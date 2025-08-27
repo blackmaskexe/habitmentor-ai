@@ -57,6 +57,8 @@ export default function TabViewExample() {
       indicatorStyle={{ backgroundColor: theme.colors.primary }}
       style={{ backgroundColor: theme.colors.background }}
       labelStyle={{ color: theme.colors.text }}
+      activeColor={theme.colors.primary}
+      inactiveColor={theme.colors.textSecondary}
     />
   );
 

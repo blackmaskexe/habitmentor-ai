@@ -1,18 +1,30 @@
 import { useTheme } from "@/utils/theme/ThemeContext";
 import { Theme } from "@/utils/theme/themes";
-import { Ionicons } from "@expo/vector-icons";
 import { StyleSheet, View, Text } from "react-native";
 import CardWithoutImage from "../../general/CardWithoutImage";
+import { getHabitObjectFromId } from "@/utils/habits";
 
-export default function EmotionAwareTextMessage({}) {
+type LeastCompletedHabitSheetProps = {
+  habitName: string;
+  completionPercentage: number;
+  habitId: string;
+};
+
+export default function LeastCompletedHabitSheet({
+  habitName,
+  habitId,
+  completionPercentage,
+}: LeastCompletedHabitSheetProps) {
   const theme = useTheme();
   const styles = createStyles(theme);
+
+  const habitObject = getHabitObjectFromId(habitId);
   return (
     <>
       <View style={styles.headerContainer}>
         <CardWithoutImage
-          title="Emotion Aware Suggestion"
-          description="Get suggestions that combine your mood with your habit activity"
+          title="Least Completed Habit"
+          description={`${habitName} was completed ${completionPercentage}% of the times this week`}
           ioniconName="heart"
           allowMultilineDescription
         />

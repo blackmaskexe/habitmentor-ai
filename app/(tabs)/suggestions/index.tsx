@@ -51,14 +51,21 @@ export default function AiSuggestions() {
       // contentContainerStyle={styles.scrollContent}
       // showsVerticalScrollIndicator={false}
     >
-      <CardWithoutImage
-        title="AI Assistant"
-        onPress={() => {
-          router.push("/chat");
+      <View
+        style={{
+          marginHorizontal: theme.spacing.s,
         }}
-        description="Click to chat with your AI Assistant"
-        iconLetters="AI"
-      />
+      >
+        <CardWithoutImage
+          title="AI Assistant"
+          onPress={() => {
+            router.push("/chat");
+          }}
+          description="Click to chat with your AI Assistant"
+          iconLetters="AI"
+        />
+      </View>
+
       <View style={styles.horizontalRoller} />
 
       {/* Lowest being done habit (full width card) */}
