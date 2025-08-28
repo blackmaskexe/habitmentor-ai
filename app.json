@@ -9,7 +9,8 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true,
+      "supportsTablet": false,
+      "googleServicesFile": "./GoogleService-Info.plist",
       "bundleIdentifier": "com.blackmaskexe.habittracker",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
@@ -26,6 +27,9 @@
     "plugins": [
       "expo-router",
       "expo-apple-authentication",
+      "@react-native-firebase/app",
+      "@react-native-firebase/auth",
+      "@react-native-firebase/crashlytics",
       "expo-notifications",
       [
         "expo-splash-screen",
@@ -40,6 +44,7 @@
         "expo-build-properties",
         {
           "ios": {
+            "useFrameworks": "static",
             "deploymentTarget": "16.0",
             "extraPods": [
               {
