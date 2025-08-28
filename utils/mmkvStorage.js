@@ -20,3 +20,4 @@ export default mmkvStorage;
 // dailyRecords: Array of daily records for users habits and actions. this will store stuff like moodRating, habitCompletionRate (you felt on average happy last week, and you completed 55% of the tasks. Let's improve on that, typeshi), tagsOfHabitsMIssed (or missedHabits[] ?).
 // lastEmotionAwareSuggestionDate: the last time emotion aware suggestion api was called
 // recentEmotionAwareSuggestion: the most recent message that was given by emotion aware ai
+// totalPoints: the points of the user's habits that they accumulate over time

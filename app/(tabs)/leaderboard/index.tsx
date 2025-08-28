@@ -3,13 +3,15 @@ import { View, useWindowDimensions, Text, StyleSheet } from "react-native";
 import { TabView, SceneMap, TabBar } from "react-native-tab-view";
 import { useTheme } from "@/utils/theme/ThemeContext";
 import { Theme } from "@/utils/theme/themes";
+import AppleSignInButton from "@/utils/components/general/AppleSignInButton";
 
 const FirstRoute = () => {
   const theme = useTheme();
   const styles = createStyles(theme);
   return (
     <View style={styles.scene}>
-      <Text style={styles.placeholderText}>Coming Soon</Text>
+      {/* <Text style={styles.placeholderText}>Coming Soon</Text> */}
+      <AppleSignInButton />
     </View>
   );
 };

@@ -23,3 +23,8 @@ export function subtractPoints(subtractAmount: number) {
     addPoints(subtractAmount); // recursively add points for the first time
   }
 }
+
+export function getPoints() {
+  const points = mmkvStorage.getNumber("totalPoints");
+  return points ? points : 0;
+}
