@@ -4,7 +4,7 @@ export const unstable_settings = {
   initialRouteName: "index",
 };
 
-export default function ProgressLayout() {
+export default function LeaderboardLayout() {
   // Changed from FeedLayout to ProgressLayout
   return (
     <Stack

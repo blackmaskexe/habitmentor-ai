@@ -66,8 +66,10 @@ import {
 } from "firebase/auth";
 import { doc, setDoc, serverTimestamp } from "firebase/firestore";
 import { getPoints } from "@/utils/database/points";
+import { useTheme } from "@/utils/theme/ThemeContext";
 
 const AppleSignInButton = ({ onSignInSuccess, onSignInError }: any) => {
+  const theme = useTheme();
   const handleAppleSignIn = async () => {
     try {
       const nonce = Math.random().toString(36).substring(2, 10);
@@ -133,7 +135,11 @@ const AppleSignInButton = ({ onSignInSuccess, onSignInError }: any) => {
   return (
     <AppleAuthentication.AppleAuthenticationButton
       buttonType={AppleAuthentication.AppleAuthenticationButtonType.SIGN_IN}
-      buttonStyle={AppleAuthentication.AppleAuthenticationButtonStyle.BLACK}
+      buttonStyle={
+        theme.theme === "dark"
+          ? AppleAuthentication.AppleAuthenticationButtonStyle.WHITE
+          : AppleAuthentication.AppleAuthenticationButtonStyle.BLACK
+      }
       cornerRadius={5}
       style={{ width: 250, height: 50 }} // You can pass style as a prop too
       onPress={handleAppleSignIn}

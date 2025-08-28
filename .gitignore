@@ -91,3 +91,7 @@ yarn-error.*
 ios
 android
 *.ipa
+
+# firebase files:
+utils/firebase/firebaseConfig.ts
+utils/misc/GoogleService-Info.plist
