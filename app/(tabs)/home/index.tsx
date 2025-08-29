@@ -39,8 +39,10 @@ import React from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { tagHabits } from "@/utils/tagManager";
 import { getMetadataRecords } from "@/utils/database/dailyMetadataRecords";
+import { getAuth } from "@react-native-firebase/auth";
 
 export default function Index() {
+  console.log(getAuth(), "tapshi tapshi");
   // mmkvStorage.set("appStartDate", "2025-7-25");
   console.log(
     "only taking pictures you gon have to take your azom",

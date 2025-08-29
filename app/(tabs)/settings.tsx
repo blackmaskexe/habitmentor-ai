@@ -22,6 +22,7 @@ import mmkvStorage from "@/utils/mmkvStorage";
 import AIToneSelectionDropdownMenu from "@/utils/components/specific/zeego/AIToneSelectionDropdownMenu";
 import { useCallback, useState } from "react";
 import { getDateFromFormattedTime } from "@/utils/date";
+import { getAuth, signOut } from "@react-native-firebase/auth";
 
 export default function Settings() {
   const theme = useTheme();
@@ -125,7 +126,7 @@ export default function Settings() {
       <View style={styles.settingsGroup}>
         {renderOptionToggleItem(
           "top",
-          "alarm-outline",
+          "alarm",
           "Enable Reminder Notifications",
           (isEnabled) => {
             if (isEnabled) {
@@ -153,32 +154,59 @@ export default function Settings() {
           notificationsEnabled,
           notificationsEnabled
         )}
-        {renderOptionItem(
-          "bottom",
-          "close-outline",
-          "Cancel All Notifications",
-          () => {
-            Alert.alert(
-              `Cancel all Notification?`,
-              "Are you sure?",
-              [
-                {
-                  text: "Cancel",
-                  onPress: () => console.log("Cancel Pressed"),
-                  style: "cancel",
+        {renderOptionItem("bottom", "close", "Cancel All Notifications", () => {
+          Alert.alert(
+            `Cancel all Notification?`,
+            "Are you sure?",
+            [
+              {
+                text: "Cancel",
+                onPress: () => console.log("Cancel Pressed"),
+                style: "cancel",
+              },
+              {
+                text: "Yes",
+                onPress: () => {
+                  cancelAllScheduledNotifications();
+                  resetAllHabitNotifications();
                 },
-                {
-                  text: "Yes",
-                  onPress: () => {
-                    cancelAllScheduledNotifications();
-                    resetAllHabitNotifications();
-                  },
+              },
+            ],
+            { cancelable: false }
+          );
+        })}
+
+        {/* Divider */}
+        <View style={styles.divider} />
+      </View>
+
+      <View style={styles.sectionHeader}>
+        <Text style={styles.sectionHeaderText}>Leaderboard Settings</Text>
+      </View>
+
+      {/* Leaderboard Group */}
+      <View style={styles.settingsGroup}>
+        {renderOptionItem("top", "log-out", "Log Out", async () => {
+          Alert.alert(
+            `Logging Out`,
+            "You will have to log back in to use leaderboards",
+            [
+              {
+                text: "Cancel",
+                onPress: () => console.log("Cancel Pressed"),
+                style: "cancel",
+              },
+              {
+                text: "Yes",
+                onPress: async () => {
+                  await signOut(getAuth());
+                  console.log("User Signed Out Successfully!");
                 },
-              ],
-              { cancelable: false }
-            );
-          }
-        )}
+              },
+            ],
+            { cancelable: false }
+          );
+        })}
 
         {/* Divider */}
         <View style={styles.divider} />
@@ -190,32 +218,27 @@ export default function Settings() {
 
       {/* Settings Group */}
       <View style={styles.settingsGroup}>
-        {renderOptionItem(
-          "single",
-          "trash-outline",
-          "Erase All Data",
-          async () => {
-            Alert.alert(
-              `Erase all Habit Data?`,
-              "Are you sure?",
-              [
-                {
-                  text: "Cancel",
-                  onPress: () => console.log("Cancel Pressed"),
-                  style: "cancel",
+        {renderOptionItem("single", "trash", "Erase All Data", async () => {
+          Alert.alert(
+            `Erase all Habit Data?`,
+            "Are you sure?",
+            [
+              {
+                text: "Cancel",
+                onPress: () => console.log("Cancel Pressed"),
+                style: "cancel",
+              },
+              {
+                text: "Yes",
+                onPress: async () => {
+                  router.replace("/(onboarding)");
+                  await eraseAllHabitData();
                 },
-                {
-                  text: "Yes",
-                  onPress: async () => {
-                    router.replace("/(onboarding)");
-                    await eraseAllHabitData();
-                  },
-                },
-              ],
-              { cancelable: false }
-            );
-          }
-        )}
+              },
+            ],
+            { cancelable: false }
+          );
+        })}
 
         {/* Divider */}
         <View style={styles.divider} />

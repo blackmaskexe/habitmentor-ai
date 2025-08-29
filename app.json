@@ -9,6 +9,7 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
+      "usesAppleSignIn": true,
       "supportsTablet": false,
       "googleServicesFile": "./GoogleService-Info.plist",
       "bundleIdentifier": "com.blackmaskexe.habittracker",

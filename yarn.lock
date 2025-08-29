@@ -1745,6 +1745,11 @@
   resolved "https://registry.yarnpkg.com/@ide/backoff/-/backoff-1.0.0.tgz#466842c25bd4a4833e0642fab41ccff064010176"
   integrity sha512-F0YfUDjvT+Mtt/R4xdl2X0EYCHMMiJqNLdxHD++jDT5ydEFIyqbCHh51Qx2E211dgZprPKhV7sHmnXKpLuvc5g==
 
+"@invertase/react-native-apple-authentication@^2.4.1":
+  version "2.4.1"
+  resolved "https://registry.yarnpkg.com/@invertase/react-native-apple-authentication/-/react-native-apple-authentication-2.4.1.tgz#166cc923a6424e19791d20f47d08ad648499db15"
+  integrity sha512-SzWXS/T6H62ScTX+jMLJFLAcBp2p8P30J5uQEimpLMUolqnv/iAljfpwTvZYaniVmMSUXjG0/N95ScUIcmsYRQ==
+
 "@isaacs/cliui@^8.0.2":
   version "8.0.2"
   resolved "https://registry.yarnpkg.com/@isaacs/cliui/-/cliui-8.0.2.tgz#b37667b7bc181c168782259bab42474fbf52b550"
@@ -2498,6 +2503,13 @@
   integrity sha512-BHZkDr0O6LaHEAul5mQi+Mq8l02mBhBAJ6ii103m0ZaYH5oESpEXP/zafeVbFzpU0USKVmuA8Elo2QDa8CfKgA==
   dependencies:
     stacktrace-js "^2.0.2"
+
+"@react-native-firebase/firestore@^23.1.2":
+  version "23.1.2"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/firestore/-/firestore-23.1.2.tgz#e87a2f37aa704692ef8bfcb67b8e709dc018cb0d"
+  integrity sha512-Tho+OIpf+9Qn1bETaPeWkbnln54xditeZf7aV57FDbR9Ia3PgfuNAJ/lVQpe/Yb8SKcFlq5iapSsZ6X4HfPQpw==
+  dependencies:
+    react-native-url-polyfill "2.0.0"
 
 "@react-native-menu/menu@^1.2.3":
   version "1.2.3"
@@ -7793,6 +7805,13 @@ react-native-type-animation@^0.4.4:
   version "0.4.4"
   resolved "https://registry.yarnpkg.com/react-native-type-animation/-/react-native-type-animation-0.4.4.tgz#50c21b3b1361b0444e422c6050db52445549aa5c"
   integrity sha512-l1SbeRZGdNbeAVtjtkvvl8e1rJCy1nDiLsFrd5aMVLcX6LmYWBv7PK7j+rdR6gWcl2+fGqdmNWH7/sJkr9joAA==
+
+react-native-url-polyfill@2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/react-native-url-polyfill/-/react-native-url-polyfill-2.0.0.tgz#db714520a2985cff1d50ab2e66279b9f91ffd589"
+  integrity sha512-My330Do7/DvKnEvwQc0WdcBnFPploYKp9CYlefDXzIdEaA+PAhDYllkvGeEroEzvc4Kzzj2O4yVdz8v6fjRvhA==
+  dependencies:
+    whatwg-url-without-unicode "8.0.0-3"
 
 react-native-web@~0.20.0:
   version "0.20.0"

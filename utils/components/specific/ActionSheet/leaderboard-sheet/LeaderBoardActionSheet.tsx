@@ -32,7 +32,7 @@ function LeaderboardSheet(props: SheetProps<"suggestions-sheet">) {
           <CrossButton
             outline={false}
             onPress={() => {
-              router.replace("/(tabs)/home");
+              router.back();
               SheetManager.hide("leaderboard-sheet");
             }}
           />

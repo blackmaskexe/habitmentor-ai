@@ -3,40 +3,50 @@ import { View, useWindowDimensions, Text, StyleSheet } from "react-native";
 import { TabView, SceneMap, TabBar } from "react-native-tab-view";
 import { useTheme } from "@/utils/theme/ThemeContext";
 import { Theme } from "@/utils/theme/themes";
-import AppleSignInButton from "@/utils/components/general/AppleSignInButton";
-import { onAuthStateChanged } from "firebase/auth";
 import { useEffect, useState, useCallback } from "react";
-import { auth } from "@/utils/firebase/firebaseConfig";
 import { SheetManager } from "react-native-actions-sheet";
 import { useFocusEffect } from "expo-router";
+import {
+  onAuthStateChanged,
+  FirebaseAuthTypes,
+  getAuth,
+} from "@react-native-firebase/auth";
 
 const FirstRoute = () => {
-  const [user, setUser] = useState(null);
+  const [initializing, setInitializing] = useState(true);
+  const [user, setUser] = useState<FirebaseAuthTypes.User | null>(null); // Default to null for clarity
 
+  function handleAuthStateChange(user: FirebaseAuthTypes.User) {
+    setUser(user);
+    if (initializing) setInitializing(false);
+  }
+
+  // This hook correctly subscribes to Firebase auth state changes.
   useEffect(() => {
-    // This listener runs when the app starts and whenever the auth state changes
-    const unsubscribe = onAuthStateChanged(auth, (authenticatedUser) => {
-      if (authenticatedUser) {
-        // User is signed in, see docs for a list of available properties
-        // https://firebase.google.com/docs/reference/js/auth.user
-        setUser(authenticatedUser as any);
-      } else {
-        // User is signed out
-        setUser(null);
-      }
-    });
-    // Cleanup subscription on unmount
-    return () => unsubscribe();
+    const subscriber = onAuthStateChanged(
+      getAuth(),
+      handleAuthStateChange as any
+    );
+
+    return subscriber; // Unsubscribe on component unmount
   }, []);
+
+  // 3. This new useEffect hook will react to auth state changes.
 
   useFocusEffect(
     useCallback(() => {
-      if (!user) {
-        SheetManager.show("leaderboard-sheet");
-      } else {
-        SheetManager.hide("leaderboard-sheet");
+      // We only want to run this logic after Firebase has initialized.
+      if (!initializing) {
+        // If there is no user, show the action sheet.
+        if (!user) {
+          SheetManager.show("leaderboard-sheet");
+        } else {
+          // If a user *is* logged in (e.g., they just signed in),
+          // explicitly hide the sheet.
+          SheetManager.hide("leaderboard-sheet");
+        }
       }
-    }, [])
+    }, [user, initializing])
   );
 
   const theme = useTheme();
