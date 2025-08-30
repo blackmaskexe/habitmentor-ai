@@ -2,7 +2,7 @@ import { ThemeProvider } from "@/utils/theme/ThemeContext";
 import { registerSheet, SheetDefinition } from "react-native-actions-sheet";
 import HabitSheet from "./habit-sheet/HabitActionSheet";
 import SuggestionsSheet from "./suggestions-sheet/SuggestionsActionSheet";
-import LeaderboardSheet from "./leaderboard-sheet/LeaderBoardActionSheet";
+import LeaderboardLoginSheet from "./login-sheet/LoginActionSheet";
 
 registerSheet("habit-sheet", (props) => {
   return (
@@ -20,10 +20,10 @@ registerSheet("suggestions-sheet", (props) => {
   );
 });
 
-registerSheet("leaderboard-sheet", (props) => {
+registerSheet("login-sheet", (props) => {
   return (
     <ThemeProvider>
-      <LeaderboardSheet {...props} />
+      <LeaderboardLoginSheet {...props} />
     </ThemeProvider>
   );
 });
@@ -34,7 +34,7 @@ declare module "react-native-actions-sheet" {
   interface Sheets {
     "habit-sheet": SheetDefinition;
     "suggestions-sheet": SheetDefinition;
-    "leaderboard-sheet": SheetDefinition;
+    "login-sheet": SheetDefinition;
     payload: {
       value: string;
     };

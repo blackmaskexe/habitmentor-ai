@@ -11,44 +11,68 @@ import {
   FirebaseAuthTypes,
   getAuth,
 } from "@react-native-firebase/auth";
+import { getFirebaseUserId } from "@/utils/firebase/firestore/profileManager";
 
 const FirstRoute = () => {
-  const [initializing, setInitializing] = useState(true);
-  const [user, setUser] = useState<FirebaseAuthTypes.User | null>(null); // Default to null for clarity
+  // const [initializing, setInitializing] = useState(true);
+  // const [user, setUser] = useState<FirebaseAuthTypes.User | null>(null); // Default to null for clarity
 
-  function handleAuthStateChange(user: FirebaseAuthTypes.User) {
-    setUser(user);
-    if (initializing) setInitializing(false);
-  }
+  // function handleAuthStateChange(user: FirebaseAuthTypes.User) {
+  //   setUser(user);
+  //   if (initializing) setInitializing(false);
+  // }
 
-  // This hook correctly subscribes to Firebase auth state changes.
-  useEffect(() => {
-    const subscriber = onAuthStateChanged(
-      getAuth(),
-      handleAuthStateChange as any
-    );
+  // // This hook correctly subscribes to Firebase auth state changes.
+  // useEffect(() => {
+  //   const subscriber = onAuthStateChanged(
+  //     getAuth(),
+  //     handleAuthStateChange as any
+  //   );
 
-    return subscriber; // Unsubscribe on component unmount
-  }, []);
+  //   return subscriber; // Unsubscribe on component unmount
+  // }, []);
 
-  // 3. This new useEffect hook will react to auth state changes.
+  // // 3. This new useEffect hook will react to auth state changes.
 
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     // We only want to run this logic after Firebase has initialized.
+  //     if (!initializing) {
+  //       // If there is no user, show the action sheet.
+  //       if (!user) {
+  //         SheetManager.show("leaderboard-sheet");
+  //       } else {
+  //         // If a user *is* logged in (e.g., they just signed in),
+  //         // explicitly hide the sheet.
+  //         SheetManager.hide("leaderboard-sheet");
+  //       }
+  //     }
+  //   }, [user, initializing])
+  // );
+
+  const [initializing, setInitializing] = useState<boolean>(true);
+
+  // what I want to happen:
+  // cases:
+  // first time user -> no userId in mmkv, no auth user = show entire action sheet
+  // returning user -> yes userId, maybe no auth user? = show only login action sheet
+  // chhapri user (did auth, but not went ahead with profile creation) = yes auth, no userId -> walk them through the entire process again\
+
+  // getting user statuses at first boot of this screen:
   useFocusEffect(
     useCallback(() => {
-      // We only want to run this logic after Firebase has initialized.
-      if (!initializing) {
-        // If there is no user, show the action sheet.
-        if (!user) {
-          SheetManager.show("leaderboard-sheet");
-        } else {
-          // If a user *is* logged in (e.g., they just signed in),
-          // explicitly hide the sheet.
-          SheetManager.hide("leaderboard-sheet");
-        }
-      }
-    }, [user, initializing])
+      console.log("MAINE PELEE");
+      const user = getAuth();
+      const firebaseUserId = getFirebaseUserId();
+
+      console.log("ee legal", user, firebaseUserId);
+      if (user.currentUser && firebaseUserId) return; // early return, not to show anything
+      SheetManager.show("login-sheet"); // show the entire login flow to the user
+      // I'll manually hide the leaderboard-login-sheet from the sheet itself when the auth flow is complete
+    }, [])
   );
 
+  // placeholder
   const theme = useTheme();
   const styles = createStyles(theme);
   return (

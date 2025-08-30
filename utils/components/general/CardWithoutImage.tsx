@@ -23,6 +23,7 @@ type CardProps = {
   iconLetters?: string;
   ioniconName?: string;
   allowMultilineDescription?: boolean;
+  IconComponent?: any; // react component, i forgot type
 };
 
 const CardWithoutImage: React.FC<CardProps> = ({
@@ -36,6 +37,7 @@ const CardWithoutImage: React.FC<CardProps> = ({
   iconLetters, // overriding the icon letter automatically from title
   ioniconName,
   allowMultilineDescription,
+  IconComponent,
 }) => {
   const theme = useTheme();
   const styles = createStyles(theme);
@@ -63,12 +65,10 @@ const CardWithoutImage: React.FC<CardProps> = ({
     >
       <View style={styles.cardContent}>
         <View style={styles.iconContainer}>
-          {ioniconName ? (
-            <Ionicons
-              name={ioniconName as any}
-              size={24}
-              color={theme.colors.altBackground}
-            />
+          {IconComponent ? (
+            IconComponent
+          ) : ioniconName ? (
+            <Ionicons name={ioniconName as any} size={24} color="white" />
           ) : (
             <Text style={styles.iconText}>
               {iconLetters ? iconLetters : title[0].toUpperCase()}

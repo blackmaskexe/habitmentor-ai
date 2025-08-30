@@ -198,9 +198,14 @@ export default function Settings() {
               },
               {
                 text: "Yes",
-                onPress: async () => {
-                  await signOut(getAuth());
-                  console.log("User Signed Out Successfully!");
+                onPress: () => {
+                  signOut(getAuth())
+                    .then(() => {
+                      console.log("User Signed Out Successfully!");
+                    })
+                    .catch((err) => {
+                      console.log(err);
+                    });
                 },
               },
             ],
