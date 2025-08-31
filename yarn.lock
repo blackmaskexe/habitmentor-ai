@@ -2483,33 +2483,38 @@
   dependencies:
     invariant "^2.2.4"
 
-"@react-native-firebase/app@^23.1.2":
+"@react-native-firebase/app@23.1.2":
   version "23.1.2"
   resolved "https://registry.yarnpkg.com/@react-native-firebase/app/-/app-23.1.2.tgz#37dbb8df83194ffb4012672da077e24edc9acfbf"
   integrity sha512-GqnMjUvWZ7TzUvjbkuSa+5zOZVPz3jKOCp42tg3Fvxqu7fbw/M0P/SADHnTpoQaDvjf5FhJ7TGNhmB5+tjJ9yA==
   dependencies:
     firebase "12.1.0"
 
-"@react-native-firebase/auth@^23.1.2":
+"@react-native-firebase/auth@23.1.2":
   version "23.1.2"
   resolved "https://registry.yarnpkg.com/@react-native-firebase/auth/-/auth-23.1.2.tgz#864719512d16e7298ee2653da3d8c1f5c6560da0"
   integrity sha512-AvL8ZtDs3JChE+MtZi9MT6+Iu7Cjkd4YRV8NpKyHblUn+vQozeXTsmj95/7fBP+VzUQAf/In4ARlOk3ye2j9Cg==
   dependencies:
     plist "^3.1.0"
 
-"@react-native-firebase/crashlytics@^23.1.2":
+"@react-native-firebase/crashlytics@23.1.2":
   version "23.1.2"
   resolved "https://registry.yarnpkg.com/@react-native-firebase/crashlytics/-/crashlytics-23.1.2.tgz#77ecd5ec69e1b10a86e08b37c7621bdbfd428e71"
   integrity sha512-BHZkDr0O6LaHEAul5mQi+Mq8l02mBhBAJ6ii103m0ZaYH5oESpEXP/zafeVbFzpU0USKVmuA8Elo2QDa8CfKgA==
   dependencies:
     stacktrace-js "^2.0.2"
 
-"@react-native-firebase/firestore@^23.1.2":
+"@react-native-firebase/firestore@23.1.2":
   version "23.1.2"
   resolved "https://registry.yarnpkg.com/@react-native-firebase/firestore/-/firestore-23.1.2.tgz#e87a2f37aa704692ef8bfcb67b8e709dc018cb0d"
   integrity sha512-Tho+OIpf+9Qn1bETaPeWkbnln54xditeZf7aV57FDbR9Ia3PgfuNAJ/lVQpe/Yb8SKcFlq5iapSsZ6X4HfPQpw==
   dependencies:
     react-native-url-polyfill "2.0.0"
+
+"@react-native-google-signin/google-signin@^15.0.0":
+  version "15.0.0"
+  resolved "https://registry.yarnpkg.com/@react-native-google-signin/google-signin/-/google-signin-15.0.0.tgz#5041e12fc5483d4b08b92d3f9a754c68c471f107"
+  integrity sha512-oU49nE+Z9TT/WaO1K7BH/QL2Nx3d2T3I5PGcYdD8swKNtfhMt8qCX/3mOnNEzthTBPrR0CWFGo3LXpkYspalog==
 
 "@react-native-menu/menu@^1.2.3":
   version "1.2.3"
@@ -4950,7 +4955,7 @@ expo-linear-gradient@~14.1.5:
   resolved "https://registry.yarnpkg.com/expo-linear-gradient/-/expo-linear-gradient-14.1.5.tgz#414bf0c8145089087198d4dd5a419eb324af2a02"
   integrity sha512-BSN3MkSGLZoHMduEnAgfhoj3xqcDWaoICgIr4cIYEx1GcHfKMhzA/O4mpZJ/WC27BP1rnAqoKfbclk1eA70ndQ==
 
-expo-linking@~7.1.6:
+expo-linking@~7.1.7:
   version "7.1.7"
   resolved "https://registry.yarnpkg.com/expo-linking/-/expo-linking-7.1.7.tgz#8e41ef1ca5d1190dfc01b7f4dbc4c3993bdc4523"
   integrity sha512-ZJaH1RIch2G/M3hx2QJdlrKbYFUTOjVVW4g39hfxrE5bPX9xhZUYXqxqQtzMNl1ylAevw9JkgEfWbBWddbZ3UA==

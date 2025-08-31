@@ -3,8 +3,9 @@ import { Theme } from "@/utils/theme/themes";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useState } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Share, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import * as DropdownMenu from "./dropdown-menu";
+import { getInviteLink } from "@/utils/firebase/firestore/friendsManager";
 
 export default function LeaderboardDropdownMenu({}: {}) {
   const router = useRouter();
@@ -35,7 +36,19 @@ export default function LeaderboardDropdownMenu({}: {}) {
         <DropdownMenu.DropdownMenuLabel>
           Leaderboard Options
         </DropdownMenu.DropdownMenuLabel>
-        <DropdownMenu.DropdownMenuItem key="invite-friend" onSelect={() => {}}>
+        <DropdownMenu.DropdownMenuItem
+          key="invite-friend"
+          onSelect={async () => {
+            try {
+              const inviteLink = getInviteLink();
+              await Share.share({
+                message: `Add me as a friend on HabitMetor-AI. Let's track our progress together! ${inviteLink}`,
+              });
+            } catch (err) {
+              console.log("CRITICAL ERROR, INVITE SHARE FAILED", err);
+            }
+          }}
+        >
           <DropdownMenu.DropdownMenuItemIcon
             ios={{
               name: "person.3",

@@ -12,3 +12,5 @@ export function getInviteLink(): string | null {
     return null;
   }
 }
+
+export async function getAllFriendsLeaderboardProfile() {}
