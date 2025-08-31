@@ -17,9 +17,19 @@ import { SceneMap, TabBar, TabView } from "react-native-tab-view";
 
 const FirstRoute = () => {
   const [initializing, setInitialzing] = useState(true);
+  const [userProfile, setUserProfile] = useState(null);
+  const [friends, setFriends] = useState(null);
+
   // getting user statuses at first boot of this screen:
   useFocusEffect(
     useCallback(() => {
+      async function showFriendsLeaderboard() {
+        // await fetching all friends from firestore, then setFriends()
+        // setInitializing(false) to stop the loading wheel
+        setInitialzing(false);
+
+        // once the initializing is true, we conditionally display mapped friends
+      }
       const user = getAuth();
 
       if (user.currentUser && getUserLeaderboardProfile()) {
@@ -27,11 +37,12 @@ const FirstRoute = () => {
         // what we want to do is:
         // 1. show a loading while stuff loads from firestore
         // 2. show all of the user's friends in the leaderboard once loaded
+        showFriendsLeaderboard();
         return;
       } // early return, not to show anything
       SheetManager.show("login-sheet"); // show the entire login flow to the user
       // I'll manually hide the leaderboard-login-sheet from the sheet itself when the auth flow is complete
-    }, [])
+    }, [userProfile])
   );
 
   // placeholder

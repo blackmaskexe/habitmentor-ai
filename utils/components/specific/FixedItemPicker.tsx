@@ -233,18 +233,8 @@ export default function FixedItemPicker({
 
                   <View style={styles.spaceSmall} />
                   <WeekdayFrequencyPicker
-                    currentFrequency={
-                      habitsFrequency[activeHabitItemIndex] || [
-                        "Sun",
-                        "Mon",
-                        "Tue",
-                        "We",
-                        "Thu",
-                        "Fri",
-                        "Sat",
-                      ]
-                    }
                     onChangeValues={setValues}
+                    values={values}
                   />
 
                   <Text style={styles.formLabel}></Text>

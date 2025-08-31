@@ -1,4 +1,4 @@
-import api from "@/utils/api";
+import api, { getChatMessage } from "@/utils/api";
 import { getDate, getTimeOfDay } from "@/utils/date";
 import { getAllHabits } from "@/utils/habits";
 import {
@@ -159,16 +159,10 @@ export default function ChatMessages({
 
     // make response request to the API:
 
-    const response: AIResponseType = await api.post("/chat", {
-      message: userMessage.content,
-      importantMessageHistory: await getImportantMessages(),
-      recentMessageHistory: messages.slice(-20), // send the last 20 messages in the payload
-      timeOfDay: getTimeOfDay(),
-      metadata: {
-        activeHabits: getAllHabits(), // already plain
-        habitCompletions: await getHabitCompletionCollection(),
-      },
-    } as UserPromptType);
+    const response = await getChatMessage(
+      userMessage.content,
+      messages.slice(-20)
+    );
 
     // populating the ai message skeleton with response data:
     setMessages((prevMessages) => {

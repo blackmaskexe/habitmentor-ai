@@ -108,7 +108,7 @@ export async function addImportantMessage(importantMessage: string) {
   });
 }
 
-export async function getImportantMessages(limit?: number) {
+export async function getImportantMessages(limit?: number): Promise<string[]> {
   const importantMessagesCollection =
     database.get<ImportantMessage>("important_messages");
 

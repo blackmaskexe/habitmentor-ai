@@ -14,7 +14,7 @@ import {
 import { getAllHabits, getHabitObjectFromId } from "./habitService";
 import lodash from "lodash";
 import { getAllHabitHistoryEntriesEntriesOnDate } from "./habitHistoryManager";
-import api from "../api";
+import { getEmotionAwareSuggestion } from "../api";
 import { getMetadataRecords } from "../database/dailyMetadataRecords";
 
 type LeastCompletedHabitMetadata = {
@@ -225,9 +225,7 @@ export async function getNewEmotionAwareMessage() {
       "THIS IS WHAT IM TRYNA POST TO EMOTION AWARE BOT",
       getMetadataRecords(7)
     );
-    const response = await api.post("/emotion-aware-suggestion", {
-      dailyMetadataRecords: JSON.stringify(getMetadataRecords(7)), // sending metadata records for the last 7 days
-    });
+    const response = await getEmotionAwareSuggestion();
 
     console.log("hoo hoo huhhu", response);
     if (response && response.data.response) {

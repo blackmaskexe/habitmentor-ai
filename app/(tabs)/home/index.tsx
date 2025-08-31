@@ -9,7 +9,7 @@ import {
   View,
 } from "react-native";
 
-import api from "@/utils/api";
+import api, { getProActiveMessage } from "@/utils/api";
 import AISuggestionSkeleton from "@/utils/components/specific/AISuggestionSkeleton";
 import DailyHabitsView from "@/utils/components/specific/DailyHabitsView";
 import WeekAtAGlance from "@/utils/components/specific/WeekGlance";
@@ -125,10 +125,14 @@ export default function Index() {
         // this is the part where I send all of the metadata and related information of user's habits
         // to the fine tuned ai model, and return whatever it gives out
 
-        const response = await api.post("/pro-active", {
-          habitCompletionCollection: await getHabitCompletionCollection(),
-          importantMessages: await getImportantMessages(),
-        });
+        const habitCompletionCollection: any =
+          await getHabitCompletionCollection();
+        const importantMessages: string[] = await getImportantMessages();
+
+        const response = await getProActiveMessage(
+          habitCompletionCollection,
+          importantMessages
+        );
 
         if (response && response.data.response) {
           setProActiveMessage(response.data.response);

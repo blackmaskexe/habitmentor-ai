@@ -10,7 +10,7 @@ import {
   View,
 } from "react-native";
 
-import TypewriterText from "./TypewriterText";
+// import TypewriterText from "./TypewriterText";
 
 const { width, height } = Dimensions.get("window");
 
@@ -59,11 +59,11 @@ const Login: React.FC<LoginScreenProps> = ({
         </View>
 
         {/* Prompt Text */}
-        <TypewriterText
+        {/* <TypewriterText
           textContent={promptText}
           typingSpeed={0.95}
           heading={true}
-        />
+        /> */}
 
         {/* Auth Buttons */}
         <View style={styles.buttonContainer}>
