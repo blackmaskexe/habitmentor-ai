@@ -1,7 +1,6 @@
 import { useTheme } from "@/utils/theme/ThemeContext";
 import {
   Animated,
-  LayoutAnimation,
   Platform,
   ScrollView,
   StyleSheet,
@@ -10,22 +9,16 @@ import {
   View,
 } from "react-native";
 
+import api from "@/utils/api";
+import AISuggestionSkeleton from "@/utils/components/specific/AISuggestionSkeleton";
 import DailyHabitsView from "@/utils/components/specific/DailyHabitsView";
 import WeekAtAGlance from "@/utils/components/specific/WeekGlance";
-import { Theme } from "@/utils/theme/themes";
-import { useEffect, useRef, useState } from "react";
+import { getMetadataRecords } from "@/utils/database/dailyMetadataRecords";
 import {
   getRecentProActiveMessage,
   setRecentProActiveMessage,
   shouldRequestProActiveMessage,
 } from "@/utils/database/proActiveMessageManager";
-import { TypeAnimation } from "react-native-type-animation";
-import {
-  getHabitCompletionCollection,
-  getImportantMessages,
-} from "@/utils/habits/habitDataCollectionHelper";
-import api from "@/utils/api";
-import AISuggestionSkeleton from "@/utils/components/specific/AISuggestionSkeleton";
 import {
   getDate,
   getDateFromFormattedDate,
@@ -33,13 +26,18 @@ import {
   getFormattedDate,
   relationBetweenTodayAndDate,
 } from "@/utils/date";
+import {
+  getHabitCompletionCollection,
+  getImportantMessages,
+} from "@/utils/habits/habitDataCollectionHelper";
 import mmkvStorage from "@/utils/mmkvStorage";
-import { TourGuideZone, useTourGuideController } from "rn-tourguide";
-import React from "react";
-import { Ionicons } from "@expo/vector-icons";
 import { tagHabits } from "@/utils/tagManager";
-import { getMetadataRecords } from "@/utils/database/dailyMetadataRecords";
+import { Theme } from "@/utils/theme/themes";
+import { Ionicons } from "@expo/vector-icons";
 import { getAuth } from "@react-native-firebase/auth";
+import React, { useEffect, useRef, useState } from "react";
+import { TypeAnimation } from "react-native-type-animation";
+import { TourGuideZone, useTourGuideController } from "rn-tourguide";
 
 export default function Index() {
   console.log(getAuth(), "tapshi tapshi");

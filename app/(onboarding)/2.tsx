@@ -1,24 +1,23 @@
 // Dependencies:
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  SafeAreaView,
-  Image,
-  Platform,
-} from "react-native";
-import React, { useEffect, useRef, useState } from "react";
 import { useTheme } from "@/utils/theme/ThemeContext";
 import { useRouter } from "expo-router";
+import React, { useEffect, useRef, useState } from "react";
+import {
+  Platform,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 // Components:
 import CTAButton from "@/utils/components/general/CTAButton";
 import VariableItemPicker from "@/utils/components/specific/VariableItemPicker";
-import { TypeAnimation } from "react-native-type-animation";
 import mmkvStorage from "@/utils/mmkvStorage";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { TypeAnimation } from "react-native-type-animation";
 
 const AddMoreHabitsPrompt = () => {
   const insets = useSafeAreaInsets();

@@ -1,26 +1,20 @@
 import {
-  KeyboardAvoidingView,
-  Modal,
-  Pressable,
-  View,
-  Text,
-  ScrollView,
-  Platform,
-  StyleSheet,
   Dimensions,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
 } from "react-native";
 
-import WeekdayFrequencyPicker from "./WeekdayFrequencyPicker";
-import CTAButton from "../general/CTAButton";
-import { useEffect, useState } from "react";
-import { FormValuesType, HabitObject } from "@/utils/types";
-import { Ionicons } from "@expo/vector-icons";
-import { Theme } from "@/utils/theme/themes";
+import { getHabitObjectFromId } from "@/utils/habits";
 import { useTheme } from "@/utils/theme/ThemeContext";
-import { generateHabitId } from "@/utils/randomId";
-import { addNewHabit, getHabitObjectFromId } from "@/utils/habits";
-import { getFormattedDate } from "@/utils/date";
+import { Theme } from "@/utils/theme/themes";
+import { FormValuesType, HabitObject } from "@/utils/types";
+import { useEffect } from "react";
 import CustomEditHabitForm from "./CustomEditHabitForm";
+import WeekdayFrequencyPicker from "./WeekdayFrequencyPicker";
 
 const { width } = Dimensions.get("window");
 const BOX_SIZE = Math.min(width * 0.18, 80); // Responsive but capped at 80px in length and width

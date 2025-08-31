@@ -1,22 +1,22 @@
 import CardWithoutImage from "@/utils/components/general/CardWithoutImage";
+import CTAButton from "@/utils/components/general/CTAButton";
+import { createProfile } from "@/utils/firebase/firestore/profileManager";
+import { LEADERBOARD_AVATAR_NAMES } from "@/utils/misc/leaderboardAvatars";
 import { useTheme } from "@/utils/theme/ThemeContext";
 import { Theme } from "@/utils/theme/themes";
 import { Ionicons } from "@expo/vector-icons";
 import { Filter } from "bad-words";
 import { useState } from "react";
 import {
-  View,
+  FlatList,
+  Keyboard,
+  StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
-  FlatList,
-  StyleSheet,
-  Keyboard,
+  View,
 } from "react-native";
-import { LEADERBOARD_AVATAR_NAMES } from "@/utils/misc/leaderboardAvatars";
-import CTAButton from "@/utils/components/general/CTAButton";
 import { SheetManager } from "react-native-actions-sheet";
-import { createProfile } from "@/utils/firebase/firestore/profileManager";
 
 export default function LoginRegisterProfileView() {
   const theme = useTheme();

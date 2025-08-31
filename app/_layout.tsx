@@ -1,14 +1,13 @@
 import "@/utils/components/specific/ActionSheet/sheet";
-import "@/utils/components/specific/ActionSheet/sheet";
-import { SheetProvider } from "react-native-actions-sheet";
 import { ThemeProvider, useTheme } from "@/utils/theme/ThemeContext";
+import { Theme } from "@/utils/theme/themes";
+import { Ionicons } from "@expo/vector-icons";
 import { Stack, useRouter } from "expo-router";
+import { StyleSheet, Text, TouchableOpacity } from "react-native";
+import { SheetProvider } from "react-native-actions-sheet";
 import {
   TourGuideProvider, // Main provider
 } from "rn-tourguide";
-import { TouchableOpacity, Text, StyleSheet } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
-import { Theme } from "@/utils/theme/themes";
 
 function AppNavigator() {
   const theme = useTheme();

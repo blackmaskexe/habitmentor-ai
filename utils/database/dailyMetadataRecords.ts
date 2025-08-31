@@ -1,7 +1,6 @@
 import {
   getAppStartDate,
   getDate,
-  getDateFromFormattedDate,
   getDatesLastWeek,
   getDatesThisWeek,
   getFormattedDate,

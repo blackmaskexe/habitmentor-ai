@@ -1,18 +1,18 @@
-import * as React from "react";
-import {
-  View,
-  useWindowDimensions,
-  Text,
-  StyleSheet,
-  ScrollView,
-} from "react-native";
-import { TabView, SceneMap, TabBar } from "react-native-tab-view";
+import { getLeastCompletedHabitMetadataThisWeek } from "@/utils/habits/habitSuggestionsManager";
 import { useTheme } from "@/utils/theme/ThemeContext";
 import { Theme } from "@/utils/theme/themes";
+import * as React from "react";
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+  useWindowDimensions,
+} from "react-native";
+import { SceneMap, TabBar, TabView } from "react-native-tab-view";
+import ChartCompletionsThisWeek from "./ChartCompletionsThisWeek";
 import CompletionRecommendationCard from "./CompletionRecommendationCard";
 import EmotionAwareSuggestionCard from "./EmotionAwareSuggestionCard";
-import ChartCompletionsThisWeek from "./ChartCompletionsThisWeek";
-import { getLeastCompletedHabitMetadataThisWeek } from "@/utils/habits/habitSuggestionsManager";
 
 const FirstRoute = () => {
   const theme = useTheme();

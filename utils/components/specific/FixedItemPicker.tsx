@@ -1,27 +1,26 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  Dimensions,
-  Pressable,
-  Modal,
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
-} from "react-native";
-import { Ionicons } from "@expo/vector-icons";
-import { useTheme } from "@/utils/theme/ThemeContext";
-import { useEffect, useState } from "react";
-import mmkvStorage from "@/utils/mmkvStorage";
 import { getHabitIcon } from "@/utils/misc/habitIcons";
+import mmkvStorage from "@/utils/mmkvStorage";
 import { generateHabitId } from "@/utils/randomId";
+import { useTheme } from "@/utils/theme/ThemeContext";
+import { Ionicons } from "@expo/vector-icons";
+import { useEffect, useState } from "react";
+import {
+  Dimensions,
+  KeyboardAvoidingView,
+  Modal,
+  Platform,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 // Components:
-import GenericForm from "../general/GenericForm";
+import { HabitObject } from "@/utils/types";
 import CTAButton from "../general/CTAButton";
+import GenericForm from "../general/GenericForm";
 import WeekdayFrequencyPicker from "./WeekdayFrequencyPicker";
-import FrequencyPickerOptionList from "./FrequencyPickerOptionList";
 import TaskFrequencyDropdownMenu from "./zeego/TaskFrequencyDropdownMenu";
-import { FormValuesType, HabitObject } from "@/utils/types";
 
 type ItemPickerProps = {
   numRows: number;

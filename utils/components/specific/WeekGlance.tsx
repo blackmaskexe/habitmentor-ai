@@ -1,22 +1,21 @@
-import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet } from "react-native";
-import { useTheme } from "@/utils/theme/ThemeContext";
-import ProgressBar from "../general/ProgressBar";
-import { Theme } from "@/utils/theme/themes";
 import {
   getDate,
   getDateFromFormattedDate,
   getDatesThisWeek,
   getFormattedDate,
   getFormattedDatesThisWeek,
-  getWeekdayNumber,
 } from "@/utils/date";
-import { getHabitHistoryEntries } from "@/utils/habits/habitHistoryManager";
 import {
   getAllHabitsOnWeekday,
   getTotalHabitNumberOnDay,
 } from "@/utils/habits";
+import { getHabitHistoryEntries } from "@/utils/habits/habitHistoryManager";
 import mmkvStorage from "@/utils/mmkvStorage";
+import { useTheme } from "@/utils/theme/ThemeContext";
+import { Theme } from "@/utils/theme/themes";
+import React, { useEffect, useState } from "react";
+import { StyleSheet, Text, View } from "react-native";
+import ProgressBar from "../general/ProgressBar";
 
 interface WeekAtAGlanceProps {
   // Array of percentages for each day (0-100)

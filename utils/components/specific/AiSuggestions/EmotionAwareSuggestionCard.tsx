@@ -1,25 +1,24 @@
-import React, { useEffect, useRef, useState } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  Dimensions,
-  Animated,
-  Platform,
-} from "react-native";
-import { useTheme } from "@/utils/theme/ThemeContext";
-import { Theme } from "@/utils/theme/themes";
-import { Ionicons } from "@expo/vector-icons";
-import CTAButton from "@/utils/components/general/CTAButton";
-import AISuggestionSkeleton from "../AISuggestionSkeleton";
-import { TypeAnimation } from "react-native-type-animation";
 import {
   getNewEmotionAwareMessage,
   getRecentEmotionAwareSuggestion,
   shouldGetNewEmotionAwareSuggestion,
 } from "@/utils/habits/habitSuggestionsManager";
+import { useTheme } from "@/utils/theme/ThemeContext";
+import { Theme } from "@/utils/theme/themes";
+import { Ionicons } from "@expo/vector-icons";
+import React, { useEffect, useRef, useState } from "react";
+import {
+  Animated,
+  Dimensions,
+  Platform,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { SheetManager } from "react-native-actions-sheet";
+import { TypeAnimation } from "react-native-type-animation";
+import AISuggestionSkeleton from "../AISuggestionSkeleton";
 import EmotionAwareTextMessage from "./EmotionAwareSuggestionSheet";
 
 const screenWidth = Dimensions.get("window").width;

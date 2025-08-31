@@ -1,7 +1,7 @@
 import AppleSignInButton from "@/utils/components/general/AppleSignInButton";
 import { useTheme } from "@/utils/theme/ThemeContext";
 import { Theme } from "@/utils/theme/themes";
-import { View, Text, StyleSheet } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 
 export default function LoginButtonView() {
   const theme = useTheme();

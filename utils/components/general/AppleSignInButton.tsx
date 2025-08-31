@@ -1,4 +1,4 @@
-import React from "react";
+import { useTheme } from "@/utils/theme/ThemeContext";
 import {
   AppleButton,
   appleAuth,
@@ -8,7 +8,7 @@ import {
   getAuth,
   signInWithCredential,
 } from "@react-native-firebase/auth";
-import { useTheme } from "@/utils/theme/ThemeContext";
+import React from "react";
 
 export default function AppleSignInButton() {
   const theme = useTheme();

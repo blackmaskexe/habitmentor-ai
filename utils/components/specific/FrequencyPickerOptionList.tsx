@@ -3,13 +3,12 @@ import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React from "react";
 import {
-  View,
-  Text,
-  StyleSheet,
   ScrollView,
+  StyleSheet,
+  Text,
   TouchableOpacity,
+  View,
 } from "react-native";
-import { SheetManager } from "react-native-actions-sheet";
 
 export default function FrequencyPickerOptionList() {
   const router = useRouter();

@@ -1,15 +1,14 @@
-import React from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  Dimensions,
-} from "react-native";
 import { useTheme } from "@/utils/theme/ThemeContext";
 import { Theme } from "@/utils/theme/themes";
 import { Ionicons } from "@expo/vector-icons";
-import CTAButton from "@/utils/components/general/CTAButton";
+import React from "react";
+import {
+  Dimensions,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { SheetManager } from "react-native-actions-sheet";
 import LeastCompletedHabitSheet from "./LeastCompletedHabitSheet";
 

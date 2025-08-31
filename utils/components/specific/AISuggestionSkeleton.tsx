@@ -1,9 +1,8 @@
-import { useReducer } from "react";
-import { StyleSheet, Pressable, View } from "react-native";
-import { MotiView } from "moti";
-import { Skeleton } from "moti/skeleton";
 import { useTheme } from "@/utils/theme/ThemeContext";
 import { Theme } from "@/utils/theme/themes";
+import { MotiView } from "moti";
+import { Skeleton } from "moti/skeleton";
+import { StyleSheet } from "react-native";
 
 export default function AISuggestionSkeleton() {
   const theme = useTheme();

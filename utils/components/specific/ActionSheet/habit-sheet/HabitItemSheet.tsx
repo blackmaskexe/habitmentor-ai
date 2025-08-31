@@ -1,18 +1,16 @@
 // habit card
 // bunch of options
 
-import { useTheme } from "@/utils/theme/ThemeContext";
-import { StyleSheet, View, Text } from "react-native";
-import CardWithoutImage from "../../../general/CardWithoutImage";
-import ReminderView from "../../ReminderView";
-import { useCallback, useEffect, useState } from "react";
-import { Theme } from "@/utils/theme/themes";
-import { HabitObject } from "@/utils/types";
-import ActionSheetIosOptionList from "./ActionSheetIosOptionList";
-import mmkvStorage from "@/utils/mmkvStorage";
 import { getHabitNotificationTime, getHabitObjectFromId } from "@/utils/habits";
-import { useFocusEffect } from "expo-router";
+import mmkvStorage from "@/utils/mmkvStorage";
+import { useTheme } from "@/utils/theme/ThemeContext";
+import { Theme } from "@/utils/theme/themes";
+import { useEffect, useState } from "react";
+import { StyleSheet, View } from "react-native";
+import CardWithoutImage from "../../../general/CardWithoutImage";
 import EditHabitView from "../../EditHabitView";
+import ReminderView from "../../ReminderView";
+import ActionSheetIosOptionList from "./ActionSheetIosOptionList";
 
 // SheetManager.show("habit-sheet", {
 //   payload: {

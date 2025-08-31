@@ -1,5 +1,5 @@
 import React from "react";
-import { View, StyleSheet, useColorScheme } from "react-native";
+import { StyleSheet, useColorScheme, View } from "react-native";
 
 export const NavigationPill: React.FC = () => {
   const colorScheme = useColorScheme();

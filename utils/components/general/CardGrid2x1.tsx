@@ -1,7 +1,7 @@
 import { useTheme } from "@/utils/theme/ThemeContext";
 import { Theme } from "@/utils/theme/themes";
 import React from "react";
-import { View, StyleSheet, Dimensions } from "react-native";
+import { Dimensions, StyleSheet, View } from "react-native";
 
 const screenWidth = Dimensions.get("window").width;
 

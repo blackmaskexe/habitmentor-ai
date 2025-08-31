@@ -1,21 +1,22 @@
-import { useTheme } from "@/utils/theme/ThemeContext";
-import { StyleSheet, View, Text } from "react-native";
-import ActionSheet, { SheetProps } from "react-native-actions-sheet";
-import NavigationPill from "../../../general/NavigationPill";
-import AppleSignInButton from "@/utils/components/general/AppleSignInButton";
 import CrossButton from "@/utils/components/general/CrossButton";
-import { SheetManager } from "react-native-actions-sheet";
-import { useRouter } from "expo-router";
-import { useEffect, useState } from "react";
+import { doesUserHaveFirebaseProfile } from "@/utils/firebase/firestore/profileManager";
+import { useTheme } from "@/utils/theme/ThemeContext";
+import { Theme } from "@/utils/theme/themes";
 import {
-  getAuth,
   FirebaseAuthTypes,
+  getAuth,
   onAuthStateChanged,
 } from "@react-native-firebase/auth";
-import { doesUserHaveFirebaseProfile } from "@/utils/firebase/firestore/profileManager";
-import { Theme } from "@/utils/theme/themes";
-import LoginRegisterProfileView from "./LoginRegisterProfileView";
+import { useRouter } from "expo-router";
+import { useEffect, useState } from "react";
+import { StyleSheet, View } from "react-native";
+import ActionSheet, {
+  SheetManager,
+  SheetProps,
+} from "react-native-actions-sheet";
+import NavigationPill from "../../../general/NavigationPill";
 import LoginButtonView from "./LoginButtonView";
+import LoginRegisterProfileView from "./LoginRegisterProfileView";
 
 export type LoginSheetPayloadData = {};
 

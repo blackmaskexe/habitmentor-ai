@@ -1,28 +1,27 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  ScrollView,
-  Alert,
-  Switch,
-} from "react-native";
-import { useTheme } from "@/utils/theme/ThemeContext";
-import { Theme } from "@/utils/theme/themes";
-import { Ionicons } from "@expo/vector-icons";
-import { useNotifications } from "@/utils/useNotifications";
+import { getDateFromFormattedTime } from "@/utils/date";
 import {
   eraseAllHabitData,
   getAllHabits,
   getHabitObjectFromId,
   resetAllHabitNotifications,
 } from "@/utils/habits";
-import { useFocusEffect, useRouter } from "expo-router";
 import mmkvStorage from "@/utils/mmkvStorage";
-import AIToneSelectionDropdownMenu from "@/utils/components/specific/zeego/AIToneSelectionDropdownMenu";
-import { useCallback, useState } from "react";
-import { getDateFromFormattedTime } from "@/utils/date";
+import { useTheme } from "@/utils/theme/ThemeContext";
+import { Theme } from "@/utils/theme/themes";
+import { useNotifications } from "@/utils/useNotifications";
+import { Ionicons } from "@expo/vector-icons";
 import { getAuth, signOut } from "@react-native-firebase/auth";
+import { useFocusEffect, useRouter } from "expo-router";
+import { useCallback, useState } from "react";
+import {
+  Alert,
+  ScrollView,
+  StyleSheet,
+  Switch,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 export default function Settings() {
   const theme = useTheme();

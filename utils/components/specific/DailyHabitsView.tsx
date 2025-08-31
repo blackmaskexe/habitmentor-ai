@@ -1,6 +1,8 @@
+import mmkvStorage from "@/utils/mmkvStorage";
 import { useTheme } from "@/utils/theme/ThemeContext";
 import { Ionicons } from "@expo/vector-icons";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { useFocusEffect } from "expo-router";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   ScrollView,
   StyleSheet,
@@ -10,29 +12,27 @@ import {
 } from "react-native";
 import { SheetManager } from "react-native-actions-sheet";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
-import mmkvStorage from "@/utils/mmkvStorage";
-import { useFocusEffect } from "expo-router";
 // import {
 //   getAllHabitHistoryEntriesToday,
 //   onMarkAsComplete,
 //   onMarkAsIncomplete,
 // } from "@/utils/database/habitHistory";
+import { addPoints, subtractPoints } from "@/utils/database/points";
 import {
   getDate,
   getDateFromFormattedDate,
   getFormattedDate,
   getWeekdayNumber,
 } from "@/utils/date";
-import { HabitObject } from "@/utils/types";
-import { Theme } from "@/utils/theme/themes";
-import * as Haptics from "expo-haptics";
-import { addPoints, subtractPoints } from "@/utils/database/points";
 import {
   getAllHabitHistoryEntriesEntriesOnDate,
   getAllHabitHistoryEntriesToday,
   onMarkAsComplete,
   onMarkAsIncomplete,
 } from "@/utils/habits/habitHistoryManager";
+import { Theme } from "@/utils/theme/themes";
+import { HabitObject } from "@/utils/types";
+import * as Haptics from "expo-haptics";
 import { TourGuideZone } from "rn-tourguide";
 
 const DailyHabitsView = ({ date }: { date: Date }) => {

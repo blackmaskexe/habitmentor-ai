@@ -1,5 +1,5 @@
 import { useTheme } from "@/utils/theme/ThemeContext";
-import { Dimensions, StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
 import ActionSheet, { SheetProps } from "react-native-actions-sheet";
 
 // Component imports:

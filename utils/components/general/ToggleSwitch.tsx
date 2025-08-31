@@ -1,7 +1,7 @@
-import React, { useRef, useEffect, useState } from "react";
-import { View, Animated, Pressable, StyleSheet } from "react-native";
 import { useTheme } from "@/utils/theme/ThemeContext";
 import * as Haptics from "expo-haptics";
+import React, { useEffect, useRef, useState } from "react";
+import { Animated, Pressable, StyleSheet, View } from "react-native";
 
 interface ToggleSwitchProps {
   initialState: boolean; // this enabled means the state of the toggle (off or on)

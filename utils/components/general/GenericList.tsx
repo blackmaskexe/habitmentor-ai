@@ -38,9 +38,9 @@
  * <GenericList items={items} spacing={16} bulletSize={8} />
  */
 
-import { View, Text, StyleSheet } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
 import { useTheme } from "@/utils/theme/ThemeContext";
+import { Ionicons } from "@expo/vector-icons";
+import { StyleSheet, Text, View } from "react-native";
 
 type BulletConfig = any;
 type ListItem = any;

@@ -1,7 +1,3 @@
-import React, { useEffect, useState } from "react";
-import { View, StyleSheet } from "react-native";
-import { useTheme } from "@/utils/theme/ThemeContext";
-import { getHabitHistoryEntries } from "@/utils/habits/habitHistoryManager";
 import {
   getDate,
   getDateFromFormattedDate,
@@ -9,10 +5,13 @@ import {
   getWeekdayNumber,
 } from "@/utils/date";
 import {
-  getAllHabits,
   getAllHabitsOnWeekday,
   getTotalHabitNumberOnDay,
 } from "@/utils/habits";
+import { getHabitHistoryEntries } from "@/utils/habits/habitHistoryManager";
+import { useTheme } from "@/utils/theme/ThemeContext";
+import React, { useEffect, useState } from "react";
+import { StyleSheet, View } from "react-native";
 
 import mmkvStorage from "@/utils/mmkvStorage";
 

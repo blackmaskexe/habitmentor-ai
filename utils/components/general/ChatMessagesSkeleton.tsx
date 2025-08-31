@@ -1,8 +1,7 @@
-import { useReducer } from "react";
-import { StyleSheet, Pressable, View } from "react-native";
+import { useTheme } from "@/utils/theme/ThemeContext";
 import { MotiView } from "moti";
 import { Skeleton } from "moti/skeleton";
-import { useTheme } from "@/utils/theme/ThemeContext";
+import { StyleSheet } from "react-native";
 
 export default function ChatMessagesSkeleton() {
   const theme = useTheme();

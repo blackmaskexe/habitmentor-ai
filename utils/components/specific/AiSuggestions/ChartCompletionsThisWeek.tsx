@@ -1,16 +1,16 @@
-import React from "react";
-import { View, Text, StyleSheet, Dimensions } from "react-native";
-import { useTheme } from "@/utils/theme/ThemeContext";
-import { Theme } from "@/utils/theme/themes";
-import { Ionicons } from "@expo/vector-icons";
-import { BarChart } from "react-native-chart-kit";
-import { getWeeklyHabitCompletionsCountData } from "@/utils/habits/habitSuggestionsManager";
 import { isAppStartWeek } from "@/utils/date";
 import {
   getAverageHabitsCompletionRatePreviousWeek,
   getAverageHabitsCompletionRateThisWeek,
 } from "@/utils/habits";
+import { getWeeklyHabitCompletionsCountData } from "@/utils/habits/habitSuggestionsManager";
+import { useTheme } from "@/utils/theme/ThemeContext";
+import { Theme } from "@/utils/theme/themes";
+import { Ionicons } from "@expo/vector-icons";
 import lodash from "lodash";
+import React from "react";
+import { Dimensions, StyleSheet, Text, View } from "react-native";
+import { BarChart } from "react-native-chart-kit";
 
 function getChartProgressText() {
   let progressText: string;

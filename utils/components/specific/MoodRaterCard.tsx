@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useRef } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
+import { setMoodToday } from "@/utils/database/dailyMetadataRecords";
 import { useTheme } from "@/utils/theme/ThemeContext";
 import { Theme } from "@/utils/theme/themes";
-import { setMoodToday } from "@/utils/database/dailyMetadataRecords";
+import React, { useEffect, useRef, useState } from "react";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 type MoodLevel = 1 | 2 | 3 | 4;
 

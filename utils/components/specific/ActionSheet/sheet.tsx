@@ -1,8 +1,8 @@
 import { ThemeProvider } from "@/utils/theme/ThemeContext";
 import { registerSheet, SheetDefinition } from "react-native-actions-sheet";
 import HabitSheet from "./habit-sheet/HabitActionSheet";
-import SuggestionsSheet from "./suggestions-sheet/SuggestionsActionSheet";
 import LeaderboardLoginSheet from "./login-sheet/LoginActionSheet";
+import SuggestionsSheet from "./suggestions-sheet/SuggestionsActionSheet";
 
 registerSheet("habit-sheet", (props) => {
   return (

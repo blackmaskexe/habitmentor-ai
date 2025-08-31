@@ -1,7 +1,6 @@
 import { useTheme } from "@/utils/theme/ThemeContext";
 import { Theme } from "@/utils/theme/themes";
-import { Ionicons } from "@expo/vector-icons";
-import { StyleSheet, View, Text } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import CardWithoutImage from "../../general/CardWithoutImage";
 
 type EmotionAwareTextMessageProps = {

@@ -1,29 +1,23 @@
+import { getDate, getFormattedDate } from "@/utils/date";
 import mmkvStorage from "@/utils/mmkvStorage";
+import { generateMessageId } from "@/utils/randomId";
 import { useTheme } from "@/utils/theme/ThemeContext";
 import { Theme } from "@/utils/theme/themes";
 import { MessageType } from "@/utils/types";
-import { Ionicons } from "@expo/vector-icons";
 import { LegendList, LegendListRef } from "@legendapp/list";
 import { useHeaderHeight } from "@react-navigation/elements";
-import { useFocusEffect } from "expo-router";
+import { useFocusEffect, useRouter } from "expo-router";
 import React, { useCallback, useEffect, useRef, useState } from "react"; // Ensure useCallback is imported
 import {
   KeyboardAvoidingView,
   Platform,
-  Pressable,
-  ScrollView,
   StyleSheet,
   Text,
-  TextInput,
-  TouchableOpacity,
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import ChatMessagesSkeleton from "../general/ChatMessagesSkeleton";
-import { generateMessageId } from "@/utils/randomId";
-import { getDate, getFormattedDate, getTimeOfDay } from "@/utils/date";
 import CTAButton from "../general/CTAButton";
-import { useRouter } from "expo-router";
 
 // Prop Instructions:
 // Send a message prop as follows:

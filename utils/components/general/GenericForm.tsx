@@ -1,7 +1,7 @@
-import { View, Text, TextInput, StyleSheet, ScrollView } from "react-native";
 import { useTheme } from "@/utils/theme/ThemeContext";
-import { FormValuesType } from "@/utils/types";
 import { Theme } from "@/utils/theme/themes";
+import { FormValuesType } from "@/utils/types";
+import { ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 
 /**
  * GenericForm Component

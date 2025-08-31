@@ -1,8 +1,8 @@
+import { getHabitObjectFromId } from "@/utils/habits";
 import { useTheme } from "@/utils/theme/ThemeContext";
 import { Theme } from "@/utils/theme/themes";
-import { StyleSheet, View, Text } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import CardWithoutImage from "../../general/CardWithoutImage";
-import { getHabitObjectFromId } from "@/utils/habits";
 
 type LeastCompletedHabitSheetProps = {
   habitName: string;

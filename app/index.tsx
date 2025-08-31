@@ -3,11 +3,9 @@ import { Redirect } from "expo-router";
 import { useEffect, useState } from "react";
 import "react-native-gesture-handler";
 import "react-native-reanimated";
-import "react-native-gesture-handler";
 
 // Components:
 import LoadingScreen from "@/utils/components/general/LoadingScreen";
-import mmkvStorage from "@/utils/mmkvStorage";
 
 export default function Index() {
   // HARD RESET APP INCASE OF BROKEN FUNCTIONALITY:

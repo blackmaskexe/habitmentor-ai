@@ -1,10 +1,10 @@
 import { useTheme } from "@/utils/theme/ThemeContext";
+import { Theme } from "@/utils/theme/themes";
+import * as Haptics from "expo-haptics";
 import { useEffect, useState } from "react";
-import { StyleSheet, TouchableOpacity, View, Text } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 const weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-import * as Haptics from "expo-haptics";
-import { Theme } from "@/utils/theme/themes";
 
 export default function WeekdayFrequencyPicker({
   initialFrequency,

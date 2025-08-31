@@ -1,7 +1,7 @@
-import React from "react";
-import { TouchableOpacity, StyleSheet, View } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
 import { useTheme } from "@/utils/theme/ThemeContext";
+import { Ionicons } from "@expo/vector-icons";
+import React from "react";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
 
 interface CheckButtonProps {
   size?: number;

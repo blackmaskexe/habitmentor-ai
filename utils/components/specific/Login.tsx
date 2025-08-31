@@ -1,13 +1,13 @@
 import React from "react";
 import {
-  View,
-  Text,
-  Image,
-  StyleSheet,
-  TouchableOpacity,
-  SafeAreaView,
-  ImageSourcePropType,
   Dimensions,
+  Image,
+  ImageSourcePropType,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
 
 import TypewriterText from "./TypewriterText";

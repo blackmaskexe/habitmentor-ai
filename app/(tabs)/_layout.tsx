@@ -1,12 +1,10 @@
-import ChatDropDownMenu from "@/utils/components/specific/zeego/ChatDropDownMenu";
 import HomeAddDropdownMenu from "@/utils/components/specific/zeego/HomeAddDropdownMenu";
 import LeaderboardDropdownMenu from "@/utils/components/specific/zeego/LeaderboardDropdownMenu";
-import mmkvStorage from "@/utils/mmkvStorage";
 import { areHabitsTagged, tagHabits } from "@/utils/tagManager";
 import { useTheme } from "@/utils/theme/ThemeContext";
 import { Ionicons } from "@expo/vector-icons";
 import { Tabs, usePathname, useRouter } from "expo-router";
-import { Text, TouchableOpacity, Dimensions, Platform } from "react-native";
+import { Dimensions, Platform, Text, TouchableOpacity } from "react-native";
 import { TourGuideZone } from "rn-tourguide";
 
 export default function TabLayout() {
