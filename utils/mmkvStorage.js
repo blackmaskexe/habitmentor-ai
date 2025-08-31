@@ -21,4 +21,4 @@ export default mmkvStorage;
 // lastEmotionAwareSuggestionDate: the last time emotion aware suggestion api was called
 // recentEmotionAwareSuggestion: the most recent message that was given by emotion aware ai
 // totalPoints: the points of the user's habits that they accumulate over time
-// firebaseUserId: the user id associated with the user in the firestore users document
+// leaderboardProfile: the same stuff stored in firestore (the same stuff, but during the initial creation of their profile + at any updations)

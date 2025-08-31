@@ -1,13 +1,8 @@
-export type LeaderboardAvatarIcon =
-  | "smile"
-  | "happy"
-  | "i don't know what else";
-
 export type FirebaseUserProfile = {
   nickname: string;
   points: number;
   pointsThisMonth: number;
-  avatarIcon: LeaderboardAvatarIcon;
+  avatarIcon: string;
   friends: string[];
   profileCreationDate: string; // formattedDate
 };

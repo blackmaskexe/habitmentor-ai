@@ -11,7 +11,7 @@ import {
   FirebaseAuthTypes,
   getAuth,
 } from "@react-native-firebase/auth";
-import { getFirebaseUserId } from "@/utils/firebase/firestore/profileManager";
+import { getUserLeaderboardProfile } from "@/utils/firebase/firestore/profileManager";
 
 const FirstRoute = () => {
   // const [initializing, setInitializing] = useState(true);
@@ -50,8 +50,6 @@ const FirstRoute = () => {
   //   }, [user, initializing])
   // );
 
-  const [initializing, setInitializing] = useState<boolean>(true);
-
   // what I want to happen:
   // cases:
   // first time user -> no userId in mmkv, no auth user = show entire action sheet
@@ -63,10 +61,8 @@ const FirstRoute = () => {
     useCallback(() => {
       console.log("MAINE PELEE");
       const user = getAuth();
-      const firebaseUserId = getFirebaseUserId();
 
-      console.log("ee legal", user, firebaseUserId);
-      if (user.currentUser && firebaseUserId) return; // early return, not to show anything
+      if (user.currentUser && getUserLeaderboardProfile()) return; // early return, not to show anything
       SheetManager.show("login-sheet"); // show the entire login flow to the user
       // I'll manually hide the leaderboard-login-sheet from the sheet itself when the auth flow is complete
     }, [])

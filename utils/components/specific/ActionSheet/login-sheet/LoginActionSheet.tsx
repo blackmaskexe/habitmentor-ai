@@ -7,6 +7,8 @@ import {
   TouchableOpacity,
   Button,
   FlatList,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from "react-native";
 import ActionSheet, { SheetProps } from "react-native-actions-sheet";
 
@@ -25,6 +27,13 @@ import {
 import CardWithoutImage from "@/utils/components/general/CardWithoutImage";
 import { Ionicons } from "@expo/vector-icons";
 import { LEADERBOARD_AVATAR_NAMES } from "@/utils/misc/leaderboardAvatars";
+import {
+  createProfile,
+  doesUserHaveFirebaseProfile,
+} from "@/utils/firebase/firestore/profileManager";
+import CTAButton from "@/utils/components/general/CTAButton";
+import { Filter } from "bad-words";
+import { Theme } from "@/utils/theme/themes";
 
 export type LoginSheetPayloadData = {};
 
@@ -32,12 +41,14 @@ export default function LoginActionSheet(props: SheetProps<"login-sheet">) {
   const theme = useTheme();
   const styles = createStyles(theme);
   const router = useRouter();
+  const payloadData: LoginSheetPayloadData = props.payload;
+  const filter = new Filter();
 
   const [display, setDisplay] = useState<"login" | "register-profile">("login");
   const [user, setUser] = useState<FirebaseAuthTypes.User | null>(null);
 
   const [nickname, setNickname] = useState<string>("");
-  const [selectedAvatar, setSelectedAvatar] = useState("");
+  const [selectedAvatar, setSelectedAvatar] = useState<string>("happy-outline");
   const [isAvatarPickerVisible, setIsAvatarPickerVisible] = useState(false);
 
   function renderLoginView() {
@@ -58,8 +69,15 @@ export default function LoginActionSheet(props: SheetProps<"login-sheet">) {
     return (
       <View style={styles.profileContainer}>
         {/* --- 1. Profile Preview Card --- */}
+        <Text style={styles.profileTitleText}>
+          Set Your Leaderboard Profile
+        </Text>
         <CardWithoutImage
-          title={nickname || "Your Nickname"}
+          title={
+            filter.isProfane(nickname)
+              ? "That's rude!!"
+              : nickname || "Your Nickname"
+          }
           description="This is how your profile will appear"
           IconComponent={
             <Ionicons
@@ -80,16 +98,33 @@ export default function LoginActionSheet(props: SheetProps<"login-sheet">) {
               placeholder="Choose a cool nickname"
               placeholderTextColor={theme.colors.textSecondary}
             />
+            {filter.isProfane(nickname) && (
+              <Text style={styles.profanityWarningText}>
+                Please keep it pg-friendly{" "}
+              </Text>
+            )}
           </View>
+
           {/* --- 3. Avatar Picker --- */}
           <View style={styles.inputGroup}>
             <Text style={styles.label}>Choose an Avatar</Text>
             <TouchableOpacity
               style={styles.addAvatarButton}
-              onPress={() => setIsAvatarPickerVisible(!isAvatarPickerVisible)}
+              onPress={() => {
+                setTimeout(() => {
+                  setIsAvatarPickerVisible(!isAvatarPickerVisible);
+                }, 200); // setTimeout because otherwise actionsheet do double animation glitch
+                // race condition bw keyboard and picker animations
+
+                Keyboard.dismiss();
+              }}
             >
               <Ionicons
-                name="add-circle-outline"
+                name={
+                  isAvatarPickerVisible
+                    ? "remove-circle-outline"
+                    : "add-circle-outline"
+                }
                 size={24}
                 color={theme.colors.primary}
               />
@@ -126,27 +161,35 @@ export default function LoginActionSheet(props: SheetProps<"login-sheet">) {
         </View>
 
         {/* --- 4. Create Button --- */}
-        {/* <Button
-          title="Create Profile"
-          onPress={() => {
-            console.log("Creating profile:", { nickname, selectedAvatar });
-            // Here you would call your createProfile function
-          }}
-        /> */}
+        {nickname.length > 0 && !filter.isProfane(nickname) && (
+          <View style={styles.proceedButtonContainer}>
+            <CTAButton
+              title="Proceed"
+              onPress={async () => {
+                await createProfile(nickname, selectedAvatar);
+                SheetManager.hide("login-sheet");
+              }}
+              buttonHeight={45}
+            />
+          </View>
+        )}
       </View>
     );
   }
-  const payloadData: LoginSheetPayloadData = props.payload;
 
   useEffect(() => {
-    const subscriber = onAuthStateChanged(getAuth(), (user) => {
+    const subscriber = onAuthStateChanged(getAuth(), async (user) => {
       setUser(user);
-      // LOGIC FOR CHECKING IF THERE ALREADY EXISTS A USER PROFILE IN THE FIRESTORE,
-      // IF THERE IS, DON'T SHOW THE REGISTER PROFILE SCREEN
-      // IF THERE ISN'T, DO SHOW THE REGISTER PROFILE SCREEN
-
-      // setting it to register-profile without any checks for now for dev purposes
-      setDisplay("register-profile");
+      if (user) {
+        const hasProfile = await doesUserHaveFirebaseProfile();
+        if (hasProfile) {
+          SheetManager.hide("login-sheet");
+        } else {
+          setDisplay("register-profile");
+        }
+      } else {
+        setDisplay("login");
+      }
     });
     return subscriber; // unsubscribe on unmount
   }, []);
@@ -178,7 +221,7 @@ export default function LoginActionSheet(props: SheetProps<"login-sheet">) {
   );
 }
 
-function createStyles(theme: any) {
+function createStyles(theme: Theme) {
   return StyleSheet.create({
     headerContainer: {
       alignItems: "center",
@@ -265,6 +308,19 @@ function createStyles(theme: any) {
     },
     avatarSelected: {
       borderColor: theme.colors.primary,
+    },
+    profileTitleText: {
+      ...theme.text.h2,
+      color: theme.colors.text,
+      textAlign: "center",
+      marginBottom: theme.spacing.l,
+    },
+    profanityWarningText: {
+      color: theme.colors.error,
+    },
+    proceedButtonContainer: {
+      marginHorizontal: theme.spacing.m,
+      marginTop: theme.spacing.l,
     },
   });
 }

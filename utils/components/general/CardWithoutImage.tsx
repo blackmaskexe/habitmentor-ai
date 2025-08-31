@@ -113,7 +113,7 @@ function createStyles(theme: Theme) {
       shadowOpacity: 0.3,
       shadowRadius: 4,
       elevation: 8,
-      margin: 10,
+      // margin: 10,
       width: "95%", // Takes up 95% of parent width
       alignSelf: "center",
     },
