@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   ScrollView,
   Alert,
+  Switch,
 } from "react-native";
 import { useTheme } from "@/utils/theme/ThemeContext";
 import { Theme } from "@/utils/theme/themes";
@@ -17,7 +18,6 @@ import {
   resetAllHabitNotifications,
 } from "@/utils/habits";
 import { useFocusEffect, useRouter } from "expo-router";
-import ToggleSwitch from "@/utils/components/general/ToggleSwitch";
 import mmkvStorage from "@/utils/mmkvStorage";
 import AIToneSelectionDropdownMenu from "@/utils/components/specific/zeego/AIToneSelectionDropdownMenu";
 import { useCallback, useState } from "react";
@@ -107,10 +107,12 @@ export default function Settings() {
           </View>
           <Text style={styles.settingItemText}>{optionName}</Text>
         </View>
-        <ToggleSwitch
-          initialState={initialState}
-          onToggle={onToggle}
-          currentState={currentState != undefined ? currentState : undefined}
+
+        <Switch
+          value={currentState != undefined ? currentState : false}
+          onValueChange={onToggle}
+          trackColor={{ false: "#767577", true: theme.colors.primary }}
+          thumbColor={currentState ? "white" : "#f4f3f4"}
         />
       </View>
     );

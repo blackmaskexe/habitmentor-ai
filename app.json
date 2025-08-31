@@ -5,7 +5,7 @@
     "version": "1.6.1",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "habitmentorai",
+    "scheme": "habitmentor-ai",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {

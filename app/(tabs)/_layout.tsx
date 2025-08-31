@@ -1,5 +1,6 @@
 import ChatDropDownMenu from "@/utils/components/specific/zeego/ChatDropDownMenu";
 import HomeAddDropdownMenu from "@/utils/components/specific/zeego/HomeAddDropdownMenu";
+import LeaderboardDropdownMenu from "@/utils/components/specific/zeego/LeaderboardDropdownMenu";
 import mmkvStorage from "@/utils/mmkvStorage";
 import { areHabitsTagged, tagHabits } from "@/utils/tagManager";
 import { useTheme } from "@/utils/theme/ThemeContext";
@@ -156,6 +157,9 @@ export default function TabLayout() {
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="stats-chart" size={size} color={color} />
           ),
+          headerRight: () => {
+            return <LeaderboardDropdownMenu />;
+          },
         }}
       />
       <Tabs.Screen
