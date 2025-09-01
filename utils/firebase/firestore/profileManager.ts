@@ -106,3 +106,25 @@ export async function doesUserHaveFirebaseProfile(): Promise<boolean> {
     return false;
   }
 }
+
+export async function getUserProfile(
+  userId: string
+): Promise<FirebaseUserProfile> {
+  try {
+    const userDocSnapshot = await usersCollection.doc(userId).get();
+    if (userDocSnapshot.exists()) {
+      const userProfile = userDocSnapshot.data() as FirebaseUserProfile;
+      return userProfile;
+    } else throw new Error("User does not exist");
+  } catch (err) {
+    console.log("CRITICAL ERROR, COULD NOT GET USER PROFILE", err);
+    return {
+      nickname: "Profile not found",
+      points: 0,
+      pointsThisMonth: 0,
+      avatarIcon: "does-not-exist-questionmark",
+      friends: [],
+      profileCreationDate: "1990-1-1",
+    };
+  }
+}

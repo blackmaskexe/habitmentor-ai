@@ -1,4 +1,5 @@
 import AppleSignInButton from "@/utils/components/general/AppleSignInButton";
+import GoogleSignInButton from "@/utils/components/general/GoogleSigninButton";
 import { useTheme } from "@/utils/theme/ThemeContext";
 import { Theme } from "@/utils/theme/themes";
 import { StyleSheet, Text, View } from "react-native";
@@ -15,6 +16,7 @@ export default function LoginButtonView() {
       </Text>
 
       <AppleSignInButton />
+      <GoogleSignInButton />
     </View>
   );
 }

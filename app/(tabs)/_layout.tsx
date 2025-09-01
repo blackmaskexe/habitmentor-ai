@@ -151,13 +151,11 @@ export default function TabLayout() {
       <Tabs.Screen
         name="leaderboard"
         options={{
+          headerShown: false,
           title: "Leaderboard",
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="stats-chart" size={size} color={color} />
           ),
-          headerRight: () => {
-            return <LeaderboardDropdownMenu />;
-          },
         }}
       />
       <Tabs.Screen

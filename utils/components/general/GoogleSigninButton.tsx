@@ -1,7 +1,6 @@
 import React from "react";
 import {
   GoogleSignin,
-  GoogleSigninButton,
   statusCodes,
 } from "@react-native-google-signin/google-signin";
 import {
@@ -10,6 +9,8 @@ import {
   signInWithCredential,
 } from "@react-native-firebase/auth";
 import { useTheme } from "@/utils/theme/ThemeContext";
+import { TouchableOpacity, Text, StyleSheet } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function GoogleSignInButton() {
   const theme = useTheme();
@@ -46,23 +47,34 @@ export default function GoogleSignInButton() {
   }
 
   return (
-    <GoogleSigninButton
-      style={{
-        width: "90%", // Match your Apple button style
-        height: 50,
-      }}
-      size={GoogleSigninButton.Size.Wide}
-      // The button color adapts to your theme, just like the Apple button
-      color={
-        theme.theme === "dark"
-          ? GoogleSigninButton.Color.Light
-          : GoogleSigninButton.Color.Dark
-      }
+    <TouchableOpacity
+      style={styles.customButton}
       onPress={() =>
         onGoogleButtonPress().then(() =>
           console.log("Google sign-in complete!")
         )
       }
-    />
+    >
+      <Ionicons name="logo-google" size={22} color="#000000" />
+      <Text style={styles.buttonText}>Sign in with Google</Text>
+    </TouchableOpacity>
   );
 }
+
+const styles = StyleSheet.create({
+  customButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#FFFFFF",
+    height: 50,
+    width: "90%",
+    borderRadius: 6,
+  },
+  buttonText: {
+    color: "#000000",
+    fontSize: 17,
+    fontWeight: "500",
+    marginLeft: 10,
+  },
+});

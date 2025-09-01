@@ -45,6 +45,7 @@ export default function AppleSignInButton() {
       style={{
         width: "90%",
         height: 50,
+        marginBottom: theme.spacing.s,
       }}
       onPress={() =>
         onAppleButtonPress().then(() => console.log("Apple sign-in complete!"))

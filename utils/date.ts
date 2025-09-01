@@ -190,3 +190,44 @@ export function isAppStartWeek() {
   }
   return false;
 }
+
+export function getOrdinalDate(customDate?: Date) {
+  const date = customDate || getDate();
+
+  const day = date.getDate();
+  const year = date.getFullYear();
+  const monthNames = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+  const monthName = monthNames[date.getMonth()];
+
+  // Function to get the correct "st", "nd", "rd", or "th" suffix
+  const getOrdinalSuffix = (dayOfMonth: number): string => {
+    if (dayOfMonth > 3 && dayOfMonth < 21) return "th"; // for 11th, 12th, 13th
+    switch (dayOfMonth % 10) {
+      case 1:
+        return "st";
+      case 2:
+        return "nd";
+      case 3:
+        return "rd";
+      default:
+        return "th";
+    }
+  };
+
+  const suffix = getOrdinalSuffix(day);
+
+  return `${day}${suffix} ${monthName}, ${year}`;
+}

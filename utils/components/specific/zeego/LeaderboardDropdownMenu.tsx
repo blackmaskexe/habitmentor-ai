@@ -6,18 +6,25 @@ import { useState } from "react";
 import { Share, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import * as DropdownMenu from "./dropdown-menu";
 import { getInviteLink } from "@/utils/firebase/firestore/friendsManager";
+import * as Haptics from "expo-haptics";
+import { getAuth } from "@react-native-firebase/auth";
 
 export default function LeaderboardDropdownMenu({}: {}) {
   const router = useRouter();
   const theme = useTheme();
   const styles = createStyles(theme);
 
-  const [isAlert, setIsAlert] = useState(false);
+  const [isAlert, setIsAlert] = useState(true);
 
   return (
     <DropdownMenu.DropdownMenuRoot>
       <DropdownMenu.DropdownMenuTrigger asChild>
-        <TouchableOpacity style={styles.triggerContainer}>
+        <TouchableOpacity
+          style={styles.triggerContainer}
+          onPress={() => {
+            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+          }}
+        >
           <View>
             <Ionicons
               name="ellipsis-horizontal-circle-outline"
@@ -33,6 +40,31 @@ export default function LeaderboardDropdownMenu({}: {}) {
         </TouchableOpacity>
       </DropdownMenu.DropdownMenuTrigger>
       <DropdownMenu.DropdownMenuContent>
+        <DropdownMenu.DropdownMenuItem
+          key="view-my-profile"
+          onSelect={() => {
+            const currentUser = getAuth().currentUser;
+            if (currentUser) {
+              const userId = currentUser.uid;
+              router.push(`/(tabs)/leaderboard/${userId}`);
+            }
+          }}
+        >
+          <DropdownMenu.DropdownMenuItemIcon
+            ios={{
+              name: "person.crop.circle",
+              pointSize: 24,
+              hierarchicalColor: {
+                dark: theme.colors.primary,
+                light: theme.colors.primary,
+              },
+            }}
+          />
+          <DropdownMenu.DropdownMenuItemTitle>
+            View My Profile
+          </DropdownMenu.DropdownMenuItemTitle>
+        </DropdownMenu.DropdownMenuItem>
+
         <DropdownMenu.DropdownMenuLabel>
           Leaderboard Options
         </DropdownMenu.DropdownMenuLabel>
