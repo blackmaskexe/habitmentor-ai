@@ -221,16 +221,12 @@ export function setRecentEmotionAwareSuggestion(message: string) {
 
 export async function getNewEmotionAwareMessage() {
   try {
-    console.log(
-      "THIS IS WHAT IM TRYNA POST TO EMOTION AWARE BOT",
-      getMetadataRecords(7)
-    );
     const response = await getEmotionAwareSuggestion();
 
     console.log("hoo hoo huhhu", response);
-    if (response && response.data.response) {
-      setRecentEmotionAwareSuggestion(response.data.response);
-      return response.data.response;
+    if (response && response.data) {
+      setRecentEmotionAwareSuggestion(response.data as string);
+      return response.data;
     }
     // catch statement for emotion aware message:
     return "Could not fetch emotion-aware message at this time, please try again later?";

@@ -2511,6 +2511,11 @@
   dependencies:
     react-native-url-polyfill "2.0.0"
 
+"@react-native-firebase/functions@^23.2.1":
+  version "23.2.1"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/functions/-/functions-23.2.1.tgz#73d4bb88936f561f79aba3758f30776f60fd49e6"
+  integrity sha512-uK4Y2FDlW7GzAnxgBhrISpc9oSopnbnTwL+ef+sPYET5cfxhlbPM4a3V9T6aUOIMtg4TRvGfWk+gKyiaFOEYrA==
+
 "@react-native-google-signin/google-signin@^15.0.0":
   version "15.0.0"
   resolved "https://registry.yarnpkg.com/@react-native-google-signin/google-signin/-/google-signin-15.0.0.tgz#5041e12fc5483d4b08b92d3f9a754c68c471f107"

@@ -104,6 +104,7 @@ export async function addImportantMessage(importantMessage: string) {
   return database.write(async () => {
     await importantMessagesCollection.create((record) => {
       record.importantMessage = importantMessage;
+      record.createdAt = getDate();
     });
   });
 }

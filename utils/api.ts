@@ -1,4 +1,3 @@
-import axios from "axios";
 import {
   getAllHabits,
   getHabitCompletionCollection,
@@ -6,19 +5,7 @@ import {
 } from "./habits";
 import { getTimeOfDay } from "./date";
 import { getMetadataRecords } from "./database/dailyMetadataRecords";
-
-const apiUrl = "https://api-tp7jjwrliq-uc.a.run.app/";
-// const apiUrl = "http://127.0.0.1:5001/habitmentor-ai/us-central1/api/";
-
-const api = axios.create({
-  baseURL: apiUrl,
-  headers: {
-    "Content-Type": "application/json",
-  },
-  // timeout: 10000, // timeout request after 10 seconds
-});
-
-export default api;
+import functions from "@react-native-firebase/functions";
 
 // ------------------------------
 // TYPES FOR API HELPER FUNCTIONS
@@ -45,14 +32,25 @@ type AIResponseType = {
 // API HELPER FUNCTIONS
 // --------------------
 
+/**
+ * Calls the 'getRecommendations' Cloud Function to get a proactive suggestion.
+ * @param habitCompletionCollection - The user's habit completion data.
+ * @param importantMessages - A list of important messages from previous interactions.
+ */
 export async function getProActiveMessage(
   habitCompletionCollection: any,
   importantMessages: string[]
 ) {
   try {
-    const response = await api.post("/pro-active", {
-      habitCompletionCollection: habitCompletionCollection,
-      importantMessages: importantMessages,
+    // Get a reference to the getRecommendations Cloud Function
+    const getRecommendations = functions().httpsCallable("getRecommendations");
+
+    // Call the function with userData payload that matches backend expectations
+    const response = await getRecommendations({
+      userData: {
+        habitCompletionCollection: habitCompletionCollection,
+        importantMessages: importantMessages,
+      },
     });
 
     return response;
@@ -66,22 +64,34 @@ export async function getProActiveMessage(
   }
 }
 
+/**
+ * Calls the 'getChatResponse' Cloud Function to get a response to a user's message.
+ * @param userMessage - The message typed by the user.
+ * @param recentMessageHistory - The last few messages in the current conversation.
+ */
 export async function getChatMessage(
   userMessage: string,
   recentMessageHistory: any
-) {
+): Promise<AIResponseType> {
   try {
-    const response: AIResponseType = await api.post("/chat", {
+    const getChatResponse = functions().httpsCallable("getChatResponse");
+
+    // Construct the messages payload that matches backend expectations
+    const messages = {
       message: userMessage,
-      importantMessageHistory: await getImportantMessages(50), // limit of 50
+      importantMessageHistory: await getImportantMessages(20), // limit of 50
       recentMessageHistory: recentMessageHistory, // send the last 20 messages in the payload
       timeOfDay: getTimeOfDay(),
       metadata: {
         activeHabits: getAllHabits(),
         habitCompletions: await getHabitCompletionCollection(),
       },
-    } as UserPromptType);
-    return response;
+    };
+
+    const response = await getChatResponse({ messages });
+
+    // The SDK nests the return value in response.data, which matches your old structure.
+    return response as AIResponseType;
   } catch (err) {
     console.log(
       "CRITICAL ERROR, COULD NOT FETCH CHAT MESSAGE FROM AI API",
@@ -93,14 +103,22 @@ export async function getChatMessage(
         actionableSteps: [],
         importantMessage: false,
       },
-    } as AIResponseType;
+    };
   }
 }
 
+/**
+ * Calls the 'getRecommendations' Cloud Function to get an emotion-aware suggestion.
+ */
 export async function getEmotionAwareSuggestion() {
   try {
-    const response = await api.post("/emotion-aware-suggestion", {
-      dailyMetadataRecords: JSON.stringify(getMetadataRecords(7)), // sending metadata records for the last 7 days
+    const getRecommendations = functions().httpsCallable("getRecommendations");
+
+    // Call the function with userData payload for emotion-aware suggestions
+    const response = await getRecommendations({
+      userData: {
+        dailyMetadataRecords: getMetadataRecords(7), // sending metadata records for the last 7 days
+      },
     });
 
     return response;

@@ -24,6 +24,7 @@
     "@react-native-firebase/auth": "23.1.2",
     "@react-native-firebase/crashlytics": "23.1.2",
     "@react-native-firebase/firestore": "23.1.2",
+    "@react-native-firebase/functions": "^23.2.1",
     "@react-native-google-signin/google-signin": "^15.0.0",
     "@react-native-menu/menu": "^1.2.3",
     "@react-navigation/bottom-tabs": "^7.3.10",

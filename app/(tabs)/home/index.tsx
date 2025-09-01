@@ -9,7 +9,7 @@ import {
   View,
 } from "react-native";
 
-import api, { getProActiveMessage } from "@/utils/api";
+import { getProActiveMessage } from "@/utils/api";
 import AISuggestionSkeleton from "@/utils/components/specific/AISuggestionSkeleton";
 import DailyHabitsView from "@/utils/components/specific/DailyHabitsView";
 import WeekAtAGlance from "@/utils/components/specific/WeekGlance";
@@ -134,11 +134,13 @@ export default function Index() {
           importantMessages
         );
 
-        if (response && response.data.response) {
-          setProActiveMessage(response.data.response);
+        console.log("OYE KHACHHEDOO", response);
+
+        if (response && response.data) {
+          setProActiveMessage(response.data as string);
 
           // set the mmkvstorage with the recent pro active message:
-          setRecentProActiveMessage(response.data.response);
+          setRecentProActiveMessage(response.data as string);
         }
       } else {
         setProActiveMessage(getRecentProActiveMessage());
