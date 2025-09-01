@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "96863368182",
+    "project_id": "habitmentor-ai",
+    "storage_bucket": "habitmentor-ai.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:96863368182:android:1c59dfb0448927dd9ecdd7",
+        "android_client_info": {
+          "package_name": "com.blackmaskexe.habittracker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "96863368182-rqkal2eqcb3u8gealmbplpa66n5s8eu9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAGEff4x4Co1FzJKNfUfMUIeB_HruJIO8M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "96863368182-rqkal2eqcb3u8gealmbplpa66n5s8eu9.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "96863368182-n72dgcej7466ersf9h6cicucttl0pgel.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.blackmaskexe.habittracker"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -56,7 +56,13 @@ export default function UserProfilePage() {
           size={60}
           color={theme.colors.textSecondary}
         />
-        <Text style={styles.nicknameText}>User Not Found</Text>
+        <Text
+          style={styles.nicknameText}
+          numberOfLines={3}
+          ellipsizeMode="tail"
+        >
+          User Not Found
+        </Text>
         <Text style={styles.statLabel}>
           The profile you're looking for doesn't exist.
         </Text>

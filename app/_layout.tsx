@@ -12,6 +12,7 @@ import * as Linking from "expo-linking";
 import { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
+import { getAuth } from "@react-native-firebase/auth";
 
 function AppNavigator() {
   const theme = useTheme();
@@ -27,10 +28,12 @@ function AppNavigator() {
       if (url) {
         const { hostname, path, queryParams } = Linking.parse(url);
         if (path === "friend-invite" && queryParams && queryParams.senderId) {
-          // router.push(""); // push to leaderboard/profile page with custom prop payload in the router push
+          router.push(`/(tabs)/leaderboard/${queryParams.senderId}`);
         }
       }
     }
+
+    runExpoLinking();
   }, [url]);
 
   useEffect(() => {

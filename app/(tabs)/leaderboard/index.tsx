@@ -1,4 +1,9 @@
-import { getUserLeaderboardProfile } from "@/utils/firebase/firestore/profileManager";
+import {
+  getMmkvUserLeaderboardProfile,
+  getUserProfile,
+} from "@/utils/firebase/firestore/profileManager";
+import { FirebaseUserProfile } from "@/utils/firebase/types";
+import mmkvStorage from "@/utils/mmkvStorage";
 import { useTheme } from "@/utils/theme/ThemeContext";
 import { Theme } from "@/utils/theme/themes";
 import { getAuth } from "@react-native-firebase/auth";
@@ -16,43 +21,89 @@ import { SheetManager } from "react-native-actions-sheet";
 import { SceneMap, TabBar, TabView } from "react-native-tab-view";
 
 const FirstRoute = () => {
-  const [initializing, setInitialzing] = useState(true);
-  const [userProfile, setUserProfile] = useState(null);
-  const [friends, setFriends] = useState(null);
-
-  // getting user statuses at first boot of this screen:
-  useFocusEffect(
-    useCallback(() => {
-      async function showFriendsLeaderboard() {
-        // await fetching all friends from firestore, then setFriends()
-        // setInitializing(false) to stop the loading wheel
-        setInitialzing(false);
-
-        // once the initializing is true, we conditionally display mapped friends
-      }
-      const user = getAuth();
-
-      if (user.currentUser && getUserLeaderboardProfile()) {
-        // the user is authenticated right now, and set to go
-        // what we want to do is:
-        // 1. show a loading while stuff loads from firestore
-        // 2. show all of the user's friends in the leaderboard once loaded
-        showFriendsLeaderboard();
-        return;
-      } // early return, not to show anything
-      SheetManager.show("login-sheet"); // show the entire login flow to the user
-      // I'll manually hide the leaderboard-login-sheet from the sheet itself when the auth flow is complete
-    }, [userProfile])
+  // This state tracks the initial check of the user's auth status.
+  const [initializing, setInitializing] = useState(true);
+  const [userProfile, setUserProfile] = useState<FirebaseUserProfile | null>(
+    null
   );
-
-  // placeholder
+  const [friends, setFriends] = useState(null);
   const theme = useTheme();
   const styles = createStyles(theme);
+
+  useFocusEffect(
+    useCallback(() => {
+      // This listener handles the user's authentication state.
+      const authSubscriber = getAuth().onAuthStateChanged(async (user) => {
+        if (user) {
+          // If the user is authenticated, we try to get their profile.
+          // First, check local storage for a quick load.
+          // If it's not there, fetch from Firestore as a fallback.
+          const profile =
+            getMmkvUserLeaderboardProfile() ?? (await getUserProfile(user.uid));
+
+          // Set the profile state. If no profile was found, this will be null.
+          setUserProfile(profile);
+          // If no profile was found even for a logged-in user, they need to create one.
+          if (!profile) {
+            SheetManager.show("login-sheet");
+          }
+        } else {
+          // If user is null, they are signed out. Clear the profile and show the login sheet.
+          setUserProfile(null);
+          SheetManager.show("login-sheet");
+        }
+        // The authentication check is complete, so we can stop the loading spinner.
+        setInitializing(false);
+      });
+
+      // This listener updates the UI if the profile changes in local storage.
+      const mmkvListener = mmkvStorage.addOnValueChangedListener(
+        (changedKey) => {
+          if (changedKey === "leaderboardProfile") {
+            setUserProfile(getMmkvUserLeaderboardProfile());
+          }
+        }
+      );
+
+      // The cleanup function unsubscribes from listeners when the screen loses focus.
+      return () => {
+        authSubscriber();
+        mmkvListener.remove();
+      };
+    }, [])
+  );
+
+  // 1. While the initial auth check is running, show a loading spinner.
+  if (initializing) {
+    return (
+      <View style={styles.scene}>
+        <ActivityIndicator size="large" color={theme.colors.primary} />
+      </View>
+    );
+  }
+
+  // 2. If the check is done and we have a user profile, show the friends list.
+  if (userProfile) {
+    return (
+      <View style={styles.scene}>
+        {friends ? (
+          <Text>Friends list will go here.</Text>
+        ) : (
+          <Text style={styles.placeholderText}>
+            You don't have any friends yet!
+          </Text>
+        )}
+      </View>
+    );
+  }
+
+  // 3. If the check is done and there's no profile, the user needs to log in.
+  // The login sheet is already handled by the effect.
   return (
     <View style={styles.scene}>
-      {initializing && (
-        <ActivityIndicator size="large" color={theme.colors.primary} />
-      )}
+      <Text style={styles.placeholderText}>
+        Please log in to see your friends.
+      </Text>
     </View>
   );
 };

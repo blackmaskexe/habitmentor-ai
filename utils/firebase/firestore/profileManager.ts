@@ -11,13 +11,13 @@ const usersCollection = firestore().collection("users");
 // FIRESTORE USER ID STORING IN MMKVSTORAGE
 // ----------------------------------------
 
-export function getUserLeaderboardProfile(): FirebaseUserProfile | null {
+export function getMmkvUserLeaderboardProfile(): FirebaseUserProfile | null {
   try {
-    const leaderboardProfile = JSON.parse(
-      mmkvStorage.getString("leaderboardProfile") || ""
+    const leaderboardProfile: FirebaseUserProfile = JSON.parse(
+      mmkvStorage.getString("leaderboardProfile") || "{}"
     );
 
-    if (!leaderboardProfile) {
+    if (!leaderboardProfile || !leaderboardProfile.nickname) {
       return null;
     }
     return leaderboardProfile as FirebaseUserProfile;
@@ -27,7 +27,9 @@ export function getUserLeaderboardProfile(): FirebaseUserProfile | null {
   }
 }
 
-export function setUserLeaderboardProfile(userProfile: FirebaseUserProfile) {
+export function setMmkvUserLeaderboardProfile(
+  userProfile: FirebaseUserProfile
+) {
   mmkvStorage.set("leaderboardProfile", JSON.stringify(userProfile));
 }
 
@@ -53,7 +55,7 @@ export async function createProfile(
     // checking if the docsnapshot (user's profile) already exists:
     if (docSnapshot.exists()) {
       const userProfileData = docSnapshot.data() as FirebaseUserProfile;
-      setUserLeaderboardProfile(userProfileData);
+      setMmkvUserLeaderboardProfile(userProfileData);
       return false; // return false for profile not created
     }
 
@@ -67,7 +69,7 @@ export async function createProfile(
     };
 
     await userDocRef.set(firebaseUserProfile);
-    setUserLeaderboardProfile(firebaseUserProfile);
+    setMmkvUserLeaderboardProfile(firebaseUserProfile);
 
     return true; // returning true for profile created
   } catch (err) {

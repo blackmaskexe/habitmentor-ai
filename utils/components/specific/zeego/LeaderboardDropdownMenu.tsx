@@ -74,7 +74,7 @@ export default function LeaderboardDropdownMenu({}: {}) {
             try {
               const inviteLink = getInviteLink();
               await Share.share({
-                message: `Add me as a friend on HabitMetor-AI. Let's track our progress together! ${inviteLink}`,
+                message: `Add me as a friend on HabitMentor-AI. Let's track our progress together! ${inviteLink}`,
               });
             } catch (err) {
               console.log("CRITICAL ERROR, INVITE SHARE FAILED", err);

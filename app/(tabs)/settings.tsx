@@ -213,6 +213,12 @@ export default function Settings() {
             { cancelable: false }
           );
         })}
+        {renderOptionItem(
+          "bottom",
+          "create",
+          "Edit Leaderboard Profile",
+          async () => {}
+        )}
 
         {/* Divider */}
         <View style={styles.divider} />
