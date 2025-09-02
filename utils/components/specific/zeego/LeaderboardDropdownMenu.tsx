@@ -136,7 +136,7 @@ export default function LeaderboardDropdownMenu({}: {}) {
           ) : (
             <DropdownMenu.DropdownMenuItemIcon
               ios={{
-                name: "eyes",
+                name: "bell",
                 pointSize: 24,
                 hierarchicalColor: {
                   dark: theme.colors.primary,
@@ -147,27 +147,6 @@ export default function LeaderboardDropdownMenu({}: {}) {
           )}
           <DropdownMenu.DropdownMenuItemTitle>
             See Friend Requests
-          </DropdownMenu.DropdownMenuItemTitle>
-        </DropdownMenu.DropdownMenuItem>
-
-        <DropdownMenu.DropdownMenuItem
-          key="test-profile"
-          onSelect={() => {
-            router.push("/(tabs)/leaderboard/lHLLZ02isNUtGjZC4VMbdpzr8qs1");
-          }}
-        >
-          <DropdownMenu.DropdownMenuItemIcon
-            ios={{
-              name: "person.3",
-              pointSize: 24,
-              hierarchicalColor: {
-                dark: theme.colors.primary,
-                light: theme.colors.primary,
-              },
-            }}
-          />
-          <DropdownMenu.DropdownMenuItemTitle>
-            Test Profile
           </DropdownMenu.DropdownMenuItemTitle>
         </DropdownMenu.DropdownMenuItem>
       </DropdownMenu.DropdownMenuContent>

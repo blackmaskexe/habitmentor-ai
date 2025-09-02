@@ -41,6 +41,7 @@ export default function LeaderboardGlobalView({
   const [allRankedUsers, setAllRankedUsers] = useState<RankedUser[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [enrollmentChecked, setEnrollmentChecked] = useState(false);
+  const [isEnrolled, setIsEnrolled] = useState<boolean>(false);
 
   // Check enrollment status and show sheet if needed
   useEffect(() => {
@@ -63,26 +64,50 @@ export default function LeaderboardGlobalView({
             .collection("users")
             .doc(currentUser.uid)
             .update({ enrolledInGlobal: false });
-
-          // Show enrollment sheet
-          SheetManager.show("global-leaderboard-sheet");
+          setIsEnrolled(false);
         } else if (userData.enrolledInGlobal === false) {
-          // Show enrollment sheet
-          SheetManager.show("global-leaderboard-sheet");
+          setIsEnrolled(false);
         } else {
+          setIsEnrolled(true);
           // User is enrolled, load global leaderboard
           loadGlobalLeaderboard();
         }
 
         setEnrollmentChecked(true);
+        setIsLoading(false);
       } catch (error) {
         console.error("Error checking enrollment status:", error);
         setEnrollmentChecked(true);
+        setIsLoading(false);
       }
     };
 
     checkEnrollmentStatus();
   }, [currentUser?.uid, userProfile, enrollmentChecked]);
+
+  // Listen for enrollment changes
+  useEffect(() => {
+    if (!currentUser || !enrollmentChecked) return;
+
+    const unsubscribe = firestore()
+      .collection("users")
+      .doc(currentUser.uid)
+      .onSnapshot((doc) => {
+        if (doc.exists()) {
+          const userData = doc.data() as FirebaseUserProfile;
+          if (userData.enrolledInGlobal === true && !isEnrolled) {
+            setIsEnrolled(true);
+            loadGlobalLeaderboard();
+          } else if (userData.enrolledInGlobal === false && isEnrolled) {
+            setIsEnrolled(false);
+            setAllRankedUsers([]);
+            setMyProfile(null);
+          }
+        }
+      });
+
+    return () => unsubscribe();
+  }, [currentUser, enrollmentChecked, isEnrolled]);
 
   // Load global leaderboard data
   const loadGlobalLeaderboard = async () => {
@@ -243,6 +268,34 @@ export default function LeaderboardGlobalView({
     );
   }
 
+  // Not enrolled in global leaderboard
+  if (!isEnrolled) {
+    return (
+      <View style={styles.centeredContainer}>
+        <Ionicons
+          name="globe-outline"
+          size={60}
+          color={theme.colors.textSecondary}
+        />
+        <Text style={styles.enrollmentTitle}>
+          You must enable global leaderboards to participate
+        </Text>
+        <Text style={styles.enrollmentDescription}>
+          Join the global leaderboard to compete with users worldwide and see
+          how you rank!
+        </Text>
+        <TouchableOpacity
+          style={styles.enrollmentButton}
+          onPress={() => SheetManager.show("global-leaderboard-sheet")}
+        >
+          <Text style={styles.enrollmentButtonText}>
+            Enable Global Leaderboard
+          </Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
+
   // No global users
   if (allRankedUsers.length === 0) {
     return (
@@ -392,6 +445,33 @@ function createStyles(theme: Theme) {
       color: theme.colors.textSecondary,
       textAlign: "center",
       lineHeight: 20,
+    },
+    enrollmentTitle: {
+      ...theme.text.h2,
+      color: theme.colors.text,
+      marginTop: theme.spacing.m,
+      marginBottom: theme.spacing.s,
+      textAlign: "center",
+    },
+    enrollmentDescription: {
+      ...theme.text.body,
+      color: theme.colors.textSecondary,
+      textAlign: "center",
+      lineHeight: 20,
+      marginBottom: theme.spacing.xl,
+    },
+    enrollmentButton: {
+      backgroundColor: theme.colors.primary,
+      paddingVertical: theme.spacing.m,
+      paddingHorizontal: theme.spacing.l,
+      borderRadius: theme.radius.m,
+      alignItems: "center",
+    },
+    enrollmentButtonText: {
+      ...theme.text.body,
+      color: theme.colors.background,
+      fontWeight: "600",
+      fontSize: 16,
     },
   });
 }
