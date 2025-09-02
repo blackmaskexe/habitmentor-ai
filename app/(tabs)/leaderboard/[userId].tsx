@@ -137,6 +137,7 @@ export default function UserProfilePage() {
       onPress: (() => void) | null; // if is null, then button should be disabled
     };
     let buttonData: ButtonData;
+
     switch (relationStatus) {
       case "self":
         buttonData = {
@@ -162,6 +163,14 @@ export default function UserProfilePage() {
           onPress: () => {
             handleAcceptFriendRequest(profileOwnerId as string);
           },
+        };
+        break;
+      case "accepted":
+        buttonData = {
+          visible: true,
+          style: styles.requestSentButton,
+          buttonTitle: "Already a Friend",
+          onPress: null,
         };
         break;
       default:

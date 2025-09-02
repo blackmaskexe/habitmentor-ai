@@ -37,7 +37,6 @@ export default function CustomEditHabitForm({
   return (
     <View style={styles.container}>
       {fields.map((field) => {
-        console.log("jatt taan", field);
         const isEditing = editingFieldKey === field.key;
         const value = (values as any)[field.key] || "";
 

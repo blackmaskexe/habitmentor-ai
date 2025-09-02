@@ -51,10 +51,9 @@ const EmotionAwareSuggestionCard: React.FC<EmotionAwareSuggestionCard> = ({
 
   useEffect(() => {
     async function getOrSetEmotionAwareSuggestion() {
-      console.log("Im a little camera shy");
       if (shouldGetNewEmotionAwareSuggestion()) {
-        const emotionAwareMessage = await getNewEmotionAwareMessage();
-        setEmotionAwareMessage(emotionAwareMessage);
+        const newEmotionAwareMessage = await getNewEmotionAwareMessage();
+        setEmotionAwareMessage(newEmotionAwareMessage);
       } else {
         setEmotionAwareMessage(getRecentEmotionAwareSuggestion());
       }
@@ -139,11 +138,6 @@ const EmotionAwareSuggestionCard: React.FC<EmotionAwareSuggestionCard> = ({
               onTextLayout={(event) => {
                 const { lines } = event.nativeEvent;
                 setEmotionAwareMessageNumLines(lines.length);
-
-                console.log(
-                  "cuz I don't play, I don't play",
-                  emotionAwareMessageNumLines
-                );
               }}
             >
               {emotionAwareMessage}

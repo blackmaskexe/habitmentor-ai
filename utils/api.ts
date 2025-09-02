@@ -45,7 +45,9 @@ export async function getProActiveMessage(
 ): Promise<{ data: { response: string } }> {
   try {
     // Get a reference to the getRecommendations Cloud Function
-    const getRecommendations = functions().httpsCallable("getRecommendations");
+    const getRecommendations = functions().httpsCallable(
+      "getProActiveRecommendationResponse"
+    );
 
     // Call the function with userData payload that matches backend expectations
     const response = await getRecommendations({
@@ -122,23 +124,30 @@ export async function getChatMessage(
  */
 export async function getEmotionAwareSuggestion() {
   try {
-    const getRecommendations = functions().httpsCallable("getRecommendations");
+    const getRecommendations = functions().httpsCallable(
+      "getEmotionAwareSuggestionResponse"
+    );
 
     // Call the function with userData payload for emotion-aware suggestions
     const response = await getRecommendations({
       userData: {
-        dailyMetadataRecords: getMetadataRecords(7), // sending metadata records for the last 7 days
+        dailyMetadataRecords: JSON.stringify(getMetadataRecords(7)), // sending metadata records for the last 7 days
       },
     });
 
-    return response;
+    // Extract the actual data from Firebase Functions response
+    // Firebase Functions return: { data: "your actual response string" }
+    // But your code expects: { data: "response string" }
+    return {
+      data:
+        typeof response.data === "string"
+          ? response.data
+          : "No emotion-aware suggestion available",
+    };
   } catch (err) {
     console.log("CRITICAL ERROR, COULD NOT GET EMOTION AWARE SUGGESTION", err);
     return {
-      data: {
-        response:
-          "Could not get emotion aware suggestion. Please try again later.",
-      },
+      data: "Could not get emotion aware suggestion. Please try again later.",
     };
   }
 }

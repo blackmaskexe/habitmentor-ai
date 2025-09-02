@@ -2,19 +2,39 @@ import { useTheme } from "@/utils/theme/ThemeContext";
 import { Theme } from "@/utils/theme/themes";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Share, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import * as DropdownMenu from "./dropdown-menu";
 import { getInviteLink } from "@/utils/firebase/firestore/friendsManager";
 import * as Haptics from "expo-haptics";
 import { getAuth } from "@react-native-firebase/auth";
+import firestore from "@react-native-firebase/firestore";
 
 export default function LeaderboardDropdownMenu({}: {}) {
   const router = useRouter();
   const theme = useTheme();
   const styles = createStyles(theme);
+  const currentUser = getAuth().currentUser;
 
-  const [isAlert, setIsAlert] = useState(true);
+  const [pendingRequestsCount, setPendingRequestsCount] = useState(0);
+
+  useEffect(() => {
+    if (!currentUser) return;
+
+    // Listen for pending friend requests
+    const unsubscribe = firestore()
+      .collection("users")
+      .doc(currentUser.uid)
+      .collection("friends")
+      .where("status", "==", "pending_received")
+      .onSnapshot((snapshot) => {
+        if (snapshot && snapshot.size) {
+          setPendingRequestsCount(snapshot.size);
+        }
+      });
+
+    return () => unsubscribe();
+  }, [currentUser]);
 
   return (
     <DropdownMenu.DropdownMenuRoot>
@@ -31,9 +51,9 @@ export default function LeaderboardDropdownMenu({}: {}) {
               size={28}
               color={theme.colors.primary}
             />
-            {isAlert && (
+            {pendingRequestsCount > 0 && (
               <View style={styles.badgeContainer}>
-                <Text style={styles.badgeText}>1</Text>
+                <Text style={styles.badgeText}>{pendingRequestsCount}</Text>
               </View>
             )}
           </View>
@@ -98,9 +118,11 @@ export default function LeaderboardDropdownMenu({}: {}) {
 
         <DropdownMenu.DropdownMenuItem
           key="friend-requests"
-          onSelect={() => {}}
+          onSelect={() => {
+            router.push("/(tabs)/leaderboard/friend-requests");
+          }}
         >
-          {isAlert ? (
+          {pendingRequestsCount > 0 ? (
             <DropdownMenu.DropdownMenuItemIcon
               ios={{
                 name: "1.circle",

@@ -53,7 +53,6 @@ export default function EditHabitView({
     // update card as soon as the value changes from the forms
     if (values.habitName) {
       setUpdatedHabit(() => {
-        console.log("I got something to say but idk how imma say it", values);
         return {
           ...(values as any),
         };
@@ -85,7 +84,6 @@ export default function EditHabitView({
               }
 
               if (didUserEditHabit) {
-                console.log("ziggy liggi");
                 Alert.alert(
                   `Update Habit`,
                   "Are you sure?",

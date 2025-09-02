@@ -1,13 +1,3 @@
-import {
-  getMmkvUserLeaderboardProfile,
-  getUserProfile,
-} from "@/utils/firebase/firestore/profileManager";
-import { FirebaseUserProfile } from "@/utils/firebase/types";
-import mmkvStorage from "@/utils/mmkvStorage";
-import { useTheme } from "@/utils/theme/ThemeContext";
-import { Theme } from "@/utils/theme/themes";
-import { getAuth } from "@react-native-firebase/auth";
-import { useFocusEffect } from "expo-router";
 import * as React from "react";
 import { useCallback, useState } from "react";
 import {
@@ -17,8 +7,20 @@ import {
   View,
   useWindowDimensions,
 } from "react-native";
-import { SheetManager } from "react-native-actions-sheet";
 import { SceneMap, TabBar, TabView } from "react-native-tab-view";
+import { useTheme } from "@/utils/theme/ThemeContext";
+import { Theme } from "@/utils/theme/themes";
+import { useFocusEffect } from "expo-router";
+import { SheetManager } from "react-native-actions-sheet";
+import { getAuth } from "@react-native-firebase/auth";
+import {
+  getMmkvUserLeaderboardProfile,
+  getUserProfile,
+} from "@/utils/firebase/firestore/profileManager";
+import { FirebaseUserProfile } from "@/utils/firebase/types";
+import mmkvStorage from "@/utils/mmkvStorage";
+import LeaderboardFriendsView from "@/utils/components/specific/LeaderboardFriendsView";
+import LeaderboardGlobalView from "@/utils/components/specific/LeaderboardGlobalView";
 
 const FirstRoute = () => {
   // This state tracks the initial check of the user's auth status.
@@ -26,7 +28,6 @@ const FirstRoute = () => {
   const [userProfile, setUserProfile] = useState<FirebaseUserProfile | null>(
     null
   );
-  const [friends, setFriends] = useState(null);
   const theme = useTheme();
   const styles = createStyles(theme);
 
@@ -82,40 +83,73 @@ const FirstRoute = () => {
     );
   }
 
-  // 2. If the check is done and we have a user profile, show the friends list.
-  if (userProfile) {
+  // 2. Pass the userProfile to LeaderboardFriendsView
+  return <LeaderboardFriendsView userProfile={userProfile} />;
+};
+
+const SecondRoute = () => {
+  // This state tracks the initial check of the user's auth status.
+  const [initializing, setInitializing] = useState(true);
+  const [userProfile, setUserProfile] = useState<FirebaseUserProfile | null>(
+    null
+  );
+  const theme = useTheme();
+  const styles = createStyles(theme);
+
+  useFocusEffect(
+    useCallback(() => {
+      // This listener handles the user's authentication state.
+      const authSubscriber = getAuth().onAuthStateChanged(async (user) => {
+        if (user) {
+          // If the user is authenticated, we try to get their profile.
+          // First, check local storage for a quick load.
+          // If it's not there, fetch from Firestore as a fallback.
+          const profile =
+            getMmkvUserLeaderboardProfile() ?? (await getUserProfile(user.uid));
+
+          // Set the profile state. If no profile was found, this will be null.
+          setUserProfile(profile);
+          // If no profile was found even for a logged-in user, they need to create one.
+          if (!profile) {
+            SheetManager.show("login-sheet");
+          }
+        } else {
+          // If user is null, they are signed out. Clear the profile and show the login sheet.
+          setUserProfile(null);
+          SheetManager.show("login-sheet");
+        }
+        // The authentication check is complete, so we can stop the loading spinner.
+        setInitializing(false);
+      });
+
+      // This listener updates the UI if the profile changes in local storage.
+      const mmkvListener = mmkvStorage.addOnValueChangedListener(
+        (changedKey) => {
+          if (changedKey === "leaderboardProfile") {
+            setUserProfile(getMmkvUserLeaderboardProfile());
+          }
+        }
+      );
+
+      // The cleanup function unsubscribes from listeners when the screen loses focus.
+      return () => {
+        authSubscriber();
+        mmkvListener.remove();
+      };
+    }, [])
+  );
+
+  // 1. While the initial auth check is running, show a loading spinner.
+  if (initializing) {
     return (
       <View style={styles.scene}>
-        {friends ? (
-          <Text>Friends list will go here.</Text>
-        ) : (
-          <Text style={styles.placeholderText}>
-            You don't have any friends yet!
-          </Text>
-        )}
+        <ActivityIndicator size="large" color={theme.colors.primary} />
       </View>
     );
   }
 
-  // 3. If the check is done and there's no profile, the user needs to log in.
-  // The login sheet is already handled by the effect.
-  return (
-    <View style={styles.scene}>
-      <Text style={styles.placeholderText}>
-        Please log in to see your friends.
-      </Text>
-    </View>
-  );
-};
-
-const SecondRoute = () => {
-  const theme = useTheme();
-  const styles = createStyles(theme);
-  return (
-    <View style={styles.scene}>
-      <Text style={styles.placeholderText}>Coming Soon</Text>
-    </View>
-  );
+  // 2. Pass the userProfile to LeaderboardGlobalView
+  return <LeaderboardGlobalView userProfile={userProfile} />;
 };
 
 // const ThirdRoute = () => {

@@ -215,21 +215,22 @@ export function getRecentEmotionAwareSuggestion() {
     : "Keep using the app, and you will get tailored emotion-aware suggestions";
 }
 
-export function setRecentEmotionAwareSuggestion(message: string) {
+export function setRecentEmotionAwareSuggestion(message: string): void {
   mmkvStorage.set("recentEmotionAwareSuggestion", message);
 }
 
-export async function getNewEmotionAwareMessage() {
+export async function getNewEmotionAwareMessage(): Promise<string> {
   try {
     const response = await getEmotionAwareSuggestion();
 
-    console.log("hoo hoo huhhu", response);
     if (response && response.data) {
       setRecentEmotionAwareSuggestion(response.data as string);
       return response.data;
     }
     // catch statement for emotion aware message:
-    return "Could not fetch emotion-aware message at this time, please try again later?";
+    throw new Error(
+      "unknown response generated from cloud function in habitSuggestionManager.ts"
+    );
   } catch (err) {
     console.log("ERROR: COULD NOT GET EMOTION AWARE SUGGESTION");
     return "Could not fetch emotion-aware message at this time, please try again later?";

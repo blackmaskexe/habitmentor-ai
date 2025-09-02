@@ -175,7 +175,6 @@ export default function AddNewHabitModal({
                         // the time is taken by the modal close animation
                         setValues({});
                         if (newHabit.id) {
-                          console.log("Starting individual tagging yeh");
                           // for ts type safety, but it would have been created by now
                           tagOneHabit(newHabit.id);
                         }

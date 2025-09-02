@@ -40,13 +40,6 @@ import { TypeAnimation } from "react-native-type-animation";
 import { TourGuideZone, useTourGuideController } from "rn-tourguide";
 
 export default function Index() {
-  console.log(getAuth(), "tapshi tapshi");
-  // mmkvStorage.set("appStartDate", "2025-7-25");
-  console.log(
-    "only taking pictures you gon have to take your azom",
-    JSON.stringify(getMetadataRecords(7))
-  );
-
   const [proActiveMessage, setProActiveMessage] = useState<string | null>(null); // will eventually fetch it's last value from a key-value store so that the user doesn't have to stare at the "loading" for 1-3 seconds
   const [proActiveMessageHeight, setProActiveMessageHeight] =
     useState<number>(76); // 76 because it is the height of the skeleton (60 height + 16 margin)

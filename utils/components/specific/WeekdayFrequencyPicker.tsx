@@ -25,12 +25,7 @@ export default function WeekdayFrequencyPicker({
   useEffect(() => {
     // change the frequency if it is changed by any other means
     // mainly, the frequency changing dropdown
-    console.log("VALUE BADLA", values);
     if (values.frequency) {
-      console.log(
-        "Bring your best friend, then pull up to the west end",
-        values
-      );
       setActiveDays(values.frequency);
     }
   }, [values]);

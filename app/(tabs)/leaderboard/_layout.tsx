@@ -37,6 +37,12 @@ export default function LeaderboardLayout() {
           title: "Profile",
         }}
       />
+      <Stack.Screen
+        name="friend-requests"
+        options={{
+          title: "Friend Requests",
+        }}
+      />
     </Stack>
   );
 }

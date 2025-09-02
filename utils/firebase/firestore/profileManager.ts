@@ -66,6 +66,7 @@ export async function createProfile(
       pointsThisMonth: 0,
       friends: [],
       profileCreationDate: getFormattedDate(),
+      enrolledInGlobal: false,
     };
 
     await userDocRef.set(firebaseUserProfile);
@@ -127,6 +128,7 @@ export async function getUserProfile(
       avatarIcon: "does-not-exist-questionmark",
       friends: [],
       profileCreationDate: "1990-1-1",
+      enrolledInGlobal: false,
     };
   }
 }

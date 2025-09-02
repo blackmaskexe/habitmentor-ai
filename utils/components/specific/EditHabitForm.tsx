@@ -49,10 +49,6 @@ export default function EditHabitForm({
   const styles = createStyles(theme, BOX_SIZE);
 
   useEffect(() => {
-    console.log(values, "Pick up your phone. I... all alone.");
-  }, [values]);
-
-  useEffect(() => {
     // setting the initial value of the habitFrequency
     const habitObject: HabitObject = getHabitObjectFromId(habitId)!;
 

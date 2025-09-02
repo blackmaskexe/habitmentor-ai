@@ -5,4 +5,5 @@ export type FirebaseUserProfile = {
   avatarIcon: string;
   friends: string[];
   profileCreationDate: string; // formattedDate
+  enrolledInGlobal: boolean;
 };
