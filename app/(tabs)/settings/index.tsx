@@ -22,6 +22,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import firestore from "@react-native-firebase/firestore";
 
 export default function Settings() {
   const theme = useTheme();
@@ -214,10 +215,41 @@ export default function Settings() {
           );
         })}
         {renderOptionItem(
-          "bottom",
+          "between",
           "create",
           "Edit Leaderboard Profile",
-          async () => {}
+          () => {
+            router.push("/(tabs)/settings/edit-leaderboard");
+          }
+        )}
+        {renderOptionItem(
+          "bottom",
+          "globe",
+          "Opt out of Global Leaderboard",
+          async () => {
+            const currentUserId = getAuth().currentUser?.uid;
+            const docRef = await firestore()
+              .collection("users")
+              .doc(currentUserId)
+              .get();
+
+            if (docRef && docRef.exists() && docRef.data()!.enrolledInGlobal) {
+              await firestore()
+                .collection("users")
+                .doc(currentUserId)
+                .update({ enrolledInGlobal: false });
+
+              Alert.alert(
+                "Opted Out",
+                "You have opted out of Global Leaderboard"
+              );
+            } else {
+              Alert.alert(
+                "Invalid",
+                "You must be enrolled in Global Leaderboards to Opt-Out"
+              );
+            }
+          }
         )}
 
         {/* Divider */}

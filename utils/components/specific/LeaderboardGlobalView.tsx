@@ -93,7 +93,7 @@ export default function LeaderboardGlobalView({
       .collection("users")
       .doc(currentUser.uid)
       .onSnapshot((doc) => {
-        if (doc.exists()) {
+        if (doc && doc.exists()) {
           const userData = doc.data() as FirebaseUserProfile;
           if (userData && userData.enrolledInGlobal === true && !isEnrolled) {
             setIsEnrolled(true);
