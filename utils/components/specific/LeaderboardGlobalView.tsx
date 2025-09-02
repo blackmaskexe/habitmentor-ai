@@ -59,13 +59,13 @@ export default function LeaderboardGlobalView({
         const userData = userDoc.data() as FirebaseUserProfile;
 
         // If enrolledInGlobal doesn't exist, create it as false
-        if (userData.enrolledInGlobal === undefined) {
+        if (userData && userData.enrolledInGlobal === undefined) {
           await firestore()
             .collection("users")
             .doc(currentUser.uid)
             .update({ enrolledInGlobal: false });
           setIsEnrolled(false);
-        } else if (userData.enrolledInGlobal === false) {
+        } else if (userData && userData.enrolledInGlobal === false) {
           setIsEnrolled(false);
         } else {
           setIsEnrolled(true);
@@ -95,10 +95,14 @@ export default function LeaderboardGlobalView({
       .onSnapshot((doc) => {
         if (doc && doc.exists()) {
           const userData = doc.data() as FirebaseUserProfile;
-          if (userData.enrolledInGlobal === true && !isEnrolled) {
+          if (userData && userData.enrolledInGlobal === true && !isEnrolled) {
             setIsEnrolled(true);
             loadGlobalLeaderboard();
-          } else if (userData.enrolledInGlobal === false && isEnrolled) {
+          } else if (
+            userData &&
+            userData.enrolledInGlobal === false &&
+            isEnrolled
+          ) {
             setIsEnrolled(false);
             setAllRankedUsers([]);
             setMyProfile(null);

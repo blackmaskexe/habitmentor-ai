@@ -1,0 +1,3 @@
+- [ ] remove firebase login-wall for ai suggestions, pro active suggestions, (emotion aware is already un-walled dw) , and tagging
+- when someone added as a friend, they don't show up on the friends tab immedately, needs app refresh
+- sending and accepting friend requests takes way too long than it should, find out why is that so
