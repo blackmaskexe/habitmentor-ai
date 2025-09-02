@@ -218,30 +218,38 @@ export default function Settings() {
           "between",
           "create",
           "Edit Leaderboard Profile",
-          async () => {}
+          () => {
+            router.push("/(tabs)/settings/edit-leaderboard");
+          }
         )}
-        {renderOptionToggleItem(
+        {renderOptionItem(
           "bottom",
           "globe",
-          "Opt in Global Leaderboard",
-          async (isSwitchOn) => {
+          "Opt out of Global Leaderboard",
+          async () => {
             const currentUserId = getAuth().currentUser?.uid;
-            if (currentUserId) {
+            const docRef = await firestore()
+              .collection("users")
+              .doc(currentUserId)
+              .get();
+
+            if (docRef && docRef.exists() && docRef.data()!.enrolledInGlobal) {
               await firestore()
                 .collection("users")
                 .doc(currentUserId)
-                .update({ enrolledInGlobal: isSwitchOn });
+                .update({ enrolledInGlobal: false });
 
-              if (!isSwitchOn) {
-                Alert.alert(
-                  "Opted Out",
-                  "You have opted out of Global Leaderboard"
-                );
-              }
+              Alert.alert(
+                "Opted Out",
+                "You have opted out of Global Leaderboard"
+              );
+            } else {
+              Alert.alert(
+                "Invalid",
+                "You must be enrolled in Global Leaderboards to Opt-Out"
+              );
             }
-          },
-          false,
-          notificationsEnabled
+          }
         )}
 
         {/* Divider */}
