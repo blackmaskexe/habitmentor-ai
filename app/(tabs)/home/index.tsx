@@ -134,13 +134,11 @@ export default function Index() {
           importantMessages
         );
 
-        console.log("OYE KHACHHEDOO", response);
-
-        if (response && response.data) {
-          setProActiveMessage(response.data as string);
+        if (response && response.data && response.data.response) {
+          setProActiveMessage(response.data.response);
 
           // set the mmkvstorage with the recent pro active message:
-          setRecentProActiveMessage(response.data as string);
+          setRecentProActiveMessage(response.data.response);
         }
       } else {
         setProActiveMessage(getRecentProActiveMessage());

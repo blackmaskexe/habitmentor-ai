@@ -13,9 +13,17 @@ import { useEffect, useState } from "react";
 import { getUserProfile } from "@/utils/firebase/firestore/profileManager";
 import { FirebaseUserProfile } from "@/utils/firebase/types";
 import { getDateFromFormattedDate, getOrdinalDate } from "@/utils/date";
+import firestore from "@react-native-firebase/firestore";
+import { getAuth } from "@react-native-firebase/auth";
+import {
+  handleAcceptFriendRequest,
+  handleSendFriendRequest,
+} from "@/utils/firebase/firestore/friendsManager";
 
 export default function UserProfilePage() {
-  const { userId } = useLocalSearchParams();
+  const { userId: profileOwnerId } = useLocalSearchParams();
+  const viewerUserId = getAuth().currentUser?.uid;
+
   const theme = useTheme();
   const styles = createStyles(theme);
 
@@ -23,20 +31,55 @@ export default function UserProfilePage() {
     null
   );
   const [isLoading, setIsLoading] = useState(true);
+  const [relationStatus, setRelationStatus] = useState<string | null>(null); // relation between the viewer and the pesron whose profile it is
 
   useEffect(() => {
+    let unsubscribe = () => {};
+
     const fetchProfile = async () => {
-      if (userId && typeof userId === "string") {
-        const profile = await getUserProfile(userId);
-        setUserProfile(profile);
-        setIsLoading(false);
+      if (profileOwnerId && typeof profileOwnerId === "string") {
+        const profile = await getUserProfile(profileOwnerId); // profile of the person of whom the profile page is
+
+        if (viewerUserId && viewerUserId != profileOwnerId) {
+          const userFriendsDocRef = firestore()
+            .collection("users")
+            .doc(viewerUserId)
+            .collection("friends")
+            .doc(profileOwnerId);
+
+          unsubscribe = userFriendsDocRef.onSnapshot((docSnapshot) => {
+            if (docSnapshot && docSnapshot.exists()) {
+              const data = docSnapshot.data();
+              if (data) {
+                setRelationStatus(data.status);
+              }
+            } else {
+              setRelationStatus(null);
+            }
+          });
+
+          setUserProfile(profile);
+          setIsLoading(false);
+
+          return;
+        } // reference to the person whose profile we are viewing in self's firestore document
+        else if (viewerUserId && viewerUserId == profileOwnerId) {
+          setRelationStatus("self");
+          setUserProfile(profile);
+          setIsLoading(false);
+
+          return;
+        }
       } else {
-        setIsLoading(false); // No userId, stop loading
+        setIsLoading(false); // No profileOwnerId, stop loading
+        return;
       }
     };
 
     fetchProfile();
-  }, [userId]);
+    // cleaup function to stop listening to firestore friend updates
+    return () => unsubscribe();
+  }, [profileOwnerId, viewerUserId]);
 
   // 1. Loading State
   if (isLoading) {
@@ -79,10 +122,76 @@ export default function UserProfilePage() {
     },
   ];
 
-  const friendsCount = userProfile.friends.length;
+  const friendsCount = 0; // will get the length of the friends subcollection later
   const joinedDate = getOrdinalDate(
     getDateFromFormattedDate(userProfile.profileCreationDate)
   );
+
+  console.log("baby a jus wanna be yours I wanna be yooooors", relationStatus);
+
+  function renderRequestButton() {
+    type ButtonData = {
+      visible: boolean;
+      style: any;
+      buttonTitle: string;
+      onPress: (() => void) | null; // if is null, then button should be disabled
+    };
+    let buttonData: ButtonData;
+    switch (relationStatus) {
+      case "self":
+        buttonData = {
+          visible: false,
+          style: {},
+          buttonTitle: "",
+          onPress: () => {},
+        };
+        break;
+      case "pending_sent":
+        buttonData = {
+          visible: true,
+          style: styles.requestSentButton,
+          buttonTitle: "Request Sent",
+          onPress: null,
+        };
+        break;
+      case "pending_received":
+        buttonData = {
+          visible: true,
+          style: styles.addButton,
+          buttonTitle: "Accept Request",
+          onPress: () => {
+            handleAcceptFriendRequest(profileOwnerId as string);
+          },
+        };
+        break;
+      default:
+        buttonData = {
+          visible: true,
+          style: styles.addButton,
+          buttonTitle: "Send Friend Request",
+          onPress: async () => {
+            await handleSendFriendRequest(profileOwnerId as string);
+          },
+        };
+        break;
+    }
+    return buttonData.visible ? (
+      <TouchableOpacity
+        style={buttonData.style}
+        disabled={buttonData.onPress == null ? true : false}
+        onPress={
+          buttonData && buttonData.onPress ? buttonData.onPress : () => {}
+        }
+      >
+        <Ionicons
+          name="person-add-outline"
+          size={20}
+          color={theme.colors.background}
+        />
+        <Text style={styles.addButtonText}>{buttonData.buttonTitle}</Text>
+      </TouchableOpacity>
+    ) : null;
+  }
 
   return (
     <View style={styles.container}>
@@ -102,7 +211,7 @@ export default function UserProfilePage() {
               name="people-outline"
               size={14}
               color={theme.colors.textSecondary}
-            />{" "}
+            />
             {friendsCount} Friends
           </Text>
           <Text style={styles.subHeaderText}>
@@ -110,21 +219,13 @@ export default function UserProfilePage() {
               name="calendar-outline"
               size={14}
               color={theme.colors.textSecondary}
-            />{" "}
+            />
             Joined {joinedDate}
           </Text>
         </View>
       </View>
 
-      {/* --- Action Button --- */}
-      <TouchableOpacity style={styles.addButton}>
-        <Ionicons
-          name="person-add-outline"
-          size={20}
-          color={theme.colors.background}
-        />
-        <Text style={styles.addButtonText}>Add Friend</Text>
-      </TouchableOpacity>
+      {renderRequestButton()}
 
       {/* --- Stats Grid --- */}
       <View style={styles.statsContainer}>
@@ -192,6 +293,15 @@ function createStyles(theme: Theme) {
       alignItems: "center",
       justifyContent: "center",
       backgroundColor: theme.colors.primary,
+      paddingVertical: theme.spacing.m,
+      borderRadius: theme.radius.m,
+      marginBottom: theme.spacing.xl,
+    },
+    requestSentButton: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "center",
+      backgroundColor: theme.colors.textTertiary,
       paddingVertical: theme.spacing.m,
       borderRadius: theme.radius.m,
       marginBottom: theme.spacing.xl,

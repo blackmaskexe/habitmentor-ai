@@ -1,4 +1,4 @@
-import api from "./api";
+import { tagHabitsOnCloud } from "./api";
 import { getHabitObjectFromId, updateHabit } from "./habits";
 import mmkvStorage from "./mmkvStorage";
 import { HabitObject } from "./types";
@@ -44,9 +44,7 @@ export async function tagOneHabit(habitId: string) {
 
 async function getTaggedHabits(habits: HabitObject[]) {
   try {
-    const response = await api.post("/tag-habits", {
-      habitData: habits,
-    });
+    const response = await tagHabitsOnCloud();
 
     const taggedHabits = response.data;
     // validating taggedHabits:

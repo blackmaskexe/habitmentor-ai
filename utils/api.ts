@@ -6,6 +6,8 @@ import {
 import { getTimeOfDay } from "./date";
 import { getMetadataRecords } from "./database/dailyMetadataRecords";
 import functions from "@react-native-firebase/functions";
+import mmkvStorage from "./mmkvStorage";
+import { HabitObject } from "./types";
 
 // ------------------------------
 // TYPES FOR API HELPER FUNCTIONS
@@ -40,7 +42,7 @@ type AIResponseType = {
 export async function getProActiveMessage(
   habitCompletionCollection: any,
   importantMessages: string[]
-) {
+): Promise<{ data: { response: string } }> {
   try {
     // Get a reference to the getRecommendations Cloud Function
     const getRecommendations = functions().httpsCallable("getRecommendations");
@@ -53,7 +55,15 @@ export async function getProActiveMessage(
       },
     });
 
-    return response;
+    // Firebase Functions return data directly, wrap to match expected structure
+    return {
+      data: {
+        response:
+          typeof response.data === "string"
+            ? response.data
+            : "No suggestion available",
+      },
+    };
   } catch (err) {
     console.log("CRITICAL ERROR, COULD NOT FETCH PRO ACTIVE MESSAGE", err);
     return {
@@ -129,6 +139,27 @@ export async function getEmotionAwareSuggestion() {
         response:
           "Could not get emotion aware suggestion. Please try again later.",
       },
+    };
+  }
+}
+
+export async function tagHabitsOnCloud() {
+  try {
+    const getTaggingSuggestions = functions().httpsCallable(
+      "getTaggingSuggestions"
+    );
+    const habits: HabitObject[] = JSON.parse(
+      mmkvStorage.getString("activeHabits") || "[]"
+    );
+    const response = await getTaggingSuggestions({
+      habits: habits,
+    });
+
+    return response;
+  } catch (err) {
+    console.log("CRITICAL ERROR, COULD NOT TAG HABITS", err);
+    return {
+      data: {},
     };
   }
 }
