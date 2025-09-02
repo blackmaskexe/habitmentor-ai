@@ -1,0 +1,1 @@
+- [ ] remove firebase login-wall for ai suggestions, pro active suggestions, (emotion aware is already un-walled dw) , and tagging
