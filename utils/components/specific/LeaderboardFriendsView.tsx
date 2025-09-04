@@ -41,35 +41,21 @@ export default function LeaderboardFriendsView({
   const [myProfile, setMyProfile] = useState<RankedUser | null>(null);
   const [allRankedUsers, setAllRankedUsers] = useState<RankedUser[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [myData, setMyData] = useState<null | FirebaseUserProfile>(null);
 
-  // Load leaderboard data
+  // Load friends data once
+  const [friendsData, setFriendsData] = useState<
+    (FirebaseUserProfile & { id: string })[]
+  >([]);
+  const [friendsLoaded, setFriendsLoaded] = useState(false);
+
+  // Load friends once when component mounts
   useEffect(() => {
-    if (!currentUser || !userProfile) {
-      setMyProfile(null);
-      setAllRankedUsers([]);
-      setIsLoading(false);
-      return;
-    }
+    if (!currentUser || !userProfile || friendsLoaded) return;
 
-    if (allRankedUsers.length > 0) return; // Don't reload if we already have data
-
-    const loadLeaderboard = async () => {
-      setIsLoading(true);
+    const loadFriends = async () => {
       try {
-        // 1. Get my current profile from Firestore
-        const myDoc = await firestore()
-          .collection("users")
-          .doc(currentUser.uid)
-          .get();
-
-        if (!myDoc.exists) {
-          setIsLoading(false);
-          return;
-        }
-
-        const myData = myDoc.data() as FirebaseUserProfile;
-
-        // 2. Get my friends
+        // Get my friends
         const friendsSnapshot = await firestore()
           .collection("users")
           .doc(currentUser.uid)
@@ -77,10 +63,7 @@ export default function LeaderboardFriendsView({
           .where("status", "==", "accepted")
           .get();
 
-        // 3. Get friend profiles
-        const allUserProfiles: (FirebaseUserProfile & { id: string })[] = [
-          { ...myData, id: currentUser.uid },
-        ];
+        const friendProfiles: (FirebaseUserProfile & { id: string })[] = [];
 
         if (!friendsSnapshot.empty) {
           const friendIds = friendsSnapshot.docs.map((doc) => doc.id);
@@ -95,12 +78,54 @@ export default function LeaderboardFriendsView({
 
             batchSnapshot.docs.forEach((doc) => {
               const data = doc.data() as FirebaseUserProfile;
-              allUserProfiles.push({ ...data, id: doc.id });
+              friendProfiles.push({ ...data, id: doc.id });
             });
           }
         }
 
-        // 4. Sort by points and create ranked list
+        setFriendsData(friendProfiles);
+        setFriendsLoaded(true);
+      } catch (error) {
+        console.error("Error loading friends:", error);
+        setFriendsLoaded(true);
+      }
+    };
+
+    loadFriends();
+  }, [currentUser?.uid, userProfile, friendsLoaded]);
+
+  // Snapshot for my profile only
+  useEffect(() => {
+    let unsubscribe = () => {};
+
+    if (!currentUser || !userProfile) {
+      setMyProfile(null);
+      setAllRankedUsers([]);
+      setIsLoading(false);
+      return;
+    }
+
+    setIsLoading(true);
+    const myDocRef = firestore().collection("users").doc(currentUser.uid);
+
+    unsubscribe = myDocRef.onSnapshot((docSnapshot) => {
+      try {
+        if (!docSnapshot.exists()) {
+          setMyData(null);
+          setIsLoading(false);
+          return;
+        }
+
+        const myProfileData = docSnapshot.data() as FirebaseUserProfile;
+        setMyData(myProfileData);
+
+        // Build leaderboard with my fresh data + friends data
+        const allUserProfiles: (FirebaseUserProfile & { id: string })[] = [
+          { ...myProfileData, id: currentUser.uid },
+          ...friendsData,
+        ];
+
+        // Sort by points and create ranked list
         allUserProfiles.sort((a, b) => b.points - a.points);
         const rankedUsers: RankedUser[] = allUserProfiles.map(
           (user, index) => ({
@@ -113,19 +138,19 @@ export default function LeaderboardFriendsView({
           })
         );
 
-        // 5. Set the data
+        // Set the data
         const myRankedProfile = rankedUsers.find((user) => user.isMe);
         setMyProfile(myRankedProfile || null);
         setAllRankedUsers(rankedUsers);
+        setIsLoading(false);
       } catch (error) {
-        console.error("Error loading leaderboard:", error);
-      } finally {
+        console.error("Error updating leaderboard:", error);
         setIsLoading(false);
       }
-    };
+    });
 
-    loadLeaderboard();
-  }, [currentUser?.uid]);
+    return () => unsubscribe();
+  }, [currentUser?.uid, friendsData]); // Include friendsData as dependency
 
   const handleUserPress = (userId: string) => {
     router.push(`/(tabs)/leaderboard/${userId}`);

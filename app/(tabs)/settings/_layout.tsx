@@ -24,6 +24,12 @@ export default function SettingsLayout() {
           title: "Settings",
         }}
       />
+      <Stack.Screen
+        name="edit-leaderboard"
+        options={{
+          title: "Edit Profile",
+        }}
+      />
     </Stack>
   );
 }

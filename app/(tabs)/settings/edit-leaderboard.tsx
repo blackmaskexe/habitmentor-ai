@@ -23,6 +23,8 @@ import { LEADERBOARD_AVATAR_NAMES } from "@/utils/misc/leaderboardAvatars";
 import CardWithoutImage from "@/utils/components/general/CardWithoutImage";
 import { Filter } from "bad-words";
 import { useRouter } from "expo-router";
+import { updateProfile } from "@/utils/firebase/firestore/profileManager";
+import CTAButton from "@/utils/components/general/CTAButton";
 
 type UpdatedProfileType = {
   nickname: string;
@@ -37,7 +39,8 @@ export default function EditLeaderboardProfile() {
   const currentUser = getAuth().currentUser;
 
   const [isLoading, setIsLoading] = useState(true);
-  const [originalProfile, setOriginalProfile] = useState<FirebaseUserProfile | null>(null);
+  const [originalProfile, setOriginalProfile] =
+    useState<FirebaseUserProfile | null>(null);
   const [updatedProfile, setUpdatedProfile] = useState<UpdatedProfileType>({
     nickname: "",
     avatarIcon: "happy-outline",
@@ -80,7 +83,7 @@ export default function EditLeaderboardProfile() {
     if (!originalProfile) return;
 
     // Check if there are any changes
-    const hasChanges = 
+    const hasChanges =
       originalProfile.nickname !== updatedProfile.nickname ||
       originalProfile.avatarIcon !== updatedProfile.avatarIcon;
 
@@ -95,10 +98,10 @@ export default function EditLeaderboardProfile() {
           },
           {
             text: "Save",
-            onPress: () => {
+            onPress: async () => {
               // TODO: Implement save profile logic here
               // This callback will be implemented by the user
-              saveProfileCallback(updatedProfile);
+              await saveProfileToFirestore(updatedProfile);
               router.back();
             },
           },
@@ -110,9 +113,15 @@ export default function EditLeaderboardProfile() {
   };
 
   // Empty callback function to be implemented by user
-  const saveProfileCallback = (profile: UpdatedProfileType) => {
-    // User will implement this function
-    console.log("Profile to save:", profile);
+  const saveProfileToFirestore = async (profile: UpdatedProfileType) => {
+    try {
+      // at this point, all the checks about the authenticated user have been done, so we just straight away
+      // call the updateProfile function:
+      await updateProfile(profile.nickname, profile.avatarIcon);
+    } catch (err) {
+      console.log("CRITICAL ERROR, UNABLE TO UPDATE PROFILE", err);
+      Alert.alert("Failed", "Unable to update profile");
+    }
   };
 
   if (isLoading) {
@@ -128,7 +137,10 @@ export default function EditLeaderboardProfile() {
     return (
       <View style={styles.errorContainer}>
         <Text style={styles.errorText}>Unable to load profile</Text>
-        <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={() => router.back()}
+        >
           <Text style={styles.backButtonText}>Go Back</Text>
         </TouchableOpacity>
       </View>
@@ -137,26 +149,7 @@ export default function EditLeaderboardProfile() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.headerBar}>
-        <TouchableOpacity
-          onPress={handleSaveProfile}
-          style={styles.backButtonIcon}
-        >
-          <Ionicons
-            name="chevron-back"
-            size={28}
-            color={theme.colors.primary}
-          />
-        </TouchableOpacity>
-        <Text style={styles.headerText}>Edit Profile</Text>
-        <View style={styles.headerRightPlaceholder} />
-      </View>
-
       <ScrollView showsVerticalScrollIndicator={false}>
-        <Text style={styles.saveHintText}>
-          Press back button to save changes
-        </Text>
-
         {/* Profile Preview Card */}
         <View style={styles.profilePreviewContainer}>
           <CardWithoutImage
@@ -230,10 +223,14 @@ export default function EditLeaderboardProfile() {
                     key={avatarName}
                     style={[
                       styles.avatarTouchable,
-                      updatedProfile.avatarIcon === avatarName && styles.avatarSelected,
+                      updatedProfile.avatarIcon === avatarName &&
+                        styles.avatarSelected,
                     ]}
                     onPress={() =>
-                      setUpdatedProfile((prev) => ({ ...prev, avatarIcon: avatarName }))
+                      setUpdatedProfile((prev) => ({
+                        ...prev,
+                        avatarIcon: avatarName,
+                      }))
                     }
                   >
                     <Ionicons
@@ -245,6 +242,20 @@ export default function EditLeaderboardProfile() {
                 ))}
               </View>
             )}
+
+            {updatedProfile.nickname.length > 0 &&
+              !filter.isProfane(updatedProfile.nickname) && (
+                <View style={styles.proceedButtonContainer}>
+                  <CTAButton
+                    title="Proceed"
+                    onPress={() => {
+                      // call the profile updating thing here
+                      handleSaveProfile();
+                    }}
+                    buttonHeight={45}
+                  />
+                </View>
+              )}
           </View>
         </View>
       </ScrollView>
@@ -258,7 +269,7 @@ const createStyles = (theme: Theme) =>
       flex: 1,
       backgroundColor: theme.colors.background,
       paddingTop: Platform.OS === "android" ? 15 : 5,
-      marginHorizontal: theme.spacing.s,
+      paddingHorizontal: theme.spacing.s,
     },
     loadingContainer: {
       flex: 1,
@@ -367,9 +378,9 @@ const createStyles = (theme: Theme) =>
       marginLeft: theme.spacing.s,
     },
     avatarGridContainer: {
-      flexDirection: 'row',
-      flexWrap: 'wrap',
-      justifyContent: 'space-between',
+      flexDirection: "row",
+      flexWrap: "wrap",
+      justifyContent: "space-between",
       marginTop: theme.spacing.m,
     },
     avatarTouchable: {
@@ -385,5 +396,8 @@ const createStyles = (theme: Theme) =>
     },
     avatarSelected: {
       borderColor: theme.colors.primary,
+    },
+    proceedButtonContainer: {
+      marginTop: theme.spacing.l,
     },
   });
