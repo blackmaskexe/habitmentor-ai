@@ -156,7 +156,7 @@ export default function Settings() {
           notificationsEnabled,
           notificationsEnabled
         )}
-        {renderOptionItem("bottom", "close", "Cancel All Notifications", () => {
+        {renderOptionItem("bottom", "ban", "Cancel All Notifications", () => {
           Alert.alert(
             `Cancel all Notification?`,
             "Are you sure?",

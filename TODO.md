@@ -1,2 +1,4 @@
-- the "1 notification" badge in "Leaderboard" and zeego leaderboard dropdown do not refresh after you have accepted the friend request.
 - create a landing page for the app (and alongside it, create the assets required to upload it on the appstore as well, use the heck out of canva for that)
+- limit retrieval of global people by 500, and make the user click a button to render 100 more, and then 100 more ....
+- validator for user's nickname in their profile
+- make things out of scroll view for things like the daily habits screen where I want to keep the WeekGlance stay, and only the rest of the stuff scrollable
