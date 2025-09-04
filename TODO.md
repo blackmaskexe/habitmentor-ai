@@ -1,4 +1,2 @@
-- when someone added as a friend, they don't show up on the friends tab immedately, needs app refresh
-- sending and accepting friend requests takes way too long than it should, find out why is that so
 - the "1 notification" badge in "Leaderboard" and zeego leaderboard dropdown do not refresh after you have accepted the friend request.
 - create a landing page for the app (and alongside it, create the assets required to upload it on the appstore as well, use the heck out of canva for that)

@@ -29,7 +29,7 @@ export default function LeaderboardDropdownMenu({}: {}) {
       .where("status", "==", "pending_received")
       .onSnapshot((snapshot) => {
         if (snapshot && snapshot.size) {
-          setPendingRequestsCount(snapshot.size);
+          setPendingRequestsCount(snapshot ? snapshot.size : 0);
         }
       });
 
