@@ -1,4 +1,5 @@
 import { updateUserPointsInFirestore } from "../firebase/firestore/pointsManager";
+import { syncDataToFirebaseProfile } from "../firebase/firestore/profileManager";
 import mmkvStorage from "../mmkvStorage";
 
 export function addPoints(addAmount: number) {
@@ -14,7 +15,7 @@ export function addPoints(addAmount: number) {
     }
 
     // also add the points in firestore:
-    updateUserPointsInFirestore(addAmount); // not awaiting, let it run in the background
+    syncDataToFirebaseProfile(); // just sync local points to firebase, dassit
   } catch (err) {
     console.log(
       "CRITICAL ERROR, COULD NOT ADD POINTS IN MMKV OR FIRESTORE",
@@ -35,8 +36,8 @@ export function subtractPoints(subtractAmount: number) {
       addPoints(subtractAmount); // recursively add points for the first time
     }
 
-    // now, subtracting the points from firestore as well:
-    updateUserPointsInFirestore(-1 * subtractAmount);
+    // now, subtracting the points from firestore as well: (we just sync current points to firebase lol)
+    syncDataToFirebaseProfile();
   } catch (err) {
     console.log(
       "CRITICAL ERROR, COULD NOT SUBTRACT POINTS FROM MMKV OR FIRESTORE",

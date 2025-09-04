@@ -16,6 +16,7 @@ import {
 } from "react-native";
 import { TourGuideZone } from "rn-tourguide";
 import firestore from "@react-native-firebase/firestore";
+import { syncDataToFirebaseProfile } from "@/utils/firebase/firestore/profileManager";
 
 export default function TabLayout() {
   const theme = useTheme();
@@ -28,6 +29,10 @@ export default function TabLayout() {
   // APP INITIALIZATION (After it has loaded):
   if (!areHabitsTagged()) {
     tagHabits();
+  }
+  if (getAuth().currentUser) {
+    // run syncing the user's leaderboard profile data to firestore:
+    syncDataToFirebaseProfile();
   }
 
   const [pendingRequestsCount, setPendingRequestsCount] = useState(0);

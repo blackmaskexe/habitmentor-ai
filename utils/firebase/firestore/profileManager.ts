@@ -4,6 +4,8 @@ import { FirebaseUserProfile } from "../types";
 import { getPoints } from "@/utils/database/points";
 import { getFormattedDate } from "@/utils/date";
 import { getAuth } from "@react-native-firebase/auth";
+import { calculateLongestStreak } from "@/app/(tabs)/home/overview";
+import { getTotalHabitsCompleted } from "@/utils/habits";
 
 const usersCollection = firestore().collection("users");
 
@@ -133,5 +135,20 @@ export async function getUserProfile(
       profileCreationDate: "1990-1-1",
       enrolledInGlobal: false,
     };
+  }
+}
+
+export async function syncDataToFirebaseProfile() {
+  try {
+    const currentUser = getAuth().currentUser;
+    if (!currentUser) return; // early return if not auth
+    await usersCollection.doc(currentUser.uid).update({
+      points: getPoints(),
+      streak: await calculateLongestStreak(),
+      totalHabitsCompleted: getTotalHabitsCompleted(),
+    });
+    console.log("User data updated!");
+  } catch (err) {
+    console.log("CRITICAL ERROR, COULD NOT SYNC DATA TO FIREBASE PROFILE", err);
   }
 }

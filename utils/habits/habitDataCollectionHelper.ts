@@ -359,3 +359,8 @@ function shouldCollectData() {
     return true;
   }
 }
+
+export function getTotalHabitsCompleted() {
+  const allHabitEntries = getHabitHistoryEntries();
+  return allHabitEntries.length;
+}

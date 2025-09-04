@@ -41,13 +41,13 @@ export default function LeaderboardFriendsView({
   const [myProfile, setMyProfile] = useState<RankedUser | null>(null);
   const [allRankedUsers, setAllRankedUsers] = useState<RankedUser[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [myData, setMyData] = useState<null | FirebaseUserProfile>(null);
 
   // Load friends data with real-time updates
   const [friendsData, setFriendsData] = useState<
     (FirebaseUserProfile & { id: string })[]
   >([]);
   const [friendIds, setFriendIds] = useState<string[]>([]);
+  const [friendsLoaded, setFriendsLoaded] = useState(false);
 
   // First, get the list of friend IDs and listen for changes
   useEffect(() => {
@@ -64,6 +64,8 @@ export default function LeaderboardFriendsView({
     unsubscribeFriendsList = friendsListRef.onSnapshot((snapshot) => {
       const ids = snapshot.docs.map((doc) => doc.id);
       setFriendIds(ids);
+      // Mark friends list as loaded (even if empty)
+      setFriendsLoaded(true);
     });
 
     return () => unsubscribeFriendsList();
@@ -113,8 +115,11 @@ export default function LeaderboardFriendsView({
 
     if (!currentUser || !userProfile) {
       setMyProfile(null);
-      setAllRankedUsers([]);
-      setIsLoading(false);
+      setIsLoading(() => {
+        // doing this so that users are first set to none, then loading is finished
+        setAllRankedUsers([]);
+        return false;
+      });
       return;
     }
 
@@ -124,13 +129,16 @@ export default function LeaderboardFriendsView({
     unsubscribe = myDocRef.onSnapshot((docSnapshot) => {
       try {
         if (!docSnapshot.exists()) {
-          setMyData(null);
           setIsLoading(false);
           return;
         }
 
         const myProfileData = docSnapshot.data() as FirebaseUserProfile;
-        setMyData(myProfileData);
+
+        // Only build leaderboard if friends have been loaded
+        if (!friendsLoaded) {
+          return; // Wait for friends to load first
+        }
 
         // Build leaderboard with my fresh data + friends data
         const allUserProfiles: (FirebaseUserProfile & { id: string })[] = [
@@ -154,8 +162,10 @@ export default function LeaderboardFriendsView({
         // Set the data
         const myRankedProfile = rankedUsers.find((user) => user.isMe);
         setMyProfile(myRankedProfile || null);
-        setAllRankedUsers(rankedUsers);
-        setIsLoading(false);
+        setIsLoading(() => {
+          setAllRankedUsers(rankedUsers);
+          return false;
+        });
       } catch (error) {
         console.error("Error updating leaderboard:", error);
         setIsLoading(false);
@@ -163,7 +173,7 @@ export default function LeaderboardFriendsView({
     });
 
     return () => unsubscribe();
-  }, [currentUser?.uid, friendsData]); // Include friendsData as dependency
+  }, [currentUser?.uid, friendsData, friendsLoaded]); // Include friendsLoaded as dependency
 
   const handleUserPress = (userId: string) => {
     router.push(`/(tabs)/leaderboard/${userId}`);
@@ -305,7 +315,7 @@ export default function LeaderboardFriendsView({
   }
 
   // No friends (only me)
-  if (allRankedUsers.length <= 1) {
+  if (allRankedUsers.length <= 1 && !isLoading) {
     return (
       <View style={styles.centeredContainer}>
         <Ionicons

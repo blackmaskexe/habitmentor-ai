@@ -13,7 +13,7 @@ import { getHabitCompletionCollection } from "@/utils/habits/habitDataCollection
 import mmkvStorage from "@/utils/mmkvStorage";
 import { Theme } from "@/utils/theme/themes";
 
-async function calculateLongestStreak() {
+export async function calculateLongestStreak() {
   const habitCompletionRecords = await getHabitCompletionCollection();
   let longestOverallStreak = habitCompletionRecords[0].streak; // stores the least of all the habit streaks
 

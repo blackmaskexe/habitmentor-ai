@@ -2,3 +2,5 @@
 - limit retrieval of global people by 500, and make the user click a button to render 100 more, and then 100 more ....
 - validator for user's nickname in their profile
 - make things out of scroll view for things like the daily habits screen where I want to keep the WeekGlance stay, and only the rest of the stuff scrollable
+- handle onboarding flow when someone has the app, someone sends them an invite to be friends, and the app hasn't onboarded yet (so therefore no friend invite) -> add it to some internalPendingFriends array or sum.
+- bruh the point addition to the firestore is dependent on making that api call when clicking the check button. What if the user doesn't have connection at that point??? -> snapshot the user's profile onto firebase instead on every app launch
