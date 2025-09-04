@@ -171,7 +171,7 @@ function createStyles(theme: Theme) {
       paddingHorizontal: 0,
       borderRadius: 999,
       marginHorizontal: 2,
-      backgroundColor: theme.colors.surface,
+      backgroundColor: "rgba(255,255,255,0.1)",
       borderWidth: 1.5,
       borderColor: "transparent",
       shadowColor: "#000",

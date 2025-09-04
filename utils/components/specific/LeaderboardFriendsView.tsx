@@ -43,56 +43,69 @@ export default function LeaderboardFriendsView({
   const [isLoading, setIsLoading] = useState(true);
   const [myData, setMyData] = useState<null | FirebaseUserProfile>(null);
 
-  // Load friends data once
+  // Load friends data with real-time updates
   const [friendsData, setFriendsData] = useState<
     (FirebaseUserProfile & { id: string })[]
   >([]);
-  const [friendsLoaded, setFriendsLoaded] = useState(false);
+  const [friendIds, setFriendIds] = useState<string[]>([]);
 
-  // Load friends once when component mounts
+  // First, get the list of friend IDs and listen for changes
   useEffect(() => {
-    if (!currentUser || !userProfile || friendsLoaded) return;
+    let unsubscribeFriendsList = () => {};
 
-    const loadFriends = async () => {
-      try {
-        // Get my friends
-        const friendsSnapshot = await firestore()
-          .collection("users")
-          .doc(currentUser.uid)
-          .collection("friends")
-          .where("status", "==", "accepted")
-          .get();
+    if (!currentUser || !userProfile) return;
 
-        const friendProfiles: (FirebaseUserProfile & { id: string })[] = [];
+    const friendsListRef = firestore()
+      .collection("users")
+      .doc(currentUser.uid)
+      .collection("friends")
+      .where("status", "==", "accepted");
 
-        if (!friendsSnapshot.empty) {
-          const friendIds = friendsSnapshot.docs.map((doc) => doc.id);
-          const batchSize = 10;
+    unsubscribeFriendsList = friendsListRef.onSnapshot((snapshot) => {
+      const ids = snapshot.docs.map((doc) => doc.id);
+      setFriendIds(ids);
+    });
 
-          for (let i = 0; i < friendIds.length; i += batchSize) {
-            const batch = friendIds.slice(i, i + batchSize);
-            const batchSnapshot = await firestore()
-              .collection("users")
-              .where(firestore.FieldPath.documentId(), "in", batch)
-              .get();
+    return () => unsubscribeFriendsList();
+  }, [currentUser?.uid, userProfile]);
 
-            batchSnapshot.docs.forEach((doc) => {
-              const data = doc.data() as FirebaseUserProfile;
-              friendProfiles.push({ ...data, id: doc.id });
-            });
-          }
+  // Then, listen to friend profile data changes
+  useEffect(() => {
+    const unsubscribers: (() => void)[] = [];
+
+    if (friendIds.length === 0) {
+      setFriendsData([]);
+      return;
+    }
+
+    const friendProfiles = new Map<
+      string,
+      FirebaseUserProfile & { id: string }
+    >();
+
+    // Set up individual snapshots for each friend
+    friendIds.forEach((friendId) => {
+      const friendDocRef = firestore().collection("users").doc(friendId);
+
+      const unsubscribe = friendDocRef.onSnapshot((docSnapshot) => {
+        if (docSnapshot.exists()) {
+          const data = docSnapshot.data() as FirebaseUserProfile;
+          friendProfiles.set(friendId, { ...data, id: friendId });
+        } else {
+          friendProfiles.delete(friendId);
         }
 
-        setFriendsData(friendProfiles);
-        setFriendsLoaded(true);
-      } catch (error) {
-        console.error("Error loading friends:", error);
-        setFriendsLoaded(true);
-      }
-    };
+        // Update the state with all current friend profiles
+        setFriendsData(Array.from(friendProfiles.values()));
+      });
 
-    loadFriends();
-  }, [currentUser?.uid, userProfile, friendsLoaded]);
+      unsubscribers.push(unsubscribe);
+    });
+
+    return () => {
+      unsubscribers.forEach((unsubscribe) => unsubscribe());
+    };
+  }, [friendIds]);
 
   // Snapshot for my profile only
   useEffect(() => {

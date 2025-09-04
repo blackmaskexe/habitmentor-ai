@@ -30,6 +30,12 @@ export default function SettingsLayout() {
           title: "Edit Profile",
         }}
       />
+      <Stack.Screen
+        name="erase-data"
+        options={{
+          title: "Erase Data",
+        }}
+      />
     </Stack>
   );
 }

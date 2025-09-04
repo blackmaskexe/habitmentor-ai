@@ -11,7 +11,7 @@ import {
  * Updates the currently logged-in user's points.
  * @param {number} pointsToAdd - The number of points to add. Can be negative to subtract.
  */
-export const updateUserPoints = async (pointsToAdd: number) => {
+export const updateUserPointsInFirestore = async (pointsToAdd: number) => {
   const auth = getAuth();
   const firestore = getFirestore();
 

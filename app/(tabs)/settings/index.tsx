@@ -262,26 +262,28 @@ export default function Settings() {
 
       {/* Settings Group */}
       <View style={styles.settingsGroup}>
-        {renderOptionItem("single", "trash", "Erase All Data", async () => {
-          Alert.alert(
-            `Erase all Habit Data?`,
-            "Are you sure?",
-            [
-              {
-                text: "Cancel",
-                onPress: () => console.log("Cancel Pressed"),
-                style: "cancel",
-              },
-              {
-                text: "Yes",
-                onPress: async () => {
-                  router.replace("/(onboarding)");
-                  await eraseAllHabitData();
-                },
-              },
-            ],
-            { cancelable: false }
-          );
+        {renderOptionItem("single", "trash", "Erase Data", () => {
+          // Alert.alert(
+          //   `Erase all Habit Data?`,
+          //   "Are you sure?",
+          //   [
+          //     {
+          //       text: "Cancel",
+          //       onPress: () => console.log("Cancel Pressed"),
+          //       style: "cancel",
+          //     },
+          //     {
+          //       text: "Yes",
+          //       onPress: async () => {
+          //         router.push("/(tabs)/settings/erase-data");
+          //         // router.replace("/(onboarding)");
+          //         // await eraseAllHabitData();
+          //       },
+          //     },
+          //   ],
+          //   { cancelable: false }
+          // );
+          router.push("/(tabs)/settings/erase-data");
         })}
 
         {/* Divider */}
