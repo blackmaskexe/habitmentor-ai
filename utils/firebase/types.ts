@@ -6,4 +6,6 @@ export type FirebaseUserProfile = {
   friends: string[];
   profileCreationDate: string; // formattedDate
   enrolledInGlobal: boolean;
+  totalHabitsCompleted?: number;
+  streak?: number;
 };

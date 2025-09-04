@@ -1,6 +1,31 @@
+import mmkvStorage from "@/utils/mmkvStorage";
 import { getAuth } from "@react-native-firebase/auth";
 import functions from "@react-native-firebase/functions";
 import { Alert } from "react-native";
+
+// -------------------------------------
+// MMKV LOGIC TO STORE NUMBER OF FRIENDS
+// -------------------------------------
+
+export function changeFriendCount(changeType: "add" | "subtract") {
+  let friendCount = mmkvStorage.getNumber("leaderboardFriendCount");
+  if (!friendCount) {
+    friendCount = 0;
+  }
+
+  if (changeType == "add") {
+    friendCount++;
+  } else friendCount--;
+
+  mmkvStorage.set("leaderboardFriendCount", friendCount);
+}
+export function getFriendCount() {
+  return mmkvStorage.getNumber("leaderboardFriendCount") || 0;
+}
+
+// --------------------------
+// FIRESTORE HELPER FUNCTIONS
+// --------------------------
 
 export function getInviteLink(): string | null {
   try {
@@ -36,6 +61,8 @@ export async function handleAcceptFriendRequest(requestSenderId: string) {
       senderId: requestSenderId, // sender of the friiend request
       response: "accept",
     });
+    // after the request is accepted, update the number of friends in the mmkvStorage as well:
+    changeFriendCount("add");
 
     Alert.alert("Success", "Friend Request Accepted!");
   } catch (err) {

@@ -16,6 +16,7 @@ import { getDateFromFormattedDate, getOrdinalDate } from "@/utils/date";
 import firestore from "@react-native-firebase/firestore";
 import { getAuth } from "@react-native-firebase/auth";
 import {
+  getFriendCount,
   handleAcceptFriendRequest,
   handleSendFriendRequest,
 } from "@/utils/firebase/firestore/friendsManager";
@@ -116,18 +117,20 @@ export default function UserProfilePage() {
   // 3. Profile Loaded State
   const pointsStats = [
     { label: "Total Points", value: userProfile.points.toString() },
+  ];
+
+  const additionalStats = [
+    { label: "Combined Streak", value: userProfile.streak?.toString() || "0" },
     {
-      label: "Points This Month",
-      value: userProfile.pointsThisMonth.toString(),
+      label: "Lifetime Habits Done",
+      value: userProfile.totalHabitsCompleted?.toString() || "0",
     },
   ];
 
-  const friendsCount = 0; // will get the length of the friends subcollection later
+  const friendsCount = getFriendCount(); // will get the length of the friends subcollection later
   const joinedDate = getOrdinalDate(
     getDateFromFormattedDate(userProfile.profileCreationDate)
   );
-
-  console.log("baby a jus wanna be yours I wanna be yooooors", relationStatus);
 
   function renderRequestButton() {
     type ButtonData = {
@@ -238,7 +241,16 @@ export default function UserProfilePage() {
 
       {/* --- Stats Grid --- */}
       <View style={styles.statsContainer}>
+        {/* Total Points - Full Width */}
         {pointsStats.map((stat, index) => (
+          <View key={index} style={styles.statBoxFullWidth}>
+            <Text style={styles.statValue}>{stat.value}</Text>
+            <Text style={styles.statLabel}>{stat.label}</Text>
+          </View>
+        ))}
+
+        {/* Additional Stats - Two columns */}
+        {additionalStats.map((stat, index) => (
           <View key={index} style={styles.statBox}>
             <Text style={styles.statValue}>{stat.value}</Text>
             <Text style={styles.statLabel}>{stat.label}</Text>
@@ -330,6 +342,14 @@ function createStyles(theme: Theme) {
     statBox: {
       backgroundColor: theme.colors.surface,
       width: "48%", // Two columns with a small gap
+      padding: theme.spacing.l,
+      borderRadius: theme.radius.m,
+      alignItems: "center",
+      marginBottom: theme.spacing.m,
+    },
+    statBoxFullWidth: {
+      backgroundColor: theme.colors.surface,
+      width: "100%", // Full width for total points
       padding: theme.spacing.l,
       borderRadius: theme.radius.m,
       alignItems: "center",

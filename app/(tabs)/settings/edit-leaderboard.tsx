@@ -21,9 +21,11 @@ import firestore from "@react-native-firebase/firestore";
 import { FirebaseUserProfile } from "@/utils/firebase/types";
 import { LEADERBOARD_AVATAR_NAMES } from "@/utils/misc/leaderboardAvatars";
 import CardWithoutImage from "@/utils/components/general/CardWithoutImage";
-import { Filter } from "bad-words";
 import { useRouter } from "expo-router";
-import { updateProfile } from "@/utils/firebase/firestore/profileManager";
+import {
+  updateProfile,
+  validateFirestoreNickname,
+} from "@/utils/firebase/firestore/profileManager";
 import CTAButton from "@/utils/components/general/CTAButton";
 
 type UpdatedProfileType = {
@@ -35,7 +37,6 @@ export default function EditLeaderboardProfile() {
   const theme = useTheme();
   const styles = createStyles(theme);
   const router = useRouter();
-  const filter = new Filter();
   const currentUser = getAuth().currentUser;
 
   const [isLoading, setIsLoading] = useState(true);
@@ -46,6 +47,7 @@ export default function EditLeaderboardProfile() {
     avatarIcon: "happy-outline",
   });
   const [isAvatarPickerVisible, setIsAvatarPickerVisible] = useState(false);
+  const [validationWarnings, setValidationWarnings] = useState<string[]>([]);
 
   // Load current profile from Firestore
   useEffect(() => {
@@ -153,11 +155,7 @@ export default function EditLeaderboardProfile() {
         {/* Profile Preview Card */}
         <View style={styles.profilePreviewContainer}>
           <CardWithoutImage
-            title={
-              filter.isProfane(updatedProfile.nickname)
-                ? "That's rude!!"
-                : updatedProfile.nickname || "Your Nickname"
-            }
+            title={updatedProfile.nickname || "Your Nickname"}
             description="This is how your profile will appear"
             IconComponent={
               <Ionicons
@@ -183,11 +181,9 @@ export default function EditLeaderboardProfile() {
               placeholder="Choose a cool nickname"
               placeholderTextColor={theme.colors.textSecondary}
             />
-            {filter.isProfane(updatedProfile.nickname) && (
-              <Text style={styles.profanityWarningText}>
-                Please keep it pg-friendly
-              </Text>
-            )}
+            {validationWarnings.map((message) => {
+              return <Text style={styles.profanityWarningText}>message</Text>;
+            })}
           </View>
 
           {/* Avatar Picker */}
@@ -243,19 +239,25 @@ export default function EditLeaderboardProfile() {
               </View>
             )}
 
-            {updatedProfile.nickname.length > 0 &&
-              !filter.isProfane(updatedProfile.nickname) && (
-                <View style={styles.proceedButtonContainer}>
-                  <CTAButton
-                    title="Proceed"
-                    onPress={() => {
-                      // call the profile updating thing here
-                      handleSaveProfile();
-                    }}
-                    buttonHeight={45}
-                  />
-                </View>
-              )}
+            <View style={styles.proceedButtonContainer}>
+              <CTAButton
+                title="Proceed"
+                onPress={async () => {
+                  const nicknameValidator = validateFirestoreNickname(
+                    updatedProfile.nickname
+                  );
+                  if (nicknameValidator.valid) {
+                    handleSaveProfile();
+                  } else {
+                    Alert.alert(
+                      "Nickname not available",
+                      nicknameValidator.messages.join("\n")
+                    );
+                  }
+                }}
+                buttonHeight={45}
+              />
+            </View>
           </View>
         </View>
       </ScrollView>

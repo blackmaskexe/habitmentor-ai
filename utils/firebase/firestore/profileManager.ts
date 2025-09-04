@@ -6,6 +6,9 @@ import { getFormattedDate } from "@/utils/date";
 import { getAuth } from "@react-native-firebase/auth";
 import { calculateLongestStreak } from "@/app/(tabs)/home/overview";
 import { getTotalHabitsCompleted } from "@/utils/habits";
+import { Filter } from "bad-words";
+
+const filter = new Filter();
 
 const usersCollection = firestore().collection("users");
 
@@ -33,6 +36,71 @@ export function setMmkvUserLeaderboardProfile(
   userProfile: FirebaseUserProfile
 ) {
   mmkvStorage.set("leaderboardProfile", JSON.stringify(userProfile));
+}
+
+// --------------------------------
+// VALIDATOR FOR FIRESTORE NICKNAME
+// --------------------------------
+
+export function validateFirestoreNickname(nickname: string) {
+  const response = {
+    valid: true,
+    messages: [] as string[],
+  };
+
+  // profanity check
+  if (filter.isProfane(nickname)) {
+    response.valid = false;
+    response.messages.push("Please keep it PG Friendly 😡");
+  }
+
+  // crazy symbols check
+  const allowedPattern = /^[a-zA-Z0-9_\s-]+$/;
+  if (!allowedPattern.test(nickname)) {
+    (response.valid = false),
+      response.messages.push(
+        "Only letters, numbers, spaces, hyphens, and underscores allowed"
+      );
+  }
+
+  // length check
+  if (nickname.length > 12 || nickname.length < 4) {
+    response.valid = false;
+    response.messages.push("Please keep the name between 4 and 12 characters");
+  }
+
+  // reserved words:
+  const reservedWords = [
+    "admin",
+    "administrator",
+    "mod",
+    "moderator",
+    "system",
+    "bot",
+    "habitmentor",
+    "support",
+    "help",
+    "api",
+    "null",
+    "undefined",
+    "deleted",
+    "anonymous",
+    "guest",
+    "user",
+    "test",
+  ];
+  if (reservedWords.includes(nickname.toLowerCase())) {
+    response.valid = false;
+    response.messages.push("This nickname is reserved and cannot be used");
+  }
+
+  // shouldn't be all numbers
+  if (/^\d+$/.test(nickname)) {
+    response.valid = false;
+    response.messages.push("Nickname cannot be only numbers");
+  }
+
+  return response;
 }
 
 // ------------------------------------

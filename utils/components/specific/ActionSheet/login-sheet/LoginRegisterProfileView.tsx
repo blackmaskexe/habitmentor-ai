@@ -1,13 +1,16 @@
 import CardWithoutImage from "@/utils/components/general/CardWithoutImage";
 import CTAButton from "@/utils/components/general/CTAButton";
-import { createProfile } from "@/utils/firebase/firestore/profileManager";
+import {
+  createProfile,
+  validateFirestoreNickname,
+} from "@/utils/firebase/firestore/profileManager";
 import { LEADERBOARD_AVATAR_NAMES } from "@/utils/misc/leaderboardAvatars";
 import { useTheme } from "@/utils/theme/ThemeContext";
 import { Theme } from "@/utils/theme/themes";
 import { Ionicons } from "@expo/vector-icons";
-import { Filter } from "bad-words";
 import { useState } from "react";
 import {
+  Alert,
   FlatList,
   Keyboard,
   StyleSheet,
@@ -21,21 +24,17 @@ import { SheetManager } from "react-native-actions-sheet";
 export default function LoginRegisterProfileView() {
   const theme = useTheme();
   const styles = createStyles(theme);
-  const filter = new Filter();
 
   const [nickname, setNickname] = useState<string>("");
   const [selectedAvatar, setSelectedAvatar] = useState<string>("happy-outline");
   const [isAvatarPickerVisible, setIsAvatarPickerVisible] = useState(false);
+  const [validationWarnings, setValidationWarnings] = useState<string[]>([]);
   return (
     <View style={styles.profileContainer}>
       {/* --- 1. Profile Preview Card --- */}
       <Text style={styles.profileTitleText}>Set Your Leaderboard Profile</Text>
       <CardWithoutImage
-        title={
-          filter.isProfane(nickname)
-            ? "That's rude!!"
-            : nickname || "Your Nickname"
-        }
+        title={nickname || "Your Nickname"}
         description="This is how your profile will appear"
         IconComponent={
           <Ionicons
@@ -56,11 +55,13 @@ export default function LoginRegisterProfileView() {
             placeholder="Choose a cool nickname"
             placeholderTextColor={theme.colors.textSecondary}
           />
-          {filter.isProfane(nickname) && (
-            <Text style={styles.profanityWarningText}>
-              Please keep it pg-friendly
-            </Text>
-          )}
+          {validationWarnings.map((message, index) => {
+            return (
+              <Text key={index} style={styles.profanityWarningText}>
+                {message}
+              </Text>
+            );
+          })}
         </View>
 
         {/* --- 3. Avatar Picker --- */}
@@ -119,18 +120,24 @@ export default function LoginRegisterProfileView() {
       </View>
 
       {/* --- 4. Create Button --- */}
-      {nickname.length > 0 && !filter.isProfane(nickname) && (
-        <View style={styles.proceedButtonContainer}>
-          <CTAButton
-            title="Proceed"
-            onPress={async () => {
+      <View style={styles.proceedButtonContainer}>
+        <CTAButton
+          title="Proceed"
+          onPress={async () => {
+            const nicknameValidator = validateFirestoreNickname(nickname);
+            if (nicknameValidator.valid) {
               await createProfile(nickname, selectedAvatar);
               SheetManager.hide("login-sheet");
-            }}
-            buttonHeight={45}
-          />
-        </View>
-      )}
+            } else {
+              Alert.alert(
+                "Nickname not available",
+                nicknameValidator.messages.join("\n")
+              );
+            }
+          }}
+          buttonHeight={45}
+        />
+      </View>
     </View>
   );
 }
