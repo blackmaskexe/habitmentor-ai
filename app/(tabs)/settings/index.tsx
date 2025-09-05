@@ -189,6 +189,10 @@ export default function Settings() {
       {/* Leaderboard Group */}
       <View style={styles.settingsGroup}>
         {renderOptionItem("top", "log-out", "Log Out", async () => {
+          if (!getAuth().currentUser) {
+            Alert.alert("Failed", "You are already logged out");
+            return;
+          }
           Alert.alert(
             `Logging Out`,
             "You will have to log back in to use leaderboards",
@@ -227,6 +231,12 @@ export default function Settings() {
           "globe",
           "Opt out of Global Leaderboard",
           async () => {
+            const currentUser = getAuth().currentUser;
+            if (!currentUser) {
+              Alert.alert("Error", "You need to sign in to do that!");
+              return;
+            }
+
             const currentUserId = getAuth().currentUser?.uid;
             const docRef = await firestore()
               .collection("users")

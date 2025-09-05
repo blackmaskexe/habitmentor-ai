@@ -91,10 +91,13 @@ function createStyles(theme: Theme) {
       backgroundColor: theme.colors.primary, // Primary color background
     },
     weekdayItemUnactivated: {
-      backgroundColor: theme.colors.textTertiary, // Primary color background
+      backgroundColor:
+        theme.theme == "dark"
+          ? theme.colors.textSecondary
+          : theme.colors.placeholder, // Primary color background
     },
     weekdayText: {
-      color: "white", // Ensure good contrast
+      color: theme.colors.textTertiary, // Ensure good contrast
       fontWeight: "bold",
     },
   });

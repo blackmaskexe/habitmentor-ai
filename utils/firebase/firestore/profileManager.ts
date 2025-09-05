@@ -64,9 +64,9 @@ export function validateFirestoreNickname(nickname: string) {
   }
 
   // length check
-  if (nickname.length > 12 || nickname.length < 4) {
+  if (nickname.length > 16 || nickname.length < 4) {
     response.valid = false;
-    response.messages.push("Please keep the name between 4 and 12 characters");
+    response.messages.push("Please keep the name between 4 and 16 characters");
   }
 
   // reserved words:

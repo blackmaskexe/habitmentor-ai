@@ -49,6 +49,7 @@ export function setMoodToday(moodLevel: number) {
 }
 
 export function didGetMoodCheckedToday() {
+  return false;
   const existingDailyRecords: DailyRecords = JSON.parse(
     mmkvStorage.getString("dailyRecords") || "{}"
   );

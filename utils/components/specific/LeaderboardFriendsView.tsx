@@ -16,6 +16,7 @@ import firestore from "@react-native-firebase/firestore";
 import { useRouter } from "expo-router";
 import { FirebaseUserProfile } from "@/utils/firebase/types";
 import { getInviteLink } from "@/utils/firebase/firestore/friendsManager";
+import CTAButton from "../general/CTAButton";
 
 type RankedUser = {
   id: string;
@@ -62,10 +63,12 @@ export default function LeaderboardFriendsView({
       .where("status", "==", "accepted");
 
     unsubscribeFriendsList = friendsListRef.onSnapshot((snapshot) => {
-      const ids = snapshot.docs.map((doc) => doc.id);
-      setFriendIds(ids);
-      // Mark friends list as loaded (even if empty)
-      setFriendsLoaded(true);
+      if (snapshot) {
+        const ids = snapshot.docs.map((doc) => doc.id);
+        setFriendIds(ids);
+        // Mark friends list as loaded (even if empty)
+        setFriendsLoaded(true);
+      }
     });
 
     return () => unsubscribeFriendsList();
@@ -90,7 +93,7 @@ export default function LeaderboardFriendsView({
       const friendDocRef = firestore().collection("users").doc(friendId);
 
       const unsubscribe = friendDocRef.onSnapshot((docSnapshot) => {
-        if (docSnapshot.exists()) {
+        if (docSnapshot && docSnapshot.exists()) {
           const data = docSnapshot.data() as FirebaseUserProfile;
           friendProfiles.set(friendId, { ...data, id: friendId });
         } else {
@@ -128,7 +131,7 @@ export default function LeaderboardFriendsView({
 
     unsubscribe = myDocRef.onSnapshot((docSnapshot) => {
       try {
-        if (!docSnapshot.exists()) {
+        if (!docSnapshot || !docSnapshot.exists()) {
           setIsLoading(false);
           return;
         }
@@ -327,6 +330,16 @@ export default function LeaderboardFriendsView({
         <Text style={styles.emptyDescription}>
           Add friends to see how you rank against each other.
         </Text>
+        <CTAButton
+          title="Add Friends"
+          iconName="add"
+          onPress={async () => {
+            await Share.share({
+              message: `Add me as a friend on HabitMentor-AI. Let's track our progress together! ${getInviteLink()}`,
+            });
+          }}
+          isBackgroundVisible={false}
+        />
       </View>
     );
   }
@@ -337,7 +350,7 @@ export default function LeaderboardFriendsView({
       <FlatList
         data={allRankedUsers}
         renderItem={renderUserItem}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item.id + Math.random().toString()}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.listContainer}
         ListHeaderComponent={renderMyRankHeader}
@@ -465,6 +478,7 @@ function createStyles(theme: Theme) {
       color: theme.colors.textSecondary,
       textAlign: "center",
       lineHeight: 20,
+      marginBottom: theme.spacing.m,
     },
     listFooter: {
       marginTop: theme.spacing.m,

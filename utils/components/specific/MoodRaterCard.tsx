@@ -126,7 +126,7 @@ function createStyles(theme: Theme) {
       shadowRadius: 4,
       elevation: 2,
       margin: 10,
-      width: "95%",
+      width: "92%",
       alignSelf: "center",
       marginTop: theme.spacing.m,
       justifyContent: "center",

@@ -11,6 +11,8 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import functions from "@react-native-firebase/functions";
+import { getAuth, signOut } from "@react-native-firebase/auth";
 
 export default function EraseData() {
   const theme = useTheme();
@@ -114,8 +116,22 @@ export default function EraseData() {
                 {
                   text: "Delete",
                   style: "destructive",
-                  onPress: () => {
-                    // TODO: Implement leaderboard profile deletion
+                  onPress: async () => {
+                    const currentUser = getAuth().currentUser;
+                    if (!currentUser) {
+                      Alert.alert(
+                        "Failed",
+                        "You must be signed in to delete your account"
+                      );
+                      return;
+                    }
+
+                    const deleteUserFunction = functions().httpsCallable(
+                      "deleteUserDataAndAccount"
+                    );
+                    router.replace("/(tabs)/home");
+                    await deleteUserFunction();
+                    signOut(getAuth());
                     console.log("Delete leaderboard profile");
                   },
                 },
@@ -152,11 +168,25 @@ export default function EraseData() {
                   text: "Delete Everything",
                   style: "destructive",
                   onPress: async () => {
+                    const currentUser = getAuth().currentUser;
+                    if (!currentUser) {
+                      Alert.alert(
+                        "Failed",
+                        "You aren't logged in. Log in first"
+                      );
+                    }
+
                     // erasing all local habits
                     router.replace("/(onboarding)");
                     await eraseAllHabitData();
 
                     // then removing cloud data
+                    const deleteUserFunction = functions().httpsCallable(
+                      "deleteUserDataAndAccount"
+                    );
+
+                    await deleteUserFunction();
+                    signOut(getAuth());
                   },
                 },
               ]

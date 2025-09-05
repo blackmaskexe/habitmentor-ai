@@ -9,7 +9,6 @@ import {
   View,
   ActivityIndicator,
   TextInput,
-  FlatList,
   Keyboard,
 } from "react-native";
 
