@@ -12,6 +12,7 @@ import {
   Pressable,
   ScrollView,
   StyleSheet,
+  Switch,
   Text,
   View,
 } from "react-native";
@@ -266,6 +267,19 @@ export default function VariableItemPicker({
                     values={values}
                   />
 
+                  <View style={styles.reminderContainer}>
+                    <Text style={styles.reminderLabel}>
+                      Enable Reminder for Habit
+                    </Text>
+                    <Switch
+                      trackColor={{ false: "#767577", true: "#81b0ff" }}
+                      thumbColor={"#f5dd4b"}
+                      ios_backgroundColor="#3e3e3e"
+                      onValueChange={() => {}}
+                      value={true}
+                    />
+                  </View>
+
                   <Text style={styles.formLabel}></Text>
                   {/* <WeekdayFrequencyPicker /> */}
                   <View style={styles.space} />
@@ -371,6 +385,22 @@ function createStyles(theme: any, boxSize: number) {
     formLabel: {
       ...theme.text.body,
       color: theme.colors.text,
+      marginBottom: theme.spacing.s,
+    },
+    reminderContainer: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
+      width: "100%",
+      marginVertical: theme.spacing.s,
+    },
+    reminderLabel: {
+      ...theme.text.body,
+      fontSize: 13,
+      fontWeight: "600",
+      color: theme.colors.textSecondary,
+      letterSpacing: 0.5,
+      textTransform: "uppercase",
       marginBottom: theme.spacing.s,
     },
   });
