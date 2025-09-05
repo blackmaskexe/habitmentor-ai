@@ -1,10 +1,10 @@
-import { TouchableOpacity } from "react-native";
-import * as DropdownMenu from "./dropdown-menu";
-import { Ionicons } from "@expo/vector-icons";
 import { useTheme } from "@/utils/theme/ThemeContext";
+import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import AddNewHabitModal from "../AddNewHabitModal";
 import { useState } from "react";
+import { TouchableOpacity } from "react-native";
+import AddNewHabitModal from "../AddNewHabitModal";
+import * as DropdownMenu from "./dropdown-menu";
 
 export default function HomeAddDropdownMenu() {
   const router = useRouter();

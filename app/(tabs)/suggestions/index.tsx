@@ -1,18 +1,12 @@
-import React, { useRef, useState } from "react";
-import { Animated, ScrollView, StyleSheet, View } from "react-native";
-import { useTheme } from "@/utils/theme/ThemeContext";
 import CardWithoutImage from "@/utils/components/general/CardWithoutImage";
-import { Theme } from "@/utils/theme/themes";
-import { useRouter } from "expo-router";
-import CompletionRecommendationCard from "@/utils/components/specific/AiSuggestions/CompletionRecommendationCard";
+import AiSuggestionsTabView from "@/utils/components/specific/AiSuggestions/AiSuggestionsTabView";
 import MoodRaterCard from "@/utils/components/specific/MoodRaterCard";
 import { didGetMoodCheckedToday } from "@/utils/database/dailyMetadataRecords";
-import Card from "@/utils/components/general/Card";
-import CardGrid2x1 from "@/utils/components/general/CardGrid2x1";
-import { getLeastCompletedHabitMetadataThisWeek } from "@/utils/habits/habitSuggestionsManager";
-import ChartCompletionsThisWeek from "@/utils/components/specific/AiSuggestions/ChartCompletionsThisWeek";
-import EmotionAwareSuggestionCard from "@/utils/components/specific/AiSuggestions/EmotionAwareSuggestionCard";
-import AiSuggestionsTabView from "@/utils/components/specific/AiSuggestions/AiSuggestionsTabView";
+import { useTheme } from "@/utils/theme/ThemeContext";
+import { Theme } from "@/utils/theme/themes";
+import { useRouter } from "expo-router";
+import React, { useRef, useState } from "react";
+import { Animated, StyleSheet, View } from "react-native";
 
 export default function AiSuggestions() {
   const fadeAnim = useRef(new Animated.Value(1)).current;
@@ -38,14 +32,12 @@ export default function AiSuggestions() {
     }, 1500);
   };
 
-  const [showMoodCard, setShowMoodCard] = useState(didGetMoodCheckedToday());
+  const [showMoodCard, setShowMoodCard] = useState(!didGetMoodCheckedToday());
   const [showNextCard, setShowNextCard] = useState(false);
   const router = useRouter();
 
   const theme = useTheme();
   const styles = createStyles(theme);
-
-  const lowestCompletedHabitThisWeek = getLeastCompletedHabitMetadataThisWeek();
 
   return (
     <View
@@ -53,18 +45,25 @@ export default function AiSuggestions() {
       // contentContainerStyle={styles.scrollContent}
       // showsVerticalScrollIndicator={false}
     >
-      <CardWithoutImage
-        title="AI Assistant"
-        onPress={() => {
-          router.push("/chat");
+      <View
+        style={{
+          marginHorizontal: theme.spacing.s,
         }}
-        description="Click to chat with your AI Assistant"
-        iconLetters="AI"
-      />
+      >
+        <CardWithoutImage
+          title="AI Assistant"
+          onPress={() => {
+            router.push("/chat");
+          }}
+          description="Click to chat with your AI Assistant"
+          iconLetters="AI"
+        />
+      </View>
+
       <View style={styles.horizontalRoller} />
 
       {/* Lowest being done habit (full width card) */}
-      {/* {showMoodCard ? (
+      {showMoodCard ? (
         <Animated.View
           style={{
             opacity: fadeAnim,
@@ -85,7 +84,7 @@ export default function AiSuggestions() {
           ],
           opacity: showMoodCard ? 0 : 1, // hide until MoodRaterCard is gone
         }}
-      ></Animated.View> */}
+      ></Animated.View>
 
       {/* <CompletionRecommendationCard
         habitName={lowestCompletedHabitThisWeek.habitName}

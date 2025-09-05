@@ -1,11 +1,8 @@
-import React from "react";
-import { View, Text, StyleSheet, ScrollView } from "react-native";
-import { Ionicons } from "@expo/vector-icons"; // For streak icon
 import { useTheme } from "@/utils/theme/ThemeContext";
+import React from "react";
+import { ScrollView, StyleSheet } from "react-native";
 
 // Components:
-import ProgressBar from "../general/ProgressBar";
-import CardWithoutImage from "../general/CardWithoutImage";
 import { Theme } from "@/utils/theme/themes";
 
 // --- Data Structures ---

@@ -17,4 +17,9 @@ export default mmkvStorage;
 // skipsLeft: stores how many skips does the user have remaining for the week, and is recalculated each week on sunday
 // isNotificationOn: stores if the user wants to have their notifications on or off -> this is for the entire app; each habitObject has it's own isNotificationOn property too
 // appStartDate: formatted date on which the user started the habit tracker app
-// dailyRecord: Array of daily records for users habits and actions. this will store stuff like moodRating, habitCompletionRate (you felt on average happy last week, and you completed 55% of the tasks. Let's improve on that, typeshi), tagsOfHabitsMIssed (or missedHabits[] ?).
+// dailyRecords: Array of daily records for users habits and actions. this will store stuff like moodRating, habitCompletionRate (you felt on average happy last week, and you completed 55% of the tasks. Let's improve on that, typeshi), tagsOfHabitsMIssed (or missedHabits[] ?).
+// lastEmotionAwareSuggestionDate: the last time emotion aware suggestion api was called
+// recentEmotionAwareSuggestion: the most recent message that was given by emotion aware ai
+// totalPoints: the points of the user's habits that they accumulate over time
+// leaderboardProfile: the same stuff stored in firestore (the same stuff, but during the initial creation of their profile + at any updations)
+// leaderboardFriendCount: number of friends that the user has, keeping track of this in the frontend as it's a heavy operation to do in the backend

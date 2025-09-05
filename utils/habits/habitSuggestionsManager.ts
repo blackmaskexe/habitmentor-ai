@@ -1,5 +1,11 @@
 import { Ionicons } from "@expo/vector-icons";
-import { getDate, getDatesThisWeek, getFormattedDatesThisWeek } from "../date";
+import {
+  getDate,
+  getDateFromFormattedDate,
+  getDatesThisWeek,
+  getFormattedDate,
+  getFormattedDatesThisWeek,
+} from "../date";
 import mmkvStorage from "../mmkvStorage";
 import {
   getHabitCompletionRatePreviousWeek,
@@ -7,7 +13,9 @@ import {
 } from "./habitFrequencyUtils";
 import { getAllHabits, getHabitObjectFromId } from "./habitService";
 import lodash from "lodash";
-import { getAllHabitHistoryEntriesOnDate } from "./habitHistoryManager";
+import { getAllHabitHistoryEntriesEntriesOnDate } from "./habitHistoryManager";
+import { getEmotionAwareSuggestion } from "../api";
+import { getMetadataRecords } from "../database/dailyMetadataRecords";
 
 type LeastCompletedHabitMetadata = {
   habitId: string;
@@ -124,7 +132,9 @@ export function getWeeklyHabitCompletionsCountData() {
   const completionsSoFar: CompletionsData[] = [];
   for (let i = 0; i < datesThisWeek.length; i++) {
     // habits completed for this particular day:
-    const completionsArray = getAllHabitHistoryEntriesOnDate(datesThisWeek[i]);
+    const completionsArray = getAllHabitHistoryEntriesEntriesOnDate(
+      datesThisWeek[i]
+    );
 
     const completionsData: CompletionsData = {
       x: weekdays[i],
@@ -136,4 +146,93 @@ export function getWeeklyHabitCompletionsCountData() {
   }
 
   return completionsSoFar;
+}
+
+export function getWeeklyHabitCompletionsCountDataForSingleHabit(
+  habitId: string
+) {
+  const datesThisWeek = getDatesThisWeek();
+  // datesThisWeek.length = getDate().getDay() + 1; // shrinks the array of only contains days uptil today
+
+  const weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+  const completionsSoFar: CompletionsData[] = [];
+  for (let i = 0; i < datesThisWeek.length; i++) {
+    // habits completed for this particular day:
+    const completionsArray = getAllHabitHistoryEntriesEntriesOnDate(
+      datesThisWeek[i]
+    );
+
+    let didUserCompleteHabitOnDate: boolean = false; // pre-declaring if habit was completed
+    // for (const entry of completionsArray) {
+    //   if
+    // }
+
+    const completionsData: CompletionsData = {
+      x: weekdays[i],
+      y: datesThisWeek[i] <= getDate() ? completionsArray.length : null, // basically makes it so that
+      // all the bars are rendred for react-native-chart-kit, but days that are in future are
+      // noted by null so no number shows next to them (if it is 0, it will show 0. If it is null, it wont show)
+    };
+    completionsSoFar.push(completionsData);
+  }
+
+  return completionsSoFar;
+}
+
+export function shouldGetNewEmotionAwareSuggestion() {
+  const lastEmotionAwareSuggestionFormattedDate = mmkvStorage.getString(
+    "lastEmotionAwareSuggestionDate"
+  );
+
+  if (lastEmotionAwareSuggestionFormattedDate) {
+    // since we want to refresh this suggestion everyday:
+    const lastSuggesstionDate = getDateFromFormattedDate(
+      lastEmotionAwareSuggestionFormattedDate
+    );
+    const dateToday = getDateFromFormattedDate(getFormattedDate()); // doing this so that I can get a date without timings attached for comparison purposses
+
+    if (dateToday > lastSuggesstionDate) {
+      mmkvStorage.set("lastEmotionAwareSuggestionDate", getFormattedDate());
+      return true;
+    } else {
+      // if it is the same day that the user got the emotion aware suggestion, don't run
+      return false;
+    }
+  } else {
+    // this is the case where the user didn't get any emotion aware suggestion till yet
+    mmkvStorage.set("lastEmotionAwareSuggestionDate", getFormattedDate());
+    return true;
+  }
+}
+export function getRecentEmotionAwareSuggestion() {
+  const emotionAwareSuggestion = mmkvStorage.getString(
+    "recentEmotionAwareSuggestion"
+  );
+
+  return emotionAwareSuggestion
+    ? emotionAwareSuggestion
+    : "Keep using the app, and you will get tailored emotion-aware suggestions";
+}
+
+export function setRecentEmotionAwareSuggestion(message: string): void {
+  mmkvStorage.set("recentEmotionAwareSuggestion", message);
+}
+
+export async function getNewEmotionAwareMessage(): Promise<string> {
+  try {
+    const response = await getEmotionAwareSuggestion();
+
+    if (response && response.data) {
+      setRecentEmotionAwareSuggestion(response.data as string);
+      return response.data;
+    }
+    // catch statement for emotion aware message:
+    throw new Error(
+      "unknown response generated from cloud function in habitSuggestionManager.ts"
+    );
+  } catch (err) {
+    console.log("ERROR: COULD NOT GET EMOTION AWARE SUGGESTION");
+    return "Could not fetch emotion-aware message at this time, please try again later?";
+  }
 }

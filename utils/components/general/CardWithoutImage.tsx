@@ -1,13 +1,14 @@
-import React from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  Dimensions,
-  TouchableOpacity,
-} from "react-native";
 import { useTheme } from "@/utils/theme/ThemeContext";
 import { Theme } from "@/utils/theme/themes";
+import { Ionicons } from "@expo/vector-icons";
+import React from "react";
+import {
+  Dimensions,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 const screenWidth = Dimensions.get("window").width;
 
@@ -20,6 +21,9 @@ type CardProps = {
   onPress?: any;
   children?: any;
   iconLetters?: string;
+  ioniconName?: string;
+  allowMultilineDescription?: boolean;
+  IconComponent?: any; // react component, i forgot type
 };
 
 const CardWithoutImage: React.FC<CardProps> = ({
@@ -31,6 +35,9 @@ const CardWithoutImage: React.FC<CardProps> = ({
   children,
   metadata,
   iconLetters, // overriding the icon letter automatically from title
+  ioniconName,
+  allowMultilineDescription,
+  IconComponent,
 }) => {
   const theme = useTheme();
   const styles = createStyles(theme);
@@ -58,9 +65,15 @@ const CardWithoutImage: React.FC<CardProps> = ({
     >
       <View style={styles.cardContent}>
         <View style={styles.iconContainer}>
-          <Text style={styles.iconText}>
-            {iconLetters ? iconLetters : title[0].toUpperCase()}
-          </Text>
+          {IconComponent ? (
+            IconComponent
+          ) : ioniconName ? (
+            <Ionicons name={ioniconName as any} size={24} color="white" />
+          ) : (
+            <Text style={styles.iconText}>
+              {iconLetters ? iconLetters : title[0].toUpperCase()}
+            </Text>
+          )}
         </View>
 
         <View style={styles.textContainer}>
@@ -70,7 +83,7 @@ const CardWithoutImage: React.FC<CardProps> = ({
           {description && description.trim().length > 0 ? (
             <Text
               style={styles.description}
-              numberOfLines={1}
+              numberOfLines={allowMultilineDescription ? 3 : 1}
               ellipsizeMode="tail" // ... when the length of the text is too long
             >
               {description}
@@ -100,7 +113,7 @@ function createStyles(theme: Theme) {
       shadowOpacity: 0.3,
       shadowRadius: 4,
       elevation: 8,
-      margin: 10,
+      // margin: 10,
       width: "95%", // Takes up 95% of parent width
       alignSelf: "center",
     },

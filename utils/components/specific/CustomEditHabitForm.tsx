@@ -1,15 +1,15 @@
+import { useTheme } from "@/utils/theme/ThemeContext";
+import { Theme } from "@/utils/theme/themes";
+import { FormValuesType } from "@/utils/types";
+import { Ionicons } from "@expo/vector-icons";
 import React, { useState } from "react";
 import {
-  View,
+  StyleSheet,
   Text,
   TextInput,
-  StyleSheet,
   TouchableOpacity,
+  View,
 } from "react-native";
-import { useTheme } from "@/utils/theme/ThemeContext";
-import { FormValuesType } from "@/utils/types";
-import { Theme } from "@/utils/theme/themes";
-import { Ionicons } from "@expo/vector-icons";
 
 type FormField = {
   label: string;
@@ -37,7 +37,6 @@ export default function CustomEditHabitForm({
   return (
     <View style={styles.container}>
       {fields.map((field) => {
-        console.log("jatt taan", field);
         const isEditing = editingFieldKey === field.key;
         const value = (values as any)[field.key] || "";
 

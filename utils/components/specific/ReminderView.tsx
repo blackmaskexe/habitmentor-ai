@@ -1,27 +1,26 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
-  SafeAreaView,
-  Text,
-  StyleSheet,
-  View,
   Platform,
+  SafeAreaView,
+  StyleSheet,
+  Text,
   TouchableOpacity,
-  Alert,
+  View,
 } from "react-native";
 
 import DatePicker from "react-native-date-picker";
 
-import { useTheme } from "@/utils/theme/ThemeContext";
-import { Ionicons } from "@expo/vector-icons";
-import CTAButton from "../general/CTAButton"; // Assuming this is your custom button
-import { Theme } from "@/utils/theme/themes";
-import { useNotifications } from "@/utils/useNotifications";
+import { getDate, getFormattedTime } from "@/utils/date";
 import {
   getHabitObjectFromId,
   updateHabitNotificationTime,
 } from "@/utils/habits";
-import { getDate, getFormattedTime } from "@/utils/date";
 import mmkvStorage from "@/utils/mmkvStorage";
+import { useTheme } from "@/utils/theme/ThemeContext";
+import { Theme } from "@/utils/theme/themes";
+import { useNotifications } from "@/utils/useNotifications";
+import { Ionicons } from "@expo/vector-icons";
+import CTAButton from "../general/CTAButton"; // Assuming this is your custom button
 
 // update state variable that holds habit when habit changes in the mmkvStorage
 // now the todo right now is what is the root component that houses the habit item so that

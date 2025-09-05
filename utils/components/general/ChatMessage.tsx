@@ -1,4 +1,13 @@
+import api, { getChatMessage } from "@/utils/api";
+import { getDate, getTimeOfDay } from "@/utils/date";
+import { getAllHabits } from "@/utils/habits";
+import {
+  addImportantMessage,
+  getHabitCompletionCollection,
+  getImportantMessages,
+} from "@/utils/habits/habitDataCollectionHelper";
 import mmkvStorage from "@/utils/mmkvStorage";
+import { generateMessageId } from "@/utils/randomId";
 import { useTheme } from "@/utils/theme/ThemeContext";
 import { Theme } from "@/utils/theme/themes";
 import { MessageType } from "@/utils/types";
@@ -19,18 +28,8 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import api from "@/utils/api";
 import ChatMessagesSkeleton from "./ChatMessagesSkeleton";
-import { generateMessageId } from "@/utils/randomId";
 import GenericList from "./GenericList";
-import {
-  addImportantMessage,
-  getHabitCompletionCollection,
-  getImportantMessages,
-} from "@/utils/habits/habitDataCollectionHelper";
-import { getDate, getTimeOfDay } from "@/utils/date";
-import { getAllHabits } from "@/utils/habits";
-import { getAllHabitCompletionRecords } from "@/utils/habits/habitHistoryManager";
 
 // Prop Instructions:
 // Send a message prop as follows:
@@ -160,16 +159,10 @@ export default function ChatMessages({
 
     // make response request to the API:
 
-    const response: AIResponseType = await api.post("/chat", {
-      message: userMessage.content,
-      importantMessageHistory: await getImportantMessages(),
-      recentMessageHistory: messages.slice(-20), // send the last 20 messages in the payload
-      timeOfDay: getTimeOfDay(),
-      metadata: {
-        activeHabits: getAllHabits(), // already plain
-        habitCompletions: await getHabitCompletionCollection(),
-      },
-    } as UserPromptType);
+    const response = await getChatMessage(
+      userMessage.content,
+      messages.slice(-20)
+    );
 
     // populating the ai message skeleton with response data:
     setMessages((prevMessages) => {

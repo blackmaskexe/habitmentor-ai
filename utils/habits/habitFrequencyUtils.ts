@@ -3,20 +3,16 @@
 import { getDate, getDatesLastWeek, getDatesThisWeek } from "../date";
 import mmkvStorage from "../mmkvStorage";
 import { HabitObject } from "../types";
-import { getAllHabitHistoryEntriesOnDate } from "./habitHistoryManager";
+import { getAllHabitHistoryEntriesEntriesOnDate } from "./habitHistoryManager";
 import { getAllHabits, getHabitObjectFromId } from "./habitService";
 
 // return all the habits that are due on the particular weekday
 export function getAllHabitsOnWeekday(weekdayNumber: number) {
-  console.log("Wouldn't do nothing", weekdayNumber);
   const activeHabits: HabitObject[] = JSON.parse(
     mmkvStorage.getString("activeHabits") || "[]"
   );
 
-  console.log("KANSOL LOG", activeHabits);
-
-  return activeHabits.filter((habit, index) => {
-    console.log("HAHAHHA", habit);
+  return activeHabits.filter((habit) => {
     return habit.frequency[weekdayNumber]; // only those habits will be returned that are active on that weekday
   });
 }
@@ -27,7 +23,6 @@ export function getTotalHabitNumberOnDay(weekdayNumber: number) {
     const allHabits = getAllHabits();
     let totalNum = 0;
     for (const habit of allHabits) {
-      console.log("I guess amarestode ", habit);
       if (habit.frequency[weekdayNumber]) {
         totalNum++;
       }
@@ -65,7 +60,9 @@ export function getTimesCompletedHabitLastWeek(habitId: string) {
   const datesLastWeek = getDatesLastWeek();
 
   for (const date of datesLastWeek) {
-    for (const habitHistoryEntry of getAllHabitHistoryEntriesOnDate(date)) {
+    for (const habitHistoryEntry of getAllHabitHistoryEntriesEntriesOnDate(
+      date
+    )) {
       // if it finds a habit that was completed on a day, it increments times completed
       if (habitHistoryEntry.habitId == habitId) {
         timesCompletedLastWeek++;
@@ -90,6 +87,17 @@ export function getHabitCompletionRatePreviousWeek(habitId: string) {
   // looping through all the dates, calculating number of times that habit was done last week:
 }
 
+export function getAverageHabitsCompletionRatePreviousWeek() {
+  const allHabits = getAllHabits();
+
+  const totalCompletionRate = allHabits.reduce((sum, habitObject) => {
+    const completionRate = getHabitCompletionRatePreviousWeek(habitObject.id);
+    return sum + completionRate;
+  }, 0);
+
+  return allHabits.length ? totalCompletionRate / allHabits.length : 0;
+}
+
 // THIS WEEK RELATED HELPERS:
 export function getTimesCompletedHabitThisWeek(habitId: string): number {
   let timesCompletedThisWeek = 0;
@@ -101,7 +109,7 @@ export function getTimesCompletedHabitThisWeek(habitId: string): number {
 
   // looping through each date's habit history entries, finding if any match the habitId input
   for (const date of datesSoFarThisWeek) {
-    for (const entry of getAllHabitHistoryEntriesOnDate(date)) {
+    for (const entry of getAllHabitHistoryEntriesEntriesOnDate(date)) {
       if (entry.habitId == habitId) {
         timesCompletedThisWeek++;
         break;
@@ -141,6 +149,18 @@ export function getHabitCompletionRateThisWeek(habitId: string): number {
   }
 }
 
+export function getAverageHabitsCompletionRateThisWeek() {
+  // this calucluates the so-far average habits completion rate
+  const allHabits = getAllHabits();
+
+  const totalCompletionRate = allHabits.reduce((sum, habitObject) => {
+    const completionRate = getHabitCompletionRateThisWeek(habitObject.id);
+    return sum + completionRate;
+  }, 0);
+
+  return allHabits.length ? totalCompletionRate / allHabits.length : 0;
+}
+
 export function getIdsOfHabitsDueOnWeekday(date: Date): string[] {
   const weekdayNumber = date.getDay(); // 0 index, 0 is sunday
   const idsOfHabitsDueOnWeekday: string[] = [];
@@ -152,4 +172,23 @@ export function getIdsOfHabitsDueOnWeekday(date: Date): string[] {
   }
 
   return idsOfHabitsDueOnWeekday;
+}
+
+export function getAllHabitsCompletionRateOnDate(date: Date) {
+  const habitEntriesOnDate = getAllHabitHistoryEntriesEntriesOnDate(date);
+  const habitsToBeDoneOnDate = getAllHabits().filter((habit) => {
+    return habit.frequency[date.getDay()] ? true : false;
+  });
+
+  if (habitsToBeDoneOnDate.length == 0) {
+    // early return incase no habits to be done, to avoid dividing by 0
+    return 0;
+  }
+
+  return Math.floor(
+    (habitEntriesOnDate.length * 100) / habitsToBeDoneOnDate.length
+    // since an entry only corresponds to one habit
+    // and no habit can have more than one entry,
+    // we can just use it for calculating how many habits the user did
+  );
 }

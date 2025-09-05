@@ -1,10 +1,10 @@
 import { useTheme } from "@/utils/theme/ThemeContext";
+import { Theme } from "@/utils/theme/themes";
+import * as Haptics from "expo-haptics";
 import { useEffect, useState } from "react";
-import { StyleSheet, TouchableOpacity, View, Text } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 const weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-import * as Haptics from "expo-haptics";
-import { Theme } from "@/utils/theme/themes";
 
 export default function WeekdayFrequencyPicker({
   initialFrequency,
@@ -25,12 +25,7 @@ export default function WeekdayFrequencyPicker({
   useEffect(() => {
     // change the frequency if it is changed by any other means
     // mainly, the frequency changing dropdown
-    console.log("VALUE BADLA", values);
     if (values.frequency) {
-      console.log(
-        "Bring your best friend, then pull up to the west end",
-        values
-      );
       setActiveDays(values.frequency);
     }
   }, [values]);
@@ -96,10 +91,13 @@ function createStyles(theme: Theme) {
       backgroundColor: theme.colors.primary, // Primary color background
     },
     weekdayItemUnactivated: {
-      backgroundColor: theme.colors.textTertiary, // Primary color background
+      backgroundColor:
+        theme.theme == "dark"
+          ? theme.colors.textSecondary
+          : theme.colors.placeholder, // Primary color background
     },
     weekdayText: {
-      color: "white", // Ensure good contrast
+      color: theme.colors.textTertiary, // Ensure good contrast
       fontWeight: "bold",
     },
   });

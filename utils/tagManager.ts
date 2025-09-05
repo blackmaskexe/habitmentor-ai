@@ -1,4 +1,4 @@
-import api from "./api";
+import { tagHabitsOnCloud } from "./api";
 import { getHabitObjectFromId, updateHabit } from "./habits";
 import mmkvStorage from "./mmkvStorage";
 import { HabitObject } from "./types";
@@ -15,11 +15,6 @@ export async function tagHabits() {
 
   // now, looping through all the habits in mmkvStorage, and assigning a tags property to each of them:
   assignTagToHabits(mappedHabitTags);
-
-  console.log(
-    "Done tagging of things I think",
-    mmkvStorage.getString("activeHabits")
-  );
 }
 
 export async function tagOneHabit(habitId: string) {
@@ -28,25 +23,20 @@ export async function tagOneHabit(habitId: string) {
     const taggedHabitArray = await getTaggedHabits([untaggedHabit]); // this is because the function returns an array (in this case
     // the array will be of length 1)
     const taggedHabit: TaggedHabit = taggedHabitArray[0]; // this only contains habitId and tags only, not the entire rest of object, so we create that:
-    console.log("Chhapri youtuber, ye le teri new tagged habit typeshi", {
-      ...untaggedHabit,
-      tags: taggedHabit.tags,
-    });
+
     if (taggedHabit.tags && taggedHabit.tags.length > 0) {
       const updatedHabit = { ...untaggedHabit, tags: taggedHabit.tags };
 
       updateHabit(habitId, updatedHabit);
     }
   } catch (err) {
-    console.log(err, "you wanna be high for this");
+    console.log("CRITICAL ERROR, COULD NOT TAG ONE HABIT", err);
   }
 }
 
 async function getTaggedHabits(habits: HabitObject[]) {
   try {
-    const response = await api.post("/tag-habits", {
-      habitData: habits,
-    });
+    const response = await tagHabitsOnCloud();
 
     const taggedHabits = response.data;
     // validating taggedHabits:

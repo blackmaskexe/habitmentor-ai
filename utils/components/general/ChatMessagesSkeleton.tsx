@@ -1,8 +1,7 @@
-import { useReducer } from "react";
-import { StyleSheet, Pressable, View } from "react-native";
+import { useTheme } from "@/utils/theme/ThemeContext";
 import { MotiView } from "moti";
 import { Skeleton } from "moti/skeleton";
-import { useTheme } from "@/utils/theme/ThemeContext";
+import { StyleSheet } from "react-native";
 
 export default function ChatMessagesSkeleton() {
   const theme = useTheme();
@@ -15,7 +14,7 @@ export default function ChatMessagesSkeleton() {
       style={[styles.container, styles.padded]}
       animate={{ backgroundColor: theme.colors.background }}
     >
-      <Skeleton width={250} backgroundColor={theme.colors.altBackground} />
+      <Skeleton width={250} colorMode={theme.theme as "light" | "dark"} />
       {/* <Spacer height={8} />
         <Skeleton colorMode={colorMode} width={"100%"} />
         <Spacer height={8} />

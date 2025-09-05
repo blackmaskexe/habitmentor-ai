@@ -1,7 +1,6 @@
-import React from "react";
-import { View, Text, StyleSheet } from "react-native";
 import { useTheme } from "@/utils/theme/ThemeContext";
-import { create } from "react-test-renderer";
+import React from "react";
+import { StyleSheet, Text, View } from "react-native";
 
 interface ProgressBarProps {
   currentValue: number;

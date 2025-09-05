@@ -8,6 +8,7 @@ import {
   View,
 } from "react-native";
 import { useTheme } from "../../theme/ThemeContext";
+import { Theme } from "@/utils/theme/themes";
 
 type IoniconsName = React.ComponentProps<typeof Ionicons>["name"];
 
@@ -19,6 +20,7 @@ interface CTAButtonProps {
   iconName?: IoniconsName; // Changed to string for Ionicons name
   iconSize?: number; // Optional size for the icon
   buttonHeight?: number;
+  isBackgroundVisible?: boolean;
 }
 
 const CTAButton: React.FC<CTAButtonProps> = ({
@@ -29,12 +31,22 @@ const CTAButton: React.FC<CTAButtonProps> = ({
   iconName,
   iconSize = 20, // Default icon size,
   buttonHeight = 54,
+  isBackgroundVisible = true,
 }) => {
   const theme = useTheme();
-  const styles = createStyles(theme, buttonHeight);
+  const styles = createStyles(
+    theme,
+    buttonHeight,
+    isBackgroundVisible,
+    disabled
+  );
   return (
     <TouchableOpacity
-      style={[styles.button, disabled && styles.buttonDisabled]}
+      style={
+        isBackgroundVisible
+          ? [styles.button, disabled && styles.buttonDisabled]
+          : [styles.button, styles.noBackgroundButton]
+      }
       onPress={onPress}
       disabled={disabled || loading}
       activeOpacity={0.8}
@@ -45,7 +57,17 @@ const CTAButton: React.FC<CTAButtonProps> = ({
         <View style={styles.contentContainer}>
           {iconName && (
             <View style={styles.iconContainer}>
-              <Ionicons name={iconName} size={iconSize} color="#FFFFFF" />
+              <Ionicons
+                name={iconName}
+                size={iconSize}
+                color={
+                  isBackgroundVisible
+                    ? "white"
+                    : disabled
+                    ? theme.colors.textSecondary
+                    : theme.colors.primary
+                }
+              />
             </View>
           )}
           <Text style={styles.text}>{title}</Text>
@@ -55,7 +77,12 @@ const CTAButton: React.FC<CTAButtonProps> = ({
   );
 };
 
-function createStyles(theme: any, buttonHeight: number) {
+function createStyles(
+  theme: Theme,
+  buttonHeight: number,
+  isBackgroundVisible: boolean,
+  disabled: boolean
+) {
   return StyleSheet.create({
     button: {
       width: "100%",
@@ -77,6 +104,9 @@ function createStyles(theme: any, buttonHeight: number) {
       shadowOpacity: 0,
       elevation: 0,
     },
+    noBackgroundButton: {
+      backgroundColor: "transparent",
+    },
     contentContainer: {
       flexDirection: "row",
       alignItems: "center",
@@ -86,7 +116,11 @@ function createStyles(theme: any, buttonHeight: number) {
       marginRight: 8,
     },
     text: {
-      color: theme.button.textColor,
+      color: isBackgroundVisible
+        ? theme.button.textColor
+        : disabled
+        ? theme.colors.textSecondary
+        : theme.colors.primary,
       fontSize: theme.button.textSize,
       fontWeight: "600",
       textAlign: "center",

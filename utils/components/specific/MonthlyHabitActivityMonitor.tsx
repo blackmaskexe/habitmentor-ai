@@ -1,7 +1,3 @@
-import React, { useEffect, useState } from "react";
-import { View, StyleSheet } from "react-native";
-import { useTheme } from "@/utils/theme/ThemeContext";
-import { getHabitHistoryEntries } from "@/utils/habits/habitHistoryManager";
 import {
   getDate,
   getDateFromFormattedDate,
@@ -9,10 +5,13 @@ import {
   getWeekdayNumber,
 } from "@/utils/date";
 import {
-  getAllHabits,
   getAllHabitsOnWeekday,
   getTotalHabitNumberOnDay,
 } from "@/utils/habits";
+import { getHabitHistoryEntries } from "@/utils/habits/habitHistoryManager";
+import { useTheme } from "@/utils/theme/ThemeContext";
+import React, { useEffect, useState } from "react";
+import { StyleSheet, View } from "react-native";
 
 import mmkvStorage from "@/utils/mmkvStorage";
 
@@ -23,8 +22,8 @@ interface DayActivity {
 
 export const MonthlyHabitActivityMonitor: React.FC = () => {
   const daysInMonth = new Date(
-    new Date().getFullYear(),
-    new Date().getMonth() + 1,
+    getDate().getFullYear(),
+    getDate().getMonth() + 1,
     0
   ).getDate();
   const [activities, setActivities] = useState<DayActivity[]>(
@@ -94,8 +93,6 @@ export const MonthlyHabitActivityMonitor: React.FC = () => {
           : appStartDate.getDate();
 
       for (let i = initialDayOfMonth; i < dayToday + 1; i++) {
-        console.log("kansol log", today, appStartDate, today > appStartDate);
-
         // looping for days of month until today
         const dateThisDay = new Date(today.getFullYear(), today.getMonth(), i);
         newActivities[i - 1] = {

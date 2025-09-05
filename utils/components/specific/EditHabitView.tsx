@@ -1,25 +1,23 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
-  SafeAreaView,
-  ScrollView,
-  Text,
-  StyleSheet,
-  View,
-  Platform,
-  TouchableOpacity,
   Alert,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
 
-import { useTheme } from "@/utils/theme/ThemeContext";
-import { Ionicons } from "@expo/vector-icons";
-import { Theme } from "@/utils/theme/themes";
-import CardWithoutImage from "../general/CardWithoutImage";
 import { getHabitObjectFromId, updateEditedHabit } from "@/utils/habits";
-import EditHabitForm from "./EditHabitForm";
+import { useTheme } from "@/utils/theme/ThemeContext";
+import { Theme } from "@/utils/theme/themes";
 import { FormValuesType } from "@/utils/types";
-import CTAButton from "../general/CTAButton";
-import EdithabitDropdownMenu from "./zeego/EditHabitDropdownMenu";
 import { useNotifications } from "@/utils/useNotifications";
+import { Ionicons } from "@expo/vector-icons";
+import CardWithoutImage from "../general/CardWithoutImage";
+import EditHabitForm from "./EditHabitForm";
+import EdithabitDropdownMenu from "./zeego/EditHabitDropdownMenu";
 
 type UpdatedHabitType = {
   habitName: string;
@@ -55,7 +53,6 @@ export default function EditHabitView({
     // update card as soon as the value changes from the forms
     if (values.habitName) {
       setUpdatedHabit(() => {
-        console.log("I got something to say but idk how imma say it", values);
         return {
           ...(values as any),
         };
@@ -87,7 +84,6 @@ export default function EditHabitView({
               }
 
               if (didUserEditHabit) {
-                console.log("ziggy liggi");
                 Alert.alert(
                   `Update Habit`,
                   "Are you sure?",

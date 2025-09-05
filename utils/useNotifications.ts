@@ -1,14 +1,10 @@
-import { useState, useEffect, useRef } from "react";
-import { Text, View, Button, Platform } from "react-native";
+import Constants from "expo-constants";
 import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
-import Constants from "expo-constants";
+import { useEffect, useRef, useState } from "react";
+import { Platform } from "react-native";
+import { updateHabitNotificationId } from "./habits";
 import { HabitObject } from "./types";
-import {
-  updateHabitNotificationId,
-  updateHabitNotificationTime,
-} from "./habits";
-import { getFormattedTime } from "./date";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({

@@ -1,5 +1,5 @@
-import { deleteHabit, getRemainingSkips, skipHabitToday } from "@/utils/habits";
 import { getDate, getFormattedDate } from "@/utils/date";
+import { getRemainingSkips, skipHabitToday } from "@/utils/habits";
 import { useTheme } from "@/utils/theme/ThemeContext";
 import { Theme } from "@/utils/theme/themes";
 import { HabitObject } from "@/utils/types";
@@ -7,12 +7,12 @@ import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React from "react";
 import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  TouchableOpacity,
   Alert,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import { SheetManager } from "react-native-actions-sheet";
 

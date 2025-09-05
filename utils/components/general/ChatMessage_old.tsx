@@ -1,3 +1,5 @@
+import api from "@/utils/api";
+import { getDate } from "@/utils/date";
 import mmkvStorage from "@/utils/mmkvStorage";
 import { useTheme } from "@/utils/theme/ThemeContext";
 import { Theme } from "@/utils/theme/themes";
@@ -19,9 +21,7 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import api from "@/utils/api";
 import ChatMessagesSkeleton from "./ChatMessagesSkeleton";
-import { getDate } from "@/utils/date";
 
 // Prop Instructions:
 // Send a message prop as follows:

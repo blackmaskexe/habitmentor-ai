@@ -1,27 +1,28 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  ScrollView,
-  Alert,
-} from "react-native";
-import { useTheme } from "@/utils/theme/ThemeContext";
-import { Theme } from "@/utils/theme/themes";
-import { Ionicons } from "@expo/vector-icons";
-import { useNotifications } from "@/utils/useNotifications";
+import { getDateFromFormattedTime } from "@/utils/date";
 import {
   eraseAllHabitData,
   getAllHabits,
   getHabitObjectFromId,
   resetAllHabitNotifications,
 } from "@/utils/habits";
-import { useFocusEffect, useRouter } from "expo-router";
-import ToggleSwitch from "@/utils/components/general/ToggleSwitch";
 import mmkvStorage from "@/utils/mmkvStorage";
-import AIToneSelectionDropdownMenu from "@/utils/components/specific/zeego/AIToneSelectionDropdownMenu";
+import { useTheme } from "@/utils/theme/ThemeContext";
+import { Theme } from "@/utils/theme/themes";
+import { useNotifications } from "@/utils/useNotifications";
+import { Ionicons } from "@expo/vector-icons";
+import { getAuth, signOut } from "@react-native-firebase/auth";
+import { useFocusEffect, useRouter } from "expo-router";
 import { useCallback, useState } from "react";
-import { getDateFromFormattedTime } from "@/utils/date";
+import {
+  Alert,
+  ScrollView,
+  StyleSheet,
+  Switch,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import firestore from "@react-native-firebase/firestore";
 
 export default function Settings() {
   const theme = useTheme();
@@ -36,9 +37,7 @@ export default function Settings() {
     useCallback(() => {
       // calculate the status of notification on each open of the settings tab
       setNotificationsEnabled(() => {
-        console.log("I know that you like man go");
         const isNotificationOn = mmkvStorage.getBoolean("isNotificationOn");
-        console.log("a pretty as you like mango", isNotificationOn);
         // handling case when mmkv is undefined (unliekly, set to true during onboarding)
         if (isNotificationOn == undefined) {
           mmkvStorage.set("isNotificationOn", true);
@@ -108,10 +107,12 @@ export default function Settings() {
           </View>
           <Text style={styles.settingItemText}>{optionName}</Text>
         </View>
-        <ToggleSwitch
-          initialState={initialState}
-          onToggle={onToggle}
-          currentState={currentState != undefined ? currentState : undefined}
+
+        <Switch
+          value={currentState != undefined ? currentState : false}
+          onValueChange={onToggle}
+          trackColor={{ false: "#767577", true: theme.colors.primary }}
+          thumbColor={currentState ? "white" : "#f4f3f4"}
         />
       </View>
     );
@@ -127,7 +128,7 @@ export default function Settings() {
       <View style={styles.settingsGroup}>
         {renderOptionToggleItem(
           "top",
-          "alarm-outline",
+          "alarm",
           "Enable Reminder Notifications",
           (isEnabled) => {
             if (isEnabled) {
@@ -155,30 +156,109 @@ export default function Settings() {
           notificationsEnabled,
           notificationsEnabled
         )}
+        {renderOptionItem("bottom", "ban", "Cancel All Notifications", () => {
+          Alert.alert(
+            `Cancel all Notification?`,
+            "Are you sure?",
+            [
+              {
+                text: "Cancel",
+                onPress: () => console.log("Cancel Pressed"),
+                style: "cancel",
+              },
+              {
+                text: "Yes",
+                onPress: () => {
+                  cancelAllScheduledNotifications();
+                  resetAllHabitNotifications();
+                },
+              },
+            ],
+            { cancelable: false }
+          );
+        })}
+
+        {/* Divider */}
+        <View style={styles.divider} />
+      </View>
+
+      <View style={styles.sectionHeader}>
+        <Text style={styles.sectionHeaderText}>Leaderboard Settings</Text>
+      </View>
+
+      {/* Leaderboard Group */}
+      <View style={styles.settingsGroup}>
+        {renderOptionItem("top", "log-out", "Log Out", async () => {
+          if (!getAuth().currentUser) {
+            Alert.alert("Failed", "You are already logged out");
+            return;
+          }
+          Alert.alert(
+            `Logging Out`,
+            "You will have to log back in to use leaderboards",
+            [
+              {
+                text: "Cancel",
+                onPress: () => console.log("Cancel Pressed"),
+                style: "cancel",
+              },
+              {
+                text: "Yes",
+                onPress: () => {
+                  signOut(getAuth())
+                    .then(() => {
+                      console.log("User Signed Out Successfully!");
+                    })
+                    .catch((err) => {
+                      console.log(err);
+                    });
+                },
+              },
+            ],
+            { cancelable: false }
+          );
+        })}
+        {renderOptionItem(
+          "between",
+          "create",
+          "Edit Leaderboard Profile",
+          () => {
+            router.push("/(tabs)/settings/edit-leaderboard");
+          }
+        )}
         {renderOptionItem(
           "bottom",
-          "close-outline",
-          "Cancel All Notifications",
-          () => {
-            Alert.alert(
-              `Cancel all Notification?`,
-              "Are you sure?",
-              [
-                {
-                  text: "Cancel",
-                  onPress: () => console.log("Cancel Pressed"),
-                  style: "cancel",
-                },
-                {
-                  text: "Yes",
-                  onPress: () => {
-                    cancelAllScheduledNotifications();
-                    resetAllHabitNotifications();
-                  },
-                },
-              ],
-              { cancelable: false }
-            );
+          "globe",
+          "Opt out of Global Leaderboard",
+          async () => {
+            const currentUser = getAuth().currentUser;
+            if (!currentUser) {
+              Alert.alert("Error", "You need to sign in to do that!");
+              return;
+            }
+
+            const currentUserId = getAuth().currentUser?.uid;
+            const docRef = await firestore()
+              .collection("users")
+              .doc(currentUserId)
+              .get();
+
+            if (docRef && docRef.exists() && docRef.data()!.enrolledInGlobal) {
+              await firestore()
+                .collection("users")
+                .doc(currentUserId)
+                .update({ enrolledInGlobal: false });
+
+              Alert.alert(
+                "Opted Out",
+                "You have opted out of Global Leaderboard"
+              );
+            } else {
+              Alert.alert(
+                "Invalid",
+                "You must be enrolled in Global Leaderboards to Opt-Out"
+              );
+            }
           }
         )}
 
@@ -192,32 +272,29 @@ export default function Settings() {
 
       {/* Settings Group */}
       <View style={styles.settingsGroup}>
-        {renderOptionItem(
-          "single",
-          "trash-outline",
-          "Erase All Data",
-          async () => {
-            Alert.alert(
-              `Erase all Habit Data?`,
-              "Are you sure?",
-              [
-                {
-                  text: "Cancel",
-                  onPress: () => console.log("Cancel Pressed"),
-                  style: "cancel",
-                },
-                {
-                  text: "Yes",
-                  onPress: async () => {
-                    router.replace("/(onboarding)");
-                    await eraseAllHabitData();
-                  },
-                },
-              ],
-              { cancelable: false }
-            );
-          }
-        )}
+        {renderOptionItem("single", "trash", "Erase Data", () => {
+          // Alert.alert(
+          //   `Erase all Habit Data?`,
+          //   "Are you sure?",
+          //   [
+          //     {
+          //       text: "Cancel",
+          //       onPress: () => console.log("Cancel Pressed"),
+          //       style: "cancel",
+          //     },
+          //     {
+          //       text: "Yes",
+          //       onPress: async () => {
+          //         router.push("/(tabs)/settings/erase-data");
+          //         // router.replace("/(onboarding)");
+          //         // await eraseAllHabitData();
+          //       },
+          //     },
+          //   ],
+          //   { cancelable: false }
+          // );
+          router.push("/(tabs)/settings/erase-data");
+        })}
 
         {/* Divider */}
         <View style={styles.divider} />

@@ -8,7 +8,7 @@ export const lightTheme = {
     surface: "#f0f0f0", // for, for example, cards and shi, stuff that you want to make elevated
     text: "#1a1a1a",
     textSecondary: "#333333",
-    textTertiary: "#c6c6c0",
+    textTertiary: "#e8e8e0",
     shadow: "rgba(0,0,0,0.2)",
     placeholder: "rgba(51, 51, 51, 0.5)",
 
@@ -84,7 +84,7 @@ export const darkTheme = {
     surface: "#2C2C2C",
     text: "#F5F5F5",
     textSecondary: "#798086",
-    textTertiary: "#c6c6c0",
+    textTertiary: "#e8e8e0",
     shadow: "rgba(0,0,0,0.5)",
     placeholder: "rgba(120, 120, 120)",
 

@@ -1,16 +1,16 @@
 // TODO FOR THE FUTURE:
 // IMPLEMENT THEMING
+import React, { useRef, useState } from "react";
 import {
-  Text,
-  View,
-  ScrollView,
   Image,
-  StyleSheet,
-  useWindowDimensions,
-  NativeSyntheticEvent,
   NativeScrollEvent,
+  NativeSyntheticEvent,
+  ScrollView,
+  StyleSheet,
+  Text,
+  useWindowDimensions,
+  View,
 } from "react-native";
-import React, { useState, useRef } from "react";
 
 interface OnboardingItem {
   title: string;

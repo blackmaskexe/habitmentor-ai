@@ -1,7 +1,6 @@
 import { useTheme } from "@/utils/theme/ThemeContext";
 import {
   Animated,
-  LayoutAnimation,
   Platform,
   ScrollView,
   StyleSheet,
@@ -10,22 +9,16 @@ import {
   View,
 } from "react-native";
 
+import { getProActiveMessage } from "@/utils/api";
+import AISuggestionSkeleton from "@/utils/components/specific/AISuggestionSkeleton";
 import DailyHabitsView from "@/utils/components/specific/DailyHabitsView";
 import WeekAtAGlance from "@/utils/components/specific/WeekGlance";
-import { Theme } from "@/utils/theme/themes";
-import { useEffect, useRef, useState } from "react";
+import { getMetadataRecords } from "@/utils/database/dailyMetadataRecords";
 import {
   getRecentProActiveMessage,
   setRecentProActiveMessage,
   shouldRequestProActiveMessage,
 } from "@/utils/database/proActiveMessageManager";
-import { TypeAnimation } from "react-native-type-animation";
-import {
-  getHabitCompletionCollection,
-  getImportantMessages,
-} from "@/utils/habits/habitDataCollectionHelper";
-import api from "@/utils/api";
-import AISuggestionSkeleton from "@/utils/components/specific/AISuggestionSkeleton";
 import {
   getDate,
   getDateFromFormattedDate,
@@ -33,15 +26,20 @@ import {
   getFormattedDate,
   relationBetweenTodayAndDate,
 } from "@/utils/date";
+import {
+  getHabitCompletionCollection,
+  getImportantMessages,
+} from "@/utils/habits/habitDataCollectionHelper";
 import mmkvStorage from "@/utils/mmkvStorage";
-import { TourGuideZone, useTourGuideController } from "rn-tourguide";
-import React from "react";
-import { Ionicons } from "@expo/vector-icons";
 import { tagHabits } from "@/utils/tagManager";
+import { Theme } from "@/utils/theme/themes";
+import { Ionicons } from "@expo/vector-icons";
+import { getAuth } from "@react-native-firebase/auth";
+import React, { useEffect, useRef, useState } from "react";
+import { TypeAnimation } from "react-native-type-animation";
+import { TourGuideZone, useTourGuideController } from "rn-tourguide";
 
 export default function Index() {
-  // mmkvStorage.set("appStartDate", "2025-7-25");
-
   const [proActiveMessage, setProActiveMessage] = useState<string | null>(null); // will eventually fetch it's last value from a key-value store so that the user doesn't have to stare at the "loading" for 1-3 seconds
   const [proActiveMessageHeight, setProActiveMessageHeight] =
     useState<number>(76); // 76 because it is the height of the skeleton (60 height + 16 margin)
@@ -115,17 +113,21 @@ export default function Index() {
     // showProActiveMessage(setProActiveMessage);
 
     async function showProActiveMessage() {
-      if (shouldRequestProActiveMessage()) {
+      if (shouldRequestProActiveMessage() || true) {
         // for testing purpose rn
         // this is the part where I send all of the metadata and related information of user's habits
         // to the fine tuned ai model, and return whatever it gives out
 
-        const response = await api.post("/pro-active", {
-          habitCompletionCollection: await getHabitCompletionCollection(),
-          importantMessages: await getImportantMessages(),
-        });
+        const habitCompletionCollection: any =
+          await getHabitCompletionCollection();
+        const importantMessages: string[] = await getImportantMessages();
 
-        if (response && response.data.response) {
+        const response = await getProActiveMessage(
+          habitCompletionCollection,
+          importantMessages
+        );
+
+        if (response && response.data && response.data.response) {
           setProActiveMessage(response.data.response);
 
           // set the mmkvstorage with the recent pro active message:

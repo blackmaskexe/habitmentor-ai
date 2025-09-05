@@ -1,9 +1,9 @@
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
-import * as ContextMenu from "./context-menu";
-import { Ionicons } from "@expo/vector-icons";
-import { SheetManager } from "react-native-actions-sheet";
 import { useTheme } from "@/utils/theme/ThemeContext";
+import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { SheetManager } from "react-native-actions-sheet";
+import * as ContextMenu from "./context-menu";
 
 export default function HabitItemContextMenu({
   habitItem,

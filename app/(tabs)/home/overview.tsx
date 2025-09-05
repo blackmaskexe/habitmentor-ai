@@ -3,25 +3,17 @@
 import { useTheme } from "@/utils/theme/ThemeContext";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
-import {
-  Alert,
-  Platform,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Platform, ScrollView, StyleSheet, Text, View } from "react-native";
 
 import CrossButton from "@/utils/components/general/CrossButton";
 import NavigationPill from "@/utils/components/general/NavigationPill";
 import AllHabitsOverview from "@/utils/components/specific/AllHabitsOverview";
 import MonthlyHabitActivityMonitor from "@/utils/components/specific/MonthlyHabitActivityMonitor";
+import { getHabitCompletionCollection } from "@/utils/habits/habitDataCollectionHelper";
 import mmkvStorage from "@/utils/mmkvStorage";
 import { Theme } from "@/utils/theme/themes";
-import { getHabitCompletionCollection } from "@/utils/habits/habitDataCollectionHelper";
 
-async function calculateLongestStreak() {
+export async function calculateLongestStreak() {
   const habitCompletionRecords = await getHabitCompletionCollection();
   let longestOverallStreak = habitCompletionRecords[0].streak; // stores the least of all the habit streaks
 

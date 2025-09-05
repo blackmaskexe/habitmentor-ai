@@ -1,28 +1,28 @@
-import {
-  KeyboardAvoidingView,
-  Modal,
-  Pressable,
-  View,
-  Text,
-  ScrollView,
-  Platform,
-  StyleSheet,
-  Dimensions,
-  Alert,
-} from "react-native";
-import GenericForm from "../general/GenericForm";
-import TaskFrequencyDropdownMenu from "./zeego/TaskFrequencyDropdownMenu";
-import WeekdayFrequencyPicker from "./WeekdayFrequencyPicker";
-import CTAButton from "../general/CTAButton";
-import { useEffect, useState } from "react";
+import { getFormattedDate } from "@/utils/date";
+import { addNewHabit } from "@/utils/habits";
+import { generateHabitId } from "@/utils/randomId";
+import { tagOneHabit } from "@/utils/tagManager";
+import { useTheme } from "@/utils/theme/ThemeContext";
+import { Theme } from "@/utils/theme/themes";
 import { FormValuesType } from "@/utils/types";
 import { Ionicons } from "@expo/vector-icons";
-import { Theme } from "@/utils/theme/themes";
-import { useTheme } from "@/utils/theme/ThemeContext";
-import { generateHabitId } from "@/utils/randomId";
-import { addNewHabit } from "@/utils/habits";
-import { getFormattedDate } from "@/utils/date";
-import { tagOneHabit } from "@/utils/tagManager";
+import { useState } from "react";
+import {
+  Alert,
+  Dimensions,
+  KeyboardAvoidingView,
+  Modal,
+  Platform,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
+import CTAButton from "../general/CTAButton";
+import GenericForm from "../general/GenericForm";
+import WeekdayFrequencyPicker from "./WeekdayFrequencyPicker";
+import TaskFrequencyDropdownMenu from "./zeego/TaskFrequencyDropdownMenu";
 
 const { width } = Dimensions.get("window");
 const BOX_SIZE = Math.min(width * 0.18, 80); // Responsive but capped at 80px in length and width
@@ -175,7 +175,6 @@ export default function AddNewHabitModal({
                         // the time is taken by the modal close animation
                         setValues({});
                         if (newHabit.id) {
-                          console.log("Starting individual tagging yeh");
                           // for ts type safety, but it would have been created by now
                           tagOneHabit(newHabit.id);
                         }

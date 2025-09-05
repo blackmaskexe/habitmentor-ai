@@ -1,12 +1,10 @@
-import { Alert, TouchableOpacity } from "react-native";
-import * as DropdownMenu from "./dropdown-menu";
-import { Ionicons } from "@expo/vector-icons";
-import { useTheme } from "@/utils/theme/ThemeContext";
-import mmkvStorage from "@/utils/mmkvStorage";
-import { useRouter } from "expo-router";
 import { deleteHabit, getHabitObjectFromId } from "@/utils/habits";
-import { HabitObject } from "@/utils/types";
+import { useTheme } from "@/utils/theme/ThemeContext";
+import { Ionicons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
+import { Alert, TouchableOpacity } from "react-native";
 import { SheetManager } from "react-native-actions-sheet";
+import * as DropdownMenu from "./dropdown-menu";
 
 export default function EdithabitDropdownMenu({
   habitId,

@@ -1,11 +1,10 @@
-import { useTheme } from "@/utils/theme/ThemeContext";
-import { Ionicons } from "@expo/vector-icons";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { SheetManager } from "react-native-actions-sheet";
-import OverviewHabitdropdownMenu from "./zeego/OverviewHabitDropdownMenu";
-import { useEffect, useState } from "react";
 import { getHabitCompletionCollection } from "@/utils/habits/habitDataCollectionHelper";
+import { useTheme } from "@/utils/theme/ThemeContext";
 import { HabitObject } from "@/utils/types";
+import { Ionicons } from "@expo/vector-icons";
+import { useEffect, useState } from "react";
+import { StyleSheet, Text, View } from "react-native";
+import OverviewHabitdropdownMenu from "./zeego/OverviewHabitDropdownMenu";
 
 export default function AllHabitsOverview({
   allHabitsArray,

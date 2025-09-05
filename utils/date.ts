@@ -4,13 +4,14 @@
 // for many days at a time, it won't mess up date calculation
 
 import { getISOWeek } from "date-fns";
+import mmkvStorage from "./mmkvStorage";
 
 export const getDate = function () {
   // this function is to be able to change date from this central location easily
   return new Date();
   // const today = new Date();
   // const tomorrow = new Date(today);
-  // tomorrow.setDate(today.getDate() + 3);
+  // tomorrow.setDate(today.getDate() + 1);
   // return tomorrow;
 };
 
@@ -171,3 +172,62 @@ export const relationBetweenTodayAndDate = function (date: Date) {
     return "Future Date"; // Or handle future dates as you see fit
   }
 };
+
+export function getAppStartDate(): Date {
+  const mmkvStartDate = mmkvStorage.getString("appStartDate");
+  return getDateFromFormattedDate(mmkvStartDate || "1920-6-15");
+}
+
+export function getFormattedAppStartDate() {
+  const mmkvStartDate = mmkvStorage.getString("appStartDate");
+  return mmkvStartDate || "1920-6-15";
+}
+
+export function isAppStartWeek() {
+  const formattedDatesThisWeek = getFormattedDatesThisWeek();
+  if (formattedDatesThisWeek.includes(getFormattedAppStartDate())) {
+    return true;
+  }
+  return false;
+}
+
+export function getOrdinalDate(customDate?: Date) {
+  const date = customDate || getDate();
+
+  const day = date.getDate();
+  const year = date.getFullYear();
+  const monthNames = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+  const monthName = monthNames[date.getMonth()];
+
+  // Function to get the correct "st", "nd", "rd", or "th" suffix
+  const getOrdinalSuffix = (dayOfMonth: number): string => {
+    if (dayOfMonth > 3 && dayOfMonth < 21) return "th"; // for 11th, 12th, 13th
+    switch (dayOfMonth % 10) {
+      case 1:
+        return "st";
+      case 2:
+        return "nd";
+      case 3:
+        return "rd";
+      default:
+        return "th";
+    }
+  };
+
+  const suffix = getOrdinalSuffix(day);
+
+  return `${day}${suffix} ${monthName}, ${year}`;
+}

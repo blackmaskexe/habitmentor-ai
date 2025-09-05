@@ -1,13 +1,12 @@
 import { useTheme } from "@/utils/theme/ThemeContext";
-import { Dimensions, StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
 import ActionSheet, { SheetProps } from "react-native-actions-sheet";
 
 // Component imports:
-import NavigationPill from "../../general/NavigationPill";
+import NavigationPill from "../../../general/NavigationPill";
 import HabitItemSheet from "./HabitItemSheet";
 
 function HabitSheet(props: SheetProps<"habit-sheet">) {
-
   const theme = useTheme();
   const styles = createStyles(theme);
 

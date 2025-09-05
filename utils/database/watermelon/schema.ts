@@ -1,7 +1,7 @@
 import { appSchema, tableSchema } from "@nozbe/watermelondb";
 
 export default appSchema({
-  version: 1,
+  version: 2,
   tables: [
     tableSchema({
       name: "missed_habits",
@@ -12,7 +12,10 @@ export default appSchema({
     }),
     tableSchema({
       name: "important_messages",
-      columns: [{ name: "important_message", type: "string" }],
+      columns: [
+        { name: "important_message", type: "string" },
+        { name: "created_at", type: "number" },
+      ],
     }),
     tableSchema({
       name: "habit_completions",

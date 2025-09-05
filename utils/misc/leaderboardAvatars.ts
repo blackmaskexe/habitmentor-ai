@@ -1,0 +1,17 @@
+export const LEADERBOARD_AVATAR_NAMES = [
+  "happy-outline",
+  "paw-outline",
+  "ice-cream-outline",
+  "pizza-outline",
+  "football-outline",
+  "musical-notes-outline",
+  "sunny-outline",
+  "thumbs-up-outline",
+  "trophy-outline",
+  "medal-outline",
+  "ribbon-outline",
+  "gift-outline",
+  "bonfire-outline",
+  "skull-outline",
+  "barbell-outline",
+];

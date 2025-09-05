@@ -91,3 +91,5 @@ yarn-error.*
 ios
 android
 *.ipa
+
+# firebase files:

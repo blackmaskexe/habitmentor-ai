@@ -1,12 +1,22 @@
-import ChatDropDownMenu from "@/utils/components/specific/zeego/ChatDropDownMenu";
 import HomeAddDropdownMenu from "@/utils/components/specific/zeego/HomeAddDropdownMenu";
-import mmkvStorage from "@/utils/mmkvStorage";
+import LeaderboardDropdownMenu from "@/utils/components/specific/zeego/LeaderboardDropdownMenu";
 import { areHabitsTagged, tagHabits } from "@/utils/tagManager";
 import { useTheme } from "@/utils/theme/ThemeContext";
 import { Ionicons } from "@expo/vector-icons";
+import { getAuth } from "@react-native-firebase/auth";
 import { Tabs, usePathname, useRouter } from "expo-router";
-import { Text, TouchableOpacity, Dimensions, Platform } from "react-native";
+import { useEffect, useState } from "react";
+import {
+  Dimensions,
+  Platform,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { TourGuideZone } from "rn-tourguide";
+import firestore from "@react-native-firebase/firestore";
+import { syncDataToFirebaseProfile } from "@/utils/firebase/firestore/profileManager";
 
 export default function TabLayout() {
   const theme = useTheme();
@@ -20,8 +30,29 @@ export default function TabLayout() {
   if (!areHabitsTagged()) {
     tagHabits();
   }
+  if (getAuth().currentUser) {
+    // run syncing the user's leaderboard profile data to firestore:
+    syncDataToFirebaseProfile();
+  }
 
-  console.log(mmkvStorage.getString("activeHabits"), "I give you all ad me");
+  const [pendingRequestsCount, setPendingRequestsCount] = useState(0);
+  const currentUser = getAuth().currentUser;
+
+  useEffect(() => {
+    if (!currentUser) return;
+
+    // Listen for pending friend requests
+    const unsubscribe = firestore()
+      .collection("users")
+      .doc(currentUser.uid)
+      .collection("friends")
+      .where("status", "==", "pending_received")
+      .onSnapshot((snapshot) => {
+        setPendingRequestsCount(snapshot ? snapshot.size : 0);
+      });
+
+    return () => unsubscribe();
+  }, [currentUser]);
 
   return (
     <Tabs
@@ -154,15 +185,46 @@ export default function TabLayout() {
       <Tabs.Screen
         name="leaderboard"
         options={{
+          headerShown: false,
           title: "Leaderboard",
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="stats-chart" size={size} color={color} />
-          ),
+          tabBarIcon: ({ color, size }) => {
+            const styles = StyleSheet.create({
+              badgeContainer: {
+                position: "absolute",
+                top: -4,
+                right: -4,
+                backgroundColor: theme.colors.error,
+                borderRadius: 9,
+                width: 20,
+                height: 20,
+                justifyContent: "center",
+                alignItems: "center",
+                borderWidth: 1.5,
+                borderColor: theme.colors.background,
+              },
+              badgeText: {
+                color: "white",
+                fontSize: 10,
+                fontWeight: "bold",
+              },
+            });
+            return (
+              <View>
+                <Ionicons name="stats-chart" size={size} color={color} />
+                {pendingRequestsCount > 0 && (
+                  <View style={styles.badgeContainer}>
+                    <Text style={styles.badgeText}>{pendingRequestsCount}</Text>
+                  </View>
+                )}
+              </View>
+            );
+          },
         }}
       />
       <Tabs.Screen
         name="settings"
         options={{
+          headerShown: false,
           title: "More",
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="list-outline" size={size} color={color} />

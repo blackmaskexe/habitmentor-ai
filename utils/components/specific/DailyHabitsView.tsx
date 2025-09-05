@@ -1,6 +1,8 @@
+import mmkvStorage from "@/utils/mmkvStorage";
 import { useTheme } from "@/utils/theme/ThemeContext";
 import { Ionicons } from "@expo/vector-icons";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { useFocusEffect } from "expo-router";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   ScrollView,
   StyleSheet,
@@ -10,29 +12,27 @@ import {
 } from "react-native";
 import { SheetManager } from "react-native-actions-sheet";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
-import mmkvStorage from "@/utils/mmkvStorage";
-import { useFocusEffect } from "expo-router";
 // import {
-//   getAllHabitHistoryToday,
+//   getAllHabitHistoryEntriesToday,
 //   onMarkAsComplete,
 //   onMarkAsIncomplete,
 // } from "@/utils/database/habitHistory";
+import { addPoints, subtractPoints } from "@/utils/database/points";
 import {
   getDate,
   getDateFromFormattedDate,
   getFormattedDate,
   getWeekdayNumber,
 } from "@/utils/date";
-import { HabitObject } from "@/utils/types";
-import { Theme } from "@/utils/theme/themes";
-import * as Haptics from "expo-haptics";
-import { addPoints, subtractPoints } from "@/utils/database/points";
 import {
-  getAllHabitHistoryEntriesOnDate,
-  getAllHabitHistoryToday,
+  getAllHabitHistoryEntriesEntriesOnDate,
+  getAllHabitHistoryEntriesToday,
   onMarkAsComplete,
   onMarkAsIncomplete,
 } from "@/utils/habits/habitHistoryManager";
+import { Theme } from "@/utils/theme/themes";
+import { HabitObject } from "@/utils/types";
+import * as Haptics from "expo-haptics";
 import { TourGuideZone } from "rn-tourguide";
 
 const DailyHabitsView = ({ date }: { date: Date }) => {
@@ -78,7 +78,7 @@ const DailyHabitsView = ({ date }: { date: Date }) => {
         }
 
         // filtering logic for habits that are skipped todday
-        for (const habitEntry of getAllHabitHistoryToday()) {
+        for (const habitEntry of getAllHabitHistoryEntriesToday()) {
           if (habit.id == habitEntry.habitId && habitEntry.skipped) {
             return false; // don't render the item if it is skipped ONLY TODAY
           }
@@ -129,7 +129,8 @@ const DailyHabitsView = ({ date }: { date: Date }) => {
       // fill the above with falses, and switch those to true which have been completed
 
       // looping throgu all the habitItem completions for today's date to see if
-      const completedHabitsOnDate = getAllHabitHistoryEntriesOnDate(date);
+      const completedHabitsOnDate =
+        getAllHabitHistoryEntriesEntriesOnDate(date);
       for (const habitEntry of completedHabitsOnDate) {
         habitItems.forEach((item, index) => {
           if (item.id == habitEntry.habitId) {

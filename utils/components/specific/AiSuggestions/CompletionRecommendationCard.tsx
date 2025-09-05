@@ -1,23 +1,23 @@
-import React from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  Dimensions,
-} from "react-native";
 import { useTheme } from "@/utils/theme/ThemeContext";
 import { Theme } from "@/utils/theme/themes";
 import { Ionicons } from "@expo/vector-icons";
-import CTAButton from "@/utils/components/general/CTAButton";
+import React from "react";
+import {
+  Dimensions,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { SheetManager } from "react-native-actions-sheet";
+import LeastCompletedHabitSheet from "./LeastCompletedHabitSheet";
 
 const screenWidth = Dimensions.get("window").width;
 
 type CompletionRecommendationCardProps = {
+  habitId: string;
   habitName: string;
   completionPercentage: number;
-  onViewTips?: () => void;
-  onClose?: () => void;
   borderRadius?: number;
   padding?: number;
   iconName?: keyof typeof Ionicons.glyphMap;
@@ -28,10 +28,9 @@ type CompletionRecommendationCardProps = {
 const CompletionRecommendationCard: React.FC<
   CompletionRecommendationCardProps
 > = ({
+  habitId,
   habitName,
   completionPercentage,
-  onViewTips,
-  onClose,
   borderRadius = 16,
   padding = 16,
   iconName,
@@ -51,6 +50,21 @@ const CompletionRecommendationCard: React.FC<
           padding,
         },
       ]}
+      onPress={() => {
+        SheetManager.show("suggestions-sheet", {
+          payload: {
+            CustomComponent: () => {
+              return (
+                <LeastCompletedHabitSheet
+                  habitName={habitName}
+                  completionPercentage={completionPercentage}
+                  habitId={habitId}
+                />
+              );
+            },
+          },
+        });
+      }}
     >
       <View style={styles.iconContainer}>
         <Ionicons
@@ -63,11 +77,6 @@ const CompletionRecommendationCard: React.FC<
 
       <View style={styles.header}>
         <Text style={styles.cardTitle}>Least Completed Habit</Text>
-        {onClose && (
-          <TouchableOpacity onPress={onClose} style={styles.closeButton}>
-            <Ionicons name="close" size={20} color={theme.colors.text} />
-          </TouchableOpacity>
-        )}
       </View>
 
       {/* Habit name only, limited to 1 line with ellipsis */}
@@ -87,9 +96,6 @@ const CompletionRecommendationCard: React.FC<
           ? "You're doing fantasitc, keep it going!"
           : "Let's get those numbers up!"}
       </Text>
-
-      {/* View Tips button using CTAButton */}
-      {onViewTips && <CTAButton title="View Tips" onPress={onViewTips} />}
     </TouchableOpacity>
   );
 };
@@ -148,7 +154,7 @@ function createStyles(theme: Theme) {
       zIndex: 1,
       justifyContent: "center",
       alignItems: "center",
-      backgroundColor: "rgba(0,0,0, 0.1)",
+      backgroundColor: "rgba(0,0,0, 0.05)",
     },
   });
 }

@@ -1,9 +1,8 @@
-import { useReducer } from "react";
-import { StyleSheet, Pressable, View } from "react-native";
-import { MotiView } from "moti";
-import { Skeleton } from "moti/skeleton";
 import { useTheme } from "@/utils/theme/ThemeContext";
 import { Theme } from "@/utils/theme/themes";
+import { MotiView } from "moti";
+import { Skeleton } from "moti/skeleton";
+import { StyleSheet } from "react-native";
 
 export default function AISuggestionSkeleton() {
   const theme = useTheme();
@@ -20,9 +19,9 @@ export default function AISuggestionSkeleton() {
       >
         <Skeleton
           width={"100%"}
-          backgroundColor={theme.colors.altBackground}
+          // backgroundColor={theme.colors.altBackground}
           height={60}
-          colorMode={theme.theme as any}
+          colorMode={theme.theme as "light" | "dark"}
         />
         {/* <Skeleton width={"100%"} /> */}
         {/* <Spacer height={8} />

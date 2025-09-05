@@ -1,12 +1,5 @@
-import {
-  TextInput,
-  StyleSheet,
-  TextInputProps,
-  View,
-  KeyboardAvoidingView,
-  Platform,
-} from "react-native";
 import { useState } from "react";
+import { StyleSheet, TextInput, TextInputProps, View } from "react-native";
 
 interface GenericTextInputProps extends TextInputProps {
   initialValue?: string;

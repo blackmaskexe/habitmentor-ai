@@ -1,9 +1,9 @@
-import * as DropdownMenu from "./dropdown-menu";
-import { Ionicons } from "@expo/vector-icons";
 import { useTheme } from "@/utils/theme/ThemeContext";
-import { useRouter } from "expo-router";
-import { TouchableOpacity, View, Text, StyleSheet } from "react-native";
 import { Theme } from "@/utils/theme/themes";
+import { Ionicons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import * as DropdownMenu from "./dropdown-menu";
 
 export default function AIToneSelectionDropdownMenu() {
   const router = useRouter();

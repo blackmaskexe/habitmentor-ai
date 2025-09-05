@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useRef } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
+import { setMoodToday } from "@/utils/database/dailyMetadataRecords";
 import { useTheme } from "@/utils/theme/ThemeContext";
 import { Theme } from "@/utils/theme/themes";
-import { setMoodToday } from "@/utils/database/dailyMetadataRecords";
+import React, { useEffect, useRef, useState } from "react";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 type MoodLevel = 1 | 2 | 3 | 4;
 
@@ -126,12 +126,12 @@ function createStyles(theme: Theme) {
       shadowRadius: 4,
       elevation: 2,
       margin: 10,
-      width: "95%",
+      width: "92%",
       alignSelf: "center",
       marginTop: theme.spacing.m,
       justifyContent: "center",
       alignItems: "flex-start",
-      minHeight: 120,
+      // minHeight: 120,
     },
     headerRow: {
       flexDirection: "row",
@@ -171,7 +171,7 @@ function createStyles(theme: Theme) {
       paddingHorizontal: 0,
       borderRadius: 999,
       marginHorizontal: 2,
-      backgroundColor: theme.colors.surface,
+      backgroundColor: "rgba(255,255,255,0.1)",
       borderWidth: 1.5,
       borderColor: "transparent",
       shadowColor: "#000",
