@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import {
   Alert,
   Dimensions,
+  Keyboard,
   KeyboardAvoidingView,
   Modal,
   Platform,
@@ -24,6 +25,7 @@ import CTAButton from "../general/CTAButton";
 import GenericForm from "../general/GenericForm";
 import WeekdayFrequencyPicker from "./WeekdayFrequencyPicker";
 import TaskFrequencyDropdownMenu from "./zeego/TaskFrequencyDropdownMenu";
+import { useKeyboardVisible } from "@/utils/hooks/useKeyboardVisible";
 
 type ItemPickerProps = {
   onItemPress?: (index: number) => void;
@@ -67,6 +69,7 @@ export default function VariableItemPicker({
     // this array contains array of days (In the format of Mon, Tue, Wed) that the user wants to do these habits on
     Array(7).fill(true)
   );
+  const isKeyboardVisible = useKeyboardVisible();
 
   useEffect(() => {
     // set freqency in the form values variable (which will be later assigned to the HabitObject's property)
@@ -230,24 +233,30 @@ export default function VariableItemPicker({
             >
               <Pressable
                 style={styles.modalContent}
-                onPress={(e) => e.stopPropagation()}
+                onPress={(e) => {
+                  e.stopPropagation();
+                  if (isKeyboardVisible) Keyboard.dismiss();
+                }}
               >
-                <View style={styles.modalHeader}>
-                  <Text style={styles.modalTitle}>Add Habit</Text>
-                  <Pressable
-                    style={styles.crossButton}
-                    onPress={() => {
-                      setModalVisible(false);
-                      setValues({});
-                    }}
-                  >
-                    <Ionicons
-                      name="close"
-                      size={24}
-                      color={theme.colors.textSecondary}
-                    />
-                  </Pressable>
-                </View>
+                {isKeyboardVisible ? null : (
+                  <View style={styles.modalHeader}>
+                    <Text style={styles.modalTitle}>Add Habit</Text>
+                    <Pressable
+                      style={styles.crossButton}
+                      onPress={() => {
+                        setModalVisible(false);
+                        setValues({});
+                      }}
+                    >
+                      <Ionicons
+                        name="close"
+                        size={24}
+                        color={theme.colors.textSecondary}
+                      />
+                    </Pressable>
+                  </View>
+                )}
+
                 <ScrollView keyboardShouldPersistTaps="handled">
                   <GenericForm
                     fields={fields}
@@ -267,7 +276,7 @@ export default function VariableItemPicker({
                     values={values}
                   />
 
-                  <View style={styles.reminderContainer}>
+                  {/* <View style={styles.reminderContainer}>
                     <Text style={styles.reminderLabel}>
                       Enable Reminder for Habit
                     </Text>
@@ -278,11 +287,11 @@ export default function VariableItemPicker({
                       onValueChange={() => {}}
                       value={true}
                     />
-                  </View>
+                  </View> */}
 
-                  <Text style={styles.formLabel}></Text>
+                  {/* <Text style={styles.formLabel}></Text> */}
                   {/* <WeekdayFrequencyPicker /> */}
-                  <View style={styles.space} />
+                  <View style={styles.spaceSmall} />
                   <CTAButton
                     title={"Submit"}
                     onPress={() => {
@@ -301,6 +310,7 @@ export default function VariableItemPicker({
                     disabled={values.habitName ? false : true}
                     iconName="checkmark-circle-outline"
                   />
+                  <View style={styles.space} />
                 </ScrollView>
               </Pressable>
             </Pressable>
@@ -359,7 +369,7 @@ function createStyles(theme: any, boxSize: number) {
       padding: theme.spacing.l,
       borderTopLeftRadius: theme.radius.l,
       borderTopRightRadius: theme.radius.l,
-      minHeight: "90%",
+      // minHeight: "90%",
     },
     modalTitle: {
       ...theme.text.h2,

@@ -13,7 +13,7 @@ import { getHabitObjectFromId, updateEditedHabit } from "@/utils/habits";
 import { useTheme } from "@/utils/theme/ThemeContext";
 import { Theme } from "@/utils/theme/themes";
 import { FormValuesType } from "@/utils/types";
-import { useNotifications } from "@/utils/useNotifications";
+import { useNotifications } from "@/utils/hooks/useNotifications";
 import { Ionicons } from "@expo/vector-icons";
 import CardWithoutImage from "../general/CardWithoutImage";
 import EditHabitForm from "./EditHabitForm";

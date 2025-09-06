@@ -6,6 +6,7 @@ import "react-native-reanimated";
 
 // Components:
 import LoadingScreen from "@/utils/components/general/LoadingScreen";
+import mmkvStorage from "@/utils/mmkvStorage";
 
 export default function Index() {
   // HARD RESET APP INCASE OF BROKEN FUNCTIONALITY:

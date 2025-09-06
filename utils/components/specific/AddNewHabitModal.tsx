@@ -10,6 +10,7 @@ import { useState } from "react";
 import {
   Alert,
   Dimensions,
+  Keyboard,
   KeyboardAvoidingView,
   Modal,
   Platform,
@@ -23,6 +24,7 @@ import CTAButton from "../general/CTAButton";
 import GenericForm from "../general/GenericForm";
 import WeekdayFrequencyPicker from "./WeekdayFrequencyPicker";
 import TaskFrequencyDropdownMenu from "./zeego/TaskFrequencyDropdownMenu";
+import { useKeyboardVisible } from "@/utils/hooks/useKeyboardVisible";
 
 const { width } = Dimensions.get("window");
 const BOX_SIZE = Math.min(width * 0.18, 80); // Responsive but capped at 80px in length and width
@@ -52,6 +54,7 @@ export default function AddNewHabitModal({
   const theme = useTheme();
   const styles = createStyles(theme, BOX_SIZE);
   const [values, setValues] = useState<FormValuesType>({});
+  const isKeyboardVisible = useKeyboardVisible();
 
   return (
     <Modal
@@ -78,24 +81,30 @@ export default function AddNewHabitModal({
           >
             <Pressable
               style={styles.modalContent}
-              onPress={(e) => e.stopPropagation()}
+              onPress={(e) => {
+                e.stopPropagation();
+                if (isKeyboardVisible) Keyboard.dismiss();
+              }}
             >
-              <View style={styles.modalHeader}>
-                <Text style={styles.modalTitle}>Add Habit</Text>
-                <Pressable
-                  style={styles.crossButton}
-                  onPress={() => {
-                    setIsModalVisible(false);
-                    setValues({});
-                  }}
-                >
-                  <Ionicons
-                    name="close"
-                    size={24}
-                    color={theme.colors.textSecondary}
-                  />
-                </Pressable>
-              </View>
+              {isKeyboardVisible ? null : (
+                <View style={styles.modalHeader}>
+                  <Text style={styles.modalTitle}>Add Habit</Text>
+                  <Pressable
+                    style={styles.crossButton}
+                    onPress={() => {
+                      setIsModalVisible(false);
+                      setValues({});
+                    }}
+                  >
+                    <Ionicons
+                      name="close"
+                      size={24}
+                      color={theme.colors.textSecondary}
+                    />
+                  </Pressable>
+                </View>
+              )}
+
               <ScrollView
                 keyboardShouldPersistTaps="handled"
                 showsVerticalScrollIndicator={false}

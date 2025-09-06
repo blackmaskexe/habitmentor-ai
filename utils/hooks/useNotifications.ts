@@ -3,8 +3,8 @@ import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
 import { useEffect, useRef, useState } from "react";
 import { Platform } from "react-native";
-import { updateHabitNotificationId } from "./habits";
-import { HabitObject } from "./types";
+import { updateHabitNotificationId } from "../habits";
+import { HabitObject } from "../types";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({

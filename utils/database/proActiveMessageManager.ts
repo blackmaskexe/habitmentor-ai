@@ -29,8 +29,6 @@ export function setRecentProActiveMessage(message: string) {
 
 export function getRecentProActiveMessage() {
   const recentMessage = mmkvStorage.getString("recentProActiveMessage");
-  if (recentMessage) {
-    return recentMessage;
-  }
-  return "Loading...";
+
+  return recentMessage ? recentMessage : "Loading...";
 }

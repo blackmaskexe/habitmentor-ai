@@ -8,7 +8,7 @@ import {
 import mmkvStorage from "@/utils/mmkvStorage";
 import { useTheme } from "@/utils/theme/ThemeContext";
 import { Theme } from "@/utils/theme/themes";
-import { useNotifications } from "@/utils/useNotifications";
+import { useNotifications } from "@/utils/hooks/useNotifications";
 import { Ionicons } from "@expo/vector-icons";
 import { getAuth, signOut } from "@react-native-firebase/auth";
 import { useFocusEffect, useRouter } from "expo-router";
