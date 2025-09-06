@@ -31,7 +31,7 @@ import {
   getImportantMessages,
 } from "@/utils/habits/habitDataCollectionHelper";
 import mmkvStorage from "@/utils/mmkvStorage";
-import { tagHabits } from "@/utils/tagManager";
+// import { tagHabits } from "@/utils/tagManager";
 import { Theme } from "@/utils/theme/themes";
 import { Ionicons } from "@expo/vector-icons";
 import { getAuth } from "@react-native-firebase/auth";
@@ -77,7 +77,7 @@ export default function Index() {
       });
 
       // run the tagging endpoint:
-      tagHabits();
+      // tagHabits(); // not tagging habits anymore
     } else {
       setShouldUserTour(false);
     }

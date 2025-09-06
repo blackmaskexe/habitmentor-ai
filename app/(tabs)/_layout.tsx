@@ -1,6 +1,5 @@
 import HomeAddDropdownMenu from "@/utils/components/specific/zeego/HomeAddDropdownMenu";
-import LeaderboardDropdownMenu from "@/utils/components/specific/zeego/LeaderboardDropdownMenu";
-import { areHabitsTagged, tagHabits } from "@/utils/tagManager";
+// import { areHabitsTagged, tagHabits } from "@/utils/tagManager";
 import { useTheme } from "@/utils/theme/ThemeContext";
 import { Ionicons } from "@expo/vector-icons";
 import { getAuth } from "@react-native-firebase/auth";
@@ -27,9 +26,10 @@ export default function TabLayout() {
   const { width } = Dimensions.get("window");
 
   // APP INITIALIZATION (After it has loaded):
-  if (!areHabitsTagged()) {
-    tagHabits();
-  }
+  // not tagging habits anymore, unnecessary imo
+  // if (!areHabitsTagged()) {
+  //   tagHabits();
+  // }
   if (getAuth().currentUser) {
     // run syncing the user's leaderboard profile data to firestore:
     syncDataToFirebaseProfile();
