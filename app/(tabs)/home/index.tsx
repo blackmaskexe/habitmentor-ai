@@ -150,14 +150,14 @@ export default function Index() {
         {/* <Text style={styles.headerText}>Total Points:</Text>
         <Text style={styles.headerText}>Streak:</Text> */}
       </View>
+      <WeekAtAGlance />
+
       <ScrollView
         style={{
           width: "90%",
         }}
         showsVerticalScrollIndicator={false}
       >
-        <WeekAtAGlance />
-
         <Animated.View style={[styles.aiSection]}>
           <Text style={styles.aiSectionHeading}>Top AI Suggestion:</Text>
           {proActiveMessage ? (
@@ -333,7 +333,7 @@ function createStyle(theme: Theme, proActiveMessageHeight: number) {
     },
     aiSection: {
       paddingTop: theme.spacing.s,
-      marginTop: theme.spacing.m,
+      // marginTop: theme.spacing.m,
     },
     aiSectionHeading: {
       color: theme.colors.text,
