@@ -23,7 +23,7 @@ function AppNavigator() {
   useEffect(() => {
     async function runExpoLinking() {
       const hasOnboarded = await AsyncStorage.getItem("hasOnboarded");
-      if (!hasOnboarded) return; // early return if the user hasn't onboarded
+      if (!hasOnboarded || !getAuth().currentUser) return; // early return if the user hasn't onboarded OR the user hasn't logged in
 
       if (url) {
         const { hostname, path, queryParams } = Linking.parse(url);

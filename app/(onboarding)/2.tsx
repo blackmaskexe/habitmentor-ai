@@ -18,6 +18,7 @@ import VariableItemPicker from "@/utils/components/specific/VariableItemPicker";
 import mmkvStorage from "@/utils/mmkvStorage";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { TypeAnimation } from "react-native-type-animation";
+import { getFormattedDate } from "@/utils/date";
 
 const AddMoreHabitsPrompt = () => {
   const insets = useSafeAreaInsets();
@@ -111,6 +112,9 @@ const AddMoreHabitsPrompt = () => {
           <CTAButton
             title="Proceed"
             onPress={() => {
+              // set app start date during onboarding:
+              mmkvStorage.set("appStartDate", getFormattedDate());
+
               AsyncStorage.setItem("hasOnboarded", "true")
                 .then((result) => {
                   router.replace("/(tabs)/home"); // send the user to home (i just wanan drive to homeeeeeeeeeeeeeee)

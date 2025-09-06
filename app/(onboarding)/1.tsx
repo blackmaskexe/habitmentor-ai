@@ -3,6 +3,9 @@
 // AND TELLING YOU THE MAIN GIST OF THE APP
 
 import OnboardingChatMessage from "@/utils/components/specific/OnboardingChatMessage";
+import { useTheme } from "@/utils/theme/ThemeContext";
+import { useRouter } from "expo-router";
+import { TouchableOpacity, Text } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 // THE STRING OF MESSAGES WILL GO SOMETHING LIKE THIS:
@@ -14,8 +17,28 @@ import { SafeAreaView } from "react-native-safe-area-context";
 // Let's now add some habits that you want to do
 
 export default function UserOnboardingChat() {
+  const theme = useTheme();
+  const router = useRouter();
   return (
     <SafeAreaView style={{ flex: 1 }}>
+      <TouchableOpacity
+        style={{
+          alignSelf: "flex-end",
+          marginRight: theme.spacing.l,
+          marginTop: theme.spacing.s,
+        }}
+        onPress={() => {
+          router.push("/(onboarding)/2");
+        }}
+      >
+        <Text
+          style={{
+            color: theme.colors.text,
+          }}
+        >
+          Skip
+        </Text>
+      </TouchableOpacity>
       <OnboardingChatMessage />
     </SafeAreaView>
   );

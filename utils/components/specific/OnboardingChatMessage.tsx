@@ -253,7 +253,6 @@ export default function OnboardingChatMessage() {
             <CTAButton
               title={"Proceed"}
               onPress={() => {
-                mmkvStorage.set("appStartDate", getFormattedDate());
                 router.push("/(onboarding)/2");
               }}
               disabled={isProceedDisabled}

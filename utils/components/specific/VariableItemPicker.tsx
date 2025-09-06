@@ -6,12 +6,14 @@ import { useEffect, useState } from "react";
 import {
   Alert,
   Dimensions,
+  Keyboard,
   KeyboardAvoidingView,
   Modal,
   Platform,
   Pressable,
   ScrollView,
   StyleSheet,
+  Switch,
   Text,
   View,
 } from "react-native";
@@ -23,6 +25,7 @@ import CTAButton from "../general/CTAButton";
 import GenericForm from "../general/GenericForm";
 import WeekdayFrequencyPicker from "./WeekdayFrequencyPicker";
 import TaskFrequencyDropdownMenu from "./zeego/TaskFrequencyDropdownMenu";
+import { useKeyboardVisible } from "@/utils/hooks/useKeyboardVisible";
 
 type ItemPickerProps = {
   onItemPress?: (index: number) => void;
@@ -66,6 +69,7 @@ export default function VariableItemPicker({
     // this array contains array of days (In the format of Mon, Tue, Wed) that the user wants to do these habits on
     Array(7).fill(true)
   );
+  const isKeyboardVisible = useKeyboardVisible();
 
   useEffect(() => {
     // set freqency in the form values variable (which will be later assigned to the HabitObject's property)
@@ -229,24 +233,30 @@ export default function VariableItemPicker({
             >
               <Pressable
                 style={styles.modalContent}
-                onPress={(e) => e.stopPropagation()}
+                onPress={(e) => {
+                  e.stopPropagation();
+                  if (isKeyboardVisible) Keyboard.dismiss();
+                }}
               >
-                <View style={styles.modalHeader}>
-                  <Text style={styles.modalTitle}>Add Habit</Text>
-                  <Pressable
-                    style={styles.crossButton}
-                    onPress={() => {
-                      setModalVisible(false);
-                      setValues({});
-                    }}
-                  >
-                    <Ionicons
-                      name="close"
-                      size={24}
-                      color={theme.colors.textSecondary}
-                    />
-                  </Pressable>
-                </View>
+                {isKeyboardVisible ? null : (
+                  <View style={styles.modalHeader}>
+                    <Text style={styles.modalTitle}>Add Habit</Text>
+                    <Pressable
+                      style={styles.crossButton}
+                      onPress={() => {
+                        setModalVisible(false);
+                        setValues({});
+                      }}
+                    >
+                      <Ionicons
+                        name="close"
+                        size={24}
+                        color={theme.colors.textSecondary}
+                      />
+                    </Pressable>
+                  </View>
+                )}
+
                 <ScrollView keyboardShouldPersistTaps="handled">
                   <GenericForm
                     fields={fields}
@@ -266,9 +276,22 @@ export default function VariableItemPicker({
                     values={values}
                   />
 
-                  <Text style={styles.formLabel}></Text>
+                  {/* <View style={styles.reminderContainer}>
+                    <Text style={styles.reminderLabel}>
+                      Enable Reminder for Habit
+                    </Text>
+                    <Switch
+                      trackColor={{ false: "#767577", true: "#81b0ff" }}
+                      thumbColor={"#f5dd4b"}
+                      ios_backgroundColor="#3e3e3e"
+                      onValueChange={() => {}}
+                      value={true}
+                    />
+                  </View> */}
+
+                  {/* <Text style={styles.formLabel}></Text> */}
                   {/* <WeekdayFrequencyPicker /> */}
-                  <View style={styles.space} />
+                  <View style={styles.spaceSmall} />
                   <CTAButton
                     title={"Submit"}
                     onPress={() => {
@@ -287,6 +310,7 @@ export default function VariableItemPicker({
                     disabled={values.habitName ? false : true}
                     iconName="checkmark-circle-outline"
                   />
+                  <View style={styles.space} />
                 </ScrollView>
               </Pressable>
             </Pressable>
@@ -345,7 +369,7 @@ function createStyles(theme: any, boxSize: number) {
       padding: theme.spacing.l,
       borderTopLeftRadius: theme.radius.l,
       borderTopRightRadius: theme.radius.l,
-      minHeight: "90%",
+      // minHeight: "90%",
     },
     modalTitle: {
       ...theme.text.h2,
@@ -371,6 +395,22 @@ function createStyles(theme: any, boxSize: number) {
     formLabel: {
       ...theme.text.body,
       color: theme.colors.text,
+      marginBottom: theme.spacing.s,
+    },
+    reminderContainer: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
+      width: "100%",
+      marginVertical: theme.spacing.s,
+    },
+    reminderLabel: {
+      ...theme.text.body,
+      fontSize: 13,
+      fontWeight: "600",
+      color: theme.colors.textSecondary,
+      letterSpacing: 0.5,
+      textTransform: "uppercase",
       marginBottom: theme.spacing.s,
     },
   });
