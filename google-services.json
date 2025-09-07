@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "96863368182-rgvm5lhdkjkroeaf68vmcf445r85frmg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.blackmaskexe.habittracker",
+            "certificate_hash": "7679e0fe239cc45656584d3b46cc64ef57d6dae3"
+          }
+        },
+        {
           "client_id": "96863368182-rqkal2eqcb3u8gealmbplpa66n5s8eu9.apps.googleusercontent.com",
           "client_type": 3
         }

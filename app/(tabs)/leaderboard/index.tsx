@@ -12,7 +12,7 @@ import { useTheme } from "@/utils/theme/ThemeContext";
 import { Theme } from "@/utils/theme/themes";
 import { useFocusEffect } from "expo-router";
 import { SheetManager } from "react-native-actions-sheet";
-import { getAuth } from "@react-native-firebase/auth";
+import { getAuth, onAuthStateChanged } from "@react-native-firebase/auth";
 import {
   getMmkvUserLeaderboardProfile,
   getUserProfile,
@@ -34,7 +34,7 @@ const FirstRoute = () => {
   useFocusEffect(
     useCallback(() => {
       // This listener handles the user's authentication state.
-      const authSubscriber = getAuth().onAuthStateChanged(async (user) => {
+      const authSubscriber = onAuthStateChanged(getAuth(), async (user) => {
         if (user) {
           // If the user is authenticated, we try to get their profile.
           // First, check local storage for a quick load.
@@ -99,7 +99,7 @@ const SecondRoute = () => {
   useFocusEffect(
     useCallback(() => {
       // This listener handles the user's authentication state.
-      const authSubscriber = getAuth().onAuthStateChanged(async (user) => {
+      const authSubscriber = onAuthStateChanged(getAuth(), async (user) => {
         if (user) {
           // If the user is authenticated, we try to get their profile.
           // First, check local storage for a quick load.

@@ -9,7 +9,7 @@ import {
   View,
 } from "react-native";
 
-import { getProActiveMessage } from "@/utils/api";
+import { getProActiveMessage } from "@/utils/firebase/functions/recommendationManager";
 import AISuggestionSkeleton from "@/utils/components/specific/AISuggestionSkeleton";
 import DailyHabitsView from "@/utils/components/specific/DailyHabitsView";
 import WeekAtAGlance from "@/utils/components/specific/WeekGlance";

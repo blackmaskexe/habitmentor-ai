@@ -1,11 +1,6 @@
-import api, { getChatMessage } from "@/utils/api";
+import { getChatMessage } from "@/utils/firebase/functions/chatManager";
 import { getDate, getTimeOfDay } from "@/utils/date";
-import { getAllHabits } from "@/utils/habits";
-import {
-  addImportantMessage,
-  getHabitCompletionCollection,
-  getImportantMessages,
-} from "@/utils/habits/habitDataCollectionHelper";
+import { addImportantMessage } from "@/utils/habits/habitDataCollectionHelper";
 import mmkvStorage from "@/utils/mmkvStorage";
 import { generateMessageId } from "@/utils/randomId";
 import { useTheme } from "@/utils/theme/ThemeContext";

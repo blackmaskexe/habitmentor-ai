@@ -85,7 +85,7 @@ export default function OnboardingChatMessage() {
 
     const aiMessage: MessageType = {
       id: generateMessageId(),
-      sender: "ai",
+      sender: "HabitMentor AI",
       content: "",
       $createdAt: getDate(),
       loading: true,
@@ -241,8 +241,6 @@ export default function OnboardingChatMessage() {
 
           <View
             style={{
-              borderWidth: 1,
-              borderColor: "black",
               flexDirection: "row",
               alignItems: "center",
               borderRadius: 20,

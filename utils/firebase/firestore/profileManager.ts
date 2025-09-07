@@ -1,5 +1,16 @@
 import mmkvStorage from "@/utils/mmkvStorage";
-import firestore from "@react-native-firebase/firestore";
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  getDoc,
+  getFirestore,
+  addDoc,
+  updateDoc,
+  doc,
+  setDoc,
+} from "@react-native-firebase/firestore";
 import { FirebaseUserProfile } from "../types";
 import { getPoints } from "@/utils/database/points";
 import { getFormattedDate } from "@/utils/date";
@@ -9,8 +20,9 @@ import { getTotalHabitsCompleted } from "@/utils/habits";
 import { Filter } from "bad-words";
 
 const filter = new Filter();
+const db = getFirestore();
 
-const usersCollection = firestore().collection("users");
+// const usersCollection = firestore().collection("users");
 
 // ----------------------------------------
 // FIRESTORE USER ID STORING IN MMKVSTORAGE
@@ -120,8 +132,9 @@ export async function createProfile(
       throw new Error("NOT SIGNED INTO FIREBASE AUTH");
     }
 
-    const userDocRef = usersCollection.doc(currentUser.uid);
-    const docSnapshot = await userDocRef.get();
+    // const userDocRef = usersCollection.doc(currentUser.uid);
+    const userDocRef = doc(db, "users", currentUser.uid);
+    const docSnapshot = await getDoc(userDocRef);
 
     // checking if the docsnapshot (user's profile) already exists:
     if (docSnapshot.exists()) {
@@ -140,7 +153,8 @@ export async function createProfile(
       enrolledInGlobal: false,
     };
 
-    await userDocRef.set(firebaseUserProfile);
+    // await userDocRef.set(firebaseUserProfile);
+    await setDoc(doc(db, "users", currentUser.uid), firebaseUserProfile);
     setMmkvUserLeaderboardProfile(firebaseUserProfile);
 
     console.log("I want to be your ford cortina");
@@ -155,7 +169,14 @@ export async function createProfile(
 export async function updateProfile(nickname: string, avatarIcon: string) {
   try {
     const currentUser = getAuth().currentUser;
-    await usersCollection.doc(currentUser?.uid).update({
+    if (!currentUser) {
+      return;
+    }
+    // await usersCollection.doc(currentUser?.uid).update({
+    //   nickname: nickname,
+    //   avatarIcon: avatarIcon,
+    // });
+    await updateDoc(doc(db, "users", currentUser.uid), {
       nickname: nickname,
       avatarIcon: avatarIcon,
     });
@@ -172,8 +193,8 @@ export async function doesUserHaveFirebaseProfile(): Promise<boolean> {
       return false;
     }
 
-    const userDocRef = usersCollection.doc(currentUser.uid);
-    const docSnapshot = await userDocRef.get();
+    const userDocRef = doc(db, "users", currentUser.uid);
+    const docSnapshot = await getDoc(userDocRef);
 
     return docSnapshot.exists();
   } catch (error) {
@@ -187,7 +208,8 @@ export async function getUserProfile(
   userId: string
 ): Promise<FirebaseUserProfile> {
   try {
-    const userDocSnapshot = await usersCollection.doc(userId).get();
+    // const userDocSnapshot = await usersCollection.doc(userId).get();
+    const userDocSnapshot = await getDoc(doc(db, "users", userId));
     if (userDocSnapshot.exists()) {
       const userProfile = userDocSnapshot.data() as FirebaseUserProfile;
       return userProfile;
@@ -210,11 +232,19 @@ export async function syncDataToFirebaseProfile() {
   try {
     const currentUser = getAuth().currentUser;
     if (!currentUser) return; // early return if not auth
-    await usersCollection.doc(currentUser.uid).update({
+
+    // await usersCollection.doc(currentUser.uid).update({
+    //   points: getPoints(),
+    //   streak: await calculateLongestStreak(),
+    //   totalHabitsCompleted: getTotalHabitsCompleted(),
+    // });
+
+    await updateDoc(doc(db, "users", currentUser.uid), {
       points: getPoints(),
       streak: await calculateLongestStreak(),
       totalHabitsCompleted: getTotalHabitsCompleted(),
     });
+
     console.log("User data updated!");
   } catch (err) {
     console.log("CRITICAL ERROR, COULD NOT SYNC DATA TO FIREBASE PROFILE", err);

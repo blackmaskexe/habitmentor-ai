@@ -9,8 +9,14 @@ import {
   signInWithCredential,
 } from "@react-native-firebase/auth";
 import React from "react";
+import { Platform } from "react-native";
 
 export default function AppleSignInButton() {
+  // return empty component if not on ios:
+  if (Platform.OS != "ios") {
+    return <></>;
+  }
+
   const theme = useTheme();
   async function onAppleButtonPress() {
     // Start the sign-in request

@@ -54,6 +54,7 @@ export default function AiSuggestions() {
       <View
         style={{
           marginHorizontal: theme.spacing.s,
+          marginTop: theme.spacing.m,
         }}
       >
         <CardWithoutImage

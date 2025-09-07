@@ -5,7 +5,7 @@ import { useRouter } from "expo-router";
 import { useState, useEffect } from "react";
 import { Share, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import * as DropdownMenu from "./dropdown-menu";
-import { getInviteLink } from "@/utils/firebase/firestore/friendsManager";
+import { getInviteLink } from "@/utils/firebase/functions/friendsManager";
 import * as Haptics from "expo-haptics";
 import { getAuth } from "@react-native-firebase/auth";
 import firestore from "@react-native-firebase/firestore";

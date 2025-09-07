@@ -12,10 +12,18 @@ import { useTheme } from "@/utils/theme/ThemeContext";
 import { Theme } from "@/utils/theme/themes";
 import { Ionicons } from "@expo/vector-icons";
 import { getAuth } from "@react-native-firebase/auth";
-import firestore from "@react-native-firebase/firestore";
+import {
+  collection,
+  doc,
+  getFirestore,
+  onSnapshot,
+  query,
+  where,
+  FirebaseFirestoreTypes,
+} from "@react-native-firebase/firestore";
 import { useRouter } from "expo-router";
 import { FirebaseUserProfile } from "@/utils/firebase/types";
-import { getInviteLink } from "@/utils/firebase/firestore/friendsManager";
+import { getInviteLink } from "@/utils/firebase/functions/friendsManager";
 import CTAButton from "../general/CTAButton";
 
 type RankedUser = {
@@ -30,6 +38,8 @@ type RankedUser = {
 type LeaderboardFriendsViewProps = {
   userProfile: FirebaseUserProfile | null;
 };
+
+const db = getFirestore();
 
 export default function LeaderboardFriendsView({
   userProfile,
@@ -56,15 +66,21 @@ export default function LeaderboardFriendsView({
 
     if (!currentUser || !userProfile) return;
 
-    const friendsListRef = firestore()
-      .collection("users")
-      .doc(currentUser.uid)
-      .collection("friends")
-      .where("status", "==", "accepted");
+    // const friendsListRef = firestore()
+    //   .collection("users")
+    //   .doc(currentUser.uid)
+    //   .collection("friends")
+    //   .where("status", "==", "accepted");
+    const friendsQuery = query(
+      collection(db, "users", currentUser.uid, "friends"),
+      where("status", "==", "accepted")
+    );
 
-    unsubscribeFriendsList = friendsListRef.onSnapshot((snapshot) => {
-      if (snapshot) {
-        const ids = snapshot.docs.map((doc) => doc.id);
+    unsubscribeFriendsList = onSnapshot(friendsQuery, (querySnapshot) => {
+      if (querySnapshot) {
+        const ids = querySnapshot.docs.map(
+          (doc: FirebaseFirestoreTypes.QueryDocumentSnapshot) => doc.id
+        );
         setFriendIds(ids);
         // Mark friends list as loaded (even if empty)
         setFriendsLoaded(true);
@@ -90,9 +106,9 @@ export default function LeaderboardFriendsView({
 
     // Set up individual snapshots for each friend
     friendIds.forEach((friendId) => {
-      const friendDocRef = firestore().collection("users").doc(friendId);
+      const friendDocRef = doc(db, "users", friendId);
 
-      const unsubscribe = friendDocRef.onSnapshot((docSnapshot) => {
+      const unsubscribe = onSnapshot(friendDocRef, (docSnapshot) => {
         if (docSnapshot && docSnapshot.exists()) {
           const data = docSnapshot.data() as FirebaseUserProfile;
           friendProfiles.set(friendId, { ...data, id: friendId });
@@ -127,9 +143,9 @@ export default function LeaderboardFriendsView({
     }
 
     setIsLoading(true);
-    const myDocRef = firestore().collection("users").doc(currentUser.uid);
+    const myDocRef = doc(db, "users", currentUser.uid);
 
-    unsubscribe = myDocRef.onSnapshot((docSnapshot) => {
+    unsubscribe = onSnapshot(myDocRef, (docSnapshot) => {
       try {
         if (!docSnapshot || !docSnapshot.exists()) {
           setIsLoading(false);

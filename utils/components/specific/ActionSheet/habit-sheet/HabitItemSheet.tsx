@@ -76,6 +76,11 @@ export default function HabitItemSheet({
                 : "No Reminders Set"
             }
           />
+          <View
+            style={{
+              marginBottom: theme.spacing.s,
+            }}
+          />
           <ActionSheetIosOptionList
             habitItem={habitObject}
             onChangeDisplayScreen={setDisplayScreen}
