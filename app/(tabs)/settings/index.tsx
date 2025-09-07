@@ -188,36 +188,38 @@ export default function Settings() {
 
       {/* Leaderboard Group */}
       <View style={styles.settingsGroup}>
-        {renderOptionItem("top", "log-out", "Log Out", async () => {
-          if (!getAuth().currentUser) {
-            Alert.alert("Failed", "You are already logged out");
-            return;
-          }
-          Alert.alert(
-            `Logging Out`,
-            "You will have to log back in to use leaderboards",
-            [
-              {
-                text: "Cancel",
-                onPress: () => console.log("Cancel Pressed"),
-                style: "cancel",
-              },
-              {
-                text: "Yes",
-                onPress: () => {
-                  signOut(getAuth())
-                    .then(() => {
-                      console.log("User Signed Out Successfully!");
-                    })
-                    .catch((err) => {
-                      console.log(err);
-                    });
+        {getAuth().currentUser &&
+          renderOptionItem("top", "log-out", "Log Out", async () => {
+            if (!getAuth().currentUser) {
+              Alert.alert("Failed", "You are already logged out");
+              return;
+            }
+            Alert.alert(
+              `Logging Out`,
+              "You will have to log back in to use leaderboards",
+              [
+                {
+                  text: "Cancel",
+                  onPress: () => console.log("Cancel Pressed"),
+                  style: "cancel",
                 },
-              },
-            ],
-            { cancelable: false }
-          );
-        })}
+                {
+                  text: "Yes",
+                  onPress: () => {
+                    signOut(getAuth())
+                      .then(() => {
+                        console.log("User Signed Out Successfully!");
+                        Alert.alert("You have been logged out");
+                      })
+                      .catch((err) => {
+                        console.log(err);
+                      });
+                  },
+                },
+              ],
+              { cancelable: false }
+            );
+          })}
         {renderOptionItem(
           "between",
           "create",

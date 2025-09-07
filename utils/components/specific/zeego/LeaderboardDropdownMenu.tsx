@@ -8,7 +8,7 @@ import * as DropdownMenu from "./dropdown-menu";
 import { getInviteLink } from "@/utils/firebase/functions/friendsManager";
 import * as Haptics from "expo-haptics";
 import { getAuth } from "@react-native-firebase/auth";
-import firestore, {
+import {
   collection,
   getFirestore,
   onSnapshot,
@@ -35,9 +35,8 @@ export default function LeaderboardDropdownMenu({}: {}) {
       where("status", "==", "pending_received")
     );
     const unsubscribe = onSnapshot(pendingRequestsQuery, (snapshot) => {
-      if (snapshot && snapshot.size) {
-        setPendingRequestsCount(snapshot ? snapshot.size : 0);
-      }
+      // Always update the count, even when it's 0
+      setPendingRequestsCount(snapshot ? snapshot.size : 0);
     });
 
     return () => unsubscribe();

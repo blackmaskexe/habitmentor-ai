@@ -8,11 +8,11 @@ import mmkvStorage from "./mmkvStorage";
 
 export const getDate = function () {
   // this function is to be able to change date from this central location easily
-  return new Date();
-  // const today = new Date();
-  // const tomorrow = new Date(today);
-  // tomorrow.setDate(today.getDate() + 1);
-  // return tomorrow;
+  // return new Date();
+  const today = new Date();
+  const tomorrow = new Date(today);
+  tomorrow.setDate(today.getDate() + 1);
+  return tomorrow;
 };
 
 export const getDateMinusNDays = (daysOffset: number, date?: Date) => {
