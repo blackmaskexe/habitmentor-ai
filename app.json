@@ -15,7 +15,8 @@
       "bundleIdentifier": "com.blackmaskexe.habittracker",
       "associatedDomains": ["applinks:habitmentor.app"],
       "infoPlist": {
-        "ITSAppUsesNonExemptEncryption": false
+        "ITSAppUsesNonExemptEncryption": false,
+        "NSUserNotificationsUsageDescription": "We send notifications to send you reminders for your habits, and updates on your progress"
       }
     },
     "android": {
