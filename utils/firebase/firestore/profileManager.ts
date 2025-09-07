@@ -148,7 +148,6 @@ export async function createProfile(
       avatarIcon: avatarIcon,
       points: getPoints(),
       pointsThisMonth: 0,
-      friends: [],
       profileCreationDate: getFormattedDate(),
       enrolledInGlobal: false,
     };
@@ -221,7 +220,6 @@ export async function getUserProfile(
       points: 0,
       pointsThisMonth: 0,
       avatarIcon: "does-not-exist-questionmark",
-      friends: [],
       profileCreationDate: "1990-1-1",
       enrolledInGlobal: false,
     };
