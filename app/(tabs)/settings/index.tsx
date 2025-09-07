@@ -269,32 +269,29 @@ export default function Settings() {
       </View>
 
       <View style={styles.sectionHeader}>
+        <Text style={styles.sectionHeaderText}>Privacy Policy</Text>
+      </View>
+
+      {/* Settings Group */}
+      <View style={styles.settingsGroup}>
+        {renderOptionItem(
+          "single",
+          "lock-closed",
+          "View Privacy Policy",
+          () => {}
+        )}
+
+        {/* Divider */}
+        <View style={styles.divider} />
+      </View>
+
+      <View style={styles.sectionHeader}>
         <Text style={styles.sectionHeaderText}>Danger Zone</Text>
       </View>
 
       {/* Settings Group */}
       <View style={styles.settingsGroup}>
         {renderOptionItem("single", "trash", "Erase Data", () => {
-          // Alert.alert(
-          //   `Erase all Habit Data?`,
-          //   "Are you sure?",
-          //   [
-          //     {
-          //       text: "Cancel",
-          //       onPress: () => console.log("Cancel Pressed"),
-          //       style: "cancel",
-          //     },
-          //     {
-          //       text: "Yes",
-          //       onPress: async () => {
-          //         router.push("/(tabs)/settings/erase-data");
-          //         // router.replace("/(onboarding)");
-          //         // await eraseAllHabitData();
-          //       },
-          //     },
-          //   ],
-          //   { cancelable: false }
-          // );
           router.push("/(tabs)/settings/erase-data");
         })}
 
