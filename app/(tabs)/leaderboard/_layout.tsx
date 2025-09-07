@@ -1,4 +1,5 @@
 import LeaderboardDropdownMenu from "@/utils/components/specific/zeego/LeaderboardDropdownMenu";
+import ProfileDropdownMenu from "@/utils/components/specific/zeego/ProfileDropdownMenu";
 import { useTheme } from "@/utils/theme/ThemeContext";
 import { Stack } from "expo-router";
 
@@ -35,6 +36,9 @@ export default function LeaderboardLayout() {
         name="[userId]"
         options={{
           title: "Profile",
+          headerRight: () => {
+            return <ProfileDropdownMenu />;
+          },
         }}
       />
       <Stack.Screen
