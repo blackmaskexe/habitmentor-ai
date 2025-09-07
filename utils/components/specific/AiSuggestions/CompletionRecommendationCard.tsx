@@ -42,7 +42,7 @@ const CompletionRecommendationCard: React.FC<
 
   return (
     <TouchableOpacity
-      activeOpacity={0.5}
+      activeOpacity={1}
       style={[
         styles.card,
         {
@@ -50,21 +50,21 @@ const CompletionRecommendationCard: React.FC<
           padding,
         },
       ]}
-      onPress={() => {
-        SheetManager.show("suggestions-sheet", {
-          payload: {
-            CustomComponent: () => {
-              return (
-                <LeastCompletedHabitSheet
-                  habitName={habitName}
-                  completionPercentage={completionPercentage}
-                  habitId={habitId}
-                />
-              );
-            },
-          },
-        });
-      }}
+      // onPress={() => {
+      //   SheetManager.show("suggestions-sheet", {
+      //     payload: {
+      //       CustomComponent: () => {
+      //         return (
+      //           <LeastCompletedHabitSheet
+      //             habitName={habitName}
+      //             completionPercentage={completionPercentage}
+      //             habitId={habitId}
+      //           />
+      //         );
+      //       },
+      //     },
+      //   });
+      // }}
     >
       <View style={styles.iconContainer}>
         <Ionicons

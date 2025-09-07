@@ -8,7 +8,15 @@ import * as DropdownMenu from "./dropdown-menu";
 import { getInviteLink } from "@/utils/firebase/functions/friendsManager";
 import * as Haptics from "expo-haptics";
 import { getAuth } from "@react-native-firebase/auth";
-import firestore from "@react-native-firebase/firestore";
+import firestore, {
+  collection,
+  getFirestore,
+  onSnapshot,
+  query,
+  where,
+} from "@react-native-firebase/firestore";
+
+const db = getFirestore();
 
 export default function LeaderboardDropdownMenu({}: {}) {
   const router = useRouter();
@@ -22,16 +30,15 @@ export default function LeaderboardDropdownMenu({}: {}) {
     if (!currentUser) return;
 
     // Listen for pending friend requests
-    const unsubscribe = firestore()
-      .collection("users")
-      .doc(currentUser.uid)
-      .collection("friends")
-      .where("status", "==", "pending_received")
-      .onSnapshot((snapshot) => {
-        if (snapshot && snapshot.size) {
-          setPendingRequestsCount(snapshot ? snapshot.size : 0);
-        }
-      });
+    const pendingRequestsQuery = query(
+      collection(db, "users", currentUser.uid, "friends"),
+      where("status", "==", "pending_received")
+    );
+    const unsubscribe = onSnapshot(pendingRequestsQuery, (snapshot) => {
+      if (snapshot && snapshot.size) {
+        setPendingRequestsCount(snapshot ? snapshot.size : 0);
+      }
+    });
 
     return () => unsubscribe();
   }, [currentUser]);
