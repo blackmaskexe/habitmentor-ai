@@ -3,9 +3,15 @@ import { Theme } from "@/utils/theme/themes";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useState, useEffect } from "react";
-import { Share, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  Alert,
+  Share,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import * as DropdownMenu from "./dropdown-menu";
-import { getInviteLink } from "@/utils/firebase/functions/friendsManager";
 import * as Haptics from "expo-haptics";
 import { getAuth } from "@react-native-firebase/auth";
 import {
@@ -15,13 +21,28 @@ import {
   query,
   where,
 } from "@react-native-firebase/firestore";
+import { getFunctions, httpsCallable } from "@react-native-firebase/functions";
+import ActivityIndicatorOverlay from "../../general/ActivityIndicatorOverlay";
 
 const db = getFirestore();
+const functionsInstance = getFunctions();
 
-export default function ProfileDropdownMenu() {
+export default function ProfileDropdownMenu({
+  profileId,
+}: {
+  profileId: string;
+}) {
   const router = useRouter();
   const theme = useTheme();
   const styles = createStyles(theme);
+  const currentUser = getAuth().currentUser;
+
+  const [isProcessingRequest, setIsProcessingRequest] =
+    useState<boolean>(false);
+
+  if (isProcessingRequest) {
+    return <ActivityIndicatorOverlay visible={true} />;
+  }
 
   return (
     <DropdownMenu.DropdownMenuRoot>
@@ -47,7 +68,33 @@ export default function ProfileDropdownMenu() {
           Profile Options
         </DropdownMenu.DropdownMenuLabel>
 
-        <DropdownMenu.DropdownMenuItem key="Report User" onSelect={() => {}}>
+        <DropdownMenu.DropdownMenuItem
+          key="Report User"
+          onSelect={async () => {
+            try {
+              // early return if trying to report self
+              if (currentUser && profileId == currentUser.uid) {
+                Alert.alert("You cannot report yourself!");
+                return;
+              }
+              setIsProcessingRequest(true);
+              const reportUser = httpsCallable(functionsInstance, "reportUser");
+              await reportUser({ reportedId: profileId });
+              setIsProcessingRequest(false);
+              Alert.alert(
+                "Success",
+                "The user was reported. Our team will investigate this user."
+              );
+            } catch (err) {
+              setIsProcessingRequest(false);
+              Alert.alert(
+                "Failed",
+                "Something wrong happened, please try to report again later"
+              );
+              console.log("CRITICAL ERROR, COULD NOT REPORT USER", err);
+            }
+          }}
+        >
           <DropdownMenu.DropdownMenuItemIcon
             ios={{
               name: "person.crop.circle.badge.exclamationmark",
@@ -79,15 +126,6 @@ export default function ProfileDropdownMenu() {
           />
           <DropdownMenu.DropdownMenuItemTitle>
             Block User
-          </DropdownMenu.DropdownMenuItemTitle>
-        </DropdownMenu.DropdownMenuItem>
-
-        <DropdownMenu.DropdownMenuItem
-          key="friend-requests"
-          onSelect={() => {}}
-        >
-          <DropdownMenu.DropdownMenuItemTitle>
-            See Friend Requests
           </DropdownMenu.DropdownMenuItemTitle>
         </DropdownMenu.DropdownMenuItem>
       </DropdownMenu.DropdownMenuContent>

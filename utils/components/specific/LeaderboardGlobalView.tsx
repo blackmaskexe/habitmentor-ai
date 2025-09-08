@@ -177,6 +177,55 @@ export default function LeaderboardGlobalView({
     }
   };
 
+  // Listen for real-time global leaderboard updates
+  useEffect(() => {
+    if (!currentUser || !isEnrolled) return;
+
+    setIsLoading(true);
+    const enrolledInGlobalUsersQuery = query(
+      collection(db, "users"),
+      where("enrolledInGlobal", "==", true)
+    );
+    const unsubscribe = onSnapshot(
+      enrolledInGlobalUsersQuery,
+      (globalUsersSnapshot) => {
+        if (globalUsersSnapshot.empty) {
+          setAllRankedUsers([]);
+          setMyProfile(null);
+          setIsLoading(false);
+          return;
+        }
+
+        const allUserProfiles: (FirebaseUserProfile & { id: string })[] = [];
+        globalUsersSnapshot.docs.forEach(
+          (doc: FirebaseFirestoreTypes.QueryDocumentSnapshot) => {
+            const data = doc.data() as FirebaseUserProfile;
+            allUserProfiles.push({ ...data, id: doc.id });
+          }
+        );
+
+        allUserProfiles.sort((a, b) => b.points - a.points);
+        const rankedUsers: RankedUser[] = allUserProfiles.map(
+          (user, index) => ({
+            id: user.id,
+            nickname: user.nickname,
+            avatarIcon: user.avatarIcon,
+            points: user.points,
+            rank: index + 1,
+            isMe: user.id === currentUser.uid,
+          })
+        );
+
+        const myRankedProfile = rankedUsers.find((user) => user.isMe);
+        setMyProfile(myRankedProfile || null);
+        setAllRankedUsers(rankedUsers);
+        setIsLoading(false);
+      }
+    );
+
+    return () => unsubscribe();
+  }, [currentUser, isEnrolled]);
+
   const handleUserPress = (userId: string) => {
     router.push(`/(tabs)/leaderboard/${userId}`);
   };

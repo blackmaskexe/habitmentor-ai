@@ -1,7 +1,12 @@
 import LeaderboardDropdownMenu from "@/utils/components/specific/zeego/LeaderboardDropdownMenu";
 import ProfileDropdownMenu from "@/utils/components/specific/zeego/ProfileDropdownMenu";
 import { useTheme } from "@/utils/theme/ThemeContext";
-import { Stack } from "expo-router";
+import { getAuth } from "@react-native-firebase/auth";
+import {
+  Stack,
+  useGlobalSearchParams,
+  useLocalSearchParams,
+} from "expo-router";
 
 export const unstable_settings = {
   initialRouteName: "index",
@@ -37,7 +42,13 @@ export default function LeaderboardLayout() {
         options={{
           title: "Profile",
           headerRight: () => {
-            return <ProfileDropdownMenu />;
+            const { userId: profileOwnerId } = useGlobalSearchParams();
+
+            return (
+              <ProfileDropdownMenu
+                profileId={(profileOwnerId as string) || ""}
+              />
+            );
           },
         }}
       />
