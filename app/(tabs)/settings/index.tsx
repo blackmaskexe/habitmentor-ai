@@ -23,8 +23,16 @@ import {
   View,
 } from "react-native";
 import firestore from "@react-native-firebase/firestore";
+import * as WebBrowser from "expo-web-browser";
 
 export default function Settings() {
+  const openPrivacyPolicyWebsite = async () => {
+    let result = await WebBrowser.openBrowserAsync(
+      "https://habitmentor.app/privacy-policy.html"
+    );
+    console.log(result); // You get info about how the browser was dismissed
+  };
+
   const theme = useTheme();
   const styles = createStyles(theme);
 
@@ -278,7 +286,7 @@ export default function Settings() {
           "single",
           "lock-closed",
           "View Privacy Policy",
-          () => {}
+          openPrivacyPolicyWebsite
         )}
 
         {/* Divider */}

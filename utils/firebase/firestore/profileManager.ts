@@ -137,7 +137,7 @@ export async function createProfile(
     const docSnapshot = await getDoc(userDocRef);
 
     // checking if the docsnapshot (user's profile) already exists:
-    if (docSnapshot.exists()) {
+    if (docSnapshot && docSnapshot.exists()) {
       const userProfileData = docSnapshot.data() as FirebaseUserProfile;
       setMmkvUserLeaderboardProfile(userProfileData);
       return false; // return false for profile not created
@@ -209,7 +209,7 @@ export async function getUserProfile(
   try {
     // const userDocSnapshot = await usersCollection.doc(userId).get();
     const userDocSnapshot = await getDoc(doc(db, "users", userId));
-    if (userDocSnapshot.exists()) {
+    if (userDocSnapshot && userDocSnapshot.exists()) {
       const userProfile = userDocSnapshot.data() as FirebaseUserProfile;
       return userProfile;
     } else throw new Error("User does not exist");

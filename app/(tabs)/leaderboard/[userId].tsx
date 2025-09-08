@@ -151,7 +151,9 @@ export default function UserProfilePage() {
     },
   ];
 
-  const friendsCount = getFriendCount(); // will get the length of the friends subcollection later
+  const friendsCount = getFriendCount(); // will get the number of friends
+  // but the thing is, this only works for the user himself because it gets an mmkvstorage fetch
+  //
   const joinedDate = getOrdinalDate(
     getDateFromFormattedDate(userProfile.profileCreationDate)
   );
@@ -199,6 +201,14 @@ export default function UserProfilePage() {
           visible: true,
           style: styles.requestSentButton,
           buttonTitle: "Already a Friend",
+          onPress: null,
+        };
+        break;
+      case "blocked":
+        buttonData = {
+          visible: true,
+          style: styles.requestSentButton,
+          buttonTitle: "User Blocked. Press to Unblock",
           onPress: null,
         };
         break;

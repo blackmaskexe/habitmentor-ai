@@ -13,7 +13,7 @@
       "supportsTablet": false,
       "googleServicesFile": "./GoogleService-Info.plist",
       "bundleIdentifier": "com.blackmaskexe.habittracker",
-      "associatedDomains": ["applinks:habitmentor.app"],
+      "associatedDomains": ["applinks:habitmentor.app/friend-invite"],
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false,
         "NSUserNotificationsUsageDescription": "We send notifications to send you reminders for your habits, and updates on your progress"

@@ -64,7 +64,7 @@ export default function LeaderboardGlobalView({
       try {
         const userDoc = await getDoc(doc(db, "users", currentUser.uid));
 
-        if (!userDoc.exists) return;
+        if (!userDoc.exists()) return;
 
         const userData = userDoc.data() as FirebaseUserProfile;
 
@@ -128,7 +128,7 @@ export default function LeaderboardGlobalView({
 
   // Load global leaderboard data
   const loadGlobalLeaderboard = async () => {
-    if (!currentUser) return;
+    if (currentUser == null) return;
 
     setIsLoading(true);
     try {
@@ -139,7 +139,7 @@ export default function LeaderboardGlobalView({
       );
       const globalUsersSnapshot = await getDocs(enrolledInGlobalUsersQuery);
 
-      if (globalUsersSnapshot.empty) {
+      if (globalUsersSnapshot && globalUsersSnapshot.empty) {
         setAllRankedUsers([]);
         setMyProfile(null);
         setIsLoading(false);
@@ -189,7 +189,7 @@ export default function LeaderboardGlobalView({
     const unsubscribe = onSnapshot(
       enrolledInGlobalUsersQuery,
       (globalUsersSnapshot) => {
-        if (globalUsersSnapshot.empty) {
+        if (globalUsersSnapshot && globalUsersSnapshot.empty) {
           setAllRankedUsers([]);
           setMyProfile(null);
           setIsLoading(false);
