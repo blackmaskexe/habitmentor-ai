@@ -11,7 +11,18 @@ import { useTheme } from "@/utils/theme/ThemeContext";
 import { Theme } from "@/utils/theme/themes";
 import { Ionicons } from "@expo/vector-icons";
 import { getAuth } from "@react-native-firebase/auth";
-import firestore from "@react-native-firebase/firestore";
+import {
+  collection,
+  doc,
+  FirebaseFirestoreTypes,
+  getDoc,
+  getDocs,
+  getFirestore,
+  onSnapshot,
+  query,
+  updateDoc,
+  where,
+} from "@react-native-firebase/firestore";
 import { useRouter } from "expo-router";
 import { FirebaseUserProfile } from "@/utils/firebase/types";
 import { SheetManager } from "react-native-actions-sheet";
@@ -28,6 +39,8 @@ type RankedUser = {
 type LeaderboardGlobalViewProps = {
   userProfile: FirebaseUserProfile | null;
 };
+
+const db = getFirestore();
 
 export default function LeaderboardGlobalView({
   userProfile,
@@ -49,21 +62,22 @@ export default function LeaderboardGlobalView({
 
     const checkEnrollmentStatus = async () => {
       try {
-        const userDoc = await firestore()
-          .collection("users")
-          .doc(currentUser.uid)
-          .get();
+        const userDoc = await getDoc(doc(db, "users", currentUser.uid));
 
-        if (!userDoc.exists) return;
+        if (!userDoc.exists()) return;
 
         const userData = userDoc.data() as FirebaseUserProfile;
 
         // If enrolledInGlobal doesn't exist, create it as false
         if (userData && userData.enrolledInGlobal === undefined) {
-          await firestore()
-            .collection("users")
-            .doc(currentUser.uid)
-            .update({ enrolledInGlobal: false });
+          // await firestore()
+          //   .collection("users")
+          //   .doc(currentUser.uid)
+          //   .update({ enrolledInGlobal: false });
+          updateDoc(doc(db, "users", currentUser.uid), {
+            enrolledInGlobal: false,
+          });
+
           setIsEnrolled(false);
         } else if (userData && userData.enrolledInGlobal === false) {
           setIsEnrolled(false);
@@ -89,43 +103,43 @@ export default function LeaderboardGlobalView({
   useEffect(() => {
     if (!currentUser || !enrollmentChecked) return;
 
-    const unsubscribe = firestore()
-      .collection("users")
-      .doc(currentUser.uid)
-      .onSnapshot((doc) => {
-        if (doc && doc.exists()) {
-          const userData = doc.data() as FirebaseUserProfile;
-          if (userData && userData.enrolledInGlobal === true && !isEnrolled) {
-            setIsEnrolled(true);
-            loadGlobalLeaderboard();
-          } else if (
-            userData &&
-            userData.enrolledInGlobal === false &&
-            isEnrolled
-          ) {
-            setIsEnrolled(false);
-            setAllRankedUsers([]);
-            setMyProfile(null);
-          }
+    const userDocRef = doc(db, "users", currentUser.uid);
+
+    const unsubscribe = onSnapshot(userDocRef, (doc) => {
+      if (doc && doc.exists()) {
+        const userData = doc.data() as FirebaseUserProfile;
+        if (userData && userData.enrolledInGlobal === true && !isEnrolled) {
+          setIsEnrolled(true);
+          loadGlobalLeaderboard();
+        } else if (
+          userData &&
+          userData.enrolledInGlobal === false &&
+          isEnrolled
+        ) {
+          setIsEnrolled(false);
+          setAllRankedUsers([]);
+          setMyProfile(null);
         }
-      });
+      }
+    });
 
     return () => unsubscribe();
   }, [currentUser, enrollmentChecked, isEnrolled]);
 
   // Load global leaderboard data
   const loadGlobalLeaderboard = async () => {
-    if (!currentUser) return;
+    if (currentUser == null) return;
 
     setIsLoading(true);
     try {
       // Get all users enrolled in global leaderboard
-      const globalUsersSnapshot = await firestore()
-        .collection("users")
-        .where("enrolledInGlobal", "==", true)
-        .get();
+      const enrolledInGlobalUsersQuery = query(
+        collection(db, "users"),
+        where("enrolledInGlobal", "==", true)
+      );
+      const globalUsersSnapshot = await getDocs(enrolledInGlobalUsersQuery);
 
-      if (globalUsersSnapshot.empty) {
+      if (globalUsersSnapshot && globalUsersSnapshot.empty) {
         setAllRankedUsers([]);
         setMyProfile(null);
         setIsLoading(false);
@@ -134,10 +148,12 @@ export default function LeaderboardGlobalView({
 
       // Convert to user profiles
       const allUserProfiles: (FirebaseUserProfile & { id: string })[] = [];
-      globalUsersSnapshot.docs.forEach((doc) => {
-        const data = doc.data() as FirebaseUserProfile;
-        allUserProfiles.push({ ...data, id: doc.id });
-      });
+      globalUsersSnapshot.docs.forEach(
+        (doc: FirebaseFirestoreTypes.QueryDocumentSnapshot) => {
+          const data = doc.data() as FirebaseUserProfile;
+          allUserProfiles.push({ ...data, id: doc.id });
+        }
+      );
 
       // Sort by points and create ranked list
       allUserProfiles.sort((a, b) => b.points - a.points);
@@ -160,6 +176,55 @@ export default function LeaderboardGlobalView({
       setIsLoading(false);
     }
   };
+
+  // Listen for real-time global leaderboard updates
+  useEffect(() => {
+    if (!currentUser || !isEnrolled) return;
+
+    setIsLoading(true);
+    const enrolledInGlobalUsersQuery = query(
+      collection(db, "users"),
+      where("enrolledInGlobal", "==", true)
+    );
+    const unsubscribe = onSnapshot(
+      enrolledInGlobalUsersQuery,
+      (globalUsersSnapshot) => {
+        if (globalUsersSnapshot && globalUsersSnapshot.empty) {
+          setAllRankedUsers([]);
+          setMyProfile(null);
+          setIsLoading(false);
+          return;
+        }
+
+        const allUserProfiles: (FirebaseUserProfile & { id: string })[] = [];
+        globalUsersSnapshot.docs.forEach(
+          (doc: FirebaseFirestoreTypes.QueryDocumentSnapshot) => {
+            const data = doc.data() as FirebaseUserProfile;
+            allUserProfiles.push({ ...data, id: doc.id });
+          }
+        );
+
+        allUserProfiles.sort((a, b) => b.points - a.points);
+        const rankedUsers: RankedUser[] = allUserProfiles.map(
+          (user, index) => ({
+            id: user.id,
+            nickname: user.nickname,
+            avatarIcon: user.avatarIcon,
+            points: user.points,
+            rank: index + 1,
+            isMe: user.id === currentUser.uid,
+          })
+        );
+
+        const myRankedProfile = rankedUsers.find((user) => user.isMe);
+        setMyProfile(myRankedProfile || null);
+        setAllRankedUsers(rankedUsers);
+        setIsLoading(false);
+      }
+    );
+
+    return () => unsubscribe();
+  }, [currentUser, isEnrolled]);
 
   const handleUserPress = (userId: string) => {
     router.push(`/(tabs)/leaderboard/${userId}`);

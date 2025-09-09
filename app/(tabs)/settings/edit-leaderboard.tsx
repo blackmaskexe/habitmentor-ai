@@ -62,7 +62,7 @@ export default function EditLeaderboardProfile() {
           .doc(currentUser.uid)
           .get();
 
-        if (userDoc.exists()) {
+        if (userDoc && userDoc.exists()) {
           const profileData = userDoc.data() as FirebaseUserProfile;
           setOriginalProfile(profileData);
           setUpdatedProfile({

@@ -13,13 +13,28 @@ import { useEffect, useState } from "react";
 import { getUserProfile } from "@/utils/firebase/firestore/profileManager";
 import { FirebaseUserProfile } from "@/utils/firebase/types";
 import { getDateFromFormattedDate, getOrdinalDate } from "@/utils/date";
-import firestore from "@react-native-firebase/firestore";
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  getDoc,
+  getFirestore,
+  addDoc,
+  updateDoc,
+  doc,
+  setDoc,
+  onSnapshot,
+} from "@react-native-firebase/firestore";
 import { getAuth } from "@react-native-firebase/auth";
 import {
   getFriendCount,
   handleAcceptFriendRequest,
   handleSendFriendRequest,
-} from "@/utils/firebase/firestore/friendsManager";
+} from "@/utils/firebase/functions/friendsManager";
+import ActivityIndicatorOverlay from "@/utils/components/general/ActivityIndicatorOverlay";
+
+const db = getFirestore();
 
 export default function UserProfilePage() {
   const { userId: profileOwnerId } = useLocalSearchParams();
@@ -33,6 +48,8 @@ export default function UserProfilePage() {
   );
   const [isLoading, setIsLoading] = useState(true);
   const [relationStatus, setRelationStatus] = useState<string | null>(null); // relation between the viewer and the pesron whose profile it is
+  const [isProcessingRequest, setIsProcessingRequest] =
+    useState<boolean>(false);
 
   useEffect(() => {
     let unsubscribe = () => {};
@@ -42,13 +59,20 @@ export default function UserProfilePage() {
         const profile = await getUserProfile(profileOwnerId); // profile of the person of whom the profile page is
 
         if (viewerUserId && viewerUserId != profileOwnerId) {
-          const userFriendsDocRef = firestore()
-            .collection("users")
-            .doc(viewerUserId)
-            .collection("friends")
-            .doc(profileOwnerId);
+          // const userFriendsDocRef = firestore()
+          //   .collection("users")
+          //   .doc(viewerUserId)
+          //   .collection("friends")
+          //   .doc(profileOwnerId);
+          const userFriendsDocRef = doc(
+            db,
+            "users",
+            viewerUserId,
+            "friends",
+            profileOwnerId
+          );
 
-          unsubscribe = userFriendsDocRef.onSnapshot((docSnapshot) => {
+          unsubscribe = onSnapshot(userFriendsDocRef, (docSnapshot) => {
             if (docSnapshot && docSnapshot.exists()) {
               const data = docSnapshot.data();
               if (data) {
@@ -127,7 +151,9 @@ export default function UserProfilePage() {
     },
   ];
 
-  const friendsCount = getFriendCount(); // will get the length of the friends subcollection later
+  const friendsCount = getFriendCount(); // will get the number of friends
+  // but the thing is, this only works for the user himself because it gets an mmkvstorage fetch
+  //
   const joinedDate = getOrdinalDate(
     getDateFromFormattedDate(userProfile.profileCreationDate)
   );
@@ -163,8 +189,10 @@ export default function UserProfilePage() {
           visible: true,
           style: styles.addButton,
           buttonTitle: "Accept Request",
-          onPress: () => {
-            handleAcceptFriendRequest(profileOwnerId as string);
+          onPress: async () => {
+            setIsProcessingRequest(true);
+            await handleAcceptFriendRequest(profileOwnerId as string);
+            setIsProcessingRequest(false);
           },
         };
         break;
@@ -176,13 +204,23 @@ export default function UserProfilePage() {
           onPress: null,
         };
         break;
+      case "blocked":
+        buttonData = {
+          visible: true,
+          style: styles.requestSentButton,
+          buttonTitle: "User Blocked. Press to Unblock",
+          onPress: null,
+        };
+        break;
       default:
         buttonData = {
           visible: true,
           style: styles.addButton,
           buttonTitle: "Send Friend Request",
           onPress: async () => {
+            setIsProcessingRequest(true);
             await handleSendFriendRequest(profileOwnerId as string);
+            setIsProcessingRequest(false);
           },
         };
         break;
@@ -207,6 +245,7 @@ export default function UserProfilePage() {
 
   return (
     <View style={styles.container}>
+      <ActivityIndicatorOverlay visible={isProcessingRequest} />
       {/* --- Profile Header --- */}
       <View style={styles.headerContainer}>
         <View style={styles.avatarContainer}>

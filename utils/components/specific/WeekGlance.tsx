@@ -200,10 +200,12 @@ function createStyles(theme: Theme) {
   return StyleSheet.create({
     container: {
       padding: theme.spacing.m,
+      marginBottom: theme.spacing.m,
       borderRadius: theme.radius.m,
       position: "relative",
       justifyContent: "center",
       backgroundColor: theme.colors.surface,
+      width: "90%",
     },
     // ...existing styles...
     dayWrapper: {

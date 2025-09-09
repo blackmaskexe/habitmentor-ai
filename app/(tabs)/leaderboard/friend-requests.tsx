@@ -11,7 +11,14 @@ import { useTheme } from "@/utils/theme/ThemeContext";
 import { Theme } from "@/utils/theme/themes";
 import { Ionicons } from "@expo/vector-icons";
 import { getAuth } from "@react-native-firebase/auth";
-import firestore from "@react-native-firebase/firestore";
+import firestore, {
+  collection,
+  FirebaseFirestoreTypes,
+  getFirestore,
+  onSnapshot,
+  query,
+  where,
+} from "@react-native-firebase/firestore";
 import { useRouter } from "expo-router";
 
 type FriendRequest = {
@@ -20,6 +27,8 @@ type FriendRequest = {
   avatarIcon: string;
   createdAt: any;
 };
+
+const db = getFirestore();
 
 export default function FriendRequestsScreen() {
   const theme = useTheme();
@@ -37,15 +46,16 @@ export default function FriendRequestsScreen() {
     }
 
     // Set up real-time listener for friend requests
-    const unsubscribe = firestore()
-      .collection("users")
-      .doc(currentUser.uid)
-      .collection("friends")
-      .where("status", "==", "pending_received")
-      .onSnapshot(
-        (snapshot) => {
-          const requests: FriendRequest[] = [];
-          snapshot.forEach((doc) => {
+    const pendingRequestsQuery = query(
+      collection(db, "users", currentUser.uid, "friends"),
+      where("status", "==", "pending_received")
+    );
+    const unsubscribe = onSnapshot(
+      pendingRequestsQuery,
+      (snapshot) => {
+        const requests: FriendRequest[] = [];
+        snapshot.forEach(
+          (doc: FirebaseFirestoreTypes.QueryDocumentSnapshot) => {
             const data = doc.data();
             requests.push({
               id: doc.id, // This is the sender's user ID
@@ -53,24 +63,25 @@ export default function FriendRequestsScreen() {
               avatarIcon: data.avatarIcon,
               createdAt: data.createdAt,
             });
-          });
+          }
+        );
 
-          // Sort by creation date (newest first)
-          requests.sort((a, b) => {
-            if (a.createdAt && b.createdAt) {
-              return b.createdAt.toDate() - a.createdAt.toDate();
-            }
-            return 0;
-          });
+        // Sort by creation date (newest first)
+        requests.sort((a, b) => {
+          if (a.createdAt && b.createdAt) {
+            return b.createdAt.toDate() - a.createdAt.toDate();
+          }
+          return 0;
+        });
 
-          setFriendRequests(requests);
-          setIsLoading(false);
-        },
-        (error) => {
-          console.error("Error fetching friend requests:", error);
-          setIsLoading(false);
-        }
-      );
+        setFriendRequests(requests);
+        setIsLoading(false);
+      },
+      (error) => {
+        console.error("Error fetching friend requests:", error);
+        setIsLoading(false);
+      }
+    );
 
     return () => unsubscribe();
   }, [currentUser]);

@@ -2,7 +2,7 @@
   "expo": {
     "name": "HabitMentor AI",
     "slug": "habitmentor-ai",
-    "version": "1.7.0",
+    "version": "1.8.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "habitmentor-ai",
@@ -13,9 +13,10 @@
       "supportsTablet": false,
       "googleServicesFile": "./GoogleService-Info.plist",
       "bundleIdentifier": "com.blackmaskexe.habittracker",
-      "associatedDomains": ["applinks:habitmentor.app"],
+      "associatedDomains": ["applinks:habitmentor.app/friend-invite"],
       "infoPlist": {
-        "ITSAppUsesNonExemptEncryption": false
+        "ITSAppUsesNonExemptEncryption": false,
+        "NSUserNotificationsUsageDescription": "We send notifications to send you reminders for your habits, and updates on your progress"
       }
     },
     "android": {

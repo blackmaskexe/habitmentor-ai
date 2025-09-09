@@ -13,6 +13,9 @@ import {
 } from "react-native";
 import functions from "@react-native-firebase/functions";
 import { getAuth, signOut } from "@react-native-firebase/auth";
+import { getFunctions, httpsCallable } from "@react-native-firebase/functions";
+
+const functionInstance = getFunctions();
 
 export default function EraseData() {
   const theme = useTheme();
@@ -126,12 +129,14 @@ export default function EraseData() {
                       return;
                     }
 
-                    const deleteUserFunction = functions().httpsCallable(
+                    const deleteUserFunction = httpsCallable(
+                      functionInstance,
                       "deleteUserDataAndAccount"
                     );
                     router.replace("/(tabs)/home");
                     await deleteUserFunction();
                     signOut(getAuth());
+
                     console.log("Delete leaderboard profile");
                   },
                 },
@@ -181,10 +186,10 @@ export default function EraseData() {
                     await eraseAllHabitData();
 
                     // then removing cloud data
-                    const deleteUserFunction = functions().httpsCallable(
+                    const deleteUserFunction = httpsCallable(
+                      functionInstance,
                       "deleteUserDataAndAccount"
                     );
-
                     await deleteUserFunction();
                     signOut(getAuth());
                   },

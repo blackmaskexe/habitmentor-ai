@@ -14,9 +14,7 @@ import {
 import { getAllHabits, getHabitObjectFromId } from "./habitService";
 import lodash from "lodash";
 import { getAllHabitHistoryEntriesEntriesOnDate } from "./habitHistoryManager";
-import { getEmotionAwareSuggestion } from "../api";
-import { getMetadataRecords } from "../database/dailyMetadataRecords";
-
+import { getEmotionAwareSuggestion } from "../firebase/functions/recommendationManager";
 type LeastCompletedHabitMetadata = {
   habitId: string;
   habitName: string;

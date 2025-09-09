@@ -125,11 +125,12 @@ function createStyles(theme: Theme) {
       shadowOpacity: 0.08,
       shadowRadius: 4,
       elevation: 2,
-      margin: 10,
+
       width: "92%",
       alignSelf: "center",
       marginTop: theme.spacing.m,
       justifyContent: "center",
+      marginBlock: theme.spacing.s,
       alignItems: "flex-start",
       // minHeight: 120,
     },

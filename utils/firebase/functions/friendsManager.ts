@@ -1,7 +1,9 @@
 import mmkvStorage from "@/utils/mmkvStorage";
 import { getAuth } from "@react-native-firebase/auth";
-import functions from "@react-native-firebase/functions";
+import { getFunctions, httpsCallable } from "@react-native-firebase/functions";
 import { Alert } from "react-native";
+
+const functionInstance = getFunctions();
 
 // -------------------------------------
 // MMKV LOGIC TO STORE NUMBER OF FRIENDS
@@ -43,7 +45,11 @@ export function getInviteLink(): string | null {
 export async function handleSendFriendRequest(profileOwnerId: string) {
   try {
     console.log("eat it well and mix it up");
-    const sendFriendRequest = functions().httpsCallable("sendFriendRequest");
+    const sendFriendRequest = httpsCallable(
+      functionInstance,
+      "sendFriendRequest"
+    );
+
     await sendFriendRequest({ recipientId: profileOwnerId });
     Alert.alert("Success", "Friend Request Sent!");
   } catch (err) {
@@ -54,9 +60,11 @@ export async function handleSendFriendRequest(profileOwnerId: string) {
 
 export async function handleAcceptFriendRequest(requestSenderId: string) {
   try {
-    const respondToFriendRequest = functions().httpsCallable(
+    const respondToFriendRequest = httpsCallable(
+      functionInstance,
       "respondToFriendRequest"
     );
+
     await respondToFriendRequest({
       senderId: requestSenderId, // sender of the friiend request
       response: "accept",

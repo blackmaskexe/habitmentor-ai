@@ -23,8 +23,16 @@ import {
   View,
 } from "react-native";
 import firestore from "@react-native-firebase/firestore";
+import * as WebBrowser from "expo-web-browser";
 
 export default function Settings() {
+  const openPrivacyPolicyWebsite = async () => {
+    let result = await WebBrowser.openBrowserAsync(
+      "https://habitmentor.app/privacy-policy.html"
+    );
+    console.log(result); // You get info about how the browser was dismissed
+  };
+
   const theme = useTheme();
   const styles = createStyles(theme);
 
@@ -188,36 +196,38 @@ export default function Settings() {
 
       {/* Leaderboard Group */}
       <View style={styles.settingsGroup}>
-        {renderOptionItem("top", "log-out", "Log Out", async () => {
-          if (!getAuth().currentUser) {
-            Alert.alert("Failed", "You are already logged out");
-            return;
-          }
-          Alert.alert(
-            `Logging Out`,
-            "You will have to log back in to use leaderboards",
-            [
-              {
-                text: "Cancel",
-                onPress: () => console.log("Cancel Pressed"),
-                style: "cancel",
-              },
-              {
-                text: "Yes",
-                onPress: () => {
-                  signOut(getAuth())
-                    .then(() => {
-                      console.log("User Signed Out Successfully!");
-                    })
-                    .catch((err) => {
-                      console.log(err);
-                    });
+        {getAuth().currentUser &&
+          renderOptionItem("top", "log-out", "Log Out", async () => {
+            if (!getAuth().currentUser) {
+              Alert.alert("Failed", "You are already logged out");
+              return;
+            }
+            Alert.alert(
+              `Logging Out`,
+              "You will have to log back in to use leaderboards",
+              [
+                {
+                  text: "Cancel",
+                  onPress: () => console.log("Cancel Pressed"),
+                  style: "cancel",
                 },
-              },
-            ],
-            { cancelable: false }
-          );
-        })}
+                {
+                  text: "Yes",
+                  onPress: () => {
+                    signOut(getAuth())
+                      .then(() => {
+                        console.log("User Signed Out Successfully!");
+                        Alert.alert("You have been logged out");
+                      })
+                      .catch((err) => {
+                        console.log(err);
+                      });
+                  },
+                },
+              ],
+              { cancelable: false }
+            );
+          })}
         {renderOptionItem(
           "between",
           "create",
@@ -267,32 +277,29 @@ export default function Settings() {
       </View>
 
       <View style={styles.sectionHeader}>
+        <Text style={styles.sectionHeaderText}>Privacy Policy</Text>
+      </View>
+
+      {/* Settings Group */}
+      <View style={styles.settingsGroup}>
+        {renderOptionItem(
+          "single",
+          "lock-closed",
+          "View Privacy Policy",
+          openPrivacyPolicyWebsite
+        )}
+
+        {/* Divider */}
+        <View style={styles.divider} />
+      </View>
+
+      <View style={styles.sectionHeader}>
         <Text style={styles.sectionHeaderText}>Danger Zone</Text>
       </View>
 
       {/* Settings Group */}
       <View style={styles.settingsGroup}>
         {renderOptionItem("single", "trash", "Erase Data", () => {
-          // Alert.alert(
-          //   `Erase all Habit Data?`,
-          //   "Are you sure?",
-          //   [
-          //     {
-          //       text: "Cancel",
-          //       onPress: () => console.log("Cancel Pressed"),
-          //       style: "cancel",
-          //     },
-          //     {
-          //       text: "Yes",
-          //       onPress: async () => {
-          //         router.push("/(tabs)/settings/erase-data");
-          //         // router.replace("/(onboarding)");
-          //         // await eraseAllHabitData();
-          //       },
-          //     },
-          //   ],
-          //   { cancelable: false }
-          // );
           router.push("/(tabs)/settings/erase-data");
         })}
 

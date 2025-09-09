@@ -1,16 +1,22 @@
 import CardWithoutImage from "@/utils/components/general/CardWithoutImage";
 import AiSuggestionsTabView from "@/utils/components/specific/AiSuggestions/AiSuggestionsTabView";
+import ChartCompletionsThisWeek from "@/utils/components/specific/AiSuggestions/ChartCompletionsThisWeek";
+import CompletionRecommendationCard from "@/utils/components/specific/AiSuggestions/CompletionRecommendationCard";
+import EmotionAwareSuggestionCard from "@/utils/components/specific/AiSuggestions/EmotionAwareSuggestionCard";
 import MoodRaterCard from "@/utils/components/specific/MoodRaterCard";
 import { didGetMoodCheckedToday } from "@/utils/database/dailyMetadataRecords";
+import { getLeastCompletedHabitMetadataThisWeek } from "@/utils/habits/habitSuggestionsManager";
 import { useTheme } from "@/utils/theme/ThemeContext";
 import { Theme } from "@/utils/theme/themes";
 import { useRouter } from "expo-router";
 import React, { useRef, useState } from "react";
-import { Animated, StyleSheet, View } from "react-native";
+import { Animated, ScrollView, StyleSheet, View } from "react-native";
 
 export default function AiSuggestions() {
   const fadeAnim = useRef(new Animated.Value(1)).current;
   const slideAnim = useRef(new Animated.Value(40)).current; // Start 40px below
+
+  const lowestCompletedHabitThisWeek = getLeastCompletedHabitMetadataThisWeek();
 
   const handleCloseMoodCard = () => {
     setTimeout(() => {
@@ -48,6 +54,7 @@ export default function AiSuggestions() {
       <View
         style={{
           marginHorizontal: theme.spacing.s,
+          marginTop: theme.spacing.m,
         }}
       >
         <CardWithoutImage
@@ -102,7 +109,34 @@ export default function AiSuggestions() {
       />
 
       <ChartCompletionsThisWeek /> */}
-      <AiSuggestionsTabView />
+      {/* <AiSuggestionsTabView /> */}
+      <ScrollView
+        contentContainerStyle={styles.scene}
+        showsVerticalScrollIndicator={false}
+      >
+        <View
+          style={{
+            marginTop: theme.spacing.s,
+          }}
+        />
+        <CompletionRecommendationCard
+          habitName={lowestCompletedHabitThisWeek.habitName}
+          completionPercentage={
+            lowestCompletedHabitThisWeek.completionPercentageLastWeek
+          }
+          habitId={lowestCompletedHabitThisWeek.habitId}
+          iconName={lowestCompletedHabitThisWeek.ioniconName}
+          iconColor={theme.colors.primary}
+          displayLastWeek={false}
+        />
+
+        <ChartCompletionsThisWeek />
+
+        <EmotionAwareSuggestionCard
+          iconName="heart"
+          iconColor={theme.colors.primary}
+        />
+      </ScrollView>
     </View>
   );
 }
@@ -123,6 +157,13 @@ function createStyles(theme: Theme) {
       marginTop: theme.spacing.s,
       alignSelf: "center",
       borderRadius: 8,
+    },
+    scene: {
+      // flex: 1,
+      // alignItems: "center",
+      // justifyContent: "center",
+      backgroundColor: theme.colors.background,
+      marginHorizontal: theme.spacing.s,
     },
   });
 }
