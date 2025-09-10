@@ -12,7 +12,7 @@ import {
   setDoc,
 } from "@react-native-firebase/firestore";
 import { FirebaseUserProfile } from "../types";
-import { getPoints } from "@/utils/database/points";
+import { getPoints, getPointsThisMonth } from "@/utils/database/points";
 import { getFormattedDate } from "@/utils/date";
 import { getAuth } from "@react-native-firebase/auth";
 import { calculateLongestStreak } from "@/app/(tabs)/home/overview";
@@ -239,6 +239,7 @@ export async function syncDataToFirebaseProfile() {
 
     await updateDoc(doc(db, "users", currentUser.uid), {
       points: getPoints(),
+      pointsThisMonth: getPointsThisMonth(),
       streak: await calculateLongestStreak(),
       totalHabitsCompleted: getTotalHabitsCompleted(),
     });

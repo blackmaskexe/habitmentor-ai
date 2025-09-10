@@ -21,5 +21,7 @@ export default mmkvStorage;
 // lastEmotionAwareSuggestionDate: the last time emotion aware suggestion api was called
 // recentEmotionAwareSuggestion: the most recent message that was given by emotion aware ai
 // totalPoints: the points of the user's habits that they accumulate over time
+// pointsThisMonth: stores the number of points the user got this month.
+// pointStoreMonth: stores the month number in which the point for "this month" are being stored so far
 // leaderboardProfile: the same stuff stored in firestore (the same stuff, but during the initial creation of their profile + at any updations)
 // leaderboardFriendCount: number of friends that the user has, keeping track of this in the frontend as it's a heavy operation to do in the backend

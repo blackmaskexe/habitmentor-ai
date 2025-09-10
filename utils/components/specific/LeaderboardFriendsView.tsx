@@ -166,6 +166,7 @@ export default function LeaderboardFriendsView({
         ];
 
         // Sort by points and create ranked list
+
         allUserProfiles.sort((a, b) => b.points - a.points);
         const rankedUsers: RankedUser[] = allUserProfiles.map(
           (user, index) => ({
@@ -277,8 +278,14 @@ export default function LeaderboardFriendsView({
           </TouchableOpacity>
         </View>
 
-        <View style={styles.rankingSection}>
+        <View
+          style={[
+            styles.rankingSection,
+            { flexDirection: "row", alignItems: "center", gap: 6 },
+          ]}
+        >
           <Text style={styles.sectionTitle}>Ranking</Text>
+          <Text style={styles.pointsThisMonthLabel}>Overall Points</Text>
         </View>
       </View>
     );
@@ -535,6 +542,12 @@ function createStyles(theme: Theme) {
       ...theme.text.small,
       color: theme.colors.textSecondary,
       fontSize: 13,
+    },
+    pointsThisMonthLabel: {
+      ...theme.text.small,
+      color: theme.colors.textSecondary,
+      fontSize: 12,
+      marginLeft: 4,
     },
   });
 }

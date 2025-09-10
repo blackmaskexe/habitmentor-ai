@@ -313,8 +313,14 @@ export default function LeaderboardGlobalView({
           </TouchableOpacity>
         </View>
 
-        <View style={styles.rankingSection}>
+        <View
+          style={[
+            styles.rankingSection,
+            { flexDirection: "row", alignItems: "center", gap: 6 },
+          ]}
+        >
           <Text style={styles.sectionTitle}>Global Ranking</Text>
+          <Text style={styles.pointsThisMonthLabel}>Overall Points</Text>
         </View>
       </View>
     );
@@ -545,6 +551,12 @@ function createStyles(theme: Theme) {
       color: theme.colors.background,
       fontWeight: "600",
       fontSize: 16,
+    },
+    pointsThisMonthLabel: {
+      ...theme.text.small,
+      color: theme.colors.textSecondary,
+      fontSize: 12,
+      marginLeft: 4,
     },
   });
 }

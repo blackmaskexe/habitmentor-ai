@@ -194,7 +194,26 @@ export default function ProfileDropdownMenu({
         {isUserFriend && (
           <DropdownMenu.DropdownMenuItem
             key="remove-friend"
-            onSelect={async () => {}}
+            onSelect={async () => {
+              try {
+                // this makes sense to do in the backend
+                // because it requires deleting both copies of
+                // references in each other's friends collection
+                setIsProcessingRequest(true);
+                const removeFriend = httpsCallable(
+                  functionsInstance,
+                  "removeFriend"
+                );
+                await removeFriend({
+                  gettingRemovedUserId: profileId,
+                });
+                setIsProcessingRequest(false);
+                Alert.alert("Success", "Friend was removed.");
+              } catch (err) {
+                console.log("ERROR, COULD NOT REMOVE FRIEND", err);
+                setIsProcessingRequest(false);
+              }
+            }}
           >
             <DropdownMenu.DropdownMenuItemIcon
               ios={{
