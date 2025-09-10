@@ -130,7 +130,6 @@ function createStyles(theme: Theme) {
       alignSelf: "center",
       marginTop: theme.spacing.m,
       justifyContent: "center",
-      marginBlock: theme.spacing.s,
       alignItems: "flex-start",
       // minHeight: 120,
     },

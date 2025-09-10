@@ -128,7 +128,7 @@ export default function LeaderboardGlobalView({
 
   // Load global leaderboard data
   const loadGlobalLeaderboard = async () => {
-    if (currentUser == null) return;
+    if (!currentUser) return;
 
     setIsLoading(true);
     try {
@@ -148,12 +148,14 @@ export default function LeaderboardGlobalView({
 
       // Convert to user profiles
       const allUserProfiles: (FirebaseUserProfile & { id: string })[] = [];
-      globalUsersSnapshot.docs.forEach(
-        (doc: FirebaseFirestoreTypes.QueryDocumentSnapshot) => {
-          const data = doc.data() as FirebaseUserProfile;
-          allUserProfiles.push({ ...data, id: doc.id });
-        }
-      );
+      if (globalUsersSnapshot) {
+        globalUsersSnapshot.docs.forEach(
+          (doc: FirebaseFirestoreTypes.QueryDocumentSnapshot) => {
+            const data = doc.data() as FirebaseUserProfile;
+            allUserProfiles.push({ ...data, id: doc.id });
+          }
+        );
+      }
 
       // Sort by points and create ranked list
       allUserProfiles.sort((a, b) => b.points - a.points);
@@ -197,12 +199,14 @@ export default function LeaderboardGlobalView({
         }
 
         const allUserProfiles: (FirebaseUserProfile & { id: string })[] = [];
-        globalUsersSnapshot.docs.forEach(
-          (doc: FirebaseFirestoreTypes.QueryDocumentSnapshot) => {
-            const data = doc.data() as FirebaseUserProfile;
-            allUserProfiles.push({ ...data, id: doc.id });
-          }
-        );
+        if (globalUsersSnapshot) {
+          globalUsersSnapshot.docs.forEach(
+            (doc: FirebaseFirestoreTypes.QueryDocumentSnapshot) => {
+              const data = doc.data() as FirebaseUserProfile;
+              allUserProfiles.push({ ...data, id: doc.id });
+            }
+          );
+        }
 
         allUserProfiles.sort((a, b) => b.points - a.points);
         const rankedUsers: RankedUser[] = allUserProfiles.map(

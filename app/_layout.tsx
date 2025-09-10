@@ -3,7 +3,7 @@ import { ThemeProvider, useTheme } from "@/utils/theme/ThemeContext";
 import { Theme } from "@/utils/theme/themes";
 import { Ionicons } from "@expo/vector-icons";
 import { Stack, useRouter } from "expo-router";
-import { StyleSheet, Text, TouchableOpacity } from "react-native";
+import { Alert, StyleSheet, Text, TouchableOpacity } from "react-native";
 import { SheetProvider } from "react-native-actions-sheet";
 import {
   TourGuideProvider, // Main provider
@@ -28,6 +28,16 @@ function AppNavigator() {
       if (url) {
         const { hostname, path, queryParams } = Linking.parse(url);
         if (path === "friend-invite" && queryParams && queryParams.senderId) {
+          const currentUser = getAuth().currentUser;
+          if (!currentUser) {
+            Alert.alert(
+              "You must log in to view your friend. Then, click the link again."
+            );
+            return; // not run the pushing and stuff, because that would mean
+            // a bypassing of login blockwall in order to get to the profile
+            // basically meaning tons of errors and shi
+          }
+          router.push("/(tabs)/leaderboard");
           router.push(`/(tabs)/leaderboard/${queryParams.senderId}`);
         }
       }
