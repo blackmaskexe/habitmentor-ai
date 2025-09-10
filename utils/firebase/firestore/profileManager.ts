@@ -245,6 +245,35 @@ export async function syncDataToFirebaseProfile() {
 
     console.log("User data updated!");
   } catch (err) {
-    console.log("CRITICAL ERROR, COULD NOT SYNC DATA TO FIREBASE PROFILE", err);
+    console.log("ERROR, COULD NOT SYNC DATA TO FIREBASE PROFILE", err);
+  }
+}
+
+export async function isFriend(profileId: string) {
+  try {
+    const currentUser = getAuth().currentUser;
+    if (!currentUser) throw new Error("Unauthenticated");
+    if (!profileId) throw new Error("ProfileId not generated yet");
+
+    // first we look in the user's friends list, and see if that document exists:
+    const friendProfileRef = await getDoc(
+      doc(db, "users", currentUser.uid, "friends", profileId)
+    );
+    console.log("ding ding ding", friendProfileRef);
+    if (friendProfileRef && friendProfileRef.exists()) {
+      console.log("I wreched here");
+      const friendDocument = friendProfileRef.data();
+      if (
+        friendDocument &&
+        friendDocument.status &&
+        friendDocument.status == "accepted"
+      )
+        return true;
+    }
+
+    return false; // return false in all other cases
+  } catch (err) {
+    console.log("ERROR, COULD NOT CHECK FRIENDSHIP STATUS");
+    return false;
   }
 }

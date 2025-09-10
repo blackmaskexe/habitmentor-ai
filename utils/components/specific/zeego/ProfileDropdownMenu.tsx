@@ -25,6 +25,7 @@ import {
 } from "@react-native-firebase/firestore";
 import { getFunctions, httpsCallable } from "@react-native-firebase/functions";
 import ActivityIndicatorOverlay from "../../general/ActivityIndicatorOverlay";
+import { isFriend } from "@/utils/firebase/firestore/profileManager";
 
 const db = getFirestore();
 const functionsInstance = getFunctions();
@@ -41,6 +42,15 @@ export default function ProfileDropdownMenu({
 
   const [isProcessingRequest, setIsProcessingRequest] =
     useState<boolean>(false);
+  const [isUserFriend, setIsUserFriend] = useState(false);
+
+  useEffect(() => {
+    async function getFriendshipStatus() {
+      const isFriendBoolean = await isFriend(profileId);
+      setIsUserFriend(isFriendBoolean);
+    }
+    getFriendshipStatus();
+  }, [profileId]);
 
   if (isProcessingRequest) {
     return <ActivityIndicatorOverlay visible={true} />;
@@ -180,6 +190,27 @@ export default function ProfileDropdownMenu({
             Block User
           </DropdownMenu.DropdownMenuItemTitle>
         </DropdownMenu.DropdownMenuItem>
+
+        {isUserFriend && (
+          <DropdownMenu.DropdownMenuItem
+            key="remove-friend"
+            onSelect={async () => {}}
+          >
+            <DropdownMenu.DropdownMenuItemIcon
+              ios={{
+                name: "person.slash.fill",
+                pointSize: 24,
+                hierarchicalColor: {
+                  dark: theme.colors.primary,
+                  light: theme.colors.primary,
+                },
+              }}
+            />
+            <DropdownMenu.DropdownMenuItemTitle>
+              Remove Friend
+            </DropdownMenu.DropdownMenuItemTitle>
+          </DropdownMenu.DropdownMenuItem>
+        )}
       </DropdownMenu.DropdownMenuContent>
     </DropdownMenu.DropdownMenuRoot>
   );

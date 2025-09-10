@@ -10,7 +10,10 @@ import { useTheme } from "@/utils/theme/ThemeContext";
 import { Theme } from "@/utils/theme/themes";
 import { Ionicons } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
-import { getUserProfile } from "@/utils/firebase/firestore/profileManager";
+import {
+  getUserProfile,
+  isFriend,
+} from "@/utils/firebase/firestore/profileManager";
 import { FirebaseUserProfile } from "@/utils/firebase/types";
 import { getDateFromFormattedDate, getOrdinalDate } from "@/utils/date";
 import {

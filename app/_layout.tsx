@@ -9,7 +9,7 @@ import {
   TourGuideProvider, // Main provider
 } from "rn-tourguide";
 import * as Linking from "expo-linking";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import { getAuth } from "@react-native-firebase/auth";

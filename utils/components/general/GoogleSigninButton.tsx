@@ -9,7 +9,7 @@ import {
   signInWithCredential,
 } from "@react-native-firebase/auth";
 import { useTheme } from "@/utils/theme/ThemeContext";
-import { TouchableOpacity, Text, StyleSheet } from "react-native";
+import { TouchableOpacity, Text, StyleSheet, Alert } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
 export default function GoogleSignInButton() {
@@ -43,6 +43,8 @@ export default function GoogleSignInButton() {
       } else {
         console.error("Google Sign-In Error:", error);
       }
+
+      Alert.alert("Could not sign in. Please try again.");
     }
   }
 

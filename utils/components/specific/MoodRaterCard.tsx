@@ -91,7 +91,7 @@ const MoodRaterCard: React.FC<MoodRaterCardProps> = ({
       <View style={styles.headerRow}>
         <Text style={styles.headerText}>Mood Check</Text>
       </View>
-      <Text style={styles.title}>How are you feeling today?</Text>
+      <Text style={styles.title}>How are you feeling today? Click One</Text>
       <View style={styles.emojiRow}>
         {([1, 2, 3, 4] as MoodLevel[]).map((level) => (
           <TouchableOpacity
