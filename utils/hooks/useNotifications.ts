@@ -32,10 +32,6 @@ export function useNotifications() {
   const responseListener = useRef<Notifications.EventSubscription | null>(null);
 
   useEffect(() => {
-    registerForPushNotificationsAsync().then(
-      (token) => token && setExpoPushToken(token)
-    );
-
     // if (Platform.OS === "android") {
     //   Notifications.getNotificationChannelsAsync().then((value) =>
     //     setChannels(value ?? [])
@@ -63,6 +59,10 @@ export function useNotifications() {
   }, []);
 
   async function schedulePushNotification(time: Date, habit: HabitObject) {
+    await registerForPushNotificationsAsync().then(
+      (token) => token && setExpoPushToken(token)
+    );
+
     console.log("Current habit:", habit);
     const allScheduledNotis = await getAllScheduledNotifications();
     console.log("currently scheduled notis:", allScheduledNotis);
@@ -135,7 +135,7 @@ export function useNotifications() {
         finalStatus = status;
       }
       if (finalStatus !== "granted") {
-        alert("Failed to get push token for push notification!");
+        alert("You need to to enable push notifications for this feature!");
         return;
       }
       // Learn more about projectId:
@@ -199,6 +199,12 @@ export function useNotifications() {
     } catch (err) {
       console.log("not able to cancel,", err);
     }
+  }
+
+  async function getExistingNotificationStatus() {
+    const { status: existingStatus } =
+      await Notifications.getPermissionsAsync();
+    return existingStatus;
   }
 
   return {

@@ -39,10 +39,9 @@ export default function ReminderView({
   onChangeDisplayScreen,
   habitId,
 }: ReminderViewProps) {
-  const { schedulePushNotification } = useNotifications();
-
   const theme = useTheme();
   const styles = createStyles(theme);
+  const { schedulePushNotification } = useNotifications();
 
   const [time, setTime] = useState(initialTime || getDate());
 
@@ -78,6 +77,7 @@ export default function ReminderView({
     const habit = getHabitObjectFromId(habitId); // using id to get the latest version of the habitObject
     // (need latest copy in order to manage notifications)
     if (habit) {
+      // to trigger only if the user presses "set reminder"
       await schedulePushNotification(time, habit);
       updateHabitNotificationTime(habitId, getFormattedTime(time));
     }
