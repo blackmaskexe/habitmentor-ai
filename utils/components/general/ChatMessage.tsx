@@ -12,6 +12,7 @@ import { useHeaderHeight } from "@react-navigation/elements";
 import { useFocusEffect } from "expo-router";
 import React, { useCallback, useEffect, useRef, useState } from "react"; // Ensure useCallback is imported
 import {
+  Alert,
   KeyboardAvoidingView,
   Platform,
   Pressable,
@@ -122,6 +123,11 @@ export default function ChatMessages({
 
   const handleSendMessage = async function () {
     // creating objects for user and ai's messages:
+
+    if (messageContent.length > 3000) {
+      Alert.alert("Please keep your messages shorter than ~500 words.");
+      return;
+    }
 
     const userMessage: MessageType = {
       id: generateMessageId(),
