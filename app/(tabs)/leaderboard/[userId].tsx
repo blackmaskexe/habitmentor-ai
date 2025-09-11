@@ -260,14 +260,16 @@ export default function UserProfilePage() {
         </View>
         <Text style={styles.nicknameText}>{userProfile.nickname}</Text>
         <View style={styles.subHeaderContainer}>
-          <Text style={styles.subHeaderText}>
-            <Ionicons
-              name="people-outline"
-              size={14}
-              color={theme.colors.textSecondary}
-            />
-            {friendsCount} Friends
-          </Text>
+          {profileOwnerId && viewerUserId && profileOwnerId == viewerUserId && (
+            <Text style={styles.subHeaderText}>
+              <Ionicons
+                name="people-outline"
+                size={14}
+                color={theme.colors.textSecondary}
+              />
+              {friendsCount} Friends
+            </Text>
+          )}
           <Text style={styles.subHeaderText}>
             <Ionicons
               name="calendar-outline"

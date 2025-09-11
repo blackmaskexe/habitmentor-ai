@@ -3,6 +3,17 @@ import { updateUserPointsInFirestore } from "../firebase/firestore/pointsManager
 import { syncDataToFirebaseProfile } from "../firebase/firestore/profileManager";
 import mmkvStorage from "../mmkvStorage";
 
+// WHY SCRAPPING "POINTS THIS MONTH":
+// users need to log in to update their scoreboard
+// I would need to move the logic of checking points to the server
+// and I don't have the energy to do that just yet
+// so I'm just delaying / putting off this feature for now
+
+// OR Alternative Idea:
+// I could manually reset all points to 0 (total points) from backend
+// nahh, that would be bad for long term users (pretty much me sadge but I'll try my best to get this app "out there")
+// look at me talking to myself while I write some computer code lol
+
 export function addPoints(addAmount: number) {
   try {
     // Logic for TOTAL points:

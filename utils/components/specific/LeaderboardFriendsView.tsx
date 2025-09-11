@@ -92,38 +92,37 @@ export default function LeaderboardFriendsView({
 
   // Then, listen to friend profile data changes
   useEffect(() => {
-    const unsubscribers: (() => void)[] = [];
-
     if (friendIds.length === 0) {
       setFriendsData([]);
       return;
     }
 
+    let isMounted = true;
     const friendProfiles = new Map<
       string,
       FirebaseUserProfile & { id: string }
     >();
+    let updatesReceived = 0;
 
-    // Set up individual snapshots for each friend
-    friendIds.forEach((friendId) => {
+    const unsubscribers = friendIds.map((friendId) => {
       const friendDocRef = doc(db, "users", friendId);
-
-      const unsubscribe = onSnapshot(friendDocRef, (docSnapshot) => {
+      return onSnapshot(friendDocRef, (docSnapshot) => {
+        updatesReceived++;
         if (docSnapshot && docSnapshot.exists()) {
           const data = docSnapshot.data() as FirebaseUserProfile;
           friendProfiles.set(friendId, { ...data, id: friendId });
         } else {
           friendProfiles.delete(friendId);
         }
-
-        // Update the state with all current friend profiles
-        setFriendsData(Array.from(friendProfiles.values()));
+        // Only update state after all listeners have fired at least once
+        if (updatesReceived >= friendIds.length && isMounted) {
+          setFriendsData(Array.from(friendProfiles.values()));
+        }
       });
-
-      unsubscribers.push(unsubscribe);
     });
 
     return () => {
+      isMounted = false;
       unsubscribers.forEach((unsubscribe) => unsubscribe());
     };
   }, [friendIds]);
@@ -142,7 +141,7 @@ export default function LeaderboardFriendsView({
       return;
     }
 
-    setIsLoading(true);
+    if (!friendsLoaded) setIsLoading(true); // only load if don't have data the first time
     const myDocRef = doc(db, "users", currentUser.uid);
 
     unsubscribe = onSnapshot(myDocRef, (docSnapshot) => {
@@ -373,7 +372,7 @@ export default function LeaderboardFriendsView({
       <FlatList
         data={allRankedUsers}
         renderItem={renderUserItem}
-        keyExtractor={(item) => item.id + Math.random().toString()}
+        keyExtractor={(item) => item.id}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.listContainer}
         ListHeaderComponent={renderMyRankHeader}
