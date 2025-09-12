@@ -2,7 +2,7 @@ import Constants from "expo-constants";
 import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
 import { useEffect, useRef, useState } from "react";
-import { Platform } from "react-native";
+import { Alert, Platform } from "react-native";
 import { updateHabitNotificationId } from "../habits";
 import { HabitObject } from "../types";
 
@@ -135,7 +135,7 @@ export function useNotifications() {
         finalStatus = status;
       }
       if (finalStatus !== "granted") {
-        alert("You need to to enable push notifications for this feature!");
+        alert("You need to enable push notifications for this feature!");
         return;
       }
       // Learn more about projectId:
