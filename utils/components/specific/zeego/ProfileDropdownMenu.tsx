@@ -26,6 +26,7 @@ import {
 import { getFunctions, httpsCallable } from "@react-native-firebase/functions";
 import ActivityIndicatorOverlay from "../../general/ActivityIndicatorOverlay";
 import { isFriend } from "@/utils/firebase/firestore/profileManager";
+import { changeFriendCount } from "@/utils/firebase/functions/friendsManager";
 
 const db = getFirestore();
 const functionsInstance = getFunctions();
@@ -160,8 +161,10 @@ export default function ProfileDropdownMenu({
               setIsProcessingRequest(true);
               const blockUser = httpsCallable(functionsInstance, "blockUser");
               await blockUser({ gettingBlockedUserId: profileId });
-              console.log("mai yyhaan tak kaise pahunchha bhagwan jaane");
               setIsProcessingRequest(false);
+              if (isUserFriend) {
+                changeFriendCount("subtract");
+              }
               Alert.alert(
                 "Success",
                 "The user was blocked. They can no longer send friend requests to you."
@@ -208,6 +211,7 @@ export default function ProfileDropdownMenu({
                   gettingRemovedUserId: profileId,
                 });
                 setIsProcessingRequest(false);
+                changeFriendCount("subtract");
                 Alert.alert("Success", "Friend was removed.");
               } catch (err) {
                 console.log("ERROR, COULD NOT REMOVE FRIEND", err);
