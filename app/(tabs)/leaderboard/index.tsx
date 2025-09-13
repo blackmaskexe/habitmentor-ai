@@ -11,7 +11,6 @@ import { SceneMap, TabBar, TabView } from "react-native-tab-view";
 import { useTheme } from "@/utils/theme/ThemeContext";
 import { Theme } from "@/utils/theme/themes";
 import { useFocusEffect } from "expo-router";
-import { SheetManager } from "react-native-actions-sheet";
 import { getAuth, onAuthStateChanged } from "@react-native-firebase/auth";
 import {
   getMmkvUserLeaderboardProfile,

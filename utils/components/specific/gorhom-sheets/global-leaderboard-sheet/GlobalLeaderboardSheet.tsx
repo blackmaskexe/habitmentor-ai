@@ -1,9 +1,5 @@
 import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import ActionSheet, {
-  SheetProps,
-  SheetManager,
-} from "react-native-actions-sheet";
 import { useTheme } from "@/utils/theme/ThemeContext";
 import { Theme } from "@/utils/theme/themes";
 import { Ionicons } from "@expo/vector-icons";

@@ -3,7 +3,6 @@ import { useTheme } from "@/utils/theme/ThemeContext";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { Alert, TouchableOpacity } from "react-native";
-import { SheetManager } from "react-native-actions-sheet";
 import * as DropdownMenu from "./dropdown-menu";
 
 export default function EdithabitDropdownMenu({

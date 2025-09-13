@@ -25,7 +25,6 @@ import {
 } from "@react-native-firebase/firestore";
 import { useRouter } from "expo-router";
 import { FirebaseUserProfile } from "@/utils/firebase/types";
-import { SheetManager } from "react-native-actions-sheet";
 
 type RankedUser = {
   id: string;

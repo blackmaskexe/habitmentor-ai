@@ -1,8 +1,8 @@
 import CardWithoutImage from "@/utils/components/general/CardWithoutImage";
-import AiSuggestionsTabView from "@/utils/components/specific/AiSuggestions/AiSuggestionsTabView";
-import ChartCompletionsThisWeek from "@/utils/components/specific/AiSuggestions/ChartCompletionsThisWeek";
-import CompletionRecommendationCard from "@/utils/components/specific/AiSuggestions/CompletionRecommendationCard";
-import EmotionAwareSuggestionCard from "@/utils/components/specific/AiSuggestions/EmotionAwareSuggestionCard";
+import AiSuggestionsTabView from "@/utils/components/specific/ai-suggestions/AiSuggestionsTabView";
+import ChartCompletionsThisWeek from "@/utils/components/specific/ai-suggestions/ChartCompletionsThisWeek";
+import CompletionRecommendationCard from "@/utils/components/specific/ai-suggestions/CompletionRecommendationCard";
+import EmotionAwareSuggestionCard from "@/utils/components/specific/ai-suggestions/EmotionAwareSuggestionCard";
 import MoodRaterCard from "@/utils/components/specific/MoodRaterCard";
 import { didGetMoodCheckedToday } from "@/utils/database/dailyMetadataRecords";
 import { getLeastCompletedHabitMetadataThisWeek } from "@/utils/habits/habitSuggestionsManager";

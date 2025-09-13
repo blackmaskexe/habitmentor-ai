@@ -10,7 +10,6 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { SheetManager } from "react-native-actions-sheet";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 // import {
 //   getAllHabitHistoryEntriesToday,
@@ -34,6 +33,7 @@ import { Theme } from "@/utils/theme/themes";
 import { HabitObject } from "@/utils/types";
 import * as Haptics from "expo-haptics";
 import { TourGuideZone } from "rn-tourguide";
+import { SheetService } from "@/utils/SheetService";
 
 const DailyHabitsView = ({ date }: { date: Date }) => {
   // date prop used to show the habits for different days
@@ -215,16 +215,18 @@ const DailyHabitsView = ({ date }: { date: Date }) => {
             style={styles.habitCard}
             onPress={() => {
               Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-              SheetManager.show("habit-sheet", {
+              SheetService.show("habit-sheet", {
                 payload: {
                   sheetType: "habitItem",
-                  habit: habit,
+                  habitId: habit.id,
                   habitDate: date,
                 },
-              }).then((res) => {
-                // on closing of the ActionSheet (is when the promise is fullfilled, refresh habits)
-                loadHabits();
               });
+              // TODO: RESOLVE THIS SO THAT WHENEVER GORHOM BOTTOM SHEET IS CLOSED, LOAD HABITS
+              // .then((res) => {
+              //   // on closing of the ActionSheet (is when the promise is fullfilled, refresh habits)
+              //   loadHabits();
+              // });
             }}
           >
             {renderHabitItem(habit, index)}
@@ -243,16 +245,18 @@ const DailyHabitsView = ({ date }: { date: Date }) => {
                   style={styles.habitOptions}
                   onPress={() => {
                     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-                    SheetManager.show("habit-sheet", {
+                    SheetService.show("habit-sheet", {
                       payload: {
                         sheetType: "habitItem",
-                        habit: habit,
+                        habitId: habit.id,
                         habitDate: date,
                       },
-                    }).then((res) => {
-                      // on closing of the ActionSheet (is when the promise is fullfilled, refresh habits)
-                      loadHabits();
                     });
+                    // TODO: SAME HERE
+                    // .then((res) => {
+                    //   // on closing of the ActionSheet (is when the promise is fullfilled, refresh habits)
+                    //   loadHabits();
+                    // });
                   }}
                 >
                   <Ionicons
@@ -267,16 +271,18 @@ const DailyHabitsView = ({ date }: { date: Date }) => {
                 style={styles.habitOptions}
                 onPress={() => {
                   Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-                  SheetManager.show("habit-sheet", {
+                  SheetService.show("habit-sheet", {
                     payload: {
                       sheetType: "habitItem",
-                      habit: habit,
+                      habitId: habit.id,
                       habitDate: date,
                     },
-                  }).then((res) => {
-                    // on closing of the ActionSheet (is when the promise is fullfilled, refresh habits)
-                    loadHabits();
                   });
+                  // TODO: SAME HERE
+                  // .then((res) => {
+                  //   // on closing of the ActionSheet (is when the promise is fullfilled, refresh habits)
+                  //   loadHabits();
+                  // });
                 }}
               >
                 <Ionicons

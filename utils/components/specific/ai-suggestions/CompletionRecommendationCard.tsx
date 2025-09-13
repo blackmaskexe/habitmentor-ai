@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { SheetManager } from "react-native-actions-sheet";
+
 import LeastCompletedHabitSheet from "./LeastCompletedHabitSheet";
 
 const screenWidth = Dimensions.get("window").width;

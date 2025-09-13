@@ -3,7 +3,7 @@
 import mmkvStorage from "../mmkvStorage";
 import { HabitObject } from "../types";
 
-export function getHabitObjectFromId(habitId: string) {
+export function getHabitObjectFromId(habitId: string): HabitObject {
   const activeHabits: HabitObject[] = JSON.parse(
     mmkvStorage.getString("activeHabits") || "[]"
   );
@@ -13,6 +13,16 @@ export function getHabitObjectFromId(habitId: string) {
       return habit;
     }
   }
+
+  return {
+    habitName: "Loading",
+    frequency: Array(7).fill(false),
+    habitDescription: "Loading...",
+    iconName: "accessibility",
+    id: "21",
+    points: 20,
+    isNotificationOn: false,
+  };
 }
 
 export function getAllHabits() {

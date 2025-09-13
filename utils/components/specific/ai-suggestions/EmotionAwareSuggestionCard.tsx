@@ -16,7 +16,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { SheetManager } from "react-native-actions-sheet";
+
 import { TypeAnimation } from "react-native-type-animation";
 import AISuggestionSkeleton from "../AISuggestionSkeleton";
 import EmotionAwareTextMessage from "./EmotionAwareSuggestionSheet";

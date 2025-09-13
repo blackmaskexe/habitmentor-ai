@@ -4,7 +4,6 @@ import { Ionicons } from "@expo/vector-icons";
 import * as Haptics from "expo-haptics";
 import { useRouter } from "expo-router";
 import { StyleSheet, TouchableOpacity } from "react-native";
-import { SheetManager } from "react-native-actions-sheet";
 import * as DropdownMenu from "./dropdown-menu";
 
 export default function OverviewHabitdropdownMenu({

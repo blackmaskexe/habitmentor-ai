@@ -1,18 +1,23 @@
-import "@/utils/components/specific/ActionSheet/sheet";
 import { ThemeProvider, useTheme } from "@/utils/theme/ThemeContext";
 import { Theme } from "@/utils/theme/themes";
 import { Ionicons } from "@expo/vector-icons";
 import { Stack, useRouter } from "expo-router";
 import { Alert, StyleSheet, Text, TouchableOpacity } from "react-native";
-import { SheetProvider } from "react-native-actions-sheet";
 import {
   TourGuideProvider, // Main provider
 } from "rn-tourguide";
 import * as Linking from "expo-linking";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import { getAuth } from "@react-native-firebase/auth";
+import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
+import {
+  HabitSheetModal,
+  HabitSheetRef,
+} from "@/utils/components/specific/gorhom-sheets/habit-sheet/HabitSheetModal";
+import { SheetService } from "@/utils/SheetService";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 function AppNavigator() {
   const theme = useTheme();
@@ -109,13 +114,26 @@ function AppNavigator() {
 }
 
 export default function RootLayout() {
+  // Registering Gorhom Bottom Sheets to use in a SheetManager.show() way:
+  const habitSheetRef = useRef<HabitSheetRef>(null);
+
+  useEffect(() => {
+    if (habitSheetRef.current)
+      SheetService.register("habit-sheet", habitSheetRef.current);
+  });
+
   return (
-    <SheetProvider>
+    <GestureHandlerRootView>
       <ThemeProvider>
-        {/* This chochla is to be able to use themes within the root _layout.tsx */}
-        <AppNavigator />
+        <BottomSheetModalProvider>
+          {/* This chochla is to be able to use themes within the root _layout.tsx */}
+          <AppNavigator />
+
+          {/* Now we place Gorhom Bottom Sheet Modal Components */}
+          <HabitSheetModal ref={habitSheetRef} />
+        </BottomSheetModalProvider>
       </ThemeProvider>
-    </SheetProvider>
+    </GestureHandlerRootView>
   );
 }
 
