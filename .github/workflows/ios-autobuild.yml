@@ -25,6 +25,10 @@ jobs:
       - name: Install dependencies
         run: npm install --legacy-peer-deps
 
+      - name: Ensure ajv and ajv-keywords are installed
+        run: |
+          npm install ajv@^8.0.0 ajv-keywords@^5.0.0
+
       - name: Get new version
         id: get_version
         run: |
