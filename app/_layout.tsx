@@ -114,23 +114,12 @@ function AppNavigator() {
 }
 
 export default function RootLayout() {
-  // Registering Gorhom Bottom Sheets to use in a SheetManager.show() way:
-  const habitSheetRef = useRef<HabitSheetRef>(null);
-
-  useEffect(() => {
-    if (habitSheetRef.current)
-      SheetService.register("habit-sheet", habitSheetRef.current);
-  });
-
   return (
     <GestureHandlerRootView>
       <ThemeProvider>
         <BottomSheetModalProvider>
           {/* This chochla is to be able to use themes within the root _layout.tsx */}
           <AppNavigator />
-
-          {/* Now we place Gorhom Bottom Sheet Modal Components */}
-          <HabitSheetModal ref={habitSheetRef} />
         </BottomSheetModalProvider>
       </ThemeProvider>
     </GestureHandlerRootView>

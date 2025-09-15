@@ -7,6 +7,7 @@ import NavigationPill from "../../../general/NavigationPill";
 import HabitItemSheet from "./HabitItemSheet";
 import { HabitObject } from "@/utils/types";
 import { Theme } from "@/utils/theme/themes";
+import { getHabitObjectFromId } from "@/utils/habits";
 
 export type HabitSheetRef = {
   present: (payload: {
@@ -21,21 +22,6 @@ export const HabitSheetModal = forwardRef<HabitSheetRef>((props, ref) => {
   const bottomSheetRef = useRef<BottomSheetModal>(null);
   const theme = useTheme();
   const styles = createStyles(theme);
-  const [payload, setPayload] = useState<{
-    habit: HabitObject;
-    habitDate: Date;
-    initialDisplayScreen?: "main" | "reminder" | "editHabit";
-  } | null>(null);
-
-  useImperativeHandle(ref, () => ({
-    present: (data) => {
-      setPayload(data);
-      bottomSheetRef.current?.present();
-    },
-    dismiss: () => bottomSheetRef.current?.dismiss(),
-  }));
-
-  if (!payload) return null;
 
   return (
     <BottomSheetModal
@@ -49,9 +35,9 @@ export const HabitSheetModal = forwardRef<HabitSheetRef>((props, ref) => {
       <BottomSheetView style={styles.bottomSheetContainer}>
         <NavigationPill />
         <HabitItemSheet
-          habit={payload.habit}
-          habitDate={payload.habitDate}
-          initialDisplayScreen={payload.initialDisplayScreen}
+          habit={getHabitObjectFromId("my enemies, my ally")}
+          habitDate={new Date()}
+          initialDisplayScreen={"main"}
           dismiss={() => bottomSheetRef.current?.dismiss()}
         />
       </BottomSheetView>
