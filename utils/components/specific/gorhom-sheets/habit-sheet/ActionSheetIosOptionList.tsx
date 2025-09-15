@@ -59,7 +59,7 @@ export default function ActionSheetIosOptionList({
     );
   };
   return (
-    <ScrollView>
+    <View>
       <View style={styles.sectionHeader}>
         <Text style={styles.sectionHeaderText}>OPTIONS</Text>
       </View>
@@ -150,7 +150,7 @@ export default function ActionSheetIosOptionList({
         {/* Divider */}
         <View style={styles.divider} />
       </View>
-    </ScrollView>
+    </View>
   );
 }
 

@@ -7,10 +7,9 @@ import NavigationPill from "../../../general/NavigationPill";
 import HabitItemSheet from "./HabitItemSheet";
 import { HabitObject } from "@/utils/types";
 import { Theme } from "@/utils/theme/themes";
-import { getHabitObjectFromId } from "@/utils/habits";
 
 export type HabitSheetRef = {
-  present: (payload: {
+  presentWithData: (payload: {
     habit: HabitObject;
     habitDate: Date;
     initialDisplayScreen?: "main" | "reminder" | "editHabit";
@@ -22,11 +21,25 @@ export const HabitSheetModal = forwardRef<HabitSheetRef>((props, ref) => {
   const bottomSheetRef = useRef<BottomSheetModal>(null);
   const theme = useTheme();
   const styles = createStyles(theme);
+  const [payload, setPayload] = useState<{
+    habit: HabitObject;
+    habitDate: Date;
+    initialDisplayScreen?: "main" | "reminder" | "editHabit";
+  } | null>(null);
+
+  useImperativeHandle(ref, () => ({
+    presentWithData: (data) => {
+      setPayload(data);
+      bottomSheetRef.current?.present();
+    },
+    dismiss: () => bottomSheetRef.current?.dismiss(),
+  }));
 
   return (
     <BottomSheetModal
       ref={bottomSheetRef}
       snapPoints={["60%"]}
+      enableDynamicSizing={true}
       backgroundStyle={{
         backgroundColor: theme.colors.background,
         borderRadius: 16,
@@ -34,12 +47,14 @@ export const HabitSheetModal = forwardRef<HabitSheetRef>((props, ref) => {
     >
       <BottomSheetView style={styles.bottomSheetContainer}>
         <NavigationPill />
-        <HabitItemSheet
-          habit={getHabitObjectFromId("my enemies, my ally")}
-          habitDate={new Date()}
-          initialDisplayScreen={"main"}
-          dismiss={() => bottomSheetRef.current?.dismiss()}
-        />
+        {payload && (
+          <HabitItemSheet
+            habit={payload.habit}
+            habitDate={payload.habitDate}
+            initialDisplayScreen={payload.initialDisplayScreen}
+            dismiss={() => bottomSheetRef.current?.dismiss()}
+          />
+        )}
       </BottomSheetView>
     </BottomSheetModal>
   );

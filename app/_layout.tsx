@@ -12,11 +12,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import { getAuth } from "@react-native-firebase/auth";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
-import {
-  HabitSheetModal,
-  HabitSheetRef,
-} from "@/utils/components/specific/gorhom-sheets/habit-sheet/HabitSheetModal";
-import { SheetService } from "@/utils/SheetService";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 function AppNavigator() {

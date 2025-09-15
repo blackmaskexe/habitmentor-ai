@@ -127,6 +127,7 @@ function createStyles(theme: Theme) {
       // padding: theme.spacing.m,
       borderRadius: theme.radius.m,
       backgroundColor: theme.colors.background,
+      marginBottom: theme.spacing.l,
     },
   });
 }

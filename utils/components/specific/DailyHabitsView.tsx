@@ -2,7 +2,7 @@ import mmkvStorage from "@/utils/mmkvStorage";
 import { useTheme } from "@/utils/theme/ThemeContext";
 import { Ionicons } from "@expo/vector-icons";
 import { useFocusEffect } from "expo-router";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   ScrollView,
   StyleSheet,
@@ -33,7 +33,10 @@ import { Theme } from "@/utils/theme/themes";
 import { HabitObject } from "@/utils/types";
 import * as Haptics from "expo-haptics";
 import { TourGuideZone } from "rn-tourguide";
-import { SheetService } from "@/utils/SheetService";
+import {
+  HabitSheetModal,
+  HabitSheetRef,
+} from "./gorhom-sheets/habit-sheet/HabitSheetModal";
 
 const DailyHabitsView = ({ date }: { date: Date }) => {
   // date prop used to show the habits for different days
@@ -41,6 +44,16 @@ const DailyHabitsView = ({ date }: { date: Date }) => {
   const styles = createStyles(theme);
 
   const [habitItems, setHabitItems] = useState<HabitObject[]>([]);
+
+  const habitSheetRef = useRef<HabitSheetRef>(null);
+
+  function openHabitSheet(habit: HabitObject, habitDate: Date) {
+    habitSheetRef.current?.presentWithData({
+      habit,
+      habitDate,
+      initialDisplayScreen: "main",
+    });
+  }
 
   // const habitItems: HabitObject[] = useMemo(() => {
   //   // fetch habits from mmkvStorage
@@ -215,13 +228,7 @@ const DailyHabitsView = ({ date }: { date: Date }) => {
             style={styles.habitCard}
             onPress={() => {
               Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-              SheetService.show("habit-sheet", {
-                payload: {
-                  sheetType: "habitItem",
-                  habitId: habit.id,
-                  habitDate: date,
-                },
-              });
+              openHabitSheet(habit, date);
               // TODO: RESOLVE THIS SO THAT WHENEVER GORHOM BOTTOM SHEET IS CLOSED, LOAD HABITS
               // .then((res) => {
               //   // on closing of the ActionSheet (is when the promise is fullfilled, refresh habits)
@@ -245,13 +252,8 @@ const DailyHabitsView = ({ date }: { date: Date }) => {
                   style={styles.habitOptions}
                   onPress={() => {
                     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-                    SheetService.show("habit-sheet", {
-                      payload: {
-                        sheetType: "habitItem",
-                        habitId: habit.id,
-                        habitDate: date,
-                      },
-                    });
+                    openHabitSheet(habit, date);
+
                     // TODO: SAME HERE
                     // .then((res) => {
                     //   // on closing of the ActionSheet (is when the promise is fullfilled, refresh habits)
@@ -271,13 +273,8 @@ const DailyHabitsView = ({ date }: { date: Date }) => {
                 style={styles.habitOptions}
                 onPress={() => {
                   Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-                  SheetService.show("habit-sheet", {
-                    payload: {
-                      sheetType: "habitItem",
-                      habitId: habit.id,
-                      habitDate: date,
-                    },
-                  });
+                  openHabitSheet(habit, date);
+
                   // TODO: SAME HERE
                   // .then((res) => {
                   //   // on closing of the ActionSheet (is when the promise is fullfilled, refresh habits)
@@ -299,11 +296,14 @@ const DailyHabitsView = ({ date }: { date: Date }) => {
   };
 
   return (
-    <ScrollView style={styles.container}>
-      {habitItems.map((habit: HabitObject, index: number) => {
-        return renderHabitCard(habit, index);
-      })}
-    </ScrollView>
+    <>
+      <ScrollView style={styles.container}>
+        {habitItems.map((habit: HabitObject, index: number) => {
+          return renderHabitCard(habit, index);
+        })}
+      </ScrollView>
+      <HabitSheetModal ref={habitSheetRef} />
+    </>
   );
 };
 
