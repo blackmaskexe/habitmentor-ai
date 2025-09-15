@@ -13,6 +13,7 @@ import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import { getAuth } from "@react-native-firebase/auth";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { ActivityIndicatorProvider } from "@/utils/contexts/ActivityIndicatorContext";
 
 function AppNavigator() {
   const theme = useTheme();
@@ -112,10 +113,12 @@ export default function RootLayout() {
   return (
     <GestureHandlerRootView>
       <ThemeProvider>
-        <BottomSheetModalProvider>
-          {/* This chochla is to be able to use themes within the root _layout.tsx */}
-          <AppNavigator />
-        </BottomSheetModalProvider>
+        <ActivityIndicatorProvider>
+          <BottomSheetModalProvider>
+            {/* This chochla is to be able to use themes within the root _layout.tsx */}
+            <AppNavigator />
+          </BottomSheetModalProvider>
+        </ActivityIndicatorProvider>
       </ThemeProvider>
     </GestureHandlerRootView>
   );
