@@ -61,7 +61,7 @@ export const SuggestionsSheetModal = forwardRef<SuggestionsSheetRef>(
       <BottomSheetModal
         backdropComponent={renderBackdrop}
         ref={bottomSheetRef}
-        snapPoints={["80%"]}
+        snapPoints={[]}
         enableDynamicSizing={true}
         backgroundStyle={{
           backgroundColor: theme.colors.background,

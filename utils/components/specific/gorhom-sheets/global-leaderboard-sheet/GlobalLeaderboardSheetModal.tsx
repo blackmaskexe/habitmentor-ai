@@ -52,7 +52,7 @@ export const GlobalLeaderboardSheetModal =
           appearsOnIndex={0}
           disappearsOnIndex={-1}
           {...backdropProps}
-          pressBehavior="close"
+          pressBehavior="none"
         />
       ),
       []
@@ -85,7 +85,7 @@ export const GlobalLeaderboardSheetModal =
       <BottomSheetModal
         backdropComponent={renderBackdrop}
         ref={bottomSheetRef}
-        snapPoints={["80%"]}
+        snapPoints={[]}
         enableDynamicSizing={true}
         backgroundStyle={{
           backgroundColor: theme.colors.background,
@@ -94,6 +94,7 @@ export const GlobalLeaderboardSheetModal =
         handleIndicatorStyle={{
           backgroundColor: pillColor,
         }}
+        enablePanDownToClose={false}
       >
         <BottomSheetView style={styles.bottomSheetContainer}>
           {/* <NavigationPill /> */}

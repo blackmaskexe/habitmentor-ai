@@ -1,5 +1,6 @@
 import CardWithoutImage from "@/utils/components/general/CardWithoutImage";
 import CTAButton from "@/utils/components/general/CTAButton";
+import { useLoginSheet } from "@/utils/contexts/LoginSheetContext";
 import {
   createProfile,
   validateFirestoreNickname,
@@ -19,9 +20,12 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { SheetManager } from "react-native-actions-sheet";
 
-export default function LoginRegisterProfileView() {
+export default function LoginRegisterProfileView({
+  dismissSheet,
+}: {
+  dismissSheet: () => void;
+}) {
   const theme = useTheme();
   const styles = createStyles(theme);
 
@@ -29,6 +33,7 @@ export default function LoginRegisterProfileView() {
   const [selectedAvatar, setSelectedAvatar] = useState<string>("happy-outline");
   const [isAvatarPickerVisible, setIsAvatarPickerVisible] = useState(false);
   const [validationWarnings, setValidationWarnings] = useState<string[]>([]);
+
   return (
     <View style={styles.profileContainer}>
       {/* --- 1. Profile Preview Card --- */}
@@ -125,9 +130,11 @@ export default function LoginRegisterProfileView() {
           title="Proceed"
           onPress={async () => {
             const nicknameValidator = validateFirestoreNickname(nickname);
+            setValidationWarnings(nicknameValidator.messages);
+
             if (nicknameValidator.valid) {
               await createProfile(nickname, selectedAvatar);
-              SheetManager.hide("login-sheet");
+              dismissSheet();
             } else {
               Alert.alert(
                 "Nickname not available",

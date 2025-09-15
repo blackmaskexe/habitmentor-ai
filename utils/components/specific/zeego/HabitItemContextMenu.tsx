@@ -2,8 +2,9 @@ import { useTheme } from "@/utils/theme/ThemeContext";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { SheetManager } from "react-native-actions-sheet";
 import * as ContextMenu from "./context-menu";
+import { useHabitSheet } from "@/utils/contexts/HabitSheetContext";
+import { getDate } from "@/utils/date";
 
 export default function HabitItemContextMenu({
   habitItem,
@@ -15,6 +16,7 @@ export default function HabitItemContextMenu({
   const theme = useTheme();
   const styles = createStyles(theme);
   const router = useRouter();
+  const { openHabitSheet } = useHabitSheet();
 
   return (
     <ContextMenu.ContextMenuRoot>
@@ -40,15 +42,17 @@ export default function HabitItemContextMenu({
           <TouchableOpacity
             style={styles.habitOptions}
             onPress={() => {
-              SheetManager.show("habit-sheet", {
-                payload: {
-                  sheetType: "habitItem",
-                  habitItem: {
-                    habit: habitItem,
-                    habitIndex: index,
-                  },
-                },
-              });
+              // SheetManager.show("habit-sheet", {
+              //   payload: {
+              //     sheetType: "habitItem",
+              //     habitItem: {
+              //       habit: habitItem,
+              //       habitIndex: index,
+              //     },
+              //   },
+              // });
+
+              openHabitSheet(habitItem, getDate(), "main");
             }}
           >
             <Ionicons

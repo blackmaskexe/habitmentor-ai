@@ -14,7 +14,6 @@ import {
 } from "@gorhom/bottom-sheet";
 import { useTheme } from "@/utils/theme/ThemeContext";
 
-import NavigationPill from "../../../general/NavigationPill";
 import HabitItemSheet from "./HabitItemSheet";
 import { HabitObject } from "@/utils/types";
 import { Theme } from "@/utils/theme/themes";
