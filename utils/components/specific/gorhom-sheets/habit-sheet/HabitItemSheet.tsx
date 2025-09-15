@@ -114,6 +114,7 @@ export default function HabitItemSheet({
         <EditHabitView
           habitId={habitObject.id}
           onChangeDisplayScreen={setDisplayScreen}
+          dismissSheet={dismiss}
         />
       ) : null}
     </View>

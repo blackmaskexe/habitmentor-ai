@@ -37,6 +37,7 @@ import {
   HabitSheetModal,
   HabitSheetRef,
 } from "./gorhom-sheets/habit-sheet/HabitSheetModal";
+import { useHabitSheet } from "@/utils/contexts/HabitSheetContext";
 
 const DailyHabitsView = ({ date }: { date: Date }) => {
   // date prop used to show the habits for different days
@@ -45,15 +46,7 @@ const DailyHabitsView = ({ date }: { date: Date }) => {
 
   const [habitItems, setHabitItems] = useState<HabitObject[]>([]);
 
-  const habitSheetRef = useRef<HabitSheetRef>(null);
-
-  function openHabitSheet(habit: HabitObject, habitDate: Date) {
-    habitSheetRef.current?.presentWithData({
-      habit,
-      habitDate,
-      initialDisplayScreen: "main",
-    });
-  }
+  const { openHabitSheet } = useHabitSheet();
 
   // const habitItems: HabitObject[] = useMemo(() => {
   //   // fetch habits from mmkvStorage
@@ -296,14 +289,11 @@ const DailyHabitsView = ({ date }: { date: Date }) => {
   };
 
   return (
-    <>
-      <ScrollView style={styles.container}>
-        {habitItems.map((habit: HabitObject, index: number) => {
-          return renderHabitCard(habit, index);
-        })}
-      </ScrollView>
-      <HabitSheetModal ref={habitSheetRef} />
-    </>
+    <ScrollView style={styles.container}>
+      {habitItems.map((habit: HabitObject, index: number) => {
+        return renderHabitCard(habit, index);
+      })}
+    </ScrollView>
   );
 };
 

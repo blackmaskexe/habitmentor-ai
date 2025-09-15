@@ -25,6 +25,7 @@ import {
 } from "@react-native-firebase/firestore";
 import { useRouter } from "expo-router";
 import { FirebaseUserProfile } from "@/utils/firebase/types";
+import { useGlobalLeaderboardSheet } from "@/utils/contexts/GlobalLeaderboardSheetContext";
 
 type RankedUser = {
   id: string;
@@ -54,6 +55,8 @@ export default function LeaderboardGlobalView({
   const [isLoading, setIsLoading] = useState(true);
   const [enrollmentChecked, setEnrollmentChecked] = useState(false);
   const [isEnrolled, setIsEnrolled] = useState<boolean>(false);
+
+  const { openGlobalLeaderboardSheet } = useGlobalLeaderboardSheet();
 
   // Check enrollment status and show sheet if needed
   useEffect(() => {
@@ -364,7 +367,9 @@ export default function LeaderboardGlobalView({
         </Text>
         <TouchableOpacity
           style={styles.enrollmentButton}
-          onPress={() => SheetManager.show("global-leaderboard-sheet")}
+          onPress={() => {
+            openGlobalLeaderboardSheet();
+          }}
         >
           <Text style={styles.enrollmentButtonText}>
             Enable Global Leaderboard

@@ -28,9 +28,11 @@ type UpdatedHabitType = {
 export default function EditHabitView({
   onChangeDisplayScreen,
   habitId,
+  dismissSheet,
 }: {
   onChangeDisplayScreen: (screen: string) => void;
   habitId: string;
+  dismissSheet: () => void;
 }) {
   const { cancelAllScheduledNotifications, schedulePushNotification } =
     useNotifications();
@@ -125,7 +127,10 @@ export default function EditHabitView({
           </TouchableOpacity>
           <Text style={styles.headerText}>Edit Habit</Text>
           <View style={styles.headerRightPlaceholder}>
-            <EdithabitDropdownMenu habitId={habitId} />
+            <EdithabitDropdownMenu
+              habitId={habitId}
+              dismissSheet={dismissSheet}
+            />
           </View>
         </View>
         <Text style={styles.saveHintText}>

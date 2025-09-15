@@ -4,14 +4,18 @@ import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { Alert, TouchableOpacity } from "react-native";
 import * as DropdownMenu from "./dropdown-menu";
+import { useHabitSheet } from "@/utils/contexts/HabitSheetContext";
 
 export default function EdithabitDropdownMenu({
   habitId,
+  dismissSheet,
 }: {
   habitId: string;
+  dismissSheet: () => void;
 }) {
   const router = useRouter();
   const theme = useTheme();
+  const { closeHabitSheet } = useHabitSheet();
 
   const habit = getHabitObjectFromId(habitId)!;
   return (
@@ -51,9 +55,10 @@ export default function EdithabitDropdownMenu({
                 {
                   text: "Yes",
                   onPress: () => {
-                    SheetManager.hide("habit-sheet").then(() => {
+                    dismissSheet();
+                    setTimeout(() => {
                       deleteHabit(habitId);
-                    });
+                    }, 100);
                   },
                 },
               ],

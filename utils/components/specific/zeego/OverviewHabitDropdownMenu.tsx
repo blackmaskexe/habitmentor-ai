@@ -5,6 +5,7 @@ import * as Haptics from "expo-haptics";
 import { useRouter } from "expo-router";
 import { StyleSheet, TouchableOpacity } from "react-native";
 import * as DropdownMenu from "./dropdown-menu";
+import { useHabitSheet } from "@/utils/contexts/HabitSheetContext";
 
 export default function OverviewHabitdropdownMenu({
   habitItem,
@@ -14,6 +15,8 @@ export default function OverviewHabitdropdownMenu({
   const router = useRouter();
   const theme = useTheme();
   const styles = createStyles(theme);
+
+  const { openHabitSheet } = useHabitSheet();
 
   return (
     <DropdownMenu.DropdownMenuRoot>
@@ -64,13 +67,8 @@ export default function OverviewHabitdropdownMenu({
               // TODO OR NOT: Setting a 500ms delay so that it navigates to home
               // because we cannot open an action sheet on an open modal window,
               // which overview is one of them
-              SheetManager.show("habit-sheet", {
-                payload: {
-                  habit: habitItem,
-                  habitDate: getDate(),
-                  initialDisplayScreen: "editHabit",
-                },
-              });
+
+              openHabitSheet(habitItem, getDate(), "editHabit");
             }, 500);
           }}
         >
@@ -91,13 +89,7 @@ export default function OverviewHabitdropdownMenu({
             router.replace("/(tabs)/home");
             // TODO OR NOT: same as above todo
             setTimeout(() => {
-              SheetManager.show("habit-sheet", {
-                payload: {
-                  habit: habitItem,
-                  habitDate: getDate(),
-                  initialDisplayScreen: "main",
-                },
-              });
+              openHabitSheet(habitItem, getDate(), "main");
             }, 500);
           }}
         >
