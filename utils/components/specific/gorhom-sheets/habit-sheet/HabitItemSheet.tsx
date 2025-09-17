@@ -13,16 +13,6 @@ import ReminderView from "../../ReminderView";
 import ActionSheetIosOptionList from "./ActionSheetIosOptionList";
 import { HabitObject } from "@/utils/types";
 
-// SheetManager.show("habit-sheet", {
-//   payload: {
-//     sheetType: "habitItem",
-//     habitItem: {
-//       habit: habit,
-//       habitIndex: index,
-//     },
-//   },
-// });
-
 export default function HabitItemSheet({
   habit,
   habitDate,

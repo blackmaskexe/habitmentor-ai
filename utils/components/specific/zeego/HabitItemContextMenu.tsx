@@ -42,16 +42,6 @@ export default function HabitItemContextMenu({
           <TouchableOpacity
             style={styles.habitOptions}
             onPress={() => {
-              // SheetManager.show("habit-sheet", {
-              //   payload: {
-              //     sheetType: "habitItem",
-              //     habitItem: {
-              //       habit: habitItem,
-              //       habitIndex: index,
-              //     },
-              //   },
-              // });
-
               openHabitSheet(habitItem, getDate(), "main");
             }}
           >

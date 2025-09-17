@@ -50,21 +50,6 @@ const CompletionRecommendationCard: React.FC<
           padding,
         },
       ]}
-      // onPress={() => {
-      //   SheetManager.show("suggestions-sheet", {
-      //     payload: {
-      //       CustomComponent: () => {
-      //         return (
-      //           <LeastCompletedHabitSheet
-      //             habitName={habitName}
-      //             completionPercentage={completionPercentage}
-      //             habitId={habitId}
-      //           />
-      //         );
-      //       },
-      //     },
-      //   });
-      // }}
     >
       <View style={styles.iconContainer}>
         <Ionicons

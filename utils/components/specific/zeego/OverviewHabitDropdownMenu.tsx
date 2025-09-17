@@ -64,7 +64,7 @@ export default function OverviewHabitdropdownMenu({
           onSelect={() => {
             router.replace("/(tabs)/home");
             setTimeout(() => {
-              // TODO OR NOT: Setting a 500ms delay so that it navigates to home
+              // Setting a 500ms delay so that it navigates to home
               // because we cannot open an action sheet on an open modal window,
               // which overview is one of them
 

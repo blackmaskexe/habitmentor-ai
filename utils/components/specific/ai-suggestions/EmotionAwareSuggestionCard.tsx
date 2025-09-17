@@ -88,17 +88,6 @@ const EmotionAwareSuggestionCard: React.FC<EmotionAwareSuggestionCard> = ({
         },
       ]}
       onPress={() => {
-        // SheetManager.show("suggestions-sheet", {
-        //   payload: {
-        //     CustomComponent: () => {
-        //       return (
-        //         <EmotionAwareTextMessage
-        //           message={emotionAwareMessage as string}
-        //         />
-        //       );
-        //     },
-        //   },
-        // });
         openSuggestionsSheet({
           CustomComponent: () => {
             return (

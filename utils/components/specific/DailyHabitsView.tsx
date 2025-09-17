@@ -220,11 +220,7 @@ const DailyHabitsView = ({ date }: { date: Date }) => {
               openHabitSheet(habit, date, "main", () => {
                 loadHabits();
               });
-              // TODO: RESOLVE THIS SO THAT WHENEVER GORHOM BOTTOM SHEET IS CLOSED, LOAD HABITS
-              // .then((res) => {
-              //   // on closing of the ActionSheet (is when the promise is fullfilled, refresh habits)
-              //   loadHabits();
-              // });
+              // WHENEVER GORHOM BOTTOM SHEET IS CLOSED, LOAD HABITS
             }}
           >
             {renderHabitItem(habit, index)}
@@ -247,11 +243,7 @@ const DailyHabitsView = ({ date }: { date: Date }) => {
                       loadHabits();
                     });
 
-                    // TODO: SAME HERE
-                    // .then((res) => {
-                    //   // on closing of the ActionSheet (is when the promise is fullfilled, refresh habits)
-                    //   loadHabits();
-                    // });
+                    // on closing of the gorhom, load / refresh habits
                   }}
                 >
                   <Ionicons
@@ -270,11 +262,7 @@ const DailyHabitsView = ({ date }: { date: Date }) => {
                     loadHabits();
                   });
 
-                  // TODO: SAME HERE
-                  // .then((res) => {
-                  //   // on closing of the ActionSheet (is when the promise is fullfilled, refresh habits)
-                  //   loadHabits();
-                  // });
+                  // on closing of the gorhom, load / refresh habits
                 }}
               >
                 <Ionicons
