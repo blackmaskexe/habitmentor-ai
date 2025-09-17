@@ -25,17 +25,24 @@ const MOOD_EMOJIS: { [key in MoodLevel]: string } = {
 // NOTE: Create a folder (e.g., `src/assets/gifs`) and place your GIFs there.
 // The paths below assume this structure.
 const MOOD_GIFS: { [key in MoodLevel]: any } = {
-  1: require("@/assets/animations/mood-rater/sad.gif"),
-  2: require("@/assets/animations/mood-rater/neutral.gif"),
-  3: require("@/assets/animations/mood-rater/slight_smile.gif"),
-  4: require("@/assets/animations/mood-rater/happy.gif"),
+  1: require("@/assets/animations/mood-rater/light/sad.gif"),
+  2: require("@/assets/animations/mood-rater/light/neutral.gif"),
+  3: require("@/assets/animations/mood-rater/light/slight_smile.gif"),
+  4: require("@/assets/animations/mood-rater/light/happy.gif"),
 };
 
-const MOOD_STATIC_IMAGES: { [key in MoodLevel]: any } = {
-  1: require("@/assets/animations/mood-rater/sad_static.png"),
-  2: require("@/assets/animations/mood-rater/neutral_static.png"),
-  3: require("@/assets/animations/mood-rater/slight_smile_static.png"),
-  4: require("@/assets/animations/mood-rater/happy_static.png"),
+const MOOD_STATIC_IMAGES_LIGHT: { [key in MoodLevel]: any } = {
+  1: require("@/assets/animations/mood-rater/light/sad_static.png"),
+  2: require("@/assets/animations/mood-rater/light/neutral_static.png"),
+  3: require("@/assets/animations/mood-rater/light/slight_smile_static.png"),
+  4: require("@/assets/animations/mood-rater/light/happy_static.png"),
+};
+
+const MOOD_STATIC_IMAGES_DARK: { [key in MoodLevel]: any } = {
+  1: require("@/assets/animations/mood-rater/dark/sad_static.png"),
+  2: require("@/assets/animations/mood-rater/dark/neutral_static.png"),
+  3: require("@/assets/animations/mood-rater/dark/slight_smile_static.png"),
+  4: require("@/assets/animations/mood-rater/dark/happy_static.png"),
 };
 
 const GIF_DURATION = 4000; // 2 seconds
@@ -73,14 +80,17 @@ const MoodRaterCard: React.FC<MoodRaterCardProps> = ({
     // Trigger the parent component's change handler
     onChange?.(level);
 
-    // Start the GIF animation
-    setPlayingGif(level);
+    // Only start GIF animation in light mode
+    if (theme.theme === "light") {
+      // Start the GIF animation
+      setPlayingGif(level);
 
-    // Set a timer to stop the animation after its duration
-    animationTimeout.current = setTimeout(() => {
-      setPlayingGif(null);
-      animationTimeout.current = null;
-    }, GIF_DURATION);
+      // Set a timer to stop the animation after its duration
+      animationTimeout.current = setTimeout(() => {
+        setPlayingGif(null);
+        animationTimeout.current = null;
+      }, GIF_DURATION);
+    }
 
     setMoodToday(level);
     closeMoodCheckCard();
@@ -104,10 +114,17 @@ const MoodRaterCard: React.FC<MoodRaterCardProps> = ({
             onPress={() => handleEmojiPress(level)}
             activeOpacity={0.8}
           >
-            {playingGif === level ? (
+            {playingGif === level && theme.theme === "light" ? (
               <Image source={MOOD_GIFS[level]} style={styles.gif} />
             ) : (
-              <Image source={MOOD_STATIC_IMAGES[level]} style={styles.gif} />
+              <Image
+                source={
+                  theme.theme === "light"
+                    ? MOOD_STATIC_IMAGES_LIGHT[level]
+                    : MOOD_STATIC_IMAGES_DARK[level]
+                }
+                style={styles.gif}
+              />
             )}
           </TouchableOpacity>
         ))}
@@ -191,6 +208,10 @@ function createStyles(theme: Theme) {
       shadowOpacity: 0.15,
       elevation: 2,
     },
+    darkModeEmojiButton: {
+      paddingHorizontal: 8,
+      paddingVertical: 8,
+    },
     emoji: {
       fontSize: 48,
       opacity: 0.85,
@@ -201,6 +222,7 @@ function createStyles(theme: Theme) {
     gif: {
       width: 70,
       height: 70,
+      padding: theme.theme == "dark" ? theme.spacing.s : 0,
     },
   });
 }

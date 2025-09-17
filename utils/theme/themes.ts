@@ -3,9 +3,9 @@ export const lightTheme = {
   colors: {
     // Core colors
     primary: "#007AFF",
-    background: "#FFFFFF",
+    background: "rgb(242, 242, 247)",
     altBackground: "#ececec", // used for background for modal
-    surface: "#f0f0f0", // for, for example, cards and shi, stuff that you want to make elevated
+    surface: "#ffffff", // for, for example, cards and shi, stuff that you want to make elevated
     text: "#1a1a1a",
     textSecondary: "#333333",
     textTertiary: "#e8e8e0",
@@ -79,9 +79,9 @@ export const darkTheme = {
   colors: {
     // Core colors
     primary: "#FF6347",
-    background: "#151515",
+    background: "#000000",
     altBackground: "#2A2A2A", // used for background for modal
-    surface: "#2C2C2C",
+    surface: "#1c1c1e",
     text: "#F5F5F5",
     textSecondary: "#798086",
     textTertiary: "#e8e8e0",
