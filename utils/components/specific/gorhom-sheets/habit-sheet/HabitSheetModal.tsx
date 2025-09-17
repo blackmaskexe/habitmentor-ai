@@ -5,7 +5,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { StyleSheet, useColorScheme, View } from "react-native";
+import { StyleSheet, useColorScheme, View, Alert } from "react-native";
 import {
   BottomSheetBackdrop,
   BottomSheetBackdropProps,
@@ -17,12 +17,16 @@ import { useTheme } from "@/utils/theme/ThemeContext";
 import HabitItemSheet from "./HabitItemSheet";
 import { HabitObject } from "@/utils/types";
 import { Theme } from "@/utils/theme/themes";
+import mmkvStorage from "@/utils/mmkvStorage";
+import { getHabitObjectFromId, updateEditedHabit } from "@/utils/habits";
+import { useNotifications } from "@/utils/hooks/useNotifications";
 
 export type HabitSheetRef = {
   presentWithData: (payload: {
     habit: HabitObject;
     habitDate: Date;
     initialDisplayScreen?: "main" | "reminder" | "editHabit";
+    backdropCloseCallback: () => void;
   }) => void;
   dismiss: () => void;
 };
@@ -35,6 +39,7 @@ export const HabitSheetModal = forwardRef<HabitSheetRef>((props, ref) => {
     habit: HabitObject;
     habitDate: Date;
     initialDisplayScreen?: "main" | "reminder" | "editHabit";
+    backdropCloseCallback: () => void;
   } | null>(null);
 
   useImperativeHandle(ref, () => ({
@@ -42,8 +47,13 @@ export const HabitSheetModal = forwardRef<HabitSheetRef>((props, ref) => {
       setPayload(data);
       bottomSheetRef.current?.present();
     },
-    dismiss: () => bottomSheetRef.current?.dismiss(),
+    dismiss: () => {
+      bottomSheetRef.current?.dismiss();
+    },
   }));
+
+  const { cancelAllScheduledNotifications, schedulePushNotification } =
+    useNotifications();
 
   const renderBackdrop = useCallback(
     (backdropProps: BottomSheetBackdropProps) => (
@@ -57,6 +67,8 @@ export const HabitSheetModal = forwardRef<HabitSheetRef>((props, ref) => {
           // maybe log or animate something
           // then optionally close
           // But the pressBehavior="close" handles the closing automatically
+          // console.log("Im a chhuchhundur", payload);
+          // payload?.backdropCloseCallback();
         }}
       />
     ),
@@ -77,6 +89,67 @@ export const HabitSheetModal = forwardRef<HabitSheetRef>((props, ref) => {
       }}
       handleIndicatorStyle={{
         backgroundColor: pillColor,
+      }}
+      onDismiss={() => {
+        payload?.backdropCloseCallback();
+
+        // if the habit was edited
+        const editedHabitStagedChanges = mmkvStorage.getString(
+          "stagedEditHabitChanges"
+        );
+        const editedHabit: {
+          habitId: string;
+          habitName: string;
+          habitDescription: string;
+          habitFrequency: boolean[];
+        } = JSON.parse(editedHabitStagedChanges || "{}");
+
+        const oldHabit = getHabitObjectFromId(editedHabit.habitId)!;
+        // checking if there are even changes in the habit in the menu:
+        let didUserEditHabit = null;
+        if (
+          oldHabit.habitName == editedHabit.habitName &&
+          JSON.stringify(editedHabit.habitFrequency) ==
+            JSON.stringify(oldHabit.frequency) &&
+          (oldHabit.habitDescription || "") == editedHabit.habitDescription
+        ) {
+          didUserEditHabit = false;
+        } else {
+          didUserEditHabit = true;
+          console.log("ding dongiyee, sahurriyeee", oldHabit, editedHabit);
+        }
+
+        if (editedHabitStagedChanges && didUserEditHabit) {
+          Alert.alert(
+            "Save Changes",
+            "Do you want to save your changes?",
+            [
+              {
+                text: "Cancel",
+                style: "cancel",
+                onPress: () => {
+                  // Do nothing - user chose to cancel
+                },
+              },
+              {
+                text: "Yes",
+                onPress: async () => {
+                  mmkvStorage.delete("stagedEditHabitChanges");
+
+                  await updateEditedHabit(
+                    editedHabit.habitId,
+                    editedHabit.habitName,
+                    editedHabit.habitDescription,
+                    editedHabit.habitFrequency,
+                    cancelAllScheduledNotifications,
+                    schedulePushNotification
+                  );
+                },
+              },
+            ],
+            { cancelable: true }
+          );
+        }
       }}
     >
       <BottomSheetView style={styles.bottomSheetContainer}>

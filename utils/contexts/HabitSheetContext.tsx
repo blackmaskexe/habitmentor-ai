@@ -8,7 +8,8 @@ type HabitSheetContextType = {
   openHabitSheet: (
     habit: any,
     habitDate: Date,
-    initialDisplayScreen?: "main" | "editHabit" | "reminder"
+    initialDisplayScreen?: "main" | "editHabit" | "reminder",
+    backdropCloseCallback?: () => void
   ) => void;
 
   closeHabitSheet: () => void;
@@ -32,12 +33,14 @@ export const HabitSheetProvider: React.FC<{ children: React.ReactNode }> = ({
   const openHabitSheet = (
     habit: any,
     habitDate: Date,
-    initialDisplayScreen: "main" | "editHabit" | "reminder" = "main"
+    initialDisplayScreen: "main" | "editHabit" | "reminder" = "main",
+    backdropCloseCallback: () => void = () => {}
   ) => {
     habitSheetRef.current?.presentWithData({
       habit,
       habitDate,
       initialDisplayScreen,
+      backdropCloseCallback,
     });
   };
 

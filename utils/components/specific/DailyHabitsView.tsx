@@ -33,10 +33,6 @@ import { Theme } from "@/utils/theme/themes";
 import { HabitObject } from "@/utils/types";
 import * as Haptics from "expo-haptics";
 import { TourGuideZone } from "rn-tourguide";
-import {
-  HabitSheetModal,
-  HabitSheetRef,
-} from "./gorhom-sheets/habit-sheet/HabitSheetModal";
 import { useHabitSheet } from "@/utils/contexts/HabitSheetContext";
 
 const DailyHabitsView = ({ date }: { date: Date }) => {
@@ -221,7 +217,9 @@ const DailyHabitsView = ({ date }: { date: Date }) => {
             style={styles.habitCard}
             onPress={() => {
               Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-              openHabitSheet(habit, date);
+              openHabitSheet(habit, date, "main", () => {
+                loadHabits();
+              });
               // TODO: RESOLVE THIS SO THAT WHENEVER GORHOM BOTTOM SHEET IS CLOSED, LOAD HABITS
               // .then((res) => {
               //   // on closing of the ActionSheet (is when the promise is fullfilled, refresh habits)
@@ -245,7 +243,9 @@ const DailyHabitsView = ({ date }: { date: Date }) => {
                   style={styles.habitOptions}
                   onPress={() => {
                     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-                    openHabitSheet(habit, date);
+                    openHabitSheet(habit, date, "main", () => {
+                      loadHabits();
+                    });
 
                     // TODO: SAME HERE
                     // .then((res) => {
@@ -266,7 +266,9 @@ const DailyHabitsView = ({ date }: { date: Date }) => {
                 style={styles.habitOptions}
                 onPress={() => {
                   Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-                  openHabitSheet(habit, date);
+                  openHabitSheet(habit, date, "main", () => {
+                    loadHabits();
+                  });
 
                   // TODO: SAME HERE
                   // .then((res) => {
