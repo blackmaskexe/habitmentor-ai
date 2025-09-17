@@ -1,18 +1,19 @@
-import "@/utils/components/specific/ActionSheet/sheet";
 import { ThemeProvider, useTheme } from "@/utils/theme/ThemeContext";
 import { Theme } from "@/utils/theme/themes";
 import { Ionicons } from "@expo/vector-icons";
 import { Stack, useRouter } from "expo-router";
 import { Alert, StyleSheet, Text, TouchableOpacity } from "react-native";
-import { SheetProvider } from "react-native-actions-sheet";
 import {
   TourGuideProvider, // Main provider
 } from "rn-tourguide";
 import * as Linking from "expo-linking";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import { getAuth } from "@react-native-firebase/auth";
+import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { ActivityIndicatorProvider } from "@/utils/contexts/ActivityIndicatorContext";
 
 function AppNavigator() {
   const theme = useTheme();
@@ -110,12 +111,16 @@ function AppNavigator() {
 
 export default function RootLayout() {
   return (
-    <SheetProvider>
+    <GestureHandlerRootView>
       <ThemeProvider>
-        {/* This chochla is to be able to use themes within the root _layout.tsx */}
-        <AppNavigator />
+        <ActivityIndicatorProvider>
+          <BottomSheetModalProvider>
+            {/* This chochla is to be able to use themes within the root _layout.tsx */}
+            <AppNavigator />
+          </BottomSheetModalProvider>
+        </ActivityIndicatorProvider>
       </ThemeProvider>
-    </SheetProvider>
+    </GestureHandlerRootView>
   );
 }
 

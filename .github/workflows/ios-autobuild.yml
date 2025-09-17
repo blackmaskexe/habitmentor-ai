@@ -22,8 +22,18 @@ jobs:
         with:
           node-version: 18
 
-      - name: Install dependencies
-        run: npm install --legacy-peer-deps
+      - name: Clear npm cache
+        run: npm cache clean --force
+
+      - name: Install dependencies with ajv fix
+        run: |
+          npm install --legacy-peer-deps
+          npm install ajv@^8.0.0 ajv-keywords@^5.0.0 --save
+
+      - name: Verify ajv installation
+        run: |
+          node -e "console.log('ajv version:', require('ajv/package.json').version)"
+          node -e "console.log('ajv-keywords version:', require('ajv-keywords/package.json').version)"
 
       - name: Get new version
         id: get_version

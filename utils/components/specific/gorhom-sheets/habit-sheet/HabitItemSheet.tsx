@@ -11,28 +11,31 @@ import CardWithoutImage from "../../../general/CardWithoutImage";
 import EditHabitView from "../../EditHabitView";
 import ReminderView from "../../ReminderView";
 import ActionSheetIosOptionList from "./ActionSheetIosOptionList";
-
-// SheetManager.show("habit-sheet", {
-//   payload: {
-//     sheetType: "habitItem",
-//     habitItem: {
-//       habit: habit,
-//       habitIndex: index,
-//     },
-//   },
-// });
+import { HabitObject } from "@/utils/types";
 
 export default function HabitItemSheet({
-  habitId,
+  habit,
   habitDate,
   initialDisplayScreen,
+  dismiss,
 }: {
-  habitId: string;
+  habit: HabitObject;
   habitDate: Date;
   initialDisplayScreen?: "main" | "reminder" | "editHabit";
+  dismiss: () => void;
 }) {
-  const [habitObject, setHabitObject] = useState(
-    getHabitObjectFromId(habitId)!
+  const [habitObject, setHabitObject] = useState<HabitObject>(
+    habit && habit.id
+      ? getHabitObjectFromId(habit.id)
+      : {
+          habitName: "Loading",
+          frequency: Array(7).fill(false),
+          habitDescription: "Loading...",
+          iconName: "accessibility",
+          id: "21",
+          points: 20,
+          isNotificationOn: false,
+        }
   );
   const theme = useTheme();
   const styles = createStyles(theme);
@@ -53,7 +56,7 @@ export default function HabitItemSheet({
 
         // or due to the name / description / other settings of the habit changing
         setHabitObject(() => {
-          return getHabitObjectFromId(habitId)!;
+          return getHabitObjectFromId(habit.id)!;
         });
       }
     });
@@ -85,6 +88,7 @@ export default function HabitItemSheet({
             habitItem={habitObject}
             onChangeDisplayScreen={setDisplayScreen}
             habitDate={habitDate}
+            dismiss={dismiss}
           />
         </>
       ) : null}
@@ -100,6 +104,7 @@ export default function HabitItemSheet({
         <EditHabitView
           habitId={habitObject.id}
           onChangeDisplayScreen={setDisplayScreen}
+          dismissSheet={dismiss}
         />
       ) : null}
     </View>
@@ -113,6 +118,7 @@ function createStyles(theme: Theme) {
       // padding: theme.spacing.m,
       borderRadius: theme.radius.m,
       backgroundColor: theme.colors.background,
+      marginBottom: theme.spacing.l,
     },
   });
 }

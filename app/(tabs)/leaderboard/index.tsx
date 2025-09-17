@@ -11,7 +11,6 @@ import { SceneMap, TabBar, TabView } from "react-native-tab-view";
 import { useTheme } from "@/utils/theme/ThemeContext";
 import { Theme } from "@/utils/theme/themes";
 import { useFocusEffect } from "expo-router";
-import { SheetManager } from "react-native-actions-sheet";
 import { getAuth, onAuthStateChanged } from "@react-native-firebase/auth";
 import {
   getMmkvUserLeaderboardProfile,
@@ -21,6 +20,7 @@ import { FirebaseUserProfile } from "@/utils/firebase/types";
 import mmkvStorage from "@/utils/mmkvStorage";
 import LeaderboardFriendsView from "@/utils/components/specific/LeaderboardFriendsView";
 import LeaderboardGlobalView from "@/utils/components/specific/LeaderboardGlobalView";
+import { useLoginSheet } from "@/utils/contexts/LoginSheetContext";
 
 const FirstRoute = () => {
   // This state tracks the initial check of the user's auth status.
@@ -30,6 +30,8 @@ const FirstRoute = () => {
   );
   const theme = useTheme();
   const styles = createStyles(theme);
+
+  const { openLoginSheet } = useLoginSheet();
 
   useFocusEffect(
     useCallback(() => {
@@ -46,12 +48,12 @@ const FirstRoute = () => {
           setUserProfile(profile);
           // If no profile was found even for a logged-in user, they need to create one.
           if (!profile) {
-            SheetManager.show("login-sheet");
+            openLoginSheet();
           }
         } else {
           // If user is null, they are signed out. Clear the profile and show the login sheet.
           setUserProfile(null);
-          SheetManager.show("login-sheet");
+          openLoginSheet();
         }
         // The authentication check is complete, so we can stop the loading spinner.
         setInitializing(false);
@@ -95,6 +97,7 @@ const SecondRoute = () => {
   );
   const theme = useTheme();
   const styles = createStyles(theme);
+  const { openLoginSheet } = useLoginSheet();
 
   useFocusEffect(
     useCallback(() => {
@@ -111,12 +114,12 @@ const SecondRoute = () => {
           setUserProfile(profile);
           // If no profile was found even for a logged-in user, they need to create one.
           if (!profile) {
-            SheetManager.show("login-sheet");
+            openLoginSheet();
           }
         } else {
           // If user is null, they are signed out. Clear the profile and show the login sheet.
           setUserProfile(null);
-          SheetManager.show("login-sheet");
+          openLoginSheet();
         }
         // The authentication check is complete, so we can stop the loading spinner.
         setInitializing(false);

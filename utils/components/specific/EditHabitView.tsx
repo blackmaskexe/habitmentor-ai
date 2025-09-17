@@ -18,6 +18,7 @@ import { Ionicons } from "@expo/vector-icons";
 import CardWithoutImage from "../general/CardWithoutImage";
 import EditHabitForm from "./EditHabitForm";
 import EdithabitDropdownMenu from "./zeego/EditHabitDropdownMenu";
+import mmkvStorage from "@/utils/mmkvStorage";
 
 type UpdatedHabitType = {
   habitName: string;
@@ -28,9 +29,11 @@ type UpdatedHabitType = {
 export default function EditHabitView({
   onChangeDisplayScreen,
   habitId,
+  dismissSheet,
 }: {
   onChangeDisplayScreen: (screen: string) => void;
   habitId: string;
+  dismissSheet: () => void;
 }) {
   const { cancelAllScheduledNotifications, schedulePushNotification } =
     useNotifications();
@@ -49,14 +52,39 @@ export default function EditHabitView({
     frequency: operatingHabit.frequency,
   });
 
+  const updateHabitCallback = async () => {
+    await updateEditedHabit(
+      habitId,
+      updatedHabit.habitName,
+      updatedHabit.habitDescription,
+      updatedHabit.frequency,
+      cancelAllScheduledNotifications,
+      schedulePushNotification
+    );
+
+    // and finally clear the staged changes in mmkvstorage:
+    mmkvStorage.delete("stagedEditHabitChanges");
+  };
+
   useEffect(() => {
     // update card as soon as the value changes from the forms
     if (values.habitName) {
-      setUpdatedHabit(() => {
-        return {
-          ...(values as any),
-        };
-      });
+      const newUpdatedHabit = {
+        ...(values as any),
+      };
+
+      setUpdatedHabit(newUpdatedHabit);
+
+      // save these changes to the stagedEditHabitChanges using the NEW values
+      mmkvStorage.set(
+        "stagedEditHabitChanges",
+        JSON.stringify({
+          habitId: habitId,
+          habitName: newUpdatedHabit.habitName,
+          habitDescription: newUpdatedHabit.habitDescription,
+          habitFrequency: newUpdatedHabit.frequency,
+        })
+      );
     }
   }, [values]);
 
@@ -95,19 +123,7 @@ export default function EditHabitView({
                     },
                     {
                       text: "Yes",
-                      onPress: async () => {
-                        console.log(
-                          "gaadi meri 2 seater. usme laga hai 1 heater. chalata hai usko peter. pete ka tut gaya meter"
-                        );
-                        await updateEditedHabit(
-                          habitId,
-                          updatedHabit.habitName,
-                          updatedHabit.habitDescription,
-                          updatedHabit.frequency,
-                          cancelAllScheduledNotifications,
-                          schedulePushNotification
-                        );
-                      },
+                      onPress: updateHabitCallback,
                     },
                   ],
                   { cancelable: false }
@@ -125,12 +141,13 @@ export default function EditHabitView({
           </TouchableOpacity>
           <Text style={styles.headerText}>Edit Habit</Text>
           <View style={styles.headerRightPlaceholder}>
-            <EdithabitDropdownMenu habitId={habitId} />
+            <EdithabitDropdownMenu
+              habitId={habitId}
+              dismissSheet={dismissSheet}
+            />
           </View>
         </View>
-        <Text style={styles.saveHintText}>
-          Press back button to save changes
-        </Text>
+        <Text style={styles.saveHintText}>Changes Saved Automatically</Text>
 
         <View style={styles.habitPreviewCardContainer}>
           <CardWithoutImage

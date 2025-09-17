@@ -60,8 +60,6 @@ function createStyles(theme: Theme) {
       borderRadius: theme.radius.l,
       alignSelf: "flex-start",
       maxWidth: "100%",
-      borderColor: theme.colors.border,
-      borderWidth: 1,
     },
     messageText: {
       ...theme.text.body,

@@ -16,10 +16,11 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { SheetManager } from "react-native-actions-sheet";
+
 import { TypeAnimation } from "react-native-type-animation";
 import AISuggestionSkeleton from "../AISuggestionSkeleton";
 import EmotionAwareTextMessage from "./EmotionAwareSuggestionSheet";
+import { useSuggestionsSheet } from "@/utils/contexts/SuggestionsSheetContext";
 
 const screenWidth = Dimensions.get("window").width;
 
@@ -40,6 +41,8 @@ const EmotionAwareSuggestionCard: React.FC<EmotionAwareSuggestionCard> = ({
 }) => {
   const theme = useTheme();
   const styles = createStyles(theme);
+
+  const { openSuggestionsSheet } = useSuggestionsSheet();
 
   // EMOTION-AWARE SUGGESTION MESSAGE
 
@@ -85,15 +88,13 @@ const EmotionAwareSuggestionCard: React.FC<EmotionAwareSuggestionCard> = ({
         },
       ]}
       onPress={() => {
-        SheetManager.show("suggestions-sheet", {
-          payload: {
-            CustomComponent: () => {
-              return (
-                <EmotionAwareTextMessage
-                  message={emotionAwareMessage as string}
-                />
-              );
-            },
+        openSuggestionsSheet({
+          CustomComponent: () => {
+            return (
+              <EmotionAwareTextMessage
+                message={emotionAwareMessage as string}
+              />
+            );
           },
         });
       }}

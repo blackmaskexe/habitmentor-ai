@@ -25,3 +25,4 @@ export default mmkvStorage;
 // pointStoreMonth: stores the month number in which the point for "this month" are being stored so far
 // leaderboardProfile: the same stuff stored in firestore (the same stuff, but during the initial creation of their profile + at any updations)
 // leaderboardFriendCount: number of friends that the user has, keeping track of this in the frontend as it's a heavy operation to do in the backend
+// stagedEditHabitChanges: stores an object containing habitName, habitDescription, habitFrequency, habitId (the stuff the user can change for their habits and what not) | or it is null when there are no staged changes

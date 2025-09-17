@@ -5,6 +5,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   ActivityIndicator,
+  Alert,
 } from "react-native";
 import { useTheme } from "@/utils/theme/ThemeContext";
 import { Theme } from "@/utils/theme/themes";
@@ -36,8 +37,10 @@ import {
   handleSendFriendRequest,
 } from "@/utils/firebase/functions/friendsManager";
 import ActivityIndicatorOverlay from "@/utils/components/general/ActivityIndicatorOverlay";
+import { getFunctions, httpsCallable } from "@react-native-firebase/functions";
 
 const db = getFirestore();
+const functionsInstance = getFunctions();
 
 export default function UserProfilePage() {
   const { userId: profileOwnerId } = useLocalSearchParams();
@@ -212,7 +215,22 @@ export default function UserProfilePage() {
           visible: true,
           style: styles.requestSentButton,
           buttonTitle: "User Blocked. Press to Unblock",
-          onPress: null,
+          onPress: async () => {
+            // unblockUser
+            try {
+              const unblockUser = httpsCallable(
+                functionsInstance,
+                "unblockUser"
+              );
+              setIsProcessingRequest(true);
+              await unblockUser({ gettingUnblockedUserId: profileOwnerId });
+              setIsProcessingRequest(false);
+              Alert.alert("Success", "You have unblocked the user");
+            } catch (err) {
+              console.log("Error, could not unblock the user", err);
+              setIsProcessingRequest(false);
+            }
+          },
         };
         break;
       default:

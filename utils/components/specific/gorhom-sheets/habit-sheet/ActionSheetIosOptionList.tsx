@@ -14,16 +14,17 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { SheetManager } from "react-native-actions-sheet";
 
 export default function ActionSheetIosOptionList({
   habitItem,
   onChangeDisplayScreen,
   habitDate,
+  dismiss,
 }: {
   habitItem: HabitObject;
   onChangeDisplayScreen: any;
   habitDate: Date;
+  dismiss: () => void;
 }) {
   const router = useRouter();
   const theme = useTheme();
@@ -58,7 +59,7 @@ export default function ActionSheetIosOptionList({
     );
   };
   return (
-    <ScrollView>
+    <View>
       <View style={styles.sectionHeader}>
         <Text style={styles.sectionHeaderText}>OPTIONS</Text>
       </View>
@@ -71,7 +72,7 @@ export default function ActionSheetIosOptionList({
           "Improve Habit using AI",
           () => {
             // router.replace("/(tabs)/home");
-            SheetManager.hide("habit-sheet");
+            dismiss();
             router.navigate({
               pathname: "/chat",
               params: {
@@ -149,7 +150,7 @@ export default function ActionSheetIosOptionList({
         {/* Divider */}
         <View style={styles.divider} />
       </View>
-    </ScrollView>
+    </View>
   );
 }
 

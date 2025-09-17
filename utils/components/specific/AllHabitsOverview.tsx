@@ -68,46 +68,6 @@ export default function AllHabitsOverview({
             </View>
             <OverviewHabitdropdownMenu habitItem={habitItem} />
           </View>
-
-          // <View style={styles.habitCard}>
-          //   <Ionicons name="today" style={styles.habitIcon} size={24} />
-          //   <View style={styles.habitCardText}>
-          //     <Text style={styles.habitName}>{habitItem.habitName}</Text>
-          //     <Text style={styles.habitDetails}>
-          //       Streak: 12 | 9 days until 21
-          //     </Text>
-          //   </View>
-          //   <View style={styles.habitCompletionDotContainer}>
-          //     {Array(7).map((value, index) => {
-          //       return (
-          //         <View
-          //           key={`${habitItem.habitName}-dot-${index}`}
-          //           style={styles.weekdayDot}
-          //         ></View>
-          //       );
-          //     })}
-          //   </View>
-          //   <TouchableOpacity
-          //     style={styles.habitOptions}
-          //     onPress={() => {
-          //       SheetManager.show("habit-sheet", {
-          //         payload: {
-          //           sheetType: "habitItem",
-          //           habitItem: {
-          //             habit: habitItem,
-          //             habitIndex: index,
-          //           },
-          //         },
-          //       });
-          //     }}
-          //   >
-          //     <Ionicons
-          //       name="ellipsis-vertical-outline"
-          //       size={20}
-          //       color={theme.colors.textSecondary}
-          //     />
-          //   </TouchableOpacity>
-          // </View>
         );
       })}
     </View>

@@ -27,6 +27,7 @@ import { getFunctions, httpsCallable } from "@react-native-firebase/functions";
 import ActivityIndicatorOverlay from "../../general/ActivityIndicatorOverlay";
 import { isFriend } from "@/utils/firebase/firestore/profileManager";
 import { changeFriendCount } from "@/utils/firebase/functions/friendsManager";
+import { useActivityIndicator } from "@/utils/contexts/ActivityIndicatorContext";
 
 const db = getFirestore();
 const functionsInstance = getFunctions();
@@ -41,8 +42,8 @@ export default function ProfileDropdownMenu({
   const styles = createStyles(theme);
   const currentUser = getAuth().currentUser;
 
-  const [isProcessingRequest, setIsProcessingRequest] =
-    useState<boolean>(false);
+  const { showIndicator, hideIndicator } = useActivityIndicator();
+
   const [isUserFriend, setIsUserFriend] = useState(false);
 
   useEffect(() => {
@@ -52,10 +53,6 @@ export default function ProfileDropdownMenu({
     }
     getFriendshipStatus();
   }, [profileId]);
-
-  if (isProcessingRequest) {
-    return <ActivityIndicatorOverlay visible={true} />;
-  }
 
   return (
     <DropdownMenu.DropdownMenuRoot>
@@ -93,16 +90,16 @@ export default function ProfileDropdownMenu({
                 Alert.alert("You cannot report yourself!");
                 return;
               }
-              setIsProcessingRequest(true);
+              showIndicator();
               const reportUser = httpsCallable(functionsInstance, "reportUser");
               await reportUser({ reportedId: profileId });
-              setIsProcessingRequest(false);
+              hideIndicator();
               Alert.alert(
                 "Success",
                 "The user was reported. Our team will investigate this user."
               );
             } catch (err) {
-              setIsProcessingRequest(false);
+              hideIndicator();
               Alert.alert(
                 "Failed",
                 "Something wrong happened, please try to report again later"
@@ -158,10 +155,10 @@ export default function ProfileDropdownMenu({
                 }
               }
 
-              setIsProcessingRequest(true);
+              showIndicator();
               const blockUser = httpsCallable(functionsInstance, "blockUser");
               await blockUser({ gettingBlockedUserId: profileId });
-              setIsProcessingRequest(false);
+              hideIndicator();
               if (isUserFriend) {
                 changeFriendCount("subtract");
               }
@@ -170,7 +167,7 @@ export default function ProfileDropdownMenu({
                 "The user was blocked. They can no longer send friend requests to you."
               );
             } catch (err) {
-              setIsProcessingRequest(false);
+              hideIndicator();
               Alert.alert(
                 "Failed",
                 "Something wrong happened, please try to block again later"
@@ -202,7 +199,7 @@ export default function ProfileDropdownMenu({
                 // this makes sense to do in the backend
                 // because it requires deleting both copies of
                 // references in each other's friends collection
-                setIsProcessingRequest(true);
+                showIndicator();
                 const removeFriend = httpsCallable(
                   functionsInstance,
                   "removeFriend"
@@ -210,12 +207,12 @@ export default function ProfileDropdownMenu({
                 await removeFriend({
                   gettingRemovedUserId: profileId,
                 });
-                setIsProcessingRequest(false);
+                hideIndicator();
                 changeFriendCount("subtract");
                 Alert.alert("Success", "Friend was removed.");
               } catch (err) {
                 console.log("ERROR, COULD NOT REMOVE FRIEND", err);
-                setIsProcessingRequest(false);
+                hideIndicator();
               }
             }}
           >
