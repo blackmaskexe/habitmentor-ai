@@ -73,7 +73,7 @@ jobs:
 
       - name: Run iOS build and submit
         run: |
-          eas build --platform ios --profile production --non-interactive --auto-submit
+          eas build --platform ios --profile production --non-interactive --auto-submit --no-wait
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
           APPLE_APP_ID: ${{ secrets.APPLE_APP_ID }}
