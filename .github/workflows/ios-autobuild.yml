@@ -20,15 +20,17 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
 
-      - name: Clear npm cache
-        run: npm cache clean --force
-
-      - name: Install dependencies with ajv fix
+      - name: Clear npm cache and clean install
         run: |
-          npm install --legacy-peer-deps
-          npm install ajv@^8.0.0 ajv-keywords@^5.0.0 --save
+          npm cache clean --force
+          rm -rf node_modules package-lock.json
+
+      - name: Install dependencies with conflict resolution
+        run: |
+          npm install --legacy-peer-deps --force
+          npm install ajv@^8.0.0 ajv-keywords@^5.0.0 --save --legacy-peer-deps
 
       - name: Verify ajv installation
         run: |

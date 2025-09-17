@@ -56,7 +56,7 @@ const CardWithoutImage: React.FC<CardProps> = ({
       style={[
         styles.card,
         {
-          backgroundColor: theme.colors.altBackground,
+          backgroundColor: theme.colors.surface,
           borderRadius,
           padding,
           height: hasChildren ? "auto" : 90,
@@ -108,7 +108,7 @@ const CardWithoutImage: React.FC<CardProps> = ({
 function createStyles(theme: Theme) {
   return StyleSheet.create({
     card: {
-      shadowColor: "#000",
+      shadowColor: "#6a6a6a",
       shadowOffset: { width: 0, height: 4 },
       shadowOpacity: 0.3,
       shadowRadius: 4,
