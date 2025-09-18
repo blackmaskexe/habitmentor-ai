@@ -45,8 +45,6 @@ const MOOD_STATIC_IMAGES_DARK: { [key in MoodLevel]: any } = {
   4: require("@/assets/animations/mood-rater/dark/happy_static.png"),
 };
 
-const GIF_DURATION = 4000; // 2 seconds
-
 const MoodRaterCard: React.FC<MoodRaterCardProps> = ({
   value,
   onChange,
@@ -56,6 +54,8 @@ const MoodRaterCard: React.FC<MoodRaterCardProps> = ({
 }) => {
   const theme = useTheme();
   const styles = createStyles(theme);
+
+  const GIF_DURATION = theme.theme == "dark" ? 2000 : 4000; // 2 seconds for dark, 4 for light
 
   // State to track which GIF is currently playing
   const [playingGif, setPlayingGif] = useState<MoodLevel | null>(null);
