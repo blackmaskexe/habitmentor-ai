@@ -12,6 +12,8 @@ import MonthlyHabitActivityMonitor from "@/utils/components/specific/MonthlyHabi
 import { getHabitCompletionCollection } from "@/utils/habits/habitDataCollectionHelper";
 import mmkvStorage from "@/utils/mmkvStorage";
 import { Theme } from "@/utils/theme/themes";
+import { getUserGlobalRank } from "@/utils/firebase/firestore/profileManager";
+import { getAuth } from "@react-native-firebase/auth";
 
 export async function calculateLongestStreak() {
   const habitCompletionRecords = await getHabitCompletionCollection();
@@ -33,6 +35,25 @@ const OverviewScreen = () => {
   const styles = createStyles(theme);
 
   const [currentStreak, setCurrentStreak] = useState(0);
+  const [currentRank, setCurrentRank] = useState<number | null>(null);
+
+  function getRankText() {
+    if (currentRank && currentRank != -1) return `${currentRank}`;
+    if (currentRank && currentRank == -1) return "NA";
+    return "...";
+  }
+
+  // useeffect to set the user's global ranking here:
+  // should be an "optimized" algo to do this very time this page loads
+  useEffect(() => {
+    const setUserGlobalRank = async () => {
+      const currentUser = getAuth().currentUser;
+      if (!currentUser) return;
+      const userGlobalRank = await getUserGlobalRank(currentUser.uid);
+      setCurrentRank(userGlobalRank);
+    };
+    setUserGlobalRank();
+  }, []);
 
   useEffect(() => {
     // calculate and set longest streak on mount
@@ -79,7 +100,7 @@ const OverviewScreen = () => {
           </View>
           <View style={styles.headerItem}>
             <Text style={styles.headerTextTop}>Global Rank:</Text>
-            <Text style={styles.headerTextBottom}>1</Text>
+            <Text style={styles.headerTextBottom}>{getRankText()}</Text>
           </View>
           <View style={styles.headerItem}>
             <Text style={styles.headerTextTop}>Total Points</Text>

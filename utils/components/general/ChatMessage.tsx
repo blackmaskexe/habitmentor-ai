@@ -324,13 +324,22 @@ export default function ChatMessages({
             <TextInput
               ref={textInputRef}
               placeholder="Type a message"
-              style={{
-                minHeight: 40,
-                color: theme.colors.text,
-                flexShrink: 1, // prevent pushing the send button out of the screen
-                flexGrow: 1, // allow the text input to grow keeping the send button to the right
-                padding: 10,
-              }}
+              style={[
+                {
+                  minHeight: 40,
+                  color: theme.colors.text,
+                  flexShrink: 1, // prevent pushing the send button out of the screen
+                  flexGrow: 1, // allow the text input to grow keeping the send button to the right
+                  padding: 10,
+                },
+                theme.theme == "dark" && {
+                  // apply a border for
+                  // better visibility in dark modes
+                  borderWidth: 0.5,
+                  borderColor: "white",
+                  borderRadius: 99,
+                },
+              ]}
               placeholderTextColor={"gray"}
               multiline
               value={messageContent}

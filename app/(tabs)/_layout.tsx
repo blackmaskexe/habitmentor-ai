@@ -62,7 +62,7 @@ export default function TabLayout() {
         // },
         headerStyle: {
           backgroundColor: theme.colors.background,
-          borderBottomWidth: 0.5,
+          borderBottomWidth: 0.167,
           borderBottomColor: theme.colors.border,
         },
         headerTintColor: theme.colors.text,
