@@ -24,7 +24,7 @@ export default function LeaderboardLayout() {
           screenOptions={{
             headerShown: true,
             headerStyle: {
-              backgroundColor: theme.colors.tabBar,
+              backgroundColor: theme.colors.background,
             },
             headerTitleStyle: {
               color: theme.colors.text,

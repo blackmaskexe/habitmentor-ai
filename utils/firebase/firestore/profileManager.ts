@@ -278,3 +278,45 @@ export async function isFriend(profileId: string) {
     return false;
   }
 }
+
+export const getUserGlobalRank = async (
+  userId: string
+): Promise<number | null> => {
+  try {
+    // First, get the current user's points
+    const userDoc = await getDoc(doc(db, "users", userId));
+    if (!userDoc.exists()) return null;
+
+    const userData = userDoc.data() as FirebaseUserProfile;
+
+    // Check if user is enrolled in global leaderboard
+    if (!userData.enrolledInGlobal) {
+      return -1; // Return -1 if user is not enrolled in global
+    }
+
+    const userPoints = userData.points || 0;
+
+    // Get all enrolled users and filter client-side to avoid composite index requirement
+    const enrolledUsersQuery = query(
+      collection(db, "users"),
+      where("enrolledInGlobal", "==", true)
+    );
+
+    const enrolledUsersSnapshot = await getDocs(enrolledUsersQuery);
+
+    // Count how many users have MORE points than this user
+    let usersWithHigherPoints = 0;
+    enrolledUsersSnapshot.forEach((docSnapshot: any) => {
+      const data = docSnapshot.data() as FirebaseUserProfile;
+      if ((data.points || 0) > userPoints) {
+        usersWithHigherPoints++;
+      }
+    });
+
+    // User's rank is the number of users with higher points + 1
+    return usersWithHigherPoints + 1;
+  } catch (error) {
+    console.error("Error calculating user rank:", error);
+    return null;
+  }
+};
