@@ -22,8 +22,16 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import firestore from "@react-native-firebase/firestore";
+import {
+  getFirestore,
+  doc,
+  getDoc,
+  updateDoc,
+} from "@react-native-firebase/firestore";
 import * as WebBrowser from "expo-web-browser";
+import { setMmkvUserLeaderboardProfile } from "@/utils/firebase/firestore/profileManager";
+
+const db = getFirestore();
 
 export default function Settings() {
   const openPrivacyPolicyWebsite = async () => {
@@ -214,6 +222,7 @@ export default function Settings() {
                 {
                   text: "Yes",
                   onPress: () => {
+                    setMmkvUserLeaderboardProfile(null);
                     signOut(getAuth())
                       .then(() => {
                         console.log("User Signed Out Successfully!");
@@ -247,17 +256,15 @@ export default function Settings() {
               return;
             }
 
-            const currentUserId = getAuth().currentUser?.uid;
-            const docRef = await firestore()
-              .collection("users")
-              .doc(currentUserId)
-              .get();
+            const userDocRef = doc(db, "users", currentUser.uid);
+            const userDocSnapshot = await getDoc(userDocRef);
 
-            if (docRef && docRef.exists() && docRef.data()!.enrolledInGlobal) {
-              await firestore()
-                .collection("users")
-                .doc(currentUserId)
-                .update({ enrolledInGlobal: false });
+            if (
+              userDocSnapshot &&
+              userDocSnapshot.exists() &&
+              userDocSnapshot.data()!.enrolledInGlobal
+            ) {
+              await updateDoc(userDocRef, { enrolledInGlobal: false });
 
               Alert.alert(
                 "Opted Out",

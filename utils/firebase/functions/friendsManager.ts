@@ -44,7 +44,6 @@ export function getInviteLink(): string | null {
 
 export async function handleSendFriendRequest(profileOwnerId: string) {
   try {
-    console.log("eat it well and mix it up");
     const sendFriendRequest = httpsCallable(
       functionInstance,
       "sendFriendRequest"

@@ -44,20 +44,6 @@ const DailyHabitsView = ({ date }: { date: Date }) => {
 
   const { openHabitSheet } = useHabitSheet();
 
-  // const habitItems: HabitObject[] = useMemo(() => {
-  //   // fetch habits from mmkvStorage
-  //   let loadedHabits: any[] = [];
-  //   const storedHabitsString = mmkvStorage.getString("activeHabits");
-  //   if (storedHabitsString) {
-  //     loadedHabits = JSON.parse(storedHabitsString);
-  //     return loadedHabits;
-  //   } else {
-  //     console.log("Unable to load the habits from mmkv");
-  //     // throw new Error("Not able to fetch active habits from mmkvStorage");
-  //     return [];
-  //   }
-  // }, []);
-
   const loadHabits = function () {
     // fetch habits from mmkvStorage
     let loadedHabits: HabitObject[] = [];

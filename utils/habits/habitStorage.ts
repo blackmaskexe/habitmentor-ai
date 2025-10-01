@@ -142,7 +142,6 @@ export async function updateEditedHabit(
   }
 
   if (didFrequencyChange) {
-    console.log("BUT ON THURSDAYYYYY");
     // we will turn off and on notifications
     // turning off internall cancel all notifications
     // turning back on will pick up the latest frequency to schedule the notifications on

@@ -22,8 +22,6 @@ import { Filter } from "bad-words";
 const filter = new Filter();
 const db = getFirestore();
 
-// const usersCollection = firestore().collection("users");
-
 // ----------------------------------------
 // FIRESTORE USER ID STORING IN MMKVSTORAGE
 // ----------------------------------------
@@ -45,8 +43,13 @@ export function getMmkvUserLeaderboardProfile(): FirebaseUserProfile | null {
 }
 
 export function setMmkvUserLeaderboardProfile(
-  userProfile: FirebaseUserProfile
+  userProfile: FirebaseUserProfile | null
 ) {
+  // delete existing leaderboard profile in storage
+  if (userProfile == null) {
+    mmkvStorage.delete("leaderboardProfile");
+    return;
+  }
   mmkvStorage.set("leaderboardProfile", JSON.stringify(userProfile));
 }
 
@@ -126,13 +129,11 @@ export async function createProfile(
   avatarIcon: string
 ): Promise<boolean> {
   try {
-    console.log("I want to be your vaccum meter");
     const currentUser = getAuth().currentUser;
     if (!currentUser) {
       throw new Error("NOT SIGNED INTO FIREBASE AUTH");
     }
 
-    // const userDocRef = usersCollection.doc(currentUser.uid);
     const userDocRef = doc(db, "users", currentUser.uid);
     const docSnapshot = await getDoc(userDocRef);
 
@@ -152,11 +153,8 @@ export async function createProfile(
       enrolledInGlobal: false,
     };
 
-    // await userDocRef.set(firebaseUserProfile);
-    await setDoc(doc(db, "users", currentUser.uid), firebaseUserProfile);
+    await setDoc(userDocRef, firebaseUserProfile);
     setMmkvUserLeaderboardProfile(firebaseUserProfile);
-
-    console.log("I want to be your ford cortina");
 
     return true; // returning true for profile created
   } catch (err) {
@@ -171,13 +169,11 @@ export async function updateProfile(nickname: string, avatarIcon: string) {
     if (!currentUser) {
       return;
     }
-    // await usersCollection.doc(currentUser?.uid).update({
-    //   nickname: nickname,
-    //   avatarIcon: avatarIcon,
-    // });
-    await updateDoc(doc(db, "users", currentUser.uid), {
-      nickname: nickname,
-      avatarIcon: avatarIcon,
+
+    const userDocRef = doc(db, "users", currentUser.uid);
+    await updateDoc(userDocRef, {
+      nickname,
+      avatarIcon,
     });
   } catch (err) {
     console.log("CRITICAL ERROR: FAILED TO UPDATE FIREBASE PROFILE", err);
@@ -207,15 +203,19 @@ export async function getUserProfile(
   userId: string
 ): Promise<FirebaseUserProfile> {
   try {
-    // const userDocSnapshot = await usersCollection.doc(userId).get();
-    const userDocSnapshot = await getDoc(doc(db, "users", userId));
+    const userDocRef = doc(db, "users", userId);
+    const userDocSnapshot = await getDoc(userDocRef);
+
     if (userDocSnapshot && userDocSnapshot.exists()) {
       const userProfile = userDocSnapshot.data() as FirebaseUserProfile;
       return userProfile;
-    } else throw new Error("User does not exist");
+    } else {
+      throw new Error("User does not exist");
+    }
   } catch (err) {
     console.log("CRITICAL ERROR, COULD NOT GET USER PROFILE", err);
     return {
+      error: true,
       nickname: "Profile not found",
       points: 0,
       pointsThisMonth: 0,
@@ -229,15 +229,10 @@ export async function getUserProfile(
 export async function syncDataToFirebaseProfile() {
   try {
     const currentUser = getAuth().currentUser;
-    if (!currentUser) return; // early return if not auth
+    if (!currentUser) return;
 
-    // await usersCollection.doc(currentUser.uid).update({
-    //   points: getPoints(),
-    //   streak: await calculateLongestStreak(),
-    //   totalHabitsCompleted: getTotalHabitsCompleted(),
-    // });
-
-    await updateDoc(doc(db, "users", currentUser.uid), {
+    const userDocRef = doc(db, "users", currentUser.uid);
+    await updateDoc(userDocRef, {
       points: getPoints(),
       pointsThisMonth: getPointsThisMonth(),
       streak: await calculateLongestStreak(),
@@ -256,49 +251,55 @@ export async function isFriend(profileId: string) {
     if (!currentUser) throw new Error("Unauthenticated");
     if (!profileId) throw new Error("ProfileId not generated yet");
 
-    // first we look in the user's friends list, and see if that document exists:
-    const friendProfileRef = await getDoc(
-      doc(db, "users", currentUser.uid, "friends", profileId)
+    const friendDocRef = doc(
+      db,
+      "users",
+      currentUser.uid,
+      "friends",
+      profileId
     );
-    console.log("ding ding ding", friendProfileRef);
-    if (friendProfileRef && friendProfileRef.exists()) {
-      console.log("I wreched here");
-      const friendDocument = friendProfileRef.data();
+    const friendDocSnapshot = await getDoc(friendDocRef);
+
+    if (friendDocSnapshot && friendDocSnapshot.exists()) {
+      const friendDocument = friendDocSnapshot.data();
       if (
         friendDocument &&
         friendDocument.status &&
-        friendDocument.status == "accepted"
-      )
+        friendDocument.status === "accepted"
+      ) {
         return true;
+      }
     }
 
-    return false; // return false in all other cases
+    return false;
   } catch (err) {
     console.log("ERROR, COULD NOT CHECK FRIENDSHIP STATUS");
     return false;
   }
 }
 
-export const getUserGlobalRank = async (
+export async function getUserGlobalRank(
   userId: string
-): Promise<number | null> => {
+): Promise<number | null> {
   try {
-    // First, get the current user's points
-    const userDoc = await getDoc(doc(db, "users", userId));
-    if (!userDoc.exists()) return null;
+    const userDocRef = doc(db, "users", userId);
+    const userDocSnapshot = await getDoc(userDocRef);
 
-    const userData = userDoc.data() as FirebaseUserProfile;
+    if (!userDocSnapshot.exists()) return null;
+
+    const userData = userDocSnapshot.data() as FirebaseUserProfile;
 
     // Check if user is enrolled in global leaderboard
     if (!userData.enrolledInGlobal) {
-      return -1; // Return -1 if user is not enrolled in global
+      return -1;
     }
 
     const userPoints = userData.points || 0;
 
     // Get all enrolled users and filter client-side to avoid composite index requirement
+    const usersCollectionRef = collection(db, "users");
     const enrolledUsersQuery = query(
-      collection(db, "users"),
+      usersCollectionRef,
       where("enrolledInGlobal", "==", true)
     );
 
@@ -319,4 +320,4 @@ export const getUserGlobalRank = async (
     console.error("Error calculating user rank:", error);
     return null;
   }
-};
+}

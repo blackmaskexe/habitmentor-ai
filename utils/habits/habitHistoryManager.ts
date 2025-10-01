@@ -85,11 +85,8 @@ export async function getOrCreateHabitCompletionRecord(habitId: string) {
     .query(Q.where("habit_id", habitId))
     .fetch();
 
-  console.log("You're too sweet for me", existingRecord);
-
   if (existingRecord.length > 0) {
     // if there is a record with the asssociated habit_id
-    console.log("my coffee bed at three", existingRecord[0]);
     return existingRecord[0];
   } else {
     const allRecords = await habitCompletionCollection.query().fetch();

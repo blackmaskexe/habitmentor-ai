@@ -67,7 +67,6 @@ export const HabitSheetModal = forwardRef<HabitSheetRef>((props, ref) => {
           // maybe log or animate something
           // then optionally close
           // But the pressBehavior="close" handles the closing automatically
-          // console.log("Im a chhuchhundur", payload);
           // payload?.backdropCloseCallback();
         }}
       />
@@ -116,7 +115,6 @@ export const HabitSheetModal = forwardRef<HabitSheetRef>((props, ref) => {
           didUserEditHabit = false;
         } else {
           didUserEditHabit = true;
-          console.log("ding dongiyee, sahurriyeee", oldHabit, editedHabit);
         }
 
         if (editedHabitStagedChanges && didUserEditHabit) {

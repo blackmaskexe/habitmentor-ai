@@ -3,18 +3,29 @@ import { Theme } from "@/utils/theme/themes";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useState, useEffect } from "react";
-import { Share, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  Alert,
+  Share,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import * as DropdownMenu from "./dropdown-menu";
 import { getInviteLink } from "@/utils/firebase/functions/friendsManager";
 import * as Haptics from "expo-haptics";
-import { getAuth } from "@react-native-firebase/auth";
+import { getAuth, signOut } from "@react-native-firebase/auth";
 import {
   collection,
+  doc,
+  getDoc,
   getFirestore,
   onSnapshot,
   query,
+  updateDoc,
   where,
 } from "@react-native-firebase/firestore";
+import { setMmkvUserLeaderboardProfile } from "@/utils/firebase/firestore/profileManager";
 
 const db = getFirestore();
 
@@ -153,6 +164,57 @@ export default function LeaderboardDropdownMenu({}: {}) {
           )}
           <DropdownMenu.DropdownMenuItemTitle>
             See Friend Requests
+          </DropdownMenu.DropdownMenuItemTitle>
+        </DropdownMenu.DropdownMenuItem>
+
+        <DropdownMenu.DropdownMenuItem
+          key="log-out"
+          onSelect={() => {
+            if (!getAuth().currentUser) {
+              Alert.alert("Failed", "You are already logged out");
+              return;
+            }
+            Alert.alert(
+              `Logging Out`,
+              "You will have to log back in to use leaderboards",
+              [
+                {
+                  text: "Cancel",
+                  onPress: () => console.log("Cancel Pressed"),
+                  style: "cancel",
+                },
+                {
+                  text: "Yes",
+                  onPress: () => {
+                    setMmkvUserLeaderboardProfile(null);
+                    signOut(getAuth())
+                      .then(() => {
+                        console.log("User Signed Out Successfully!");
+                        Alert.alert("You have been logged out");
+                      })
+                      .catch((err) => {
+                        console.log(err);
+                      });
+                  },
+                },
+              ],
+              { cancelable: false }
+            );
+          }}
+        >
+          <DropdownMenu.DropdownMenuItemIcon
+            ios={{
+              name: "rectangle.portrait.and.arrow.right",
+              pointSize: 24,
+              hierarchicalColor: {
+                dark: theme.colors.error,
+                light: theme.colors.error,
+              },
+            }}
+          />
+
+          <DropdownMenu.DropdownMenuItemTitle>
+            Log Out
           </DropdownMenu.DropdownMenuItemTitle>
         </DropdownMenu.DropdownMenuItem>
       </DropdownMenu.DropdownMenuContent>

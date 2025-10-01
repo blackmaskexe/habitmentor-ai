@@ -1,6 +1,5 @@
 import CardWithoutImage from "@/utils/components/general/CardWithoutImage";
 import CTAButton from "@/utils/components/general/CTAButton";
-import { useLoginSheet } from "@/utils/contexts/LoginSheetContext";
 import {
   createProfile,
   validateFirestoreNickname,
@@ -9,11 +8,13 @@ import { LEADERBOARD_AVATAR_NAMES } from "@/utils/misc/leaderboardAvatars";
 import { useTheme } from "@/utils/theme/ThemeContext";
 import { Theme } from "@/utils/theme/themes";
 import { Ionicons } from "@expo/vector-icons";
+import { BottomSheetTextInput } from "@gorhom/bottom-sheet";
 import { useState } from "react";
 import {
   Alert,
   FlatList,
   Keyboard,
+  KeyboardAvoidingView,
   StyleSheet,
   Text,
   TextInput,
@@ -35,7 +36,7 @@ export default function LoginRegisterProfileView({
   const [validationWarnings, setValidationWarnings] = useState<string[]>([]);
 
   return (
-    <View style={styles.profileContainer}>
+    <KeyboardAvoidingView style={styles.profileContainer}>
       {/* --- 1. Profile Preview Card --- */}
       <Text style={styles.profileTitleText}>Set Your Leaderboard Profile</Text>
       <CardWithoutImage
@@ -53,7 +54,7 @@ export default function LoginRegisterProfileView({
         {/* --- 2. Nickname Input --- */}
         <View style={styles.inputGroup}>
           <Text style={styles.label}>Nickname</Text>
-          <TextInput
+          <BottomSheetTextInput
             style={styles.input}
             value={nickname}
             onChangeText={setNickname}
@@ -145,7 +146,7 @@ export default function LoginRegisterProfileView({
           buttonHeight={45}
         />
       </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 }
 

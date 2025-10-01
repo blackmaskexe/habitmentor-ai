@@ -38,7 +38,6 @@ export async function runHabitDataCollection() {
 
   try {
     if (shouldCollectData()) {
-      console.log("I heard you're married girl");
       // STREAK COLLECITON, DAYS MISSED CALCULATION, ETC:
 
       // add names of habits missed in the past 2 weeks in the daily metadata records (not normal daily habit history record)
@@ -77,15 +76,12 @@ export async function runHabitDataCollection() {
               : daysMissedSinceLast;
 
           await habitCompletion.incrementTimesMissed(actualMissedDays);
-          console.log("not silently crashing", console.log(habitCompletion));
 
           await database.write(async () => {
             await habitCompletion.update((record) => {
               record.prevDaysSinceLast = daysMissedSinceLast; // update the function with the latest days since
             });
           });
-
-          console.log("sliently crashing");
         }
       }
 
@@ -217,17 +213,11 @@ export function getMissedHabitIdsOnDate(date: Date): string[] {
 }
 
 function daysUserMissedHabitSinceLastCompletion(habitId: string) {
-  console.log("Every angel is terrifying", habitId);
   const entries = getHabitHistoryEntries(); // objects that contain date of completion in them
-  console.log("We're annihilated");
-
-  console.log("I CAN'T KEEP MY EYES OFF THE SCREEN", habitId, entries);
 
   for (let i = entries.length - 1; i >= 0; i--) {
     // looping in reverse (new records are later in array), finding the last time the user completed that habit:
     if (entries[i].habitId == habitId) {
-      console.log("I only imagined in my dreams before");
-
       // found a habit being done
 
       const lastHabitCompletionDate = getDateFromFormattedDate(

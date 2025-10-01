@@ -7,4 +7,5 @@ export type FirebaseUserProfile = {
   enrolledInGlobal: boolean;
   totalHabitsCompleted?: number;
   streak?: number;
+  error?: boolean;
 };
