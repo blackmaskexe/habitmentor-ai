@@ -251,7 +251,13 @@ export async function isFriend(profileId: string) {
     if (!currentUser) throw new Error("Unauthenticated");
     if (!profileId) throw new Error("ProfileId not generated yet");
 
-    const friendDocRef = doc(db, "users", currentUser.uid, "friends", profileId);
+    const friendDocRef = doc(
+      db,
+      "users",
+      currentUser.uid,
+      "friends",
+      profileId
+    );
     const friendDocSnapshot = await getDoc(friendDocRef);
 
     if (friendDocSnapshot && friendDocSnapshot.exists()) {
@@ -301,7 +307,7 @@ export async function getUserGlobalRank(
 
     // Count how many users have MORE points than this user
     let usersWithHigherPoints = 0;
-    enrolledUsersSnapshot.forEach((docSnapshot) => {
+    enrolledUsersSnapshot.forEach((docSnapshot: any) => {
       const data = docSnapshot.data() as FirebaseUserProfile;
       if ((data.points || 0) > userPoints) {
         usersWithHigherPoints++;

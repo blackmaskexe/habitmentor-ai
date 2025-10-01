@@ -2,7 +2,7 @@
   "expo": {
     "name": "HabitMentor AI",
     "slug": "habitmentor-ai",
-    "version": "1.9.2",
+    "version": "2.0.1",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "habitmentor-ai",
