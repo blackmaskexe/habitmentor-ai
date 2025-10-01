@@ -45,8 +45,13 @@ export function getMmkvUserLeaderboardProfile(): FirebaseUserProfile | null {
 }
 
 export function setMmkvUserLeaderboardProfile(
-  userProfile: FirebaseUserProfile
+  userProfile: FirebaseUserProfile | null
 ) {
+  // delete existing leaderboard profile in storage
+  if (userProfile == null) {
+    mmkvStorage.delete("leaderboardProfile");
+    return;
+  }
   mmkvStorage.set("leaderboardProfile", JSON.stringify(userProfile));
 }
 
@@ -213,6 +218,7 @@ export async function getUserProfile(
   } catch (err) {
     console.log("CRITICAL ERROR, COULD NOT GET USER PROFILE", err);
     return {
+      error: true,
       nickname: "Profile not found",
       points: 0,
       pointsThisMonth: 0,

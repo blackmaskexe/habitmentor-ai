@@ -24,6 +24,7 @@ import {
 } from "react-native";
 import firestore from "@react-native-firebase/firestore";
 import * as WebBrowser from "expo-web-browser";
+import { setMmkvUserLeaderboardProfile } from "@/utils/firebase/firestore/profileManager";
 
 export default function Settings() {
   const openPrivacyPolicyWebsite = async () => {
@@ -214,6 +215,7 @@ export default function Settings() {
                 {
                   text: "Yes",
                   onPress: () => {
+                    setMmkvUserLeaderboardProfile(null);
                     signOut(getAuth())
                       .then(() => {
                         console.log("User Signed Out Successfully!");

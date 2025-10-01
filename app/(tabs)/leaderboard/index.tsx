@@ -15,6 +15,7 @@ import { getAuth, onAuthStateChanged } from "@react-native-firebase/auth";
 import {
   getMmkvUserLeaderboardProfile,
   getUserProfile,
+  setMmkvUserLeaderboardProfile,
 } from "@/utils/firebase/firestore/profileManager";
 import { FirebaseUserProfile } from "@/utils/firebase/types";
 import mmkvStorage from "@/utils/mmkvStorage";
@@ -37,18 +38,30 @@ const FirstRoute = () => {
     useCallback(() => {
       // This listener handles the user's authentication state.
       const authSubscriber = onAuthStateChanged(getAuth(), async (user) => {
+        console.log("these khudals aint loyal", user);
         if (user) {
           // If the user is authenticated, we try to get their profile.
           // First, check local storage for a quick load.
           // If it's not there, fetch from Firestore as a fallback.
-          const profile =
-            getMmkvUserLeaderboardProfile() ?? (await getUserProfile(user.uid));
+          const profile = getMmkvUserLeaderboardProfile();
 
-          // Set the profile state. If no profile was found, this will be null.
-          setUserProfile(profile);
-          // If no profile was found even for a logged-in user, they need to create one.
           if (!profile) {
-            openLoginSheet();
+            // the profile in mmkvstorage is null, doesn't translate to user not having
+            // a profile at all, so we check for that:
+            // if the profile is null, we check firebase if there exists a profile
+            const fetchedProfile = await getUserProfile(user.uid);
+            if (fetchedProfile.error) {
+              // this is the case where the user does NOT have a profile,
+              // and they should register for one:
+              setUserProfile(null);
+              openLoginSheet();
+            } else {
+              setUserProfile(fetchedProfile);
+              setMmkvUserLeaderboardProfile(fetchedProfile);
+            }
+          } else {
+            // Profile exists in MMKV, use it
+            setUserProfile(profile);
           }
         } else {
           // If user is null, they are signed out. Clear the profile and show the login sheet.

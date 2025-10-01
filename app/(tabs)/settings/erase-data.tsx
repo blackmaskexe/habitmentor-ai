@@ -14,6 +14,7 @@ import {
 import functions from "@react-native-firebase/functions";
 import { getAuth, signOut } from "@react-native-firebase/auth";
 import { getFunctions, httpsCallable } from "@react-native-firebase/functions";
+import mmkvStorage from "@/utils/mmkvStorage";
 
 const functionInstance = getFunctions();
 
@@ -132,6 +133,7 @@ export default function EraseData() {
                       functionInstance,
                       "deleteUserDataAndAccount"
                     );
+                    mmkvStorage.delete("leaderboardProfile");
                     router.replace("/(tabs)/home");
                     await deleteUserFunction();
                     signOut(getAuth());
