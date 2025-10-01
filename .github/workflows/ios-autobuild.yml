@@ -1,4 +1,4 @@
-name: iOS Auto Build and Deploy
+name: Auto Version Tagging
 
 on:
   push:
@@ -8,34 +8,14 @@ on:
       - main
 
 jobs:
-  build-and-deploy:
-    runs-on: macos-latest
+  create-tag:
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           persist-credentials: false
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-
-      - name: Clear npm cache and clean install
-        run: |
-          npm cache clean --force
-          rm -rf node_modules package-lock.json
-
-      - name: Install dependencies with conflict resolution
-        run: |
-          npm install --legacy-peer-deps --force
-          npm install ajv@^8.0.0 ajv-keywords@^5.0.0 --save --legacy-peer-deps
-
-      - name: Verify ajv installation
-        run: |
-          node -e "console.log('ajv version:', require('ajv/package.json').version)"
-          node -e "console.log('ajv-keywords version:', require('ajv-keywords/package.json').version)"
 
       - name: Get new version
         id: get_version
@@ -62,21 +42,3 @@ jobs:
           git remote set-url origin https://x-access-token:${GH_PAT}@github.com/${{ github.repository }}
           git tag "v${VERSION}"
           git push origin "v${VERSION}"
-
-      - name: Install EAS CLI
-        run: npm install -g eas-cli
-
-      - name: Authenticate with Expo
-        run: eas whoami
-        env:
-          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
-
-      - name: Run iOS build and submit
-        run: |
-          eas build --platform ios --profile production --non-interactive --auto-submit --no-wait
-        env:
-          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
-          APPLE_APP_ID: ${{ secrets.APPLE_APP_ID }}
-          APPLE_API_KEY: ${{ secrets.APPLE_API_KEY }}
-          APPLE_API_ISSUER: ${{ secrets.APPLE_API_ISSUER }}
-          APPLE_API_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
