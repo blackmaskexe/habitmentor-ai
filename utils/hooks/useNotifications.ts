@@ -68,10 +68,6 @@ export function useNotifications() {
     console.log("currently scheduled notis:", allScheduledNotis);
     // checking if there is already an identifier attached to that habit, cancel the previous one first:
     if (habit.notificationIds) {
-      console.log(
-        habit.notificationIds,
-        "bro totally was hiding his other family as well as the notificaitonId"
-      );
       for (const notificationId of habit.notificationIds) {
         // cancel all of the scheduled notifications within the notificationIds array to cancel for all (selected) days of the week
         await cancelScheduledNotificationById(notificationId);
@@ -106,11 +102,6 @@ export function useNotifications() {
       updateHabitNotificationId(habit.id, notificationIdArray);
       // updateHabitNotificationTime(habit.id, getFormattedTime(time)); did this in th reminder view component itself
     }
-
-    console.log(
-      "GUESS GUESS GUESS GUESS, YOUR NOTIFICATION IS SCHEDULED FOR ",
-      time
-    );
   }
 
   async function registerForPushNotificationsAsync() {
@@ -153,14 +144,9 @@ export function useNotifications() {
             projectId,
           })
         ).data;
-        console.log(token);
       } catch (e) {
         token = `${e}`;
       }
-    } else {
-      console.log(
-        "shouldn't use simulator for handling expo token notifications, local notifications are fine"
-      );
     }
 
     return token;

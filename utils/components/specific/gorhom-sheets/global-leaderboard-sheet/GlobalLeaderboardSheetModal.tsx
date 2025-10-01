@@ -36,7 +36,6 @@ export const GlobalLeaderboardSheetModal =
     const bottomSheetRef = useRef<BottomSheetModal>(null);
     const theme = useTheme();
     const styles = createStyles(theme);
-    const currentUser = getAuth().currentUser;
 
     // Expose methods to the parent component
     useImperativeHandle(ref, () => ({
@@ -62,8 +61,9 @@ export const GlobalLeaderboardSheetModal =
     const pillColor = colorScheme === "dark" ? "#424242" : "#DDDDDD";
 
     const handleEnrollInGlobal = async () => {
-      if (!currentUser) return;
+      const currentUser = getAuth().currentUser;
 
+      if (!currentUser) return;
       try {
         await firestore()
           .collection("users")

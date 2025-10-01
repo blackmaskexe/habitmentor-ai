@@ -86,7 +86,6 @@ export function addMissedHabitsThisWeekToMetadata() {
   }
 
   for (const date of datesSoFar) {
-    console.log("apun run kar raha hu taipshi taipshi");
     const dateRecord: DailyRecordEntry = {
       ...existingDailyRecords[getFormattedDate(date)],
     };

@@ -94,9 +94,6 @@ export default function EditHabitView({
         <View style={styles.headerBar}>
           <TouchableOpacity
             onPress={() => {
-              console.log(
-                "brake ki jagah accelerator dabau, agle din tv par aau"
-              );
               const oldHabit = getHabitObjectFromId(habitId)!;
               // checking if there are even changes in the habit in the menu:
               let didUserEditHabit = null;

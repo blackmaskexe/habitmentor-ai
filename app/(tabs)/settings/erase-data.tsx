@@ -84,7 +84,6 @@ export default function EraseData() {
                     // erasing all habits local data
                     router.replace("/(onboarding)");
                     await eraseAllHabitData();
-                    console.log("Delete local habits");
                   },
                 },
               ]
@@ -136,8 +135,6 @@ export default function EraseData() {
                     router.replace("/(tabs)/home");
                     await deleteUserFunction();
                     signOut(getAuth());
-
-                    console.log("Delete leaderboard profile");
                   },
                 },
               ]

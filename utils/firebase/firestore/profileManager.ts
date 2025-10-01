@@ -126,7 +126,6 @@ export async function createProfile(
   avatarIcon: string
 ): Promise<boolean> {
   try {
-    console.log("I want to be your vaccum meter");
     const currentUser = getAuth().currentUser;
     if (!currentUser) {
       throw new Error("NOT SIGNED INTO FIREBASE AUTH");
@@ -155,8 +154,6 @@ export async function createProfile(
     // await userDocRef.set(firebaseUserProfile);
     await setDoc(doc(db, "users", currentUser.uid), firebaseUserProfile);
     setMmkvUserLeaderboardProfile(firebaseUserProfile);
-
-    console.log("I want to be your ford cortina");
 
     return true; // returning true for profile created
   } catch (err) {
@@ -260,9 +257,7 @@ export async function isFriend(profileId: string) {
     const friendProfileRef = await getDoc(
       doc(db, "users", currentUser.uid, "friends", profileId)
     );
-    console.log("ding ding ding", friendProfileRef);
     if (friendProfileRef && friendProfileRef.exists()) {
-      console.log("I wreched here");
       const friendDocument = friendProfileRef.data();
       if (
         friendDocument &&
