@@ -99,6 +99,7 @@ export const LoginSheetModal = forwardRef<LoginSheetRef>((props, ref) => {
       handleIndicatorStyle={{
         backgroundColor: pillColor,
       }}
+      keyboardBehavior="interactive"
     >
       <BottomSheetView style={styles.bottomSheetContainer}>
         <View style={styles.headerContainer}>
