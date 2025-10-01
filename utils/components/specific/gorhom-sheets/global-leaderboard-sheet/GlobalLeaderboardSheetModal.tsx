@@ -22,8 +22,13 @@ import { useTheme } from "@/utils/theme/ThemeContext";
 import { Theme } from "@/utils/theme/themes";
 import { Ionicons } from "@expo/vector-icons";
 import { getAuth } from "@react-native-firebase/auth";
-import firestore from "@react-native-firebase/firestore";
-import NavigationPill from "../../../general/NavigationPill";
+import {
+  getFirestore,
+  doc,
+  updateDoc,
+} from "@react-native-firebase/firestore";
+
+const db = getFirestore();
 
 // Define the component reference type
 export type GlobalLeaderboardSheetRef = {
@@ -64,11 +69,10 @@ export const GlobalLeaderboardSheetModal =
       const currentUser = getAuth().currentUser;
 
       if (!currentUser) return;
+
       try {
-        await firestore()
-          .collection("users")
-          .doc(currentUser.uid)
-          .update({ enrolledInGlobal: true });
+        const userDocRef = doc(db, "users", currentUser.uid);
+        await updateDoc(userDocRef, { enrolledInGlobal: true });
 
         // Dismiss the modal
         bottomSheetRef.current?.dismiss();

@@ -38,7 +38,6 @@ const FirstRoute = () => {
     useCallback(() => {
       // This listener handles the user's authentication state.
       const authSubscriber = onAuthStateChanged(getAuth(), async (user) => {
-        console.log("these khudals aint loyal", user);
         if (user) {
           // If the user is authenticated, we try to get their profile.
           // First, check local storage for a quick load.
