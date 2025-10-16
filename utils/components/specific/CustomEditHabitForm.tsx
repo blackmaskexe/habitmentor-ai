@@ -3,13 +3,8 @@ import { Theme } from "@/utils/theme/themes";
 import { FormValuesType } from "@/utils/types";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useState } from "react";
-import {
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { BottomSheetTextInput } from "@gorhom/bottom-sheet";
 
 type FormField = {
   label: string;
@@ -50,12 +45,12 @@ export default function CustomEditHabitForm({
             </Text>
 
             {isEditing ? (
-              <TextInput
+              <BottomSheetTextInput
                 style={styles.input}
                 placeholder={field.placeholder}
                 placeholderTextColor={theme.colors.placeholder}
                 value={value}
-                onChangeText={(text) => onValueChange(field.key, text)}
+                onChangeText={(text: string) => onValueChange(field.key, text)}
                 secureTextEntry={field.secureTextEntry}
                 autoFocus
                 onBlur={() => setEditingFieldKey(null)}

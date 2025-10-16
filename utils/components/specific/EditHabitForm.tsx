@@ -1,6 +1,5 @@
 import {
   Dimensions,
-  KeyboardAvoidingView,
   Platform,
   ScrollView,
   StyleSheet,
@@ -64,34 +63,28 @@ export default function EditHabitForm({
   return (
     <View style={styles.container}>
       <View style={styles.modalContainer}>
-        <KeyboardAvoidingView
-          behavior={Platform.OS === "ios" ? "padding" : "height"}
-          style={{ flex: 1 }}
-          keyboardVerticalOffset={0}
+        <ScrollView
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
         >
-          <ScrollView
-            keyboardShouldPersistTaps="handled"
-            showsVerticalScrollIndicator={false}
-          >
-            <CustomEditHabitForm
-              fields={fields}
-              onValueChange={(key, value) => {
-                setValues((prev: any) => ({ ...prev, [key]: value }));
-              }}
-              values={values}
-            />
+          <CustomEditHabitForm
+            fields={fields}
+            onValueChange={(key, value) => {
+              setValues((prev: any) => ({ ...prev, [key]: value }));
+            }}
+            values={values}
+          />
 
-            <View style={styles.spaceSmall} />
-            <WeekdayFrequencyPicker
-              initialFrequency={values.frequency}
-              onChangeValues={setValues}
-              values={values}
-            />
+          <View style={styles.spaceSmall} />
+          <WeekdayFrequencyPicker
+            initialFrequency={values.frequency}
+            onChangeValues={setValues}
+            values={values}
+          />
 
-            <Text style={styles.formLabel}></Text>
-            {/* <WeekdayFrequencyPicker /> */}
-          </ScrollView>
-        </KeyboardAvoidingView>
+          <Text style={styles.formLabel}></Text>
+          {/* <WeekdayFrequencyPicker /> */}
+        </ScrollView>
       </View>
     </View>
   );
