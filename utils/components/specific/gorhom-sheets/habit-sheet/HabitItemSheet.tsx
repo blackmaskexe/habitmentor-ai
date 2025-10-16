@@ -6,7 +6,7 @@ import mmkvStorage from "@/utils/mmkvStorage";
 import { useTheme } from "@/utils/theme/ThemeContext";
 import { Theme } from "@/utils/theme/themes";
 import { useEffect, useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, KeyboardAvoidingView, Platform } from "react-native";
 import CardWithoutImage from "../../../general/CardWithoutImage";
 import EditHabitView from "../../EditHabitView";
 import ReminderView from "../../ReminderView";
@@ -67,7 +67,11 @@ export default function HabitItemSheet({
   }, []);
 
   return (
-    <View style={styles.habitItemSheetContainer}>
+    <KeyboardAvoidingView
+      style={styles.habitItemSheetContainer}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      keyboardVerticalOffset={0}
+    >
       {displayScreen == "main" ? (
         <>
           <CardWithoutImage
@@ -107,15 +111,15 @@ export default function HabitItemSheet({
           dismissSheet={dismiss}
         />
       ) : null}
-    </View>
+    </KeyboardAvoidingView>
   );
 }
 
 function createStyles(theme: Theme) {
   return StyleSheet.create({
     habitItemSheetContainer: {
+      flex: 1,
       marginVertical: theme.spacing.s,
-      // padding: theme.spacing.m,
       borderRadius: theme.radius.m,
       backgroundColor: theme.colors.background,
       marginBottom: theme.spacing.l,

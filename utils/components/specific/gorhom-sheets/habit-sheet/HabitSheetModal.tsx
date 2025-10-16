@@ -4,6 +4,7 @@ import {
   useImperativeHandle,
   useRef,
   useState,
+  useEffect,
 } from "react";
 import { StyleSheet, useColorScheme, View, Alert } from "react-native";
 import {
@@ -13,6 +14,7 @@ import {
   BottomSheetView,
 } from "@gorhom/bottom-sheet";
 import { useTheme } from "@/utils/theme/ThemeContext";
+import { useKeyboardVisible } from "@/utils/hooks/useKeyboardVisible";
 
 import HabitItemSheet from "./HabitItemSheet";
 import { HabitObject } from "@/utils/types";
@@ -35,6 +37,7 @@ export const HabitSheetModal = forwardRef<HabitSheetRef>((props, ref) => {
   const bottomSheetRef = useRef<BottomSheetModal>(null);
   const theme = useTheme();
   const styles = createStyles(theme);
+  const isKeyboardVisible = useKeyboardVisible();
   const [payload, setPayload] = useState<{
     habit: HabitObject;
     habitDate: Date;
@@ -54,6 +57,17 @@ export const HabitSheetModal = forwardRef<HabitSheetRef>((props, ref) => {
 
   const { cancelAllScheduledNotifications, schedulePushNotification } =
     useNotifications();
+
+  // When keyboard closes, snap sheet back to 60%
+  useEffect(() => {
+    if (!isKeyboardVisible) {
+      // Small delay to allow keyboard to fully close
+      const timeoutId = setTimeout(() => {
+        bottomSheetRef.current?.snapToIndex(0);
+      }, 100);
+      return () => clearTimeout(timeoutId);
+    }
+  }, [isKeyboardVisible]);
 
   const renderBackdrop = useCallback(
     (backdropProps: BottomSheetBackdropProps) => (
@@ -82,6 +96,7 @@ export const HabitSheetModal = forwardRef<HabitSheetRef>((props, ref) => {
       ref={bottomSheetRef}
       snapPoints={["60%"]}
       enableDynamicSizing={true}
+      keyboardBehavior="interactive"
       backgroundStyle={{
         backgroundColor: theme.colors.background,
         borderRadius: 16,
