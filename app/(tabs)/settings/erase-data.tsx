@@ -180,17 +180,17 @@ export default function EraseData() {
                       );
                     }
 
-                    // erasing all local habits
-                    router.replace("/(onboarding)");
-                    await eraseAllHabitData();
-
-                    // then removing cloud data
+                    // removing cloud data
                     const deleteUserFunction = httpsCallable(
                       functionInstance,
                       "deleteUserDataAndAccount"
                     );
                     await deleteUserFunction();
                     signOut(getAuth());
+
+                    // erasing all local habits
+                    router.replace("/(onboarding)");
+                    await eraseAllHabitData();
                   },
                 },
               ]
