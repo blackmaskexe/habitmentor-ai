@@ -1,10 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { View, TouchableOpacity, Text, StyleSheet } from "react-native";
+import { TouchableOpacity, Text, StyleSheet } from "react-native";
 import {
   GoogleSignin,
   statusCodes,
 } from "@react-native-google-signin/google-signin";
 import { Ionicons } from "@expo/vector-icons";
+import {
+  getAuth,
+  signInWithCredential,
+  GoogleAuthProvider,
+} from "@react-native-firebase/auth";
 
 export default function GoogleSignInButton() {
   const [loading, setLoading] = useState(false);
@@ -15,7 +20,7 @@ export default function GoogleSignInButton() {
         "96863368182-rqkal2eqcb3u8gealmbplpa66n5s8eu9.apps.googleusercontent.com",
       offlineAccess: false,
       scopes: ["profile", "email"],
-      forceCodeForRefreshToken: false, // Android only
+      forceCodeForRefreshToken: false,
     });
   }, []);
 
@@ -23,27 +28,44 @@ export default function GoogleSignInButton() {
     try {
       setLoading(true);
 
-      // Ensure Play Services exist
       await GoogleSignin.hasPlayServices({
         showPlayServicesUpdateDialog: true,
       });
 
-      // Attempt sign-in
       const userInfo = await GoogleSignin.signIn();
-      console.log("✔️ Google Sign-In Success:", userInfo);
+      console.log(
+        "✔️ Google Sign-In Success:",
+        JSON.stringify(userInfo, null, 2)
+      );
+
+      const idToken = userInfo.data?.idToken;
+      if (!idToken) throw new Error("No idToken returned from Google Sign-In");
+
+      const auth = getAuth();
+      const credential = GoogleAuthProvider.credential(idToken);
+      const firebaseUser = await signInWithCredential(auth, credential);
+
+      console.log("🔥 Firebase Sign-In Success:", firebaseUser.user);
 
       setLoading(false);
-      return userInfo;
+      return firebaseUser;
     } catch (error: any) {
       setLoading(false);
-      console.log("❌ Google Sign-In Error:", error);
 
-      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
-        console.log("User cancelled the login flow");
-      } else if (error.code === statusCodes.IN_PROGRESS) {
-        console.log("Login already in progress");
-      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-        console.log("Play services not available");
+      if (error && "code" in error) {
+        switch (error.code) {
+          case statusCodes.SIGN_IN_CANCELLED:
+            console.log("User cancelled the login flow");
+            break;
+          case statusCodes.IN_PROGRESS:
+            console.log("Login already in progress");
+            break;
+          case statusCodes.PLAY_SERVICES_NOT_AVAILABLE:
+            console.log("Play services not available");
+            break;
+          default:
+            console.log("Unhandled Google Sign-In error:", error);
+        }
       } else {
         console.log("Unhandled error:", error);
       }
@@ -53,14 +75,13 @@ export default function GoogleSignInButton() {
   return (
     <TouchableOpacity
       style={styles.customButton}
-      onPress={() => {
-        signIn().then(() => {
-          console.log("Sign in process completed hehe");
-        });
-      }}
+      onPress={signIn}
+      disabled={loading}
     >
       <Ionicons name="logo-google" size={22} color="#000000" />
-      <Text style={styles.buttonText}>Sign in with Google</Text>
+      <Text style={styles.buttonText}>
+        {loading ? "Signing in..." : "Sign in with Google"}
+      </Text>
     </TouchableOpacity>
   );
 }
