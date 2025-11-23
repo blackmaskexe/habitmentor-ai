@@ -75,25 +75,44 @@ export function useNotifications() {
     }
     // then proceed with creating a new notification scheduler for EACH day the habit is active:
     const notificationIdArray: string[] = [];
-    for (let i = 0; i < habit.frequency.length; i++) {
-      const dayOfWeek = i + 1; // calendar trigger assumes 1 = sunday, .... 7 = saturday, so adding one
-      if (habit.frequency[i]) {
-        // checks for if that habit is to be done on the particular day of the week (frequency[] is array of 7 bools)
-        const identifier = await Notifications.scheduleNotificationAsync({
-          content: {
-            title: "HabitMentor AI",
-            body: `Gentle reminder for the habit: ${habit.habitName}`,
-          },
-          trigger: {
-            type: Notifications.SchedulableTriggerInputTypes.CALENDAR,
-            hour: time.getHours(),
-            minute: time.getMinutes(),
-            weekday: dayOfWeek,
-            repeats: true,
-            channelId: "default",
-          },
-        });
-        notificationIdArray.push(identifier);
+
+    if (Platform.OS === "android") {
+      // Android doesn't support CALENDAR triggers with weekday - use DAILY trigger instead
+      const identifier = await Notifications.scheduleNotificationAsync({
+        content: {
+          title: "HabitMentor AI",
+          body: `Gentle reminder for the habit: ${habit.habitName}`,
+        },
+        trigger: {
+          type: Notifications.SchedulableTriggerInputTypes.DAILY,
+          hour: time.getHours(),
+          minute: time.getMinutes(),
+          channelId: "default",
+        },
+      });
+      notificationIdArray.push(identifier);
+    } else {
+      // iOS supports CALENDAR triggers with weekday - schedule for each active day
+      for (let i = 0; i < habit.frequency.length; i++) {
+        const dayOfWeek = i + 1; // calendar trigger assumes 1 = sunday, .... 7 = saturday, so adding one
+        if (habit.frequency[i]) {
+          // checks for if that habit is to be done on the particular day of the week (frequency[] is array of 7 bools)
+          const identifier = await Notifications.scheduleNotificationAsync({
+            content: {
+              title: "HabitMentor AI",
+              body: `Gentle reminder for the habit: ${habit.habitName}`,
+            },
+            trigger: {
+              type: Notifications.SchedulableTriggerInputTypes.CALENDAR,
+              hour: time.getHours(),
+              minute: time.getMinutes(),
+              weekday: dayOfWeek,
+              repeats: true,
+              channelId: "default",
+            },
+          });
+          notificationIdArray.push(identifier);
+        }
       }
     }
 
@@ -126,9 +145,27 @@ export function useNotifications() {
         finalStatus = status;
       }
       if (finalStatus !== "granted") {
-        alert("You need to enable push notifications for this feature!");
+        Alert.alert(
+          "Notification Permission Required",
+          "You need to enable push notifications for this feature to work!",
+          [{ text: "OK" }]
+        );
         return;
       }
+
+      // For Android 13+, check for POST_NOTIFICATIONS permission explicitly
+      if (Platform.OS === "android" && Platform.Version >= 33) {
+        const { status } = await Notifications.getPermissionsAsync();
+        if (status !== "granted") {
+          Alert.alert(
+            "Notification Permission Denied",
+            "Please enable notifications in your device settings to receive habit reminders.",
+            [{ text: "OK" }]
+          );
+          return;
+        }
+      }
+
       // Learn more about projectId:
       // https://docs.expo.dev/push-notifications/push-notifications-setup/#configure-projectid
       // EAS projectId is used here.
@@ -147,6 +184,12 @@ export function useNotifications() {
       } catch (e) {
         token = `${e}`;
       }
+    } else {
+      Alert.alert(
+        "Device Not Supported",
+        "Push notifications don't work on simulators/emulators.",
+        [{ text: "OK" }]
+      );
     }
 
     return token;
