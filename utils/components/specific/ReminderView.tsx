@@ -107,7 +107,7 @@ export default function ReminderView({
       <Text style={styles.tooltipText}>
         {Platform.OS == "ios"
           ? "You will be reminded to check off your habit each day your habit is due at this time"
-          : "You will be reminded to check of your habit everyday when this habit is due"}
+          : "You will be reminded to check off your habit every day at the time this habit is due"}
       </Text>
 
       <View style={styles.pickerContainer}>
