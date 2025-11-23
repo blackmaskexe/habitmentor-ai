@@ -39,13 +39,6 @@ function AppNavigator() {
 
       const { path, queryParams } = Linking.parse(event.url);
       if (path === "friend-invite" && queryParams && queryParams.senderId) {
-        const currentUser = getAuth().currentUser;
-        if (!currentUser) {
-          Alert.alert(
-            "You must log in to view your friend. Then, click the link again."
-          );
-          return;
-        }
         router.push("/(tabs)/leaderboard");
         setTimeout(() => {
           router.push(`/(tabs)/leaderboard/${queryParams.senderId}`);
