@@ -19,39 +19,53 @@ function AppNavigator() {
   const theme = useTheme();
   const router = useRouter();
   const styles = createStyles(theme);
-  const url = Linking.useLinkingURL();
 
   useEffect(() => {
-    async function runExpoLinking() {
+    const handleDeepLink = async (event: { url: string }) => {
       const hasOnboarded = await AsyncStorage.getItem("hasOnboarded");
-      if (!hasOnboarded || !getAuth().currentUser) return; // early return if the user hasn't onboarded OR the user hasn't logged in
-
-      if (url) {
-        const { hostname, path, queryParams } = Linking.parse(url);
-        if (path === "friend-invite" && queryParams && queryParams.senderId) {
-          const currentUser = getAuth().currentUser;
-          if (!currentUser) {
-            Alert.alert(
-              "You must log in to view your friend. Then, click the link again."
-            );
-            return; // not run the pushing and stuff, because that would mean
-            // a bypassing of login blockwall in order to get to the profile
-            // basically meaning tons of errors and shi
-          }
-          router.push("/(tabs)/leaderboard");
-          router.push(`/(tabs)/leaderboard/${queryParams.senderId}`);
+      if (!hasOnboarded || !getAuth().currentUser) {
+        if (!hasOnboarded) {
+          Alert.alert(
+            "Please complete the app setup to accept friend requests"
+          );
+        } else {
+          Alert.alert(
+            "Please log in to leaderboards to accept friend requests"
+          );
         }
+
+        return;
       }
-    }
 
-    runExpoLinking();
-  }, [url]);
+      const { path, queryParams } = Linking.parse(event.url);
+      if (path === "friend-invite" && queryParams && queryParams.senderId) {
+        const currentUser = getAuth().currentUser;
+        if (!currentUser) {
+          Alert.alert(
+            "You must log in to view your friend. Then, click the link again."
+          );
+          return;
+        }
+        router.push("/(tabs)/leaderboard");
+        setTimeout(() => {
+          router.push(`/(tabs)/leaderboard/${queryParams.senderId}`);
+        }, 100);
+      }
+    };
 
-  useEffect(() => {
-    GoogleSignin.configure({
-      webClientId:
-        "96863368182-n72dgcej7466ersf9h6cicucttl0pgel.apps.googleusercontent.com",
+    // Handle initial URL (app opened from deep link)
+    Linking.getInitialURL().then((url) => {
+      if (url) {
+        handleDeepLink({ url });
+      }
     });
+
+    // Handle incoming URLs (app already open)
+    const subscription = Linking.addEventListener("url", handleDeepLink);
+
+    return () => {
+      subscription.remove();
+    };
   }, []);
 
   return (
