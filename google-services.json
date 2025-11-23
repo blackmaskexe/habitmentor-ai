@@ -14,11 +14,19 @@
       },
       "oauth_client": [
         {
-          "client_id": "96863368182-rgvm5lhdkjkroeaf68vmcf445r85frmg.apps.googleusercontent.com",
+          "client_id": "96863368182-0as34kkqppe1jst5mpcpg9lgo9i30ldd.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.blackmaskexe.habittracker",
-            "certificate_hash": "7679e0fe239cc45656584d3b46cc64ef57d6dae3"
+            "certificate_hash": "b7aa5fa5955ea5a8c68e8009e434990bb8bb0d5e"
+          }
+        },
+        {
+          "client_id": "96863368182-533bhj80gh5fg1g5diqc8l3565if98al.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.blackmaskexe.habittracker",
+            "certificate_hash": "e802c3428dec241899f71c1e3823fef75436d0c5"
           }
         },
         {
@@ -42,7 +50,8 @@
               "client_id": "96863368182-n72dgcej7466ersf9h6cicucttl0pgel.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.blackmaskexe.habittracker"
+                "bundle_id": "com.blackmaskexe.habittracker",
+                "app_store_id": "6745747475"
               }
             }
           ]

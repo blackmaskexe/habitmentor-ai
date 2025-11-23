@@ -2516,10 +2516,10 @@
   resolved "https://registry.yarnpkg.com/@react-native-firebase/functions/-/functions-23.2.1.tgz#73d4bb88936f561f79aba3758f30776f60fd49e6"
   integrity sha512-uK4Y2FDlW7GzAnxgBhrISpc9oSopnbnTwL+ef+sPYET5cfxhlbPM4a3V9T6aUOIMtg4TRvGfWk+gKyiaFOEYrA==
 
-"@react-native-google-signin/google-signin@^15.0.0":
-  version "15.0.0"
-  resolved "https://registry.yarnpkg.com/@react-native-google-signin/google-signin/-/google-signin-15.0.0.tgz#5041e12fc5483d4b08b92d3f9a754c68c471f107"
-  integrity sha512-oU49nE+Z9TT/WaO1K7BH/QL2Nx3d2T3I5PGcYdD8swKNtfhMt8qCX/3mOnNEzthTBPrR0CWFGo3LXpkYspalog==
+"@react-native-google-signin/google-signin@^16.0.0":
+  version "16.0.0"
+  resolved "https://registry.yarnpkg.com/@react-native-google-signin/google-signin/-/google-signin-16.0.0.tgz#05af652e16f7dab745907db06edc74c007c0e670"
+  integrity sha512-jVuzPo8odREekFc0b4RK3YsqCvedtLIM2P6NSszFr9cYyhKrUNikffPapL6LmkL9qkb8K6pDeb5CXg4qALOc0g==
 
 "@react-native-menu/menu@^1.2.3":
   version "1.2.3"

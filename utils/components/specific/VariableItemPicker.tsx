@@ -83,11 +83,6 @@ export default function VariableItemPicker({
   const [modalVisible, setModalVisible] = useState(false);
   const [moreHabitsArray, setMoreHabitsArray] = useState(Array(1).fill(null));
 
-  console.log(
-    values,
-    "I just gotta see it through, I just gotta see it through.. "
-  );
-
   // not enforcing typing here. It's a complex functionality, and if it ain't broke don't fix it typeshi
 
   const handleNewHabitSubmission = function () {
