@@ -69,6 +69,13 @@ export default function Index() {
       // the user hasn't toured in this case, and should be the only time the tour should show
       setShouldUserTour(() => {
         mmkvStorage.set("didTourApp", true);
+
+        if (Platform.OS == "android") {
+          // what we do is set the didTourApp to true so it doesn't concern us in the future
+          // as well as return false the first time so that it's not run the first time
+          // essentially, never running the tourguide on Android (because it's funky on Android)
+          return false;
+        }
         return true;
       });
 
@@ -81,7 +88,6 @@ export default function Index() {
 
   useEffect(() => {
     if (canStart && shouldUserTour) {
-      // 👈 test if you can start otherwise nothing will happen
       start();
     }
   }, [canStart]); // 👈 don't miss it!
