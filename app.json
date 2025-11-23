@@ -2,7 +2,7 @@
   "expo": {
     "name": "HabitMentor AI",
     "slug": "habitmentor-ai",
-    "version": "2.0.2",
+    "version": "2.0.3",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "habitmentor-ai",
@@ -26,7 +26,7 @@
       },
       "edgeToEdgeEnabled": true,
       "package": "com.blackmaskexe.habittracker",
-      "googleServicesFile": "google-services.json"
+      "googleServicesFile": "./google-services.json"
     },
     "plugins": [
       "expo-router",

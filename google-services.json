@@ -7,20 +7,12 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:96863368182:android:1c59dfb0448927dd9ecdd7",
+        "mobilesdk_app_id": "1:96863368182:android:61195972c4eb64a89ecdd7",
         "android_client_info": {
           "package_name": "com.blackmaskexe.habittracker"
         }
       },
       "oauth_client": [
-        {
-          "client_id": "96863368182-rgvm5lhdkjkroeaf68vmcf445r85frmg.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.blackmaskexe.habittracker",
-            "certificate_hash": "7679e0fe239cc45656584d3b46cc64ef57d6dae3"
-          }
-        },
         {
           "client_id": "96863368182-rqkal2eqcb3u8gealmbplpa66n5s8eu9.apps.googleusercontent.com",
           "client_type": 3
@@ -42,7 +34,8 @@
               "client_id": "96863368182-n72dgcej7466ersf9h6cicucttl0pgel.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.blackmaskexe.habittracker"
+                "bundle_id": "com.blackmaskexe.habittracker",
+                "app_store_id": "6745747475"
               }
             }
           ]

@@ -1,7 +1,7 @@
 {
   "name": "habitmentor-ai",
   "main": "expo-router/entry",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "private": true,
   "scripts": {
     "start": "expo start --dev-client",
@@ -25,7 +25,7 @@
     "@react-native-firebase/crashlytics": "23.1.2",
     "@react-native-firebase/firestore": "23.1.2",
     "@react-native-firebase/functions": "^23.2.1",
-    "@react-native-google-signin/google-signin": "^15.0.0",
+    "@react-native-google-signin/google-signin": "^16.0.0",
     "@react-native-menu/menu": "^1.2.3",
     "@react-navigation/bottom-tabs": "^7.3.10",
     "@react-navigation/elements": "^2.3.8",

@@ -12,7 +12,7 @@ import { useTheme } from "@/utils/theme/ThemeContext";
 import { TouchableOpacity, Text, StyleSheet, Alert } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
-export default function GoogleSignInButton() {
+export default function GoogleSignInButtonIos() {
   const theme = useTheme();
 
   async function onGoogleButtonPress() {
