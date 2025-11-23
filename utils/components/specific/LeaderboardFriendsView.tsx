@@ -360,7 +360,6 @@ export default function LeaderboardFriendsView({
               message: `Add me as a friend on HabitMentor-AI. Let's track our progress together! ${getInviteLink()}`,
             });
           }}
-          isBackgroundVisible={false}
         />
       </View>
     );
