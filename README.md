@@ -260,7 +260,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - **📱 iOS App**: [Download on App Store](https://apps.apple.com/app/habitmentor-ai)
 - **🤖 Android App**: [Get it on Google Play](https://play.google.com/store/apps/details?id=com.blackmaskexe.habittracker)
 - **🌐 Website**: [habitmentor.app](https://habitmentor.app)
-- **👨‍💻 Developer**: [Your LinkedIn Profile](https://linkedin.com/in/your-profile)
+- **👨‍💻 Developer**: [Linkedin](https://linkedin.com/in/prathamsnehi)
 
 ---
 
